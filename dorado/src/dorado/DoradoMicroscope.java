@@ -3,7 +3,11 @@ package dorado;
 import clearcl.ClearCLContext;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
+import clearcontrol.devices.lasers.LaserDeviceInterface;
 import clearcontrol.devices.lasers.devices.sim.LaserDeviceSimulator;
+import clearcontrol.devices.lasers.instructions.ChangeLaserPowerInstruction;
+import clearcontrol.devices.lasers.instructions.SwitchLaserOnOffInstruction;
+import clearcontrol.devices.lasers.instructions.SwitchLaserPowerOnOffInstruction;
 import clearcontrol.devices.optomech.filterwheels.devices.ludl.LudlFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.instructions.FilterWheelInstruction;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
@@ -19,6 +23,8 @@ import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicrosco
 import clearcontrol.microscope.lightsheet.timelapse.LightSheetTimelapse;
 import dorado.adaptive.AdaptiveZInstruction;
 import clearcontrol.microscope.lightsheet.component.lightsheet.instructions.MultiChannelInstruction;
+
+import java.util.ArrayList;
 
 
 /**
@@ -69,7 +75,6 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
       // Setup stage here...
     }
 
-
     // Setting up lasers:
     {
       addDevice(0,new LaserDeviceSimulator("405",0,405, 100));
@@ -77,7 +82,6 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
       addDevice(1,new LaserDeviceSimulator("561",0,561, 100));
       addDevice(2,new LaserDeviceSimulator("637",0,637, 100));
     }
-
 
     // Setting up cameras and filterwheels:
     if (true)

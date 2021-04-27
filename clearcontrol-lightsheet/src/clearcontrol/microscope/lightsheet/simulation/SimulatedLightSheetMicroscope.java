@@ -60,6 +60,7 @@ import clearcontrol.microscope.lightsheet.warehouse.instructions.DropOldestStack
 import clearcontrol.microscope.state.AcquisitionStateManager;
 import clearcontrol.microscope.timelapse.TimelapseInterface;
 import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
+import clearcontrol.stack.sourcesink.sink.ZarrStackSink;
 
 import java.util.ArrayList;
 
@@ -363,6 +364,7 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
     lTimelapse.getAdaptiveEngineOnVariable().set(false);
 
     lTimelapse.addFileStackSinkType(RawFileStackSink.class);
+    lTimelapse.addFileStackSinkType(ZarrStackSink.class);
     // lTimelapse.addFileStackSinkType(SqeazyFileStackSink.class);
 
     // ------------------------------------------------------------------------
@@ -562,6 +564,9 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
     addDevice(0, new ChangeLightSheetWidthInstruction(this, 0));
     addDevice(0, new ChangeLightSheetHeightInstruction(this, 0, 0.0));
     addDevice(0, new ChangeLaserLineOnOffInstruction(this, 0));
+    addDevice(0, new ChangeLightSheetBrightnessInstruction(this, 0, 0));
+
+
 
     addDevice(0, new ChangeImageSizeInstruction(this));
     addDevice(0, new ChangeZRangeInstruction(this));
