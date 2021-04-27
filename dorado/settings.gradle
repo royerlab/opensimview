@@ -1,0 +1,18 @@
+rootProject.name = 'dorado'
+
+
+// includeBuild ('../dorado-dev')
+includeBuild ('../clearcontrol-lightsheet')
+includeBuild ('../fastfuse')
+includeBuild ('../dcamj')
+includeBuild ('../clearcontrol')
+includeBuild ('../simbryo')
+includeBuild ('../clearcl')
+includeBuild ('../clearvolume')
+includeBuild ('../coremem')
+includeBuild ('../cleargl')
+includeBuild ('../nirioj')
+includeBuild ('../halcyon')
+includeBuild ('../dockfx')
+//includeBuild ('../asdkj')
+//includeBuild ('../GS16AO64c')

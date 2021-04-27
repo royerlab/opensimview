@@ -1,0 +1,12 @@
+-library ecc
+#-beautifyNames
+-f
+-o src\
+-rootPackage src
+-package ecc100.bindings
+-arch win64 
+-libFile lib\ecc100\ecc.lib lib\ecc100\libusb0.dll  lib\ecc100\ecc.dll 
+-runtime BridJ
+-mode Directory
+-jar ecc100.jar
+lib\ecc100\ecc.h

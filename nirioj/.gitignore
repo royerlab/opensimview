@@ -1,0 +1,15 @@
+bin/
+build/
+labview/builds/
+.project
+.classpath
+.settings/*
+.gradle
+*.class
+.DS_Store
+labview/direttore/Direttore.aliases
+
+gradle/
+.idea/
+
+out

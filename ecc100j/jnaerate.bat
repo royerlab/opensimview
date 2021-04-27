@@ -1,0 +1,1 @@
+java.exe -jar ./tools/jnaerator.jar ecc100.config.win.jnaerator

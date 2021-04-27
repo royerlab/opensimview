@@ -1,0 +1,1 @@
+java.exe -jar ./tools/jnaerator.jar mirao52e.config.win.jnaerator
