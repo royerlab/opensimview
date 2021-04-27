@@ -1,0 +1,5 @@
+rootProject.name = 'clearvolume'
+
+
+//includeBuild ('../simbryo')
+//includeBuild ('../clearcl')

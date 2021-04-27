@@ -1,0 +1,248 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+    }
+}
+
+
+plugins {
+    id "com.jfrog.bintray" version "1.8.3"
+    id "com.diffplug.gradle.spotless" version "3.1.0"
+    id "de.undercouch.download" version "3.4.3"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'javafx-gradle-plugin'
+
+
+
+//***********************************************************************************
+// JAVA CODE BUILDING
+
+sourceSets {
+    main
+    {
+        java
+        { srcDir 'src/main/java' }
+        resources
+        { srcDir 'src/main/java' }
+    }
+    test
+    {
+        java
+        { srcDir 'src/test/java' }
+        resources
+        { srcDir 'src/test/java' }
+    }
+}
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+test 
+{
+    testLogging.showStandardStreams = true
+    testLogging
+    { events "passed", "skipped", "failed" }
+
+    exclude '**/demo/**'
+    exclude '**/run/**'
+
+    maxHeapSize = "16G"
+}
+
+dependencies 
+{
+    // Vecmath:
+    compile ('javax.vecmath:vecmath:1.5.2')
+    
+    // JUnit:
+    compile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    // commons lang:
+    compile 'org.apache.commons:commons-lang3:3.4'
+
+    // ClearCL:
+    compile ('net.clearcontrol:clearcl:1.6.2') {transitive= true; changing= true}
+    
+}
+
+
+repositories 
+{
+    // main repos:
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+
+    // ClearCL:
+    maven { url "http://dl.bintray.com/royerlab/RL"  }
+    maven { url "http://dl.bintray.com/clearcontrol/ClearControl" }
+
+    // ClearVolume: 
+    maven { url  "http://dl.bintray.com/clearvolume/ClearVolume"  }
+    
+    // Sqeazy:
+    maven {url  "http://dl.bintray.com/psteinb/maven" }
+    
+    // ImageJ repo:
+    maven {url  "http://maven.imagej.net/content/repositories/releases/"}
+    
+    // Bioformats:
+    maven {url "http://artifacts.openmicroscopy.org/artifactory/maven"}
+    maven { url "https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases" }
+
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+      tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+      }
+    }
+  }
+
+
+//***********************************************************************************
+
+// PUBLISHING
+archivesBaseName = 'simbryo'
+group = 'net.clearcontrol'
+version = '1.9.1'
+description = 'simbryo_RL'
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+//bintray {
+//
+//
+//    user = bintray_user
+//    key =  bintray_key
+//
+//    publications = ['MyPublication']
+//    publish = true
+//    pkg {
+//        userOrg = 'royerlab'
+//        repo = 'RL'
+//        name = 'simbryo'
+//        licenses = ['Apache-2.0']
+//        vcsUrl = 'https://github.com/royerlab/simbryo.git'
+//        labels = ['ClearControl', 'simbryo']
+//        publicDownloadNumbers = true
+//        version {
+//            name = project.version
+//            desc = project.description
+//            released  = new Date()
+//        }
+//    }
+//}
+
+//***********************************************************************************
+// APP PACKAGING
+
+// configure javafx-gradle-plugin
+// for all available settings please look at the class "JavaFXGradlePluginExtension"
+jfx {
+    verbose = true
+    mainClass = "simbryo.particles.demos.Collider"
+    jfxAppOutputDir = "build/jfx/app"
+    jfxMainAppJarName = "Collider.jar"
+    deployDir = "src/main/deploy"
+    useEnvironmentRelativeExecutables = true
+
+    // gradle jfxJar
+    css2bin = false
+    preLoader = null // String
+    updateExistingJar = false
+    allPermissions = false
+    manifestAttributes = null // Map<String, String>
+    addPackagerJar = true
+    copyAdditionalAppResourcesToJar = false
+
+    // gradle jfxNative
+    identifier = null  // String - setting this for windows-bundlers makes it possible to generate upgradeable installers (using same GUID)
+    vendor = "Loic Royer"
+    nativeOutputDir = "build/jfx/native"
+    bundler = "ALL" // set this to some specific, if your don't want all bundlers running, examples "windows.app", "jnlp", ...
+    jvmProperties = null // Map<String, String>
+    jvmArgs = null // List<String>
+    userJvmArgs = null // Map<String, String>
+    launcherArguments = null // List<String>
+    nativeReleaseVersion = project.version
+    needShortcut = false
+    needMenu = false
+    bundleArguments = [
+        // dont bundle JRE (not recommended, but increases build-size/-speed)
+        runtime: null
+    ]
+    appName = "Collider" // this is used for files below "src/main/deploy", e.g. "src/main/deploy/windows/project.ico"
+    additionalBundlerResources = null // path to some additional resources for the bundlers when creating application-bundle
+    additionalAppResources = null // path to some additional resources when creating application-bundle
+    secondaryLaunchers = [[appName:"somethingDifferent"], [appName:"somethingDifferent2"]]
+    fileAssociations = null // List<Map<String, Object>>
+    noBlobSigning = false // when using bundler "jnlp", you can choose to NOT use blob signing
+    customBundlers = null // List<String>
+    skipNativeLauncherWorkaround205 = false
+
+    skipNativeLauncherWorkaround124 = false
+    skipNativeLauncherWorkaround167 = false
+    skipJNLPRessourcePathWorkaround182 = false
+    skipSigningJarFilesJNLP185 = false
+    skipSizeRecalculationForJNLP185 = false
+
+    // gradle jfxRun
+    runJavaParameter = null // String
+    runAppParameter = null // String
+
+    // per default the outcome of the gradle "jarTask" will be used, set this to specify otherwise (like proguard-output)
+    alternativePathToJarFile = null // String
+
+    // to disable patching of ant-javafx.jar, set this to false
+    usePatchedJFXAntLib = true
+
+    // making it able to support absolute paths, defaults to "false" for maintaining old behaviour
+    checkForAbsolutePaths = false
+
+    // gradle jfxGenerateKeyStore
+    keyStore = "src/main/deploy/keystore.jks"
+    keyStoreAlias = "myalias"
+    keyStorePassword = "password"
+    keyPassword = null // will default to keyStorePassword
+    keyStoreType = "jks"
+    overwriteKeyStore = false
+
+    certDomain = null // required
+    certOrgUnit = null // defaults to "none"
+    certOrg = null // required
+    certState = null // required
+    certCountry = null // required
+}
+
+

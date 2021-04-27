@@ -1,0 +1,5 @@
+rootProject.name = 'fastfuse'
+
+
+//includeBuild ('../simbryo')
+//includeBuild ('../clearcl')

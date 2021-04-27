@@ -1,0 +1,10 @@
+rootProject.name = 'clearcontrol'
+
+
+//includeBuild ('../clearcontrol-lightsheet')
+//includeBuild ('../fastfuse')
+//includeBuild ('../clearcontrol')
+//includeBuild ('../simbryo')
+//includeBuild ('../dcamj')
+//includeBuild ('../clearcl')
+//includeBuild ('../clearvolume')

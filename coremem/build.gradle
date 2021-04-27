@@ -1,0 +1,156 @@
+plugins {
+	id "com.jfrog.bintray" version "1.8.3"
+	id "com.diffplug.gradle.spotless" version "3.1.0"
+	id "de.undercouch.download" version "3.4.3"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+
+project.ext.masterfile = (new File(projectDir,'/gradle/master.gradle')).getAbsolutePath()
+
+// Attempts to download master gradle file
+if(!hasProperty('do_not_update_master_file'))
+try {
+    download {
+    src 'https://github.com/ClearControl/master/blob/master/master.gradle?raw=true'
+    dest project.ext.masterfile
+    overwrite true
+    onlyIfModified true
+    tempAndMove true
+    }
+}
+catch (Throwable e)
+{
+}
+
+apply from: project.ext.masterfile
+
+
+
+//***********************************************************************************
+// JAVA CODE BUILDING
+
+sourceSets
+{
+	main
+	{
+		java
+		{ srcDir 'src/main/java' }
+		resources
+		{ srcDir 'src/main/java' }
+	}
+	test
+	{
+		java
+		{ srcDir 'src/test/java' }
+		resources
+		{ srcDir 'src/test/java' }
+	}
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava {
+    options.compilerArgs << '-XDignore.symbol.file -Xlint:-deprecation'
+    options.fork = true // may not needed on 1.8
+    options.forkOptions.executable = 'javac' // may not needed on 1.8
+    options.deprecation = false
+}
+
+test
+{
+	testLogging.showStandardStreams = true
+	testLogging
+	{ events "passed", "skipped", "failed" }
+
+	exclude '**/demo/**'
+	exclude '**/run/**'
+
+	maxHeapSize = "4G"
+}
+
+// This excludes the whole damn android dx thingy that is really not needed...
+configurations.all {
+	exclude group:"com.google.android.tools", module: "dx"
+}
+
+dependencies
+{
+	
+	// BridJ:
+	compile 'com.nativelibs4java:bridj:0.7.0'
+
+	// JNA:
+	compile group: 'net.java.dev.jna', name: 'jna', version: '4.5.1'
+	compile group: 'net.java.dev.jna', name: 'jna-platform', version: '4.5.1'
+
+	// JUnit:
+	compile group: 'junit', name: 'junit', version: '4.11'
+	testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+repositories
+{
+	mavenCentral()
+	maven
+	{ url "http://oss.sonatype.org/content/groups/public" }
+}
+
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+if (JavaVersion.current().isJava8Compatible()) {
+	allprojects {
+		tasks.withType(Javadoc) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
+	}
+}
+
+//***********************************************************************************
+// PUBLISHING
+
+group   = project.ext.groupname
+version = project.ext.versionsMap[project.name]
+
+
+artifacts
+{
+	archives sourcesJar
+	archives javadocJar
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+			artifact sourcesJar { classifier "sources" }
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+

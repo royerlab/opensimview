@@ -1,0 +1,156 @@
+plugins {
+    id "com.jfrog.bintray" version "1.8.3"
+    id "com.diffplug.gradle.spotless" version "3.1.0"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+
+
+//***********************************************************************************
+// JAVA CODE BUILDING
+
+sourceSets
+{
+    main
+    {
+        java
+        { srcDir 'src/main/java' }
+        resources
+        { srcDir 'src/main/java' }
+    }
+    test
+    {
+        java
+        { srcDir 'src/test/java' }
+        resources
+        { srcDir 'src/test/java' }
+    }
+}
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+test 
+{
+    testLogging.showStandardStreams = true 
+    testLogging 
+    {
+        events "passed", "skipped", "failed"
+    }
+
+    exclude '**/demo/**'
+
+    maxHeapSize = "16G"
+}
+
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+dependencies 
+{
+    // Symbrio:
+    compile ('net.clearcontrol:simbryo:1.9.1')    {transitive= true; changing= true}
+
+    // commons lang:
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.commons:commons-math3:3.6.1'
+    
+    // Vecmath:
+    compile ('javax.vecmath:vecmath:1.5.2')
+
+        
+    // JUnit:
+    compile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+
+repositories 
+{
+    // Main repos:
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+
+    maven { url "http://oss.sonatype.org/content/groups/public"} 
+    maven { url "http://mvnrepository.com/artifact" }
+
+    // ClearControl:
+    maven { url "http://dl.bintray.com/royerlab/RL"  }
+    maven { url "http://dl.bintray.com/clearcontrol/ClearControl" }
+
+
+    // ImageJ repo:
+    maven {url  "http://maven.imagej.net/content/repositories/releases/"}
+    
+    // Bioformats:
+    maven {url "http://artifacts.openmicroscopy.org/artifactory/maven"}
+
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+      tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+      }
+    }
+  }
+
+
+
+//***********************************************************************************
+// PUBLISHING
+archivesBaseName = 'fastfuse'
+group = 'net.clearcontrol'
+version = '1.6.5'
+description = 'fastfuse_RL'
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+//bintray {
+//
+//
+//    user = bintray_user
+//    key =  bintray_key
+//
+//    publications = ['MyPublication']
+//    publish = true
+//    pkg {
+//        userOrg = 'royerlab'
+//        repo = 'RL'
+//        name = 'fastfuse'
+//        licenses = ['Apache-2.0']
+//        vcsUrl = 'https://github.com/royerlab/fastfuse.git'
+//        labels = ['ClearControl', 'fastfuse']
+//        publicDownloadNumbers = true
+//        version {
+//            name = project.version
+//            desc = project.description
+//            released  = new Date()
+//        }
+//    }
+//}

@@ -1,0 +1,13 @@
+bin/
+build/
+.project
+.classpath
+.settings/*
+.gradle
+*.class
+.DS_Store
+.settings
+DcamJ.iml
+
+.idea/
+out/

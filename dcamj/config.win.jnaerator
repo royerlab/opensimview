@@ -1,0 +1,15 @@
+-library dcamapi
+-beautifyNames
+//-libraryNamingPrefixes DCAM
+//-reification
+-f
+-o src\
+-rootPackage src
+-package dcamapi
+-arch win64 
+-libFile lib\dcam\lib\x64\dcamapi.lib
+-runtime BridJ
+-mode Directory
+-jar dcam.jar
+lib\dcam\inc\dcamapi.h
+lib\dcam\inc\dcamprop.h

@@ -1,0 +1,155 @@
+buildscript {
+	dependencies {
+		classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+	}
+}
+
+
+plugins {
+    id "com.jfrog.bintray" version "1.8.3"
+    id "com.diffplug.gradle.spotless" version "3.1.0"
+    id "de.undercouch.download" version "3.4.3"
+    id 'java'
+}
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+
+//***********************************************************************************
+// JAVA CODE BUILDING
+
+sourceSets
+{
+  main
+  {
+    java
+    {
+      srcDir 'src'
+    }
+    resources
+    {
+      srcDir 'src'
+    }
+  }
+  test
+  {
+    java
+    {
+      srcDir 'src'
+    }
+    resources
+    {
+      srcDir 'src'
+    }
+  }
+}
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+test
+{
+    testLogging.showStandardStreams = true
+    testLogging
+            { events "passed", "skipped", "failed" }
+
+    exclude '**/demo/**'
+    exclude '**/run/**'
+
+    maxHeapSize = "4G"
+}
+
+dependencies
+{
+    compile 'org.apache.commons:commons-collections4:4.0'
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.commons:commons-math3:3.4.1'
+    compile 'org.apache.logging.log4j:log4j-api:2.1'
+    compile 'org.apache.logging.log4j:log4j-core:2.1'
+    compile 'com.nativelibs4java:bridj:0.7.0'
+
+    // CoreMem:
+    compile ('net.clearcontrol:coremem:0.4.7')  {transitive= true; changing= true}
+
+
+    compile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+repositories
+{
+    // Main repos:
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+
+    // ClearControl:
+    maven { url  "http://dl.bintray.com/clearcontrol/ClearControl"  }
+
+}
+
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+
+//***********************************************************************************
+// PUBLISHING
+archivesBaseName = 'dcamj'
+group = 'net.clearcontrol'
+version = '3.1.7'
+description = 'dcamj_RL'
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+/*
+bintray {
+
+
+    user = bintray_user
+    key =  bintray_key
+
+    publications = ['MyPublication']
+    publish = true
+    pkg {
+        userOrg = 'royerlab'
+        repo = 'RL'
+        name = 'dcamj'
+	      licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/royerlab/dcamj_RL.git'
+        labels = ['ClearControl', 'dcamj', 'dcamj_RL']
+        publicDownloadNumbers = true
+      	version {
+      		name = project.version
+                  	desc = project.description
+                  	released  = new Date()
+      	}
+    }
+}
+*/

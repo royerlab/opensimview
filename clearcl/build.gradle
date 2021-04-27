@@ -1,0 +1,157 @@
+buildscript {
+	dependencies {
+		classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+	}
+}
+
+
+plugins {
+    id "com.jfrog.bintray" version "1.8.3"
+    id "com.diffplug.gradle.spotless" version "3.1.0"
+    id "de.undercouch.download" version "3.4.3"
+    id 'java'
+}
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+
+
+//***********************************************************************************
+// JAVA CODE BUILDING
+
+sourceSets
+{
+	main
+	{
+		java
+		{ srcDir 'src/main/java' }
+    resources
+		{ srcDir 'src/main/java' }
+	}
+	test
+	{
+		java
+		{ srcDir 'src/test/java' }
+    resources
+		{ srcDir 'src/test/java' }
+	}
+}
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+test
+{
+	testLogging.showStandardStreams = true
+	testLogging
+	{ events "passed", "skipped", "failed" }
+
+	exclude '**/demo/**'
+	exclude '**/run/**'
+
+	maxHeapSize = "4G"
+}
+
+dependencies
+{
+
+	// CoreMem:
+	compile ('net.clearcontrol:coremem:0.4.7')  {transitive= true; changing= true}
+
+	// JAVACL Backend:
+	compile ('com.nativelibs4java:javacl:1.0.0-RC4') {transitive= true; changing= false}
+
+	// JOCL backend:
+	compile ('org.jocl:jocl:2.0.1') {transitive= true; changing= false}
+
+	// Vecmath:
+    compile ('javax.vecmath:vecmath:1.5.2')
+
+	// Bioformats
+	compile('ome:formats-api:6.0.1')
+	compile('ome:formats-bsd:6.0.1')
+
+	// Junit:
+	compile group: 'junit', name: 'junit', version: '4.12'
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+repositories
+{
+	// Main repos:
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+
+    // Other repos:
+	maven { url "http://oss.sonatype.org/content/groups/public" }
+	maven { url "http://dl.bintray.com/royerlab/RL"  }
+	maven { url "http://dl.bintray.com/clearcontrol/ClearControl" }
+	maven { url "https://mvnrepository.com/artifact/org.jocl/jocl"}
+	maven { url "http://artifacts.openmicroscopy.org/artifactory/ome.releases/"}
+
+}
+
+
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+if (JavaVersion.current().isJava8Compatible()) {
+	allprojects {
+		tasks.withType(Javadoc) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
+	}
+}
+
+
+//***********************************************************************************
+// PUBLISHING
+archivesBaseName = 'ClearCL'
+group = 'net.clearcontrol'
+version = '1.6.2'
+description = 'dcamj_RL'
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+//bintray {
+//
+//
+//    user = bintray_user
+//    key =  bintray_key
+//
+//    publications = ['MyPublication']
+//    publish = true
+//    pkg {
+//        userOrg = 'royerlab'
+//        repo = 'RL'
+//        name = 'clearcl'
+//	      licenses = ['Apache-2.0']
+//        vcsUrl = 'https://github.com/royerlab/clearcl.git'
+//        labels = ['ClearControl', 'clearcl']
+//        publicDownloadNumbers = true
+//      	version {
+//      		name = project.version
+//                  	desc = project.description
+//                  	released  = new Date()
+//      	}
+//    }
+//}
