@@ -11,27 +11,6 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 
-project.ext.masterfile = (new File(projectDir,'/gradle/master.gradle')).getAbsolutePath()
-
-// Attempts to download master gradle file
-if(!hasProperty('do_not_update_master_file'))
-try {
-    download {
-    src 'https://github.com/ClearControl/master/blob/master/master.gradle?raw=true'
-    dest project.ext.masterfile
-    overwrite true
-    onlyIfModified true
-    tempAndMove true
-    }
-}
-catch (Throwable e)
-{
-}
-
-apply from: project.ext.masterfile
-
-
-
 //***********************************************************************************
 // JAVA CODE BUILDING
 
@@ -124,8 +103,8 @@ if (JavaVersion.current().isJava8Compatible()) {
 //***********************************************************************************
 // PUBLISHING
 
-group   = project.ext.groupname
-version = project.ext.versionsMap[project.name]
+group   = "net.clearcontrol:coremem"
+version = "0.4.7"
 
 
 artifacts

@@ -23,7 +23,7 @@ import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.metadata.MetaDataChannel;
 import clearcontrol.stack.sourcesink.StackSinkSourceInterface;
 import clearcontrol.stack.sourcesink.sink.FileStackSinkInterface;
-import clearcontrol.stack.sourcesink.sink.ZarrStackSink;
+import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
 
 /**
  * Base implementation providing common fields and methods for all Timelapse
@@ -86,7 +86,7 @@ public abstract class TimelapseBase extends LoopTaskDevice
 
   private final Variable<Class<? extends FileStackSinkInterface>> mCurrentFileStackSinkTypeVariable =
                                                                                                     new Variable<>("CurrentFileStackSinkTypeVariable",
-                                                                                                            ZarrStackSink.class);
+                                                                                                            CompressedStackSink.class);
 
   private final Variable<FileStackSinkInterface> mCurrentFileStackSinkVariable =
                                                                                new Variable<>("CurrentFileStackSink",

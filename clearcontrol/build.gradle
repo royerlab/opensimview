@@ -188,6 +188,12 @@ dependencies
     // GS driver
     compile ('net.clearcontrol:GS16AO64c:0.0.5')
 
+    // JZarr:
+    compile ('com.bc.zarr:jzarr:0.3.3-SNAPSHOT')
+
+    // JZarr:
+    compile ('org.lasersonlab:jblosc:1.0.1')
+
     // Other:
     //compile 'com.github.rwl:jtransforms:2.4.0'
     //compile 'org.lwjgl.lwjgl:lwjgl:2.9.1'
@@ -235,6 +241,9 @@ repositories
 
     //GS driver
     maven { url "https://dl.bintray.com/ahmetcansolak/gsrepo" }
+
+    // Jzarr
+    maven { url 'http://nexus.senbox.net/nexus/content/groups/public/'}
 }
 
 task sourcesJar(type: Jar, dependsOn:classes) {

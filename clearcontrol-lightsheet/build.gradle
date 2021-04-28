@@ -114,6 +114,9 @@ repositories
     //GS driver
     maven { url "https://dl.bintray.com/ahmetcansolak/gsrepo" }
 
+    // Jzarr
+    maven { url 'http://nexus.senbox.net/nexus/content/groups/public/'}
+
 }
 
 task sourcesJar(type: Jar, dependsOn:classes) {

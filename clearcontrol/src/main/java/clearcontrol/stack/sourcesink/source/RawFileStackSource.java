@@ -26,7 +26,7 @@ public class RawFileStackSource extends FileStackBase implements
                                 AutoCloseable
 {
 
-  private RecyclerInterface<StackInterface, StackRequest> mStackRecycler;
+  protected RecyclerInterface<StackInterface, StackRequest> mStackRecycler;
 
   /**
    * Instantiates a raw file stack source

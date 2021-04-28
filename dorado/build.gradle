@@ -109,6 +109,9 @@ repositories
     // Bioformats
     maven { url "http://artifacts.openmicroscopy.org/artifactory/ome.releases/"}
 
+    // Jzarr
+    maven { url 'http://nexus.senbox.net/nexus/content/groups/public/'}
+
 }
 
 

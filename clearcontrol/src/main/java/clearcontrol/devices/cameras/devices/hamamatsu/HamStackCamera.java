@@ -17,6 +17,7 @@ import clearcontrol.devices.cameras.TriggerTypeInterface;
 import clearcontrol.stack.EmptyStack;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
+import coremem.ContiguousMemoryInterface;
 import dcamj2.DcamDevice;
 import dcamj2.DcamLibrary;
 import dcamj2.DcamSequenceAcquisition;
@@ -34,6 +35,8 @@ public class HamStackCamera extends
                             LoggingFeature,
                             AsynchronousExecutorFeature
 {
+
+  private static final char cZeroLevel = 100;
 
   private static final long cWaitTime = 1000;
 
@@ -275,6 +278,15 @@ public class HamStackCamera extends
                     .setTimeStampInNanoseconds(System.nanoTime());
       lAcquiredStack.getMetaData()
                     .setIndex(getCurrentIndexVariable().get());
+
+      // Remove zero level:
+      ContiguousMemoryInterface lContiguousMemory = lAcquiredStack.getContiguousMemory();
+      long lLengthInUINT16 = lContiguousMemory.getSizeInBytes()/2;
+      for(long i = 0; i < lLengthInUINT16; i++) {
+        int value = lContiguousMemory.getCharAligned(i);
+        char lValue = (char) (Math.max(cZeroLevel, value) - cZeroLevel);
+        lContiguousMemory.setCharAligned(i, lValue);
+      }
 
       getStackVariable().setAsync(lAcquiredStack);
       return true;

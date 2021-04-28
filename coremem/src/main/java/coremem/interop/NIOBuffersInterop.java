@@ -31,16 +31,35 @@ public class NIOBuffersInterop
    */
   public static OffHeapMemory getContiguousMemoryFrom(Buffer pBuffer)
   {
+
+    final long lSizeInBytes = Size.of(pBuffer);
+
+    final OffHeapMemory lOffHeapMemory = getContiguousMemoryFrom(pBuffer, lSizeInBytes);
+
+    return lOffHeapMemory;
+  }
+
+  /**
+   * Returns a contiguous buffer from a NIO buffer
+   *
+   * @param pBuffer
+   *          NIO buffer
+   *
+   * @param pSizeInBytes
+   *
+   * @return contiguous memory
+   */
+  public static OffHeapMemory getContiguousMemoryFrom(Buffer pBuffer, long pSizeInBytes)
+  {
     if (!pBuffer.isDirect())
       throw new UnsupportedWrappingException("Cannot wrap a non-native NIO Buffer");
 
     final long lBufferAddress = getAddress(pBuffer);
-    final long lSizeInBytes = Size.of(pBuffer);
 
     final OffHeapMemory lOffHeapMemory =
-                                       new OffHeapMemory(pBuffer,
-                                                         lBufferAddress,
-                                                         lSizeInBytes);
+            new OffHeapMemory(pBuffer,
+                    lBufferAddress,
+                    pSizeInBytes);
     return lOffHeapMemory;
   }
 
@@ -65,6 +84,22 @@ public class NIOBuffersInterop
       }
     }
     return 0;
+  }
+
+  /**
+   * This method creates a list of ByteBuffers that cover sequentially a given
+   * ContiguousMemory region.
+   * @param pContiguousMemory
+   *          contiguous memory
+   * @return array of NIO byte buffers corresponding to given contiguous memory
+   *         region
+   */
+  public static ArrayList<ByteBuffer> getByteBuffersForContiguousMemory(ContiguousMemoryInterface pContiguousMemory)
+  {
+    return getByteBuffersForContiguousMemory(pContiguousMemory,
+            0,
+            pContiguousMemory.getSizeInBytes()
+            );
   }
 
   /**
