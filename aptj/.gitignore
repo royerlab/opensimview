@@ -1,0 +1,12 @@
+/bin/
+.gradle/
+.classpath
+.project
+.settings/
+/build/
+<<<<<<< Updated upstream
+/.idea/
+*.iml
+=======
+/out/
+>>>>>>> Stashed changes

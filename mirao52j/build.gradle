@@ -1,34 +1,9 @@
-plugins {
-    id "com.jfrog.bintray" version "1.8.3"
-    id "com.diffplug.gradle.spotless" version "3.1.0"
-    id "de.undercouch.download" version "3.4.3"
-}
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-
-project.ext.masterfile = (new File(projectDir,'/gradle/master.gradle')).getAbsolutePath()
-
-// Attempts to download master gradle file
-if(!hasProperty('do_not_update_master_file'))
-try {
-    download {
-        src 'https://github.com/ClearControl/master/blob/master/master.gradle?raw=true'
-        dest project.ext.masterfile
-        overwrite true
-        onlyIfModified true
-        tempAndMove true
-    }
-}
-catch (Throwable e)
-{
-}
-
-apply from: project.ext.masterfile
 
 //***********************************************************************************
 // JAVA CODE BUILDING
@@ -60,8 +35,8 @@ sourceSets
 }
 
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+//sourceCompatibility = 1.8
+//targetCompatibility = 1.8
 
 
 test
@@ -123,8 +98,8 @@ if (JavaVersion.current().isJava8Compatible()) {
 //***********************************************************************************
 // PUBLISHING
 
-group   = project.ext.groupname
-version = project.ext.versionsMap[project.name]
+group   = "net.clearcontrol"
+version = "1.0.1"
 
 artifacts
 {

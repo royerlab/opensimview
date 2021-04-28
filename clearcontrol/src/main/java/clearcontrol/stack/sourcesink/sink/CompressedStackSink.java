@@ -1,30 +1,19 @@
 package clearcontrol.stack.sourcesink.sink;
 
-import clearcontrol.core.units.OrderOfMagnitude;
 import clearcontrol.stack.StackInterface;
-import clearcontrol.stack.StackRequest;
-import clearcontrol.stack.metadata.StackMetaData;
-import clearcontrol.stack.sourcesink.FileStackBase;
-import clearcontrol.stack.sourcesink.FileStackInterface;
 import clearcontrol.stack.sourcesink.StackSinkSourceInterface;
-import com.bc.zarr.ArrayParams;
-import com.bc.zarr.DataType;
-import com.bc.zarr.ZarrArray;
+import com.sun.jna.NativeLong;
 import coremem.fragmented.FragmentedMemoryInterface;
-import coremem.interop.NIOBuffersInterop;
+import coremem.interop.JNAInterop;
 import coremem.offheap.OffHeapMemory;
+import org.blosc.IBloscDll;
 import org.blosc.JBlosc;
 import org.blosc.PrimitiveSizes;
 import org.blosc.Shuffle;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Raw file stack sink
@@ -56,32 +45,39 @@ public class CompressedStackSink extends  RawFileStackSink
     FragmentedMemoryInterface lFragmentedMemory =
                                                 pStack.getFragmentedMemory();
 
-    OffHeapMemory lContiguousMemory = lFragmentedMemory.makeConsolidatedCopy();
-    ArrayList<ByteBuffer> lBuffersForContiguousMemory = NIOBuffersInterop.getByteBuffersForContiguousMemory(lContiguousMemory);
+    OffHeapMemory lRawBuffer = lFragmentedMemory.makeConsolidatedCopy();
+    OffHeapMemory lCompressedBuffer = OffHeapMemory.allocateBytes(lRawBuffer.getSizeInBytes() + JBlosc.OVERHEAD);
 
-    if (lBuffersForContiguousMemory.size()>1)
-      throw new RuntimeException("Buffer too large to be compressed!");
 
-    ByteBuffer lRawBuffer = lBuffersForContiguousMemory.get(0);
-    ByteBuffer lCompressedBuffer = ByteBuffer.allocateDirect(lRawBuffer.limit() + JBlosc.OVERHEAD);
 
-    JBlosc jb = new JBlosc();
-    jb.compressCtx(
+    //		int w = IBloscDll.blosc_compress_ctx(
+    //		compressionLevel,
+    //		shuffleType,
+    //		new NativeLong(typeSize)
+    //	    new NativeLong(srcLength),
+    //	    src,
+    //	    dest,
+    //	    new NativeLong(destLength),
+    //	    compressorName,
+    //		new NativeLong(blockSize),
+    //		numThreads);
+
+    long lCompressedBufferLength =IBloscDll.blosc_compress_ctx(
             3,
             Shuffle.BYTE_SHUFFLE,
-            PrimitiveSizes.SHORT_FIELD_SIZE,
-            lRawBuffer,
-            lRawBuffer.limit(),
-            lCompressedBuffer,
-            lCompressedBuffer.limit(),
+            new NativeLong(PrimitiveSizes.SHORT_FIELD_SIZE),
+            new NativeLong(lRawBuffer.getSizeInBytes()),
+            JNAInterop.getJNAPointer(lRawBuffer),
+            JNAInterop.getJNAPointer(lCompressedBuffer),
+            new NativeLong(lCompressedBuffer.getSizeInBytes()),
             "zstd",
-            0,
-            4);
-    long lCompressedBufferLength = lCompressedBuffer.position();
+            new NativeLong(0),
+            Runtime.getRuntime().availableProcessors()/2);
 
-    OffHeapMemory lCompressedContiguousMemory = NIOBuffersInterop.getContiguousMemoryFrom(lCompressedBuffer, lCompressedBufferLength);
+    System.out.println("Raw        size: "+lRawBuffer.getSizeInBytes());
+    System.out.println("Compressed size: "+lCompressedBufferLength);
 
-    lCompressedContiguousMemory.writeBytesToFileChannel(lBinaryFileChannel, 0);
+    lCompressedBuffer.writeBytesToFileChannel(lBinaryFileChannel, 0);
 
     lBinaryFileChannel.force(false);
     lBinaryFileChannel.close();

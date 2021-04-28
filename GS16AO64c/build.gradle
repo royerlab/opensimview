@@ -1,0 +1,85 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+
+//***********************************************************************************
+// JAVA CODE BUILDING
+
+processResources {
+    from ('src/main/resources') {
+        include '**/*.lib'
+        include '**/*.dll'
+    }
+}
+
+sourceSets
+{
+    main
+    {
+        java
+        { srcDir 'src/main/java' }
+        resources
+        { srcDir 'src/main/resources' }
+    }
+    test
+    {
+        java
+        { srcDir 'src/test/java' }
+        resources
+        { srcDir 'src/test/resources' }
+    }
+}
+
+//sourceCompatibility = 1.8
+//targetCompatibility = 1.8
+
+test {
+    useJUnitPlatform()
+
+    testLogging.showStandardStreams = true
+    testLogging
+            { events "passed", "skipped", "failed" }
+
+    exclude '**/demo/**'
+    exclude '**/run/**'
+
+    maxHeapSize = "4G"
+}
+
+dependencies {
+
+    // Coremem:
+    compile('net.clearcontrol:coremem:0.4.7')
+
+    // JUnit:
+    compile group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.2.0'
+    compile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
+    compile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: '5.2.0'
+}
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+
+    maven {
+        url "http://oss.sonatype.org/content/groups/public"
+    }
+}
+
+// PUBLISHING
+archivesBaseName = 'GS16AO64c'
+group = 'net.clearcontrol'
+version = '0.0.5'
+description = 'General Standards 64 channel signal generator'
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+        }
+    }
+}
+

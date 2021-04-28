@@ -1,9 +1,3 @@
-plugins {
-	id "com.jfrog.bintray" version "1.8.3"
-	id "com.diffplug.gradle.spotless" version "3.1.0"
-	id "de.undercouch.download" version "3.4.3"
-}
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -32,15 +26,6 @@ sourceSets
 	}
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-compileJava {
-    options.compilerArgs << '-XDignore.symbol.file -Xlint:-deprecation'
-    options.fork = true // may not needed on 1.8
-    options.forkOptions.executable = 'javac' // may not needed on 1.8
-    options.deprecation = false
-}
 
 test
 {
@@ -76,6 +61,7 @@ dependencies
 
 repositories
 {
+	mavenLocal()
 	mavenCentral()
 	maven
 	{ url "http://oss.sonatype.org/content/groups/public" }
@@ -103,7 +89,7 @@ if (JavaVersion.current().isJava8Compatible()) {
 //***********************************************************************************
 // PUBLISHING
 
-group   = "net.clearcontrol:coremem"
+group   = "net.clearcontrol"
 version = "0.4.7"
 
 

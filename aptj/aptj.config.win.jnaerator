@@ -1,0 +1,20 @@
+-library APT
+#-beautifyNames
+-f
+-o src/
+-rootPackage src
+-package aptj.bindings
+-arch win64 
+-libFile lib/apt/APT.lib 
+-dependencies ftd2xx.dll,MG17Utils.dll,MG17Comms.dll,MG17UIThread.dll,MG17Core.dll
+-runtime BridJ
+-mode Directory
+lib/apt/APTAPI.fixed.h
+
+
+#GdiPlus.dll
+ 
+
+
+
+  

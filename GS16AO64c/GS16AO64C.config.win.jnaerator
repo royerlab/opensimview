@@ -1,0 +1,20 @@
+-library AO64_64b_Driver_C
+#-beautifyNames
+-f
+-o src/
+-rootPackage src
+-package bindings
+-arch win64
+-libFile DriverFiles/66-16AO64_64bit/AO64_64b_Driver_C.lib
+-dependencies DriverFiles/66-16AO64/CioColor.h DriverFiles/66-16AO64/Tools.h DriverFiles/66-16AO64_64bit/GS64ebApi.dll
+-runtime JNA
+-mode Directory
+DriverFiles/66-16AO64/AO64eintface.h
+
+
+#GdiPlus.dll
+ 
+
+
+
+  

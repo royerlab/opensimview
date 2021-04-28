@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,14 +29,14 @@ import static org.junit.Assert.assertTrue;
 public class CompressedFileStackTests
 {
 
-  private static final long cDiv = 4;
+  private static final long cDiv = 1;
 
   private static final long cSizeX = 2048 / cDiv;
   private static final long cSizeY = 2048 / cDiv;
-  private static final long cSizeZ = 512 / cDiv;
+  private static final long cSizeZ = 410 / cDiv;
   private static final int cBytesPerVoxel = 2;
 
-  private static final int cNumberOfStacks = 2;
+  private static final int cNumberOfStacks = 6;
   private static final int cMaximalNumberOfAvailableStacks = 20;
 
   /**
@@ -89,21 +90,26 @@ public class CompressedFileStackTests
 
       ContiguousBuffer lBuffer =
                                ContiguousBuffer.wrap(lContiguousMemory);
+      Random rand = new Random();
       int i = 0;
       while (lBuffer.hasRemainingByte())
       {
-        lBuffer.writeByte((byte) i++);
+        lBuffer.writeByte((byte) ((i+1)^(i*i)));
+        //lBuffer.writeByte((byte) (rand.nextInt()));
+        //(i+1)^(i*i)
+        i++;
       } /**/
 
       System.out.println("done generating data...");
 
       long lStart = System.nanoTime();
-      assertTrue(lLocalFileStackSink.appendStack(lStack));
+      for (int j=0; j<cNumberOfStacks; j++)
+        assertTrue(lLocalFileStackSink.appendStack(lStack));
       long lStop = System.nanoTime();
 
-      double lElapsedTimeInSeconds = (lStop - lStart) * 1e-9;
+      double lElapsedTimeInSeconds = ((lStop - lStart) * 1e-9) /cNumberOfStacks ;
 
-      double lSpeed = (lStack.getSizeInBytes() * 1e-6)
+      double lSpeed = ( lStack.getSizeInBytes() * 1e-6)
                       / lElapsedTimeInSeconds;
 
       System.out.format("speed: %g MB/s \n", lSpeed);

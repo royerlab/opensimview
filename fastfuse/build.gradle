@@ -1,8 +1,3 @@
-plugins {
-    id "com.jfrog.bintray" version "1.8.3"
-    id "com.diffplug.gradle.spotless" version "3.1.0"
-}
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -33,8 +28,8 @@ sourceSets
 }
 
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+//sourceCompatibility = 1.8
+//targetCompatibility = 1.8
 
 test 
 {
@@ -83,11 +78,6 @@ repositories
     maven { url "http://oss.sonatype.org/content/groups/public"} 
     maven { url "http://mvnrepository.com/artifact" }
 
-    // ClearControl:
-    maven { url "http://dl.bintray.com/royerlab/RL"  }
-    maven { url "http://dl.bintray.com/clearcontrol/ClearControl" }
-
-
     // ImageJ repo:
     maven {url  "http://maven.imagej.net/content/repositories/releases/"}
     
@@ -130,27 +120,3 @@ publishing {
         }
     }
 }
-
-//bintray {
-//
-//
-//    user = bintray_user
-//    key =  bintray_key
-//
-//    publications = ['MyPublication']
-//    publish = true
-//    pkg {
-//        userOrg = 'royerlab'
-//        repo = 'RL'
-//        name = 'fastfuse'
-//        licenses = ['Apache-2.0']
-//        vcsUrl = 'https://github.com/royerlab/fastfuse.git'
-//        labels = ['ClearControl', 'fastfuse']
-//        publicDownloadNumbers = true
-//        version {
-//            name = project.version
-//            desc = project.description
-//            released  = new Date()
-//        }
-//    }
-//}

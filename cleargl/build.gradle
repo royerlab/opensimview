@@ -1,21 +1,8 @@
-buildscript {
-  repositories {
-    mavenCentral()
-  }
-}
-
-plugins {
-    id "com.jfrog.bintray" version "1.2"
-    id "us.kirchmeier.capsule" version "1.0.2"
-    id "com.diffplug.gradle.spotless" version "3.1.0"
-}
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
-apply plugin: 'com.diffplug.gradle.spotless'
 
 
 //***********************************************************************************
@@ -40,8 +27,8 @@ sourceSets
 }
 
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+//sourceCompatibility = 1.8
+//targetCompatibility = 1.8
 
 test
 {
@@ -74,6 +61,7 @@ dependencies
 
 repositories
 {
+	mavenLocal()
 	mavenCentral()
 	maven
 	{ url "http://oss.sonatype.org/content/groups/public" }
@@ -99,54 +87,14 @@ if (JavaVersion.current().isJava8Compatible()) {
 	}
 }
 
-//***********************************************************************************
-// TEST PROG
-
-task TestProgFatJar(type:Jar) {
-	archiveName = "TestProg.jar"
-	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-	with jar
-
-	manifest {
-		attributes("Class-Path": ".", 'Main-Class': 'cleargl.testprog.JOGLTestProgram')
-	}
-}
 
 
-
-
-//***********************************************************************************
-// BINTRAY PUBLISHING
-
-def getMavenPOMVersion = {
-    File mavenPOM = new File("${project.projectDir}/pom.xml")
-    def xmlSlurper = new XmlSlurper()
-    def output = xmlSlurper.parse(mavenPOM)
-    return output."version"
-}
-/*
- * Gets the version name from the latest Git tag
- */
-def getVersionName = { ->
-		def stdout = new ByteArrayOutputStream()
-		exec {
-				commandLine 'git', 'describe', '--tags'
-				standardOutput = stdout
-		}
-		return stdout.toString().trim()
-}
 
 group = 'net.clearcontrol'
 archivesBaseName = 'cleargl'
-//version = '2.0.1-SNAPSHOT'
+version = '2.2.1'
 
-if(project.hasProperty('releasebuild')) {
-    version = getMavenPOMVersion()
-} else {
-    version = getMavenPOMVersion()
-}
 
-println("Building ClearGL ${version}")
 
 artifacts
 {
@@ -163,42 +111,4 @@ publishing {
 	}
 }
 
-apply from: 'gradle/bintrayUpload.gradle'
-
-//***********************************************************************************
-// GIT HOOKS:
-
-apply from: 'gradle/install-git-hooks.gradle'
-
-
-//***********************************************************************************
-// SPOTLESS:
-
-spotless {
-    java {
-        //licenseHeader '/* Licensed under Apache-2.0 */' // License header
- 
-        importOrder(['java', 'javax', 'com', 'org'])
-
-        removeUnusedImports() // removes any unused imports
-
-        eclipseFormatFile 'cleargl-eclipse-formatter.xml'  
-    }
-}
-
-//***********************************************************************************
-// UPLOAD TO FIJI REPO:
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "http://maven.imagej.net/content/repositories/releases") {
-                authentication(userName: "$System.env.CI_DEPLOY_USERNAME", password: "$System.env.CI_DEPLOY_PASSWORD")
-            }
-            snapshotRepository(url: "http://maven.imagej.net/content/repositories/snapshots") {
-                authentication(userName: "$System.env.CI_DEPLOY_USERNAME", password: "$System.env.CI_DEPLOY_PASSWORD")
-            }
-        }
-    }
-}
 

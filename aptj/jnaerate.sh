@@ -1,0 +1,1 @@
+java -jar ./tools/jnaerator.jar aptj.config.win.jnaerator
