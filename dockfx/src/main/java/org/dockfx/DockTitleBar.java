@@ -620,7 +620,7 @@ public class DockTitleBar extends HBox
       dragNodes.clear();
 
       // Remove temporary event handler for bug mentioned above.
-      DockPane dockPane = this.getDockNode().getPrevDockPane();
+      DockPane dockPane = this.getDockNode().getDockPane();
       if (dockPane != null)
       {
         dockPane.removeEventFilter(MouseEvent.MOUSE_DRAGGED, this);

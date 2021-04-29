@@ -438,16 +438,21 @@ public class TreePanel extends DockNode
     removeNoChildNode();
   }
 
-  public void removeNoChildNode()
+  private void removeNoChildNode()
   {
+    final List<TreeItem> lRemoveItemList = new ArrayList<>();
+
     tree.getRoot().getChildren().forEach(c -> {
-      if (c.getChildren().size() == 1) {
-      	  TreeNode n = c.getChildren().get( 0 ).getValue();
-		  c.getValue().setName( n.getName() );
-		  c.getValue().setNode( n.getNode() );
-		  c.getChildren().remove( 0 );
-	  }
+      if (c.getChildren().size() == 0)
+      {
+        lRemoveItemList.add(c);
+        subNodes.remove(c.getValue().getName());
+      }
     });
+
+    tree.getRoot()
+        .getChildren()
+        .removeIf(c -> lRemoveItemList.contains(c));
   }
 
   private class TreeNode
@@ -518,7 +523,7 @@ public class TreePanel extends DockNode
      * @param node
      *          the node
      */
-    public void setNode(HalcyonNodeInterface node)
+    public void setNode(HalcyonNode node)
     {
       this.node = node;
     }

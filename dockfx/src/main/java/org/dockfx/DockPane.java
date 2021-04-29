@@ -27,7 +27,6 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +44,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -53,7 +51,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Popup;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -1048,7 +1045,7 @@ public class DockPane extends StackPane
 
     try (
         XMLDecoder decoder =
-                           new XMLDecoder(new BufferedInputStream(new FileInputStream(filePath)), Thread.currentThread().getContextClassLoader()))
+                           new XMLDecoder(new BufferedInputStream(new FileInputStream(filePath))))
     {
       contents =
                (HashMap<String, ContentHolder>) decoder.readObject();
@@ -1129,14 +1126,12 @@ public class DockPane extends StackPane
     // the preference file,
     // The below logic prevents from the window hidden in outside the current
     // screen
-	Rectangle2D screen = Screen.getPrimary().getBounds();
-
-    if (windowPosition[0] > screen.getMaxX())
+    if (windowPosition[0] > currentStage.getWidth())
     {
       windowPosition[0] = currentStage.getX();
     }
 
-    if (windowPosition[1] > screen.getMaxY())
+    if (windowPosition[1] > currentStage.getHeight())
     {
       windowPosition[1] = currentStage.getY();
     }
@@ -1277,7 +1272,6 @@ public class DockPane extends StackPane
     {
       ContentTabPane tabPane = new ContentTabPane();
 
-      List<DockNode> dockNodeList = new ArrayList<>();
       for (Object item : holder.getChildren())
       {
         if (item instanceof String)
@@ -1296,7 +1290,8 @@ public class DockPane extends StackPane
               DockNode newNode = delayOpenHandler.open((String) item);
               if (newNode != null)
               {
-              	dockNodeList.add( newNode );
+                newNode.dockedProperty().set(true);
+                tabPane.addDockNodeTab(new DockNodeTab(newNode));
               }
             }
             else
@@ -1304,12 +1299,6 @@ public class DockPane extends StackPane
           }
         }
       }
-
-      for (DockNode n : dockNodeList)
-	  {
-		n.dockedProperty().set(true);
-		tabPane.addDockNodeTab(new DockNodeTab(n));
-	  }
 
       if (parent != null)
         tabPane.setContentParent(parent);

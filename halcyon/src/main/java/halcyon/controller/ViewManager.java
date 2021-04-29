@@ -40,6 +40,7 @@ import halcyon.model.node.HalcyonNodeInterface;
 import halcyon.model.node.HalcyonOtherNode;
 import halcyon.view.HalcyonPanel;
 import halcyon.view.TreePanel;
+import halcyon.view.console.StdOutputCaptureConsole;
 
 import org.dockfx.ContentHolder;
 import org.dockfx.DockNode;
@@ -65,6 +66,8 @@ public class ViewManager
   private final DockPane mDockPane;
 
   private final TreePanel mTreePanel;
+
+  private final StdOutputCaptureConsole mStdOutputCaptureConsole;
 
   private final Menu mViewMenu;
 
@@ -118,11 +121,16 @@ public class ViewManager
 
     mAppIconPath = pAppIconPath;
 
+    mStdOutputCaptureConsole = new StdOutputCaptureConsole();
+    mStdOutputCaptureConsole.setPrefSize(600, 200);
+    mStdOutputCaptureConsole.setClosable(false);
+    pConsoles.add(mStdOutputCaptureConsole);
+
     mControlNodeMap.put("Console", new ObservableCollection<>());
     mControlNodeMap.put("Toolbar", new ObservableCollection<>());
 
-    dockNodes("Console", DockPos.RIGHT, pConsoles, false);
-    dockNodes("Toolbar", DockPos.TOP, pToolbars, true);
+    dockNodes("Console", DockPos.RIGHT, pConsoles);
+    dockNodes("Toolbar", DockPos.TOP, pToolbars);
 
     SplitPane split = (SplitPane) pDockPane.getChildren().get(0);
     split.setDividerPositions(0.3);
@@ -191,13 +199,12 @@ public class ViewManager
 
   private void dockNodes(String pMenu,
                          DockPos pPosition,
-                         ObservableCollection<DockNode> pControlNodes, boolean visible)
+                         ObservableCollection<DockNode> pControlNodes)
   {
     for (DockNode lDockNode : pControlNodes.getList())
     {
-      	dockNode(pMenu, lDockNode, pPosition);
-      	if(!visible) lDockNode.close();
-      	addViewMenuItem(pMenu, lDockNode);
+      dockNode(pMenu, lDockNode, pPosition);
+      addViewMenuItem(pMenu, lDockNode);
     }
 
     if (pControlNodes.getCount() > 0)
@@ -327,9 +334,11 @@ public class ViewManager
     if (deviceTabsDock != null)
     {
       page.dock(mDockPane, DockPos.CENTER, deviceTabsDock);
-    } else {
-      page.dock(mDockPane, DockPos.RIGHT, mTreePanel.getParent());
-	}
+    }
+    else
+    {
+      page.dock(mDockPane, DockPos.TOP, mStdOutputCaptureConsole);
+    }
 
     mPages.add(page);
   }
@@ -363,9 +372,11 @@ public class ViewManager
     if (deviceTabsDock != null)
     {
       page.dock(mDockPane, DockPos.CENTER, deviceTabsDock);
-    } else {
-	  page.dock(mDockPane, DockPos.RIGHT, mTreePanel.getParent());
-	}
+    }
+    else
+    {
+      page.dock(mDockPane, DockPos.TOP, mStdOutputCaptureConsole);
+    }
 
     mPages.add(page);
 

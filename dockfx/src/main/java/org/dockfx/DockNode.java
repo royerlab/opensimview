@@ -1124,11 +1124,6 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
     return lastDockSibling;
   }
 
-  private DockPane prevDockPane;
-
-  public DockPane getPrevDockPane() {
-  	return prevDockPane;
-  }
   /**
    * Dock this node into a dock pane.
    * 
@@ -1168,7 +1163,6 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
     {
       setFloating(false);
     }
-    this.prevDockPane = this.dockPane;
     this.dockPane = dockPane;
     this.dockedProperty.set(true);
     this.closedProperty.set(false);
