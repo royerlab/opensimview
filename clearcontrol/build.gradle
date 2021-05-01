@@ -165,8 +165,7 @@ dependencies
     // JZarr:
     compile ('com.bc.zarr:jzarr:0.3.3-SNAPSHOT')
 
-    // JZarr:
-    compile ('org.lasersonlab:jblosc:1.0.1')
+
 
     // Other:
     //compile 'com.github.rwl:jtransforms:2.4.0'

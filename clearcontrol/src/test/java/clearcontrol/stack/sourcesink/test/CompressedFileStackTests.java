@@ -36,7 +36,7 @@ public class CompressedFileStackTests
   private static final long cSizeZ = 410 / cDiv;
   private static final int cBytesPerVoxel = 2;
 
-  private static final int cNumberOfStacks = 6;
+  private static final int cNumberOfStacks = 2;
   private static final int cMaximalNumberOfAvailableStacks = 20;
 
   /**
@@ -225,12 +225,11 @@ public class CompressedFileStackTests
       assertEquals(cNumberOfStacks,
                    lLocalFileStackSource.getNumberOfStacks());
 
-      assertEquals(cSizeX,
-                   lLocalFileStackSource.getStack(0).getWidth());
-      assertEquals(cSizeY,
-                   lLocalFileStackSource.getStack(0).getHeight());
-      assertEquals(cSizeZ,
-                   lLocalFileStackSource.getStack(0).getDepth());
+      StackInterface lStack = lLocalFileStackSource.getStack(0);
+
+      assertEquals(cSizeX, lStack.getWidth());
+      assertEquals(cSizeY, lStack.getHeight());
+      assertEquals(cSizeZ, lStack.getDepth());
 
       lLocalFileStackSource.close();
     }

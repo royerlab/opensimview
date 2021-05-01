@@ -6,6 +6,9 @@ import clearcontrol.stack.StackRequest;
 import clearcontrol.stack.metadata.StackMetaData;
 import clearcontrol.stack.sourcesink.FileStackBase;
 import clearcontrol.stack.sourcesink.StackSinkSourceInterface;
+import coremem.buffers.CompressedBuffer;
+import coremem.buffers.DecompressedBuffer;
+import coremem.offheap.OffHeapMemory;
 import coremem.recycling.RecyclerInterface;
 
 import java.io.File;
@@ -23,6 +26,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class CompressedStackSource extends RawFileStackSource
 {
+
+  OffHeapMemory mCompressedData;
 
   /**
    * Instantiates a compressed file stack source
@@ -67,16 +72,16 @@ public class CompressedStackSource extends RawFileStackSource
 
       FileChannel lBinnaryFileChannel = getFileChannel(lFile, true);
 
-      if (lStack.getContiguousMemory() != null)
-        lStack.getContiguousMemory()
-              .readBytesFromFileChannel(lBinnaryFileChannel,
-                                        0,
-                                        lStack.getSizeInBytes());
-      else
-        lStack.getFragmentedMemory()
-              .readBytesFromFileChannel(lBinnaryFileChannel,
-                                        0,
-                                        lStack.getSizeInBytes());
+      long lNumCompressedBytes = lFile.length();
+
+      if (mCompressedData == null || mCompressedData.getSizeInBytes()!=lNumCompressedBytes)
+        mCompressedData = OffHeapMemory.allocateBytes(lNumCompressedBytes);
+
+      mCompressedData.readBytesFromFileChannel(lBinnaryFileChannel,0, lNumCompressedBytes);
+
+      DecompressedBuffer lDecompressedBuffer = new DecompressedBuffer(lStack.getContiguousMemory());
+      lDecompressedBuffer.writeDecompressedMemory(mCompressedData);
+
 
       final double lTimeStampInSeconds =
                                        getStackTimeStampInSeconds(pChannel,

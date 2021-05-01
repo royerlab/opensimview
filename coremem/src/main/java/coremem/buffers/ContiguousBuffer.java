@@ -98,10 +98,29 @@ public class ContiguousBuffer implements SizedInBytes
     return mContiguousMemoryInterface;
   }
 
+  /**
+   * Returns the ContiguousMemoryInterface corresponding to the remaining part of the buffer.
+   *
+   * @return contiguous memory
+   */
+  public ContiguousMemoryInterface getRemainingContiguousMemory()
+  {
+    return mContiguousMemoryInterface.subRegion(getCurrentRelativePosition(), remainingBytes());
+  }
+
   @Override
   public long getSizeInBytes()
   {
     return mContiguousMemoryInterface.getSizeInBytes();
+  }
+
+  /**
+   * Returns the position in bytes between the start of the buffer and the current position.
+   * @return relative position.
+   */
+  public long getCurrentRelativePosition()
+  {
+    return mPosition - mFirstValidPosition;
   }
 
   /**

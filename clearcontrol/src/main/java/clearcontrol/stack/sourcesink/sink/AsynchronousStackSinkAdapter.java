@@ -9,7 +9,7 @@ import clearcontrol.stack.StackInterface;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * Asynchronous stack sink adapter. This sink adapter can wrap anotehr sink an
+ * Asynchronous stack sink adapter. This sink adapter can wrap another sink an
  * provides asynchronous decoupling via an elastic queue.
  *
  * @author royer

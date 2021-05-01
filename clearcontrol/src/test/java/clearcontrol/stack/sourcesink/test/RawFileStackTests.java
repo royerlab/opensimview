@@ -27,7 +27,7 @@ import org.junit.Test;
 public class RawFileStackTests
 {
 
-  private static final long cDiv = 4;
+  private static final long cDiv = 2;
 
   private static final long cSizeX = 2048 / cDiv;
   private static final long cSizeY = 2048 / cDiv;
