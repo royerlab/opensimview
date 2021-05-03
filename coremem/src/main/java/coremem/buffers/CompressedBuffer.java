@@ -69,7 +69,7 @@ public class CompressedBuffer extends ContiguousBuffer
     long lBufferSize = pContiguousMemory.getSizeInBytes();
     if (lBufferSize>cMaxBufferSize)
     {
-      long lNumberOfChunks = (long) Math.max(4L, Math.ceil(lBufferSize/cMaxBufferSize));
+      long lNumberOfChunks = (long) Math.max(2L, Math.ceil(lBufferSize/cMaxBufferSize));
       FragmentedMemory lChunks = FragmentedMemory.split(pContiguousMemory, lNumberOfChunks);
       for (ContiguousMemoryInterface lChunk : lChunks)
       {

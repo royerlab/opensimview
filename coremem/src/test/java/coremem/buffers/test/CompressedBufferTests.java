@@ -85,8 +85,8 @@ public class CompressedBufferTests
     {
       byte lValue = (byte)((int)(i+1L));
       lRawData.setByte(i, lValue);
-      if (i%(1<<21)==0)
-        System.out.println("index: "+i+" value: "+lValue);
+//      if (i%(1<<21)==0)
+//        System.out.println("index: "+i+" value: "+lValue);
     }
 
     System.out.println("    CompressedBuffer lCompressedBuffer = new CompressedBuffer(OffHeapMemory.allocateBytes(cMaxCompressedData));");
@@ -104,13 +104,17 @@ public class CompressedBufferTests
 
     ContiguousMemoryInterface lDecompressedRawData = lDecompressedBuffer.getDecompressedContiguousMemory();
 
+    assert lDecompressedRawData.getSizeInBytes() == lRawData.getSizeInBytes();
+
+    for (long i=0; i<256; i++)
+      System.out.println("index: "+i+" raw value: "+lRawData.getByte(i)+ " decompressed value: "+lDecompressedRawData.getByte(i));
+
     System.out.println("    for (int i=0; i<cRawDataLength; i++)  getByte ");
     for (long i=0; i<cRawDataLength; i++)
     {
-      System.out.println("index: "+i+" raw value: "+lRawData.getByte(i)+ " decompressed value: "+lDecompressedRawData.getByte(i));
-      assert(lRawData.getByte(i) == lDecompressedRawData.getByte(i));
-      //if (i%(1<<21)==0 || lRawData.getByte(i) != lDecompressedRawData.getByte(i))
-
+      if (lRawData.getByte(i) != lDecompressedRawData.getByte(i))
+        System.out.println("index: " + i + " raw value: " + lRawData.getByte(i) + " decompressed value: " + lDecompressedRawData.getByte(i));
+      assert (lRawData.getByte(i) == lDecompressedRawData.getByte(i));
     }
 
     System.out.println("assert lCompressedMemory.getSizeInBytes() < lRawData.getSizeInBytes();");

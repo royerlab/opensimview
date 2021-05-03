@@ -77,15 +77,18 @@ public class DecompressedBuffer extends ContiguousBuffer
     if (this.remainingBytes() < lNumberOfDecompressedBytes.getValue().longValue())
       throw new CoreMemException("Too little space remaining on decompression buffer!");
 
+    long lDecompressedSize = lNumberOfDecompressedBytes.getValue().longValue();
+    long lCompressedSize = lNumberOfCompressedBytes.getValue().longValue();
+
     IBloscDll.blosc_decompress_ctx(
               JNAInterop.getJNAPointer(pContiguousMemory),
               JNAInterop.getJNAPointer(getRemainingContiguousMemory()),
-              new NativeLong(remainingBytes()),
+              new NativeLong(lDecompressedSize),
               mNumThreads
               );
 
-    skipBytes(lNumberOfDecompressedBytes.getValue().longValue());
+    skipBytes(lDecompressedSize);
 
-    return lNumberOfCompressedBytes.getValue().longValue();
+    return lCompressedSize;
   }
 }
