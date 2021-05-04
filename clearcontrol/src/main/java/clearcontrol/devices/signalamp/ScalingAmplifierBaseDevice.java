@@ -3,15 +3,10 @@ package clearcontrol.devices.signalamp;
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.core.variable.Variable;
 
-public class ScalingAmplifierBaseDevice extends VirtualDevice
-                                        implements
-                                        ScalingAmplifierDeviceInterface
+public class ScalingAmplifierBaseDevice extends VirtualDevice implements ScalingAmplifierDeviceInterface
 {
 
-  protected double mMinGain = Double.NEGATIVE_INFINITY,
-      mMaxGain = Double.POSITIVE_INFINITY,
-      mMinOffset = Double.NEGATIVE_INFINITY,
-      mMaxOffset = Double.POSITIVE_INFINITY;
+  protected double mMinGain = Double.NEGATIVE_INFINITY, mMaxGain = Double.POSITIVE_INFINITY, mMinOffset = Double.NEGATIVE_INFINITY, mMaxOffset = Double.POSITIVE_INFINITY;
 
   protected Variable<Number> mGainVariable, mOffsetVariable;
 

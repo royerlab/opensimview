@@ -1,14 +1,13 @@
 package clearcontrol.microscope.adaptive.gui.demo;
 
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
 import clearcontrol.microscope.adaptive.AdaptiveEngine;
 import clearcontrol.microscope.adaptive.gui.AdaptiveEngineToolbar;
 import clearcontrol.microscope.adaptive.test.AdaptationTestModule;
 import clearcontrol.microscope.adaptive.test.TestState;
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * Simulation manager demo
@@ -27,16 +26,13 @@ public class AdaptiveEngineToolBarDemo extends Application
     stage.setTitle(AdaptiveEngineToolBarDemo.class.getSimpleName());
     // scene.setFill(Color.BLACK);
 
-    AdaptiveEngine<TestState> lAdaptator =
-                                         new AdaptiveEngine<TestState>(null,
-                                                                       new TestState("initial state"));
+    AdaptiveEngine<TestState> lAdaptator = new AdaptiveEngine<TestState>(null, new TestState("initial state"));
 
     lAdaptator.add(new AdaptationTestModule("A", 2, 2, 2));
     lAdaptator.add(new AdaptationTestModule("B", 3));
     // lAdaptator.add(new AdaptationTestModule("C", 2, 3));
 
-    AdaptiveEngineToolbar lAdaptorToolBar =
-                                          new AdaptiveEngineToolbar(lAdaptator);
+    AdaptiveEngineToolbar lAdaptorToolBar = new AdaptiveEngineToolbar(lAdaptator);
 
     root.getChildren().add(lAdaptorToolBar);
 
@@ -45,9 +41,8 @@ public class AdaptiveEngineToolBarDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

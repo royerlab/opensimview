@@ -8,9 +8,7 @@ import clearcontrol.devices.lasers.devices.omicron.adapters.protocol.ProtocolOmi
  *
  * @author royer
  */
-public class SetOperatingModeAdapter extends OmicronAdapter<Integer>
-                                     implements
-                                     SerialTextDeviceAdapter<Integer>
+public class SetOperatingModeAdapter extends OmicronAdapter<Integer> implements SerialTextDeviceAdapter<Integer>
 {
 
   @Override
@@ -26,19 +24,13 @@ public class SetOperatingModeAdapter extends OmicronAdapter<Integer>
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(final Integer pOldValue,
-                                          final Integer pNewValue)
+  public byte[] getSetValueCommandMessage(final Integer pOldValue, final Integer pNewValue)
   {
     final int lOperatingMode = pNewValue;
-    final String lHexOperatingModeString =
-                                         ProtocolOmicron.toHexadecimalString(lOperatingMode,
-                                                                             1);
-    final String lSetOperatingModeCommandString =
-                                                String.format(ProtocolOmicron.cSetOperatingModeCommand,
-                                                              lHexOperatingModeString);
+    final String lHexOperatingModeString = ProtocolOmicron.toHexadecimalString(lOperatingMode, 1);
+    final String lSetOperatingModeCommandString = String.format(ProtocolOmicron.cSetOperatingModeCommand, lHexOperatingModeString);
 
-    final byte[] lSetOperatingModeCommandBytes =
-                                               lSetOperatingModeCommandString.getBytes();
+    final byte[] lSetOperatingModeCommandBytes = lSetOperatingModeCommandString.getBytes();
 
     return lSetOperatingModeCommandBytes;
   }

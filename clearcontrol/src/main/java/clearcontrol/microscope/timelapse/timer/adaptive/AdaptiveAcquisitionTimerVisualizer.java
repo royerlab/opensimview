@@ -29,42 +29,33 @@ public class AdaptiveAcquisitionTimerVisualizer
    */
   public void clear()
   {
-    if (mMultiPlotState != null)
-      mMultiPlotState.clear();
+    if (mMultiPlotState != null) mMultiPlotState.clear();
 
     if (mMultiPlotState == null)
     {
-      mMultiPlotState = MultiPlot.getMultiPlot(
-                                               this.getClass()
-                                                   .getSimpleName()
-                                               + "State");
+      mMultiPlotState = MultiPlot.getMultiPlot(this.getClass().getSimpleName() + "State");
       mMultiPlotState.setVisible(true);
     }
   }
 
   /**
    * Append a metric value at the given position.
-   * 
-   * @param pPosition
-   *          position
-   * @param pMetric
-   *          metric
+   *
+   * @param pPosition position
+   * @param pMetric   metric
    */
   public void append(int pPosition, double pMetric)
   {
-    PlotTab lPlot =
-                  mMultiPlotState.getPlot("AdaptiveAcquisitionTimerVisualizer");
+    PlotTab lPlot = mMultiPlotState.getPlot("AdaptiveAcquisitionTimerVisualizer");
     lPlot.setLinePlot("metric");
-    if (Double.isFinite(pMetric))
-      lPlot.addPoint("metric", pPosition, pMetric);
+    if (Double.isFinite(pMetric)) lPlot.addPoint("metric", pPosition, pMetric);
     lPlot.ensureUpToDate();
   }
 
   /**
    * Visualize stack
-   * 
-   * @param pStack
-   *          stack
+   *
+   * @param pStack stack
    */
   public void visualizeStack(StackInterface pStack)
   {

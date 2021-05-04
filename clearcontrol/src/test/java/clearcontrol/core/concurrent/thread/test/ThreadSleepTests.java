@@ -1,14 +1,13 @@
 package clearcontrol.core.concurrent.thread.test;
 
-import static org.junit.Assert.assertTrue;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.core.units.OrderOfMagnitude;
+import org.junit.Test;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.core.units.OrderOfMagnitude;
-
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 /**
  * ThreadSleep tests
@@ -20,14 +19,14 @@ public class ThreadSleepTests
 
   /**
    * Tests sleep method
-   * 
-   * @throws InterruptedException
-   *           N/A
+   *
+   * @throws InterruptedException N/A
    */
   @Test
   public void testSleep() throws InterruptedException
   {
-    Runnable lParasiteRunnable = () -> {
+    Runnable lParasiteRunnable = () ->
+    {
       long[] lDummyData = new long[10000];
       for (int i = 0; i < 10000; i++)
       {
@@ -50,11 +49,7 @@ public class ThreadSleepTests
       long lStop = System.nanoTime();
       long lElapsedTimeNanos = lStop - lStart;
 
-      double lRelativeError =
-                            OrderOfMagnitude.nano2milli((1.0
-                                                         * lSleepTimeNanos
-                                                         - lElapsedTimeNanos)
-                                                        / lSleepTimeNanos);
+      double lRelativeError = OrderOfMagnitude.nano2milli((1.0 * lSleepTimeNanos - lElapsedTimeNanos) / lSleepTimeNanos);
       // System.out.println("rel error=" + lRelativeError);
 
       assertTrue(Math.abs(lRelativeError) < 1E-3);
@@ -66,15 +61,15 @@ public class ThreadSleepTests
 
   /**
    * Tests sleepWhile method
-   * 
-   * @throws Exception
-   *           N/A
+   *
+   * @throws Exception N/A
    */
   @Test
   public void testSleepWhile() throws Exception
   {
 
-    Runnable lRunnable = () -> {
+    Runnable lRunnable = () ->
+    {
       ThreadSleep.sleep(250, TimeUnit.MILLISECONDS);
       flag = false;
     };
@@ -82,7 +77,8 @@ public class ThreadSleepTests
     Thread lOtherThread = new Thread(lRunnable);
     lOtherThread.setDaemon(true);
 
-    Callable<Boolean> lCondition = () -> {
+    Callable<Boolean> lCondition = () ->
+    {
       return flag;
     };
 
@@ -93,9 +89,7 @@ public class ThreadSleepTests
     ThreadSleep.sleepWhile(500, TimeUnit.MILLISECONDS, lCondition);
     long lStop = System.nanoTime();
 
-    long lElapsed =
-                  TimeUnit.MILLISECONDS.convert(lStop - lStart,
-                                                TimeUnit.NANOSECONDS);
+    long lElapsed = TimeUnit.MILLISECONDS.convert(lStop - lStart, TimeUnit.NANOSECONDS);
 
     assertTrue(lElapsed > 200 && lElapsed < 300);
   }

@@ -9,56 +9,34 @@ import clearcontrol.microscope.MicroscopeInterface;
  * Base class providing common fields and methods for all acquisition state
  * implementations
  *
- * @param <M>
- *          microscope type
- * @param <Q>
- *          queue type
+ * @param <M> microscope type
+ * @param <Q> queue type
  * @author royer
  */
-public abstract class AcquisitionStateBase<M extends MicroscopeInterface<Q>, Q extends QueueInterface>
-                                          extends
-                                          NameableWithChangeListener<AcquisitionStateInterface<M, Q>>
-                                          implements
-                                          AcquisitionStateInterface<M, Q>
+public abstract class AcquisitionStateBase<M extends MicroscopeInterface<Q>, Q extends QueueInterface> extends NameableWithChangeListener<AcquisitionStateInterface<M, Q>> implements AcquisitionStateInterface<M, Q>
 {
 
   private final M mMicroscope;
 
   protected Q mQueue;
 
-  private final BoundedVariable<Number> mExposureInSeconds =
-                                                           new BoundedVariable<Number>("ExposureInSeconds",
-                                                                                       0.020,
-                                                                                       0.0,
-                                                                                       100.0);
+  private final BoundedVariable<Number> mExposureInSeconds = new BoundedVariable<Number>("ExposureInSeconds", 0.020, 0.0, 100.0);
 
-  private final BoundedVariable<Number> mImageWidthVariable =
-                                                            new BoundedVariable<Number>("ImageWidth",
-                                                                                        0.0);
+  private final BoundedVariable<Number> mImageWidthVariable = new BoundedVariable<Number>("ImageWidth", 0.0);
 
-  private final BoundedVariable<Number> mImageHeightVariable =
-                                                             new BoundedVariable<Number>("mImageHeight",
-                                                                                         0.0);
+  private final BoundedVariable<Number> mImageHeightVariable = new BoundedVariable<Number>("mImageHeight", 0.0);
 
-  private final BoundedVariable<Number> mStageXVariable =
-                                                        new BoundedVariable<Number>("StageX",
-                                                                                    0.0);
+  private final BoundedVariable<Number> mStageXVariable = new BoundedVariable<Number>("StageX", 0.0);
 
-  private final BoundedVariable<Number> mStageYVariable =
-                                                        new BoundedVariable<Number>("StageY",
-                                                                                    0.0);
+  private final BoundedVariable<Number> mStageYVariable = new BoundedVariable<Number>("StageY", 0.0);
 
-  private final BoundedVariable<Number> mStageZVariable =
-                                                        new BoundedVariable<Number>("StageZ",
-                                                                                    0.0);
+  private final BoundedVariable<Number> mStageZVariable = new BoundedVariable<Number>("StageZ", 0.0);
 
   /**
    * Instantiates an acquisition state given a name and parent microscope
-   * 
-   * @param pName
-   *          name
-   * @param pMicroscope
-   *          parent microscope
+   *
+   * @param pName       name
+   * @param pMicroscope parent microscope
    */
   public AcquisitionStateBase(String pName, M pMicroscope)
   {
@@ -69,9 +47,8 @@ public abstract class AcquisitionStateBase<M extends MicroscopeInterface<Q>, Q e
   /**
    * Sets the settings of this acquisition state (exp, width, height, stage
    * x,y,z, ...) to be identical to the given state.
-   * 
-   * @param pAcquisitionState
-   *          state to copy settings from.
+   *
+   * @param pAcquisitionState state to copy settings from.
    */
   public void set(AcquisitionStateBase<M, Q> pAcquisitionState)
   {
@@ -86,7 +63,7 @@ public abstract class AcquisitionStateBase<M extends MicroscopeInterface<Q>, Q e
 
   /**
    * Returns the parent microscope
-   * 
+   *
    * @return parent microscope
    */
   public M getMicroscope()
@@ -102,7 +79,7 @@ public abstract class AcquisitionStateBase<M extends MicroscopeInterface<Q>, Q e
 
   /**
    * Returns the centered ROI image height variable
-   * 
+   *
    * @return image height variable
    */
   public BoundedVariable<Number> getImageWidthVariable()
@@ -112,7 +89,7 @@ public abstract class AcquisitionStateBase<M extends MicroscopeInterface<Q>, Q e
 
   /**
    * Returns the centered ROI image width variable
-   * 
+   *
    * @return image width variable
    */
   public BoundedVariable<Number> getImageHeightVariable()
@@ -122,7 +99,7 @@ public abstract class AcquisitionStateBase<M extends MicroscopeInterface<Q>, Q e
 
   /**
    * Returns state variable x
-   * 
+   *
    * @return stage variable x
    */
   public BoundedVariable<Number> getStageXVariable()
@@ -132,7 +109,7 @@ public abstract class AcquisitionStateBase<M extends MicroscopeInterface<Q>, Q e
 
   /**
    * Returns state variable y
-   * 
+   *
    * @return stage variable y
    */
   public BoundedVariable<Number> getStageYVariable()
@@ -142,7 +119,7 @@ public abstract class AcquisitionStateBase<M extends MicroscopeInterface<Q>, Q e
 
   /**
    * Returns state variable z
-   * 
+   *
    * @return stage variable z
    */
   public BoundedVariable<Number> getStageZVariable()

@@ -7,21 +7,17 @@ import clearcontrol.core.math.interpolation.bezier.Bezier;
  *
  * @author royer
  */
-public class BezierStave extends StaveAbstract
-                         implements StaveInterface
+public class BezierStave extends StaveAbstract implements StaveInterface
 {
 
-  private volatile float mStartValue, mStopValue, mStartSlope,
-      mStopSlope, mSmoothness, mMargin;
+  private volatile float mStartValue, mStopValue, mStartSlope, mStopSlope, mSmoothness, mMargin;
 
   /**
    * Instantiates a Bezier stave that is equivalent to a constant stave of given
    * value
-   * 
-   * @param pName
-   *          name of stave
-   * @param pValue
-   *          value
+   *
+   * @param pName  name of stave
+   * @param pValue value
    */
   public BezierStave(final String pName, float pValue)
   {
@@ -35,29 +31,16 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Instantiates a Bezier stave
-   * 
-   * @param pName
-   *          name of stave
-   * @param pValueStart
-   *          start value
-   * @param pValueEnd
-   *          end value
-   * @param pSlopeStart
-   *          slope at start
-   * @param pSlopeEnd
-   *          slope at end
-   * @param pSmoothness
-   *          smoothness
-   * @param pMargin
-   *          margin parameter
+   *
+   * @param pName       name of stave
+   * @param pValueStart start value
+   * @param pValueEnd   end value
+   * @param pSlopeStart slope at start
+   * @param pSlopeEnd   slope at end
+   * @param pSmoothness smoothness
+   * @param pMargin     margin parameter
    */
-  public BezierStave(final String pName,
-                     final float pValueStart,
-                     final float pValueEnd,
-                     final float pSlopeStart,
-                     final float pSlopeEnd,
-                     final float pSmoothness,
-                     final float pMargin)
+  public BezierStave(final String pName, final float pValueStart, final float pValueEnd, final float pSlopeStart, final float pSlopeEnd, final float pSmoothness, final float pMargin)
   {
     super(pName);
     setStartValue(pValueStart);
@@ -71,13 +54,7 @@ public class BezierStave extends StaveAbstract
   @Override
   public StaveInterface duplicate()
   {
-    StaveInterface lStave =  new BezierStave(getName(),
-                           getValueStart(),
-                           getValueStop(),
-                           getSlopeStart(),
-                           getSlopeEnd(),
-                           getSmoothness(),
-                           getMargin());
+    StaveInterface lStave = new BezierStave(getName(), getValueStart(), getValueStop(), getSlopeStart(), getSlopeEnd(), getSmoothness(), getMargin());
 
     lStave.setEnabled(this.isEnabled());
 
@@ -93,32 +70,19 @@ public class BezierStave extends StaveAbstract
     if (pNormalizedTime < getMargin())
     {
       lValue = getValueStart() + getSlopeStart() * pNormalizedTime;
-    }
-    else if (pNormalizedTime > 1 - getMargin())
+    } else if (pNormalizedTime > 1 - getMargin())
     {
       lValue = getValueStop() - getSlopeEnd() * (1 - pNormalizedTime);
-    }
-    else
+    } else
     {
-      float lBezierTime = (pNormalizedTime - getMargin())
-                          / (1 - 2 * getMargin());
-      float lBezierValueStart = getValueStart()
-                                + getSlopeStart() * getMargin();
-      float lBezierValueStop = getValueStop()
-                               - getSlopeEnd() * (getMargin());
+      float lBezierTime = (pNormalizedTime - getMargin()) / (1 - 2 * getMargin());
+      float lBezierValueStart = getValueStart() + getSlopeStart() * getMargin();
+      float lBezierValueStop = getValueStop() - getSlopeEnd() * (getMargin());
 
-      float lControlValueStart = lBezierValueStart
-                                 + getSlopeStart() * getSmoothness()
-                                   * (1 - 2 * getMargin());
-      float lControlValueEnd = lBezierValueStop
-                               - getSlopeEnd() * getSmoothness()
-                                 * (1 - 2 * getMargin());
+      float lControlValueStart = lBezierValueStart + getSlopeStart() * getSmoothness() * (1 - 2 * getMargin());
+      float lControlValueEnd = lBezierValueStop - getSlopeEnd() * getSmoothness() * (1 - 2 * getMargin());
 
-      lValue = (float) Bezier.bezier(lBezierValueStart,
-                                     lControlValueStart,
-                                     lControlValueEnd,
-                                     lBezierValueStop,
-                                     lBezierTime);
+      lValue = (float) Bezier.bezier(lBezierValueStart, lControlValueStart, lControlValueEnd, lBezierValueStop, lBezierTime);
     }
 
     return lValue;
@@ -126,7 +90,7 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Returns the value at the beginning of the stave.
-   * 
+   *
    * @return start value
    */
   public float getValueStart()
@@ -136,9 +100,8 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Sets the value at the start of the stave
-   * 
-   * @param pValueStart
-   *          start value
+   *
+   * @param pValueStart start value
    */
   public void setStartValue(float pValueStart)
   {
@@ -147,7 +110,7 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Returns the value at the end of the stave
-   * 
+   *
    * @return stop value
    */
   public float getValueStop()
@@ -157,9 +120,8 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Sets the value at the end of the stave
-   * 
-   * @param pValueStop
-   *          stop value
+   *
+   * @param pValueStop stop value
    */
   public void setStopValue(float pValueStop)
   {
@@ -168,7 +130,7 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Returns the slope at the start of the stave
-   * 
+   *
    * @return start slope
    */
   public float getSlopeStart()
@@ -178,9 +140,8 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Sets the slope at the start of the save.
-   * 
-   * @param pSlopeStart
-   *          start slope
+   *
+   * @param pSlopeStart start slope
    */
   public void setStartSlope(float pSlopeStart)
   {
@@ -189,7 +150,7 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Returns the slope at the end of the stave
-   * 
+   *
    * @return end slope
    */
   public float getSlopeEnd()
@@ -199,9 +160,8 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Sets the slope at the end of the stave
-   * 
-   * @param pSlopeStop
-   *          end slope
+   *
+   * @param pSlopeStop end slope
    */
   public void setStopSlope(float pSlopeStop)
   {
@@ -210,7 +170,7 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Returns the smoothness parameter
-   * 
+   *
    * @return smoothness parameter within [0,1]
    */
   public float getSmoothness()
@@ -220,9 +180,8 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Sets the smoothness parameter
-   * 
-   * @param pSmoothness
-   *          smoothness parameter within [0,1]
+   *
+   * @param pSmoothness smoothness parameter within [0,1]
    */
   public void setSmoothness(float pSmoothness)
   {
@@ -231,7 +190,7 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Returns margin parameter
-   * 
+   *
    * @return margin parameter
    */
   public float getMargin()
@@ -241,9 +200,8 @@ public class BezierStave extends StaveAbstract
 
   /**
    * Sets the margin parameter
-   * 
-   * @param pMargin
-   *          margin parameter
+   *
+   * @param pMargin margin parameter
    */
   public void setMargin(float pMargin)
   {

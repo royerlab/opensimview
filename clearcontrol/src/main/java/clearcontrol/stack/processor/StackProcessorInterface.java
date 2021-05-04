@@ -14,29 +14,25 @@ public interface StackProcessorInterface
 
   /**
    * Sets processor active state
-   * 
-   * @param pIsActive
-   *          true -> procesor active
+   *
+   * @param pIsActive true -> procesor active
    */
   public void setActive(boolean pIsActive);
 
   /**
    * Returns whether this processor is active
-   * 
+   *
    * @return true -> processor active
    */
   public boolean isActive();
 
   /**
    * Processes a given stack.
-   * 
-   * @param pStack
-   *          stack to process
-   * @param pStackRecycler
-   *          stack recycler
+   *
+   * @param pStack         stack to process
+   * @param pStackRecycler stack recycler
    * @return processed stack
    */
-  public StackInterface process(StackInterface pStack,
-                                RecyclerInterface<StackInterface, StackRequest> pStackRecycler);
+  public StackInterface process(StackInterface pStack, RecyclerInterface<StackInterface, StackRequest> pStackRecycler);
 
 }

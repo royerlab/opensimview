@@ -1,17 +1,11 @@
 package clearcontrol.core.concurrent.executors;
 
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.Delayed;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * Scheduled future that can wait for completion
  *
- * @param <V>
- *          future return type
+ * @param <V> future return type
  * @author royer
  */
 public class WaitingScheduledFuture<V> implements ScheduledFuture<V>
@@ -21,9 +15,8 @@ public class WaitingScheduledFuture<V> implements ScheduledFuture<V>
 
   /**
    * Instantiates a waiting scheduled future given a delegated scheduled future
-   * 
-   * @param pDelegatedScheduledFuture
-   *          delegated scheduled future
+   *
+   * @param pDelegatedScheduledFuture delegated scheduled future
    */
   public WaitingScheduledFuture(ScheduledFuture<V> pDelegatedScheduledFuture)
   {
@@ -66,24 +59,19 @@ public class WaitingScheduledFuture<V> implements ScheduledFuture<V>
     try
     {
       return mDelegatedScheduledFuture.get();
-    }
-    catch (final CancellationException | InterruptedException e)
+    } catch (final CancellationException | InterruptedException e)
     {
       return null;
     }
   }
 
   @Override
-  public V get(long pTimeout,
-               TimeUnit pUnit) throws InterruptedException,
-                               ExecutionException,
-                               TimeoutException
+  public V get(long pTimeout, TimeUnit pUnit) throws InterruptedException, ExecutionException, TimeoutException
   {
     try
     {
       return mDelegatedScheduledFuture.get(pTimeout, pUnit);
-    }
-    catch (final CancellationException | InterruptedException e)
+    } catch (final CancellationException | InterruptedException e)
     {
       return null;
     }
@@ -92,32 +80,25 @@ public class WaitingScheduledFuture<V> implements ScheduledFuture<V>
   /**
    * Waist for completion of the delegated scheduled future or returns after
    * timeout.
-   * 
-   * @param pTimeout
-   *          timeout
-   * @param pUnit
-   *          timeout unit
+   *
+   * @param pTimeout timeout
+   * @param pUnit    timeout unit
    * @return true if execution finished before timeout
-   * @throws ExecutionException
-   *           thrown if exception occured during execution
+   * @throws ExecutionException thrown if exception occured during execution
    */
-  public boolean waitForCompletion(long pTimeout,
-                                   TimeUnit pUnit) throws ExecutionException
+  public boolean waitForCompletion(long pTimeout, TimeUnit pUnit) throws ExecutionException
   {
     try
     {
       mDelegatedScheduledFuture.get(pTimeout, pUnit);
       return true;
-    }
-    catch (final TimeoutException e)
+    } catch (final TimeoutException e)
     {
       return false;
-    }
-    catch (final CancellationException e)
+    } catch (final CancellationException e)
     {
       return true;
-    }
-    catch (final InterruptedException e)
+    } catch (final InterruptedException e)
     {
       waitForCompletion(pTimeout, pUnit);
     }

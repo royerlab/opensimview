@@ -7,8 +7,7 @@ import clearcontrol.core.device.openclose.OpenCloseDeviceInterface;
  *
  * @author royer
  */
-public interface OptoMechDeviceInterface extends
-                                         OpenCloseDeviceInterface
+public interface OptoMechDeviceInterface extends OpenCloseDeviceInterface
 {
 
 }

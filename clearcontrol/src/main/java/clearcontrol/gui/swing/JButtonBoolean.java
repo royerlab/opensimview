@@ -1,12 +1,11 @@
 package clearcontrol.gui.swing;
 
-import java.awt.EventQueue;
+import clearcontrol.core.variable.Variable;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-
-import clearcontrol.core.variable.Variable;
 
 public class JButtonBoolean extends JButton
 {
@@ -16,9 +15,7 @@ public class JButtonBoolean extends JButton
 
   private boolean mButtonIsOnOffSwitch = true;
 
-  public JButtonBoolean(final boolean pInitialState,
-                        final String pOnLabel,
-                        final String pOffLabel)
+  public JButtonBoolean(final boolean pInitialState, final String pOnLabel, final String pOffLabel)
   {
     this(pInitialState, pOnLabel, pOffLabel, true);
   }
@@ -28,51 +25,41 @@ public class JButtonBoolean extends JButton
     this(false, pLabel, pLabel, false);
   }
 
-  public JButtonBoolean(final String pRestLabel,
-                        final String pPressingLabel)
+  public JButtonBoolean(final String pRestLabel, final String pPressingLabel)
   {
     this(false, pPressingLabel, pRestLabel, false);
   }
 
-  public JButtonBoolean(final boolean pInitialState,
-                        final String pOnLabel,
-                        final String pOffLabel,
-                        final boolean pButtonIsOnOffSwitch)
+  public JButtonBoolean(final boolean pInitialState, final String pOnLabel, final String pOffLabel, final boolean pButtonIsOnOffSwitch)
   {
     mThis = this;
-    mBooleanVariable =
-                     new Variable<Boolean>(pOnLabel + "/"
-                                           + pOffLabel,
-                                           pInitialState)
-                     {
-                       @Override
-                       public Boolean setEventHook(final Boolean pOldValue,
-                                                   final Boolean pNewValue)
-                       {
-                         final boolean lButtonState = pNewValue;
-                         // if (pDoubleEventSource != mThis)
-                         {
-                           EventQueue.invokeLater(new Runnable()
-                           {
-                             @Override
-                             public void run()
-                             {
-                               try
-                               {
-                                 setLabelFromState(lButtonState);
-                               }
-                               catch (final Throwable e)
-                               {
-                                 e.printStackTrace();
-                               }
-                             }
-                           });
-                         }
+    mBooleanVariable = new Variable<Boolean>(pOnLabel + "/" + pOffLabel, pInitialState)
+    {
+      @Override
+      public Boolean setEventHook(final Boolean pOldValue, final Boolean pNewValue)
+      {
+        final boolean lButtonState = pNewValue;
+        // if (pDoubleEventSource != mThis)
+        {
+          EventQueue.invokeLater(new Runnable()
+          {
+            @Override
+            public void run()
+            {
+              try
+              {
+                setLabelFromState(lButtonState);
+              } catch (final Throwable e)
+              {
+                e.printStackTrace();
+              }
+            }
+          });
+        }
 
-                         return super.setEventHook(pOldValue,
-                                                   pNewValue);
-                       }
-                     };
+        return super.setEventHook(pOldValue, pNewValue);
+      }
+    };
 
     mOnLabel = pOnLabel;
     mOffLabel = pOffLabel;
@@ -87,8 +74,7 @@ public class JButtonBoolean extends JButton
         if (mButtonIsOnOffSwitch)
         {
           mBooleanVariable.toggle();
-        }
-        else
+        } else
         {
           mBooleanVariable.setEdge(false, true);
         }
@@ -103,8 +89,7 @@ public class JButtonBoolean extends JButton
             try
             {
               setLabelFromState(lButtonState);
-            }
-            catch (final Throwable e)
+            } catch (final Throwable e)
             {
               e.printStackTrace();
             }
@@ -127,8 +112,7 @@ public class JButtonBoolean extends JButton
     if (lButtonState)
     {
       setText(mOnLabel);
-    }
-    else
+    } else
     {
       setText(mOffLabel);
     }

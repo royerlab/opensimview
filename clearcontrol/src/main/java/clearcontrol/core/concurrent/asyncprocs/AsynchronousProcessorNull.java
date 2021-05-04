@@ -5,28 +5,20 @@ import java.util.concurrent.TimeUnit;
 /**
  * Null asynchronous processor
  *
- * @param <I>
- *          input type
- * @param <O>
- *          output type
+ * @param <I> input type
+ * @param <O> output type
  * @author royer
  */
-public class AsynchronousProcessorNull<I, O> extends
-                                      AsynchronousProcessorBase<I, O>
-                                      implements
-                                      AsynchronousProcessorInterface<I, O>
+public class AsynchronousProcessorNull<I, O> extends AsynchronousProcessorBase<I, O> implements AsynchronousProcessorInterface<I, O>
 {
 
   /**
    * Instantiates an asynchronous processor
-   * 
-   * @param pName
-   *          asynchronous processor name
-   * @param pMaxQueueSize
-   *          max queue size
+   *
+   * @param pName         asynchronous processor name
+   * @param pMaxQueueSize max queue size
    */
-  public AsynchronousProcessorNull(final String pName,
-                                   final int pMaxQueueSize)
+  public AsynchronousProcessorNull(final String pName, final int pMaxQueueSize)
   {
     super(pName, pMaxQueueSize);
   }

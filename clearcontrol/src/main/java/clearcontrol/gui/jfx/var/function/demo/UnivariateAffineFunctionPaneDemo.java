@@ -1,26 +1,24 @@
 package clearcontrol.gui.jfx.var.function.demo;
 
-import static java.lang.Math.random;
-
-import java.util.concurrent.TimeUnit;
+import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
+import clearcontrol.core.math.functions.UnivariateAffineFunction;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.var.function.UnivariateAffineFunctionPane;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
-import clearcontrol.core.math.functions.UnivariateAffineFunction;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.var.function.UnivariateAffineFunctionPane;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Math.random;
 
 /**
  * Univariate affine function pane demo
  *
  * @author royer
  */
-public class UnivariateAffineFunctionPaneDemo extends Application
-                                              implements
-                                              AsynchronousSchedulerFeature
+public class UnivariateAffineFunctionPaneDemo extends Application implements AsynchronousSchedulerFeature
 {
 
   @Override
@@ -31,23 +29,20 @@ public class UnivariateAffineFunctionPaneDemo extends Application
     stage.setScene(scene);
     stage.setTitle(this.getClass().getName());
 
-    Variable<UnivariateAffineFunction> lFunctionVariable =
-                                                         new Variable<>("Fun",
-                                                                        UnivariateAffineFunction.identity());
+    Variable<UnivariateAffineFunction> lFunctionVariable = new Variable<>("Fun", UnivariateAffineFunction.identity());
 
-    lFunctionVariable.addSetListener((o, n) -> {
+    lFunctionVariable.addSetListener((o, n) ->
+    {
       System.out.println("new function: " + lFunctionVariable);
     });
 
-    UnivariateAffineFunctionPane lUnivariateAffineFunctionPane =
-                                                               new UnivariateAffineFunctionPane("MyFunction",
-                                                                                                lFunctionVariable);
+    UnivariateAffineFunctionPane lUnivariateAffineFunctionPane = new UnivariateAffineFunctionPane("MyFunction", lFunctionVariable);
 
     root.getChildren().add(lUnivariateAffineFunctionPane);
 
-    scheduleAtFixedRate(() -> {
-      lFunctionVariable.set(UnivariateAffineFunction.axplusb(random(),
-                                                             random()));
+    scheduleAtFixedRate(() ->
+    {
+      lFunctionVariable.set(UnivariateAffineFunction.axplusb(random(), random()));
     }, 1, TimeUnit.SECONDS);
 
     stage.show();
@@ -55,9 +50,8 @@ public class UnivariateAffineFunctionPaneDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

@@ -9,8 +9,7 @@ public class MinPositionVariable extends Variable<Double>
   private static final double cEpsilon = 5; // nm
   private final ECC100Axis mECC100Axis;
 
-  public MinPositionVariable(String pVariableName,
-                             ECC100Axis pECC100Axis)
+  public MinPositionVariable(String pVariableName, ECC100Axis pECC100Axis)
   {
     super(pVariableName, 0.0);
     mECC100Axis = pECC100Axis;

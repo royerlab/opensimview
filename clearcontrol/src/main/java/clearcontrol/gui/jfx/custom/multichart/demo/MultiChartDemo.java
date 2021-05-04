@@ -1,5 +1,6 @@
 package clearcontrol.gui.jfx.custom.multichart.demo;
 
+import clearcontrol.gui.jfx.custom.multichart.MultiChart;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -9,8 +10,6 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
-import clearcontrol.gui.jfx.custom.multichart.MultiChart;
 
 /**
  * Mulichart demo
@@ -35,20 +34,17 @@ public class MultiChartDemo extends Application
       lMultiLineChart.setXAxisLabel("x axis");
       lMultiLineChart.setYAxisLabel("y axis");
 
-      ObservableList<Data<Number, Number>> lSeries1 =
-                                                    lMultiLineChart.addSeries("series 1");
+      ObservableList<Data<Number, Number>> lSeries1 = lMultiLineChart.addSeries("series 1");
       MultiChart.addData(lSeries1, 0, 0);
       MultiChart.addData(lSeries1, 1, 1);
       MultiChart.addData(lSeries1, 2, 2);
 
-      ObservableList<Data<Number, Number>> lSeries2 =
-                                                    lMultiLineChart.addSeries("series 2");
+      ObservableList<Data<Number, Number>> lSeries2 = lMultiLineChart.addSeries("series 2");
       MultiChart.addData(lSeries2, 0, 4.6);
       MultiChart.addData(lSeries2, 1.5, 1.3);
       MultiChart.addData(lSeries2, 2.2, 3.9);
 
-      ObservableList<Data<Number, Number>> lSeries3 =
-                                                    lMultiLineChart.addSeries("series 3");
+      ObservableList<Data<Number, Number>> lSeries3 = lMultiLineChart.addSeries("series 3");
       MultiChart.addData(lSeries3, 1, 44);
       MultiChart.addData(lSeries3, 3, 15);
       MultiChart.addData(lSeries3, 5, 36);
@@ -60,14 +56,10 @@ public class MultiChartDemo extends Application
 
       for (int i = 0; i < 5; i++)
       {
-        ObservableList<Data<Number, Number>> lSeriesK =
-                                                      lMultiLineChart.addSeries("series "
-                                                                                + i);
+        ObservableList<Data<Number, Number>> lSeriesK = lMultiLineChart.addSeries("series " + i);
 
         for (int j = 0; j < 100; j++)
-          MultiChart.addData(lSeriesK,
-                             0.01 * j,
-                             0.005 * i * j + Math.random());
+          MultiChart.addData(lSeriesK, 0.01 * j, 0.005 * i * j + Math.random());
 
       }
 
@@ -83,20 +75,17 @@ public class MultiChartDemo extends Application
       lMultiAreaChart.setXAxisLabel("x axis");
       lMultiAreaChart.setYAxisLabel("y axis");
 
-      ObservableList<Data<Number, Number>> lSeries1 =
-                                                    lMultiAreaChart.addSeries("series 1");
+      ObservableList<Data<Number, Number>> lSeries1 = lMultiAreaChart.addSeries("series 1");
       MultiChart.addData(lSeries1, 0, 0);
       MultiChart.addData(lSeries1, 1, 1);
       MultiChart.addData(lSeries1, 2, 2);
 
-      ObservableList<Data<Number, Number>> lSeries2 =
-                                                    lMultiAreaChart.addSeries("series 2");
+      ObservableList<Data<Number, Number>> lSeries2 = lMultiAreaChart.addSeries("series 2");
       MultiChart.addData(lSeries2, 0, 4.6);
       MultiChart.addData(lSeries2, 1.5, 1.3);
       MultiChart.addData(lSeries2, 2.2, 3.9);
 
-      ObservableList<Data<Number, Number>> lSeries3 =
-                                                    lMultiAreaChart.addSeries("series 3");
+      ObservableList<Data<Number, Number>> lSeries3 = lMultiAreaChart.addSeries("series 3");
       MultiChart.addData(lSeries3, 2, 3);
       MultiChart.addData(lSeries3, 3, 4);
       MultiChart.addData(lSeries3, 4, 5);
@@ -111,27 +100,23 @@ public class MultiChartDemo extends Application
     }
 
     {
-      MultiChart lMultiScatterChart =
-                                    new MultiChart(ScatterChart.class);
+      MultiChart lMultiScatterChart = new MultiChart(ScatterChart.class);
       lMultiScatterChart.setChartTitle("Demo ScatterChart");
 
       lMultiScatterChart.setXAxisLabel("x axis");
       lMultiScatterChart.setYAxisLabel("y axis");
 
-      ObservableList<Data<Number, Number>> lSeries1 =
-                                                    lMultiScatterChart.addSeries("series 1");
+      ObservableList<Data<Number, Number>> lSeries1 = lMultiScatterChart.addSeries("series 1");
       MultiChart.addData(lSeries1, 0, 0);
       MultiChart.addData(lSeries1, 1, 1);
       MultiChart.addData(lSeries1, 2, 2);
 
-      ObservableList<Data<Number, Number>> lSeries2 =
-                                                    lMultiScatterChart.addSeries("series 2");
+      ObservableList<Data<Number, Number>> lSeries2 = lMultiScatterChart.addSeries("series 2");
       MultiChart.addData(lSeries2, 0, 4.6);
       MultiChart.addData(lSeries2, 1.5, 1.3);
       MultiChart.addData(lSeries2, 2.2, 3.9);
 
-      ObservableList<Data<Number, Number>> lSeries3 =
-                                                    lMultiScatterChart.addSeries("series 3");
+      ObservableList<Data<Number, Number>> lSeries3 = lMultiScatterChart.addSeries("series 3");
       MultiChart.addData(lSeries3, 1, 7);
       MultiChart.addData(lSeries3, 2, 5);
       MultiChart.addData(lSeries3, 3, 4);
@@ -150,9 +135,8 @@ public class MultiChartDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

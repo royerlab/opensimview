@@ -1,22 +1,21 @@
 package clearcontrol.gui.jfx.custom.labelgrid.demo;
 
-import java.util.concurrent.TimeUnit;
+import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.gui.jfx.custom.labelgrid.LabelGrid;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.gui.jfx.custom.labelgrid.LabelGrid;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Mulichart demo
  *
  * @author royer
  */
-public class LabelGridDemo extends Application
-                           implements AsynchronousExecutorFeature
+public class LabelGridDemo extends Application implements AsynchronousExecutorFeature
 {
 
   @Override
@@ -37,7 +36,8 @@ public class LabelGridDemo extends Application
     for (int j = 0; j < 10; j++)
       lLabelGrid.setRowName(j, "r" + j);
 
-    executeAsynchronously(() -> {
+    executeAsynchronously(() ->
+    {
 
       for (int i = 0; i < 10; i++)
         for (int j = 0; j < 10; j++)
@@ -56,9 +56,8 @@ public class LabelGridDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

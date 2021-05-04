@@ -8,9 +8,7 @@ import clearcontrol.devices.lasers.devices.cobolt.adapters.protocol.ProtocolCobo
  *
  * @author royer
  */
-public class GetCurrentPowerAdapter extends CoboltAdapter<Number>
-                                    implements
-                                    SerialTextDeviceAdapter<Number>
+public class GetCurrentPowerAdapter extends CoboltAdapter<Number> implements SerialTextDeviceAdapter<Number>
 {
 
   @Override

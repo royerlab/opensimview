@@ -1,35 +1,28 @@
 package clearcontrol.core.device;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import clearcontrol.core.device.change.ChangeListener;
 import clearcontrol.core.device.change.HasChangeListenerInterface;
 import clearcontrol.core.device.name.NameableBase;
 import clearcontrol.core.device.name.NameableInterface;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 /**
  * Base class extended by classes that need both name and change listener
  * functionality
  *
- * @param <E>
- *          event type
+ * @param <E> event type
  * @author royer
  */
-public abstract class NameableWithChangeListener<E>
-                                                extends NameableBase
-                                                implements
-                                                HasChangeListenerInterface<E>,
-                                                NameableInterface
+public abstract class NameableWithChangeListener<E> extends NameableBase implements HasChangeListenerInterface<E>, NameableInterface
 {
 
-  private CopyOnWriteArrayList<ChangeListener<E>> mChangeListenerList =
-                                                                      new CopyOnWriteArrayList<>();
+  private CopyOnWriteArrayList<ChangeListener<E>> mChangeListenerList = new CopyOnWriteArrayList<>();
 
   /**
    * Instanciates with given name
-   * 
-   * @param pName
-   *          name
+   *
+   * @param pName name
    */
   public NameableWithChangeListener(final String pName)
   {

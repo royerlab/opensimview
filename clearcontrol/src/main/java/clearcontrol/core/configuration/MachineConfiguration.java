@@ -1,31 +1,26 @@
 package clearcontrol.core.configuration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
-
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.math.functions.UnivariateAffineFunction;
 import clearcontrol.core.variable.bounded.BoundedVariable;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.math3.analysis.UnivariateFunction;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Properties;
 
 /**
  * MachineConfiguration is a singleton that can be accessed to query infromation
  * about the current system. Typically, it holds information such as the
  * assigned COM ports for serial devices and other configuration info that is
  * specific to a computer and its connected hardware.
- * 
+ *
  * @author royer
  */
+
 /**
  *
  *
@@ -33,15 +28,13 @@ import org.apache.commons.math3.analysis.UnivariateFunction;
  */
 public class MachineConfiguration implements LoggingFeature
 {
-  private static final String cComments =
-                                        "ClearControl machine configuration file";
-  private static final MachineConfiguration sConfiguration =
-                                                           new MachineConfiguration();
+  private static final String cComments = "ClearControl machine configuration file";
+  private static final MachineConfiguration sConfiguration = new MachineConfiguration();
   private static ObjectMapper sObjectMapper = new ObjectMapper();
 
   /**
    * Returns the singleton instance of MachineConfiguration.
-   * 
+   *
    * @return singketon instance of MachineConfiguration
    */
   public static MachineConfiguration get()
@@ -65,13 +58,11 @@ public class MachineConfiguration implements LoggingFeature
     {
       final String lUserHome = System.getProperty("user.home");
       final File lUserHomeFolder = new File(lUserHome);
-      mClearControlFolder =
-                          new File(lUserHomeFolder, ".clearcontrol/");
+      mClearControlFolder = new File(lUserHomeFolder, ".clearcontrol/");
       mClearControlFolder.mkdirs();
       mPersistentVariablesFolder = getFolder("PersistentVariables");
 
-      final File lConfigurationFile = new File(mClearControlFolder,
-                                               "configuration.txt");
+      final File lConfigurationFile = new File(mClearControlFolder, "configuration.txt");
 
       mProperties = new Properties();
 
@@ -80,13 +71,10 @@ public class MachineConfiguration implements LoggingFeature
         final Writer lWriter = new FileWriter(lConfigurationFile);
         mProperties.store(lWriter, cComments);
       }
-      final FileInputStream lFileInputStream =
-                                             new FileInputStream(lConfigurationFile);
+      final FileInputStream lFileInputStream = new FileInputStream(lConfigurationFile);
 
       mProperties.load(lFileInputStream);
-    }
-
-    catch (final IOException e2)
+    } catch (final IOException e2)
     {
       e2.printStackTrace();
       mProperties = null;
@@ -95,7 +83,7 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Return properties used internally.
-   * 
+   *
    * @return properties object
    */
   public Properties getProperties()
@@ -105,21 +93,20 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns true if the properties contain a given key
-   * 
+   *
    * @param pKey
    *          key
    * @return true if contains key
    */
   public boolean containsKey(String pKey)
   {
-    if (mProperties == null)
-      return false;
+    if (mProperties == null) return false;
     return mProperties.containsKey(pKey);
   }
 
   /**
    * Returns a string property for a given key
-   * 
+   *
    * @param pKey
    *          key
    * @param pDefaultValue
@@ -140,18 +127,16 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns an integer property for a given key
-   * 
+   *
    * @param pKey
    *          key
    * @param pDefaultValue
    *          default integer property
    * @return interger property
    */
-  public Integer getIntegerProperty(String pKey,
-                                    Integer pDefaultValue)
+  public Integer getIntegerProperty(String pKey, Integer pDefaultValue)
   {
-    if (mProperties == null)
-      return pDefaultValue;
+    if (mProperties == null) return pDefaultValue;
     final String lProperty = mProperties.getProperty(pKey);
     if (lProperty == null)
     {
@@ -164,7 +149,7 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns a long property for a given key
-   * 
+   *
    * @param pKey
    *          key
    * @param pDefaultValue
@@ -173,8 +158,7 @@ public class MachineConfiguration implements LoggingFeature
    */
   public Long getLongProperty(String pKey, Long pDefaultValue)
   {
-    if (mProperties == null)
-      return pDefaultValue;
+    if (mProperties == null) return pDefaultValue;
     final String lProperty = mProperties.getProperty(pKey);
     if (lProperty == null)
     {
@@ -187,7 +171,7 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns double property for a given key
-   * 
+   *
    * @param pKey
    *          key
    * @param pDefaultValue
@@ -196,8 +180,7 @@ public class MachineConfiguration implements LoggingFeature
    */
   public Double getDoubleProperty(String pKey, Double pDefaultValue)
   {
-    if (mProperties == null)
-      return pDefaultValue;
+    if (mProperties == null) return pDefaultValue;
     final String lProperty = mProperties.getProperty(pKey);
     if (lProperty == null)
     {
@@ -212,18 +195,16 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns boolean proprty for a given key
-   * 
+   *
    * @param pKey
    *          key
    * @param pDefaultValue
    *          default boolean value
    * @return boolean property
    */
-  public boolean getBooleanProperty(String pKey,
-                                    Boolean pDefaultValue)
+  public boolean getBooleanProperty(String pKey, Boolean pDefaultValue)
   {
-    if (mProperties == null)
-      return pDefaultValue;
+    if (mProperties == null) return pDefaultValue;
     final String lProperty = mProperties.getProperty(pKey);
     if (lProperty == null)
     {
@@ -233,16 +214,12 @@ public class MachineConfiguration implements LoggingFeature
       return pDefaultValue;
     }
 
-    return Boolean.parseBoolean(lProperty.toLowerCase())
-           || lProperty.trim().equals("1")
-           || lProperty.trim().toLowerCase().equals("on")
-           || lProperty.trim().toLowerCase().equals("present")
-           || lProperty.trim().toLowerCase().equals("true");
+    return Boolean.parseBoolean(lProperty.toLowerCase()) || lProperty.trim().equals("1") || lProperty.trim().toLowerCase().equals("on") || lProperty.trim().toLowerCase().equals("present") || lProperty.trim().toLowerCase().equals("true");
   }
 
   /**
    * Returns file property for a given key
-   * 
+   *
    * @param pKey
    *          key
    * @param pDefaultFile
@@ -266,7 +243,7 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns serial device port for a given device name and device index
-   * 
+   *
    * @param pDeviceName
    *          device name
    * @param pDeviceIndex
@@ -275,13 +252,9 @@ public class MachineConfiguration implements LoggingFeature
    *          default port
    * @return serial device port
    */
-  public String getSerialDevicePort(String pDeviceName,
-                                    int pDeviceIndex,
-                                    String pDefaultPort)
+  public String getSerialDevicePort(String pDeviceName, int pDeviceIndex, String pDefaultPort)
   {
-    final String lKey = "device.serial." + pDeviceName
-                        + "."
-                        + pDeviceIndex;
+    final String lKey = "device.serial." + pDeviceName + "." + pDeviceIndex;
     final String lPort = getStringProperty(lKey, pDefaultPort);
     return lPort;
   }
@@ -289,7 +262,7 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns a networ device host name and port for a given device name and
    * index
-   * 
+   *
    * @param pDeviceName
    *          device name
    * @param pDeviceIndex
@@ -298,30 +271,23 @@ public class MachineConfiguration implements LoggingFeature
    *          default host name amd port
    * @return hostname and port
    */
-  public String[] getNetworkDeviceHostnameAndPort(String pDeviceName,
-                                                  int pDeviceIndex,
-                                                  String pDefaultHostNameAndPort)
+  public String[] getNetworkDeviceHostnameAndPort(String pDeviceName, int pDeviceIndex, String pDefaultHostNameAndPort)
   {
-    final String lKey = "device.network." + pDeviceName
-                        + "."
-                        + pDeviceIndex;
-    final String lHostnameAndPort =
-                                  getStringProperty(lKey,
-                                                    pDefaultHostNameAndPort);
+    final String lKey = "device.network." + pDeviceName + "." + pDeviceIndex;
+    final String lHostnameAndPort = getStringProperty(lKey, pDefaultHostNameAndPort);
     return lHostnameAndPort.split(":");
   }
 
   /**
    * Returns IO device port for given device name
-   * 
+   *
    * @param pDeviceName
    *          device name
    * @param pDefaultPort
    *          default IO port
    * @return IO device port
    */
-  public Integer getIODevicePort(String pDeviceName,
-                                 Integer pDefaultPort)
+  public Integer getIODevicePort(String pDeviceName, Integer pDefaultPort)
   {
     final String lKey = "device." + pDeviceName;
     final Integer lPort = getIntegerProperty(lKey, pDefaultPort);
@@ -330,15 +296,14 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns true if the given device is present
-   * 
+   *
    * @param pDeviceName
    *          device name
    * @param pDeviceIndex
    *          device index
    * @return true if device present
    */
-  public boolean getIsDevicePresent(String pDeviceName,
-                                    int pDeviceIndex)
+  public boolean getIsDevicePresent(String pDeviceName, int pDeviceIndex)
   {
     final String lKey = "device." + pDeviceName + "." + pDeviceIndex;
     return getBooleanProperty(lKey, false);
@@ -347,7 +312,7 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns a list of values given a prefix key. Keys have the format:
    * prefix.0, prefix.1, prefix.2, ... prefix.n
-   * 
+   *
    * @param pPrefix
    *          prefix
    * @return list of values (strings)
@@ -359,8 +324,7 @@ public class MachineConfiguration implements LoggingFeature
     {
       final String lKey = pPrefix + "." + i;
       final String lProperty = mProperties.getProperty(lKey, null);
-      if (lProperty == null)
-        break;
+      if (lProperty == null) break;
       lList.add(lProperty);
     }
     return lList;
@@ -369,7 +333,7 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns a folder within the clearcontrol folder (.clearcontrol). The folder
    * is created if it does not exist.
-   * 
+   *
    * @param pFolderName
    *          folder name
    * @return folder
@@ -383,7 +347,7 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns the folder holding any persistency information
-   * 
+   *
    * @return persistency folder
    */
   public File getPersistencyFolder()
@@ -393,7 +357,7 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns the file for persisting a variable with given name
-   * 
+   *
    * @param pVariableName
    *          variable name
    * @return file
@@ -405,45 +369,35 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Returns a univariate affine function given a function name
-   * 
+   *
    * @param pFunctionName
    *          function name
    * @return affine function
    */
   public UnivariateAffineFunction getUnivariateAffineFunction(String pFunctionName)
   {
-    String lAffineFunctionString = getStringProperty(pFunctionName,
-                                                     null);
+    String lAffineFunctionString = getStringProperty(pFunctionName, null);
 
     if (lAffineFunctionString == null)
     {
-      warning("Cannot find following function def in configuration file: "
-              + pFunctionName);
-      UnivariateAffineFunction lUnivariateAffineFunction =
-                                                         new UnivariateAffineFunction(1,
-                                                                                      0);
+      warning("Cannot find following function def in configuration file: " + pFunctionName);
+      UnivariateAffineFunction lUnivariateAffineFunction = new UnivariateAffineFunction(1, 0);
       return lUnivariateAffineFunction;
     }
 
-    TypeReference<HashMap<String, Double>> lTypeReference =
-                                                          new TypeReference<HashMap<String, Double>>()
-                                                          {
-                                                          };
+    TypeReference<HashMap<String, Double>> lTypeReference = new TypeReference<HashMap<String, Double>>()
+    {
+    };
 
     try
     {
-      HashMap<String, Double> lMap =
-                                   sObjectMapper.readValue(lAffineFunctionString,
-                                                           lTypeReference);
+      HashMap<String, Double> lMap = sObjectMapper.readValue(lAffineFunctionString, lTypeReference);
 
-      UnivariateAffineFunction lUnivariateAffineFunction =
-                                                         new UnivariateAffineFunction(lMap.get("a"),
-                                                                                      lMap.get("b"));
+      UnivariateAffineFunction lUnivariateAffineFunction = new UnivariateAffineFunction(lMap.get("a"), lMap.get("b"));
 
       return lUnivariateAffineFunction;
 
-    }
-    catch (IOException e)
+    } catch (IOException e)
     {
       e.printStackTrace();
       return null;
@@ -453,26 +407,22 @@ public class MachineConfiguration implements LoggingFeature
 
   /**
    * Sets the bounds for a given variable.
-   * 
+   *
    * @param pBoundsName
    *          bounds name
    * @param pVariable
    *          variable
-   * 
+   *
    */
   @SuppressWarnings("unchecked")
-  public <T extends Number, F extends UnivariateFunction> void getBoundsForVariable(String pBoundsName,
-                                                                                    BoundedVariable<T> pVariable)
+  public <T extends Number, F extends UnivariateFunction> void getBoundsForVariable(String pBoundsName, BoundedVariable<T> pVariable)
   {
-    getBoundsForVariable(pBoundsName,
-                         pVariable,
-                         (T) new Double(-100),
-                         (T) new Double(100));
+    getBoundsForVariable(pBoundsName, pVariable, (T) new Double(-100), (T) new Double(100));
   }
 
   /**
    * Sets the bounds for a given variable.
-   * 
+   *
    * @param pBoundsName
    *          bounds name
    * @param pVariable
@@ -482,41 +432,32 @@ public class MachineConfiguration implements LoggingFeature
    * @param pDefaultNax
    *          default max
    */
-  public <T extends Number, F extends UnivariateFunction> void getBoundsForVariable(String pBoundsName,
-                                                                                    BoundedVariable<T> pVariable,
-                                                                                    T pDefaultMin,
-                                                                                    T pDefaultNax)
+  public <T extends Number, F extends UnivariateFunction> void getBoundsForVariable(String pBoundsName, BoundedVariable<T> pVariable, T pDefaultMin, T pDefaultNax)
   {
-    String lAffineFunctionString =
-                                 getStringProperty(pBoundsName, null);
+    String lAffineFunctionString = getStringProperty(pBoundsName, null);
 
     if (lAffineFunctionString == null)
     {
-      warning("Cannot find following bounds def in configuration file: "
-              + pBoundsName);
+      warning("Cannot find following bounds def in configuration file: " + pBoundsName);
       pVariable.setMinMax(pDefaultMin, pDefaultNax);
 
       return;
     }
 
-    TypeReference<HashMap<String, Double>> lTypeReference =
-                                                          new TypeReference<HashMap<String, Double>>()
-                                                          {
-                                                          };
+    TypeReference<HashMap<String, Double>> lTypeReference = new TypeReference<HashMap<String, Double>>()
+    {
+    };
 
     try
     {
-      HashMap<String, Double> lMap =
-                                   sObjectMapper.readValue(lAffineFunctionString,
-                                                           lTypeReference);
+      HashMap<String, Double> lMap = sObjectMapper.readValue(lAffineFunctionString, lTypeReference);
 
       Double lMin = lMap.get("min");
       Double lMax = lMap.get("max");
 
       if (lMin == null || lMax == null)
       {
-        warning("Cannot find following bounds def in configuration file: "
-                + pBoundsName);
+        warning("Cannot find following bounds def in configuration file: " + pBoundsName);
         pVariable.setMinMax(-100.0, 100.0);
         return;
       }
@@ -524,15 +465,12 @@ public class MachineConfiguration implements LoggingFeature
       pVariable.setMinMax(lMin, lMax);
 
       Double lGranularity = lMap.get("granularity");
-      if (lGranularity == null)
-        pVariable.setGranularity(0);
-      else
-        pVariable.setGranularity(lGranularity);
+      if (lGranularity == null) pVariable.setGranularity(0);
+      else pVariable.setGranularity(lGranularity);
 
       return;
 
-    }
-    catch (IOException e)
+    } catch (IOException e)
     {
       e.printStackTrace();
     }

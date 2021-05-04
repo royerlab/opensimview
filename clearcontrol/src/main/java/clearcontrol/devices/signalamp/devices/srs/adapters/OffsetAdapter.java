@@ -1,16 +1,15 @@
 package clearcontrol.devices.signalamp.devices.srs.adapters;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-
 import clearcontrol.devices.signalamp.devices.srs.SIM900MainframeDevice;
 import clearcontrol.devices.signalamp.devices.srs.adapters.protocol.ProtocolSIM;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class OffsetAdapter extends SIMAdapter
 {
 
-  public OffsetAdapter(SIM900MainframeDevice pSim900MainframeDevice,
-                       int pPort)
+  public OffsetAdapter(SIM900MainframeDevice pSim900MainframeDevice, int pPort)
   {
     super(pSim900MainframeDevice, pPort, ProtocolSIM.cOffset);
   }

@@ -1,7 +1,5 @@
 package clearcontrol.stack.processor;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import clearcontrol.core.device.name.NameableBase;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.microscope.stacks.StackRecyclerManager;
@@ -9,36 +7,30 @@ import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
 import coremem.recycling.RecyclerInterface;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 /**
  * Base class for stack processing pipelines
  *
  * @author royer
  */
-public class StackProcessorPipelineBase extends NameableBase
-                                        implements
-                                        StackProcessingPipelineInterface
+public class StackProcessorPipelineBase extends NameableBase implements StackProcessingPipelineInterface
 {
   private StackRecyclerManager mStackRecyclerManager;
 
-  protected final CopyOnWriteArrayList<StackProcessorInterface> mProcessorList =
-                                                                               new CopyOnWriteArrayList<>();
-  protected final CopyOnWriteArrayList<RecyclerInterface<StackInterface, StackRequest>> mRecyclerList =
-                                                                                                      new CopyOnWriteArrayList<>();
+  protected final CopyOnWriteArrayList<StackProcessorInterface> mProcessorList = new CopyOnWriteArrayList<>();
+  protected final CopyOnWriteArrayList<RecyclerInterface<StackInterface, StackRequest>> mRecyclerList = new CopyOnWriteArrayList<>();
 
   private Variable<StackInterface> mInputVariable;
   private Variable<StackInterface> mOutputVariable;
 
   /**
    * Instantiates a stack processor given a stack recycler manager
-   * 
-   * @param pName
-   *          name
-   * 
-   * @param pStackRecyclerManager
-   *          stack recycler manager
+   *
+   * @param pName                 name
+   * @param pStackRecyclerManager stack recycler manager
    */
-  public StackProcessorPipelineBase(String pName,
-                                    StackRecyclerManager pStackRecyclerManager)
+  public StackProcessorPipelineBase(String pName, StackRecyclerManager pStackRecyclerManager)
   {
     super(pName);
     mStackRecyclerManager = pStackRecyclerManager;
@@ -47,15 +39,9 @@ public class StackProcessorPipelineBase extends NameableBase
   }
 
   @Override
-  public void addStackProcessor(StackProcessorInterface pStackProcessor,
-                                String pRecyclerName,
-                                int pMaximumNumberOfLiveObjects,
-                                int pMaximumNumberOfAvailableObjects)
+  public void addStackProcessor(StackProcessorInterface pStackProcessor, String pRecyclerName, int pMaximumNumberOfLiveObjects, int pMaximumNumberOfAvailableObjects)
   {
-    RecyclerInterface<StackInterface, StackRequest> lRecycler =
-                                                              mStackRecyclerManager.getRecycler(pRecyclerName,
-                                                                                                pMaximumNumberOfLiveObjects,
-                                                                                                pMaximumNumberOfAvailableObjects);
+    RecyclerInterface<StackInterface, StackRequest> lRecycler = mStackRecyclerManager.getRecycler(pRecyclerName, pMaximumNumberOfLiveObjects, pMaximumNumberOfAvailableObjects);
     mRecyclerList.add(lRecycler);
     mProcessorList.add(pStackProcessor);
   }
@@ -91,16 +77,13 @@ public class StackProcessorPipelineBase extends NameableBase
     StackInterface lStack = pInput;
     for (int i = 0; i < mProcessorList.size(); i++)
     {
-      final StackProcessorInterface lProcessor =
-                                               mProcessorList.get(i);
+      final StackProcessorInterface lProcessor = mProcessorList.get(i);
       if (lProcessor.isActive())
       {
 
-        final RecyclerInterface<StackInterface, StackRequest> lRecycler =
-                                                                        mRecyclerList.get(i);
+        final RecyclerInterface<StackInterface, StackRequest> lRecycler = mRecyclerList.get(i);
 
-        if (lStack == null)
-          return null;
+        if (lStack == null) return null;
 
         lStack = lProcessor.process(lStack, lRecycler);
 
@@ -112,8 +95,7 @@ public class StackProcessorPipelineBase extends NameableBase
   @Deprecated
   public RecyclerInterface<StackInterface, StackRequest> getRecyclerOfProcessor(StackProcessorInterface pProcessor)
   {
-    for (int i = 0; i < mProcessorList.size()
-                    && i < mRecyclerList.size(); i++)
+    for (int i = 0; i < mProcessorList.size() && i < mRecyclerList.size(); i++)
     {
       if (mProcessorList.get(i) == pProcessor)
       {

@@ -8,5 +8,5 @@ package clearcontrol.devices.stages.gui;
 @SuppressWarnings("javadoc")
 public enum StageVariableEnum
 {
- Enable, Ready, Homing, Stop, Reset
+  Enable, Ready, Homing, Stop, Reset
 }

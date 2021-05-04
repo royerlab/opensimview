@@ -1,27 +1,22 @@
 package clearcontrol.gui.jfx.custom.visualconsole;
 
-import java.util.concurrent.ConcurrentHashMap;
+import clearcontrol.gui.jfx.custom.labelgrid.LabelGrid;
+import clearcontrol.gui.jfx.custom.multichart.MultiChart;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
+import clearcontrol.gui.jfx.custom.visualconsole.listeners.ChartListenerInterface;
+import clearcontrol.gui.jfx.custom.visualconsole.listeners.LabelGridListener;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart.Data;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
-
-import clearcontrol.gui.jfx.custom.labelgrid.LabelGrid;
-import clearcontrol.gui.jfx.custom.multichart.MultiChart;
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
-import clearcontrol.gui.jfx.custom.visualconsole.listeners.ChartListenerInterface;
-import clearcontrol.gui.jfx.custom.visualconsole.listeners.LabelGridListener;
-
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Visual Console Panel displays debug/monitoring information in various ways
@@ -29,30 +24,23 @@ import org.apache.commons.lang3.tuple.Pair;
  *
  * @author royer
  */
-public class VisualConsolePanel extends BorderPane implements
-                                ChartListenerInterface,
-                                LabelGridListener
+public class VisualConsolePanel extends BorderPane implements ChartListenerInterface, LabelGridListener
 {
 
   private TabPane mTabPane;
 
-  ConcurrentHashMap<String, Tab> mTabNameToTabMap =
-                                                  new ConcurrentHashMap<>();
+  ConcurrentHashMap<String, Tab> mTabNameToTabMap = new ConcurrentHashMap<>();
 
-  ConcurrentHashMap<String, MultiChart> mTabNameToMultiChartMap =
-                                                                new ConcurrentHashMap<>();
+  ConcurrentHashMap<String, MultiChart> mTabNameToMultiChartMap = new ConcurrentHashMap<>();
 
-  ConcurrentHashMap<Pair<String, String>, ObservableList<Data<Number, Number>>> mTabNameAndSeriesNameToSeriesMap =
-                                                                                                                 new ConcurrentHashMap<>();
+  ConcurrentHashMap<Pair<String, String>, ObservableList<Data<Number, Number>>> mTabNameAndSeriesNameToSeriesMap = new ConcurrentHashMap<>();
 
-  private ConcurrentHashMap<String, LabelGrid> mTabNameToLabelGridMap =
-                                                                      new ConcurrentHashMap<>();
+  private ConcurrentHashMap<String, LabelGrid> mTabNameToLabelGridMap = new ConcurrentHashMap<>();
 
   /**
    * Instantiates a visual console
-   * 
-   * @param pVisualConsoleInterface
-   *          adaptor
+   *
+   * @param pVisualConsoleInterface adaptor
    */
   public VisualConsolePanel(VisualConsoleInterface pVisualConsoleInterface)
   {
@@ -98,16 +86,10 @@ public class VisualConsolePanel extends BorderPane implements
   }
 
   @Override
-  public void addEntry(String pTabName,
-                       boolean pClear,
-                       String pColumnName,
-                       String pRowName,
-                       int pFontSize,
-                       int pX,
-                       int pY,
-                       String pString)
+  public void addEntry(String pTabName, boolean pClear, String pColumnName, String pRowName, int pFontSize, int pX, int pY, String pString)
   {
-    Platform.runLater(() -> {
+    Platform.runLater(() ->
+    {
 
       String lTabName = pTabName + " grid";
 
@@ -128,8 +110,7 @@ public class VisualConsolePanel extends BorderPane implements
       lLabelGrid.setColumnName(pX, pColumnName + pX);
       lLabelGrid.setRowName(pY, pRowName + pY);
 
-      if (pClear)
-        lLabelGrid.clear();
+      if (pClear) lLabelGrid.clear();
 
       Label lLabel = lLabelGrid.getLabel(pX, pY);
 
@@ -142,13 +123,10 @@ public class VisualConsolePanel extends BorderPane implements
   }
 
   @Override
-  public void configureChart(String pTabName,
-                             String pSeriesName,
-                             String pXAxisName,
-                             String pYAxisName,
-                             ChartType pChartType)
+  public void configureChart(String pTabName, String pSeriesName, String pXAxisName, String pYAxisName, ChartType pChartType)
   {
-    Platform.runLater(() -> {
+    Platform.runLater(() ->
+    {
 
       String lTabName = pTabName + " chart";
 
@@ -159,12 +137,9 @@ public class VisualConsolePanel extends BorderPane implements
 
         Tab lTab = getTab(mTabPane, lTabName);
 
-        if (pChartType == ChartType.Line)
-          lMultiChart = new MultiChart(LineChart.class);
-        else if (pChartType == ChartType.Area)
-          lMultiChart = new MultiChart(AreaChart.class);
-        else if (pChartType == ChartType.Scatter)
-          lMultiChart = new MultiChart(ScatterChart.class);
+        if (pChartType == ChartType.Line) lMultiChart = new MultiChart(LineChart.class);
+        else if (pChartType == ChartType.Area) lMultiChart = new MultiChart(AreaChart.class);
+        else if (pChartType == ChartType.Scatter) lMultiChart = new MultiChart(ScatterChart.class);
 
         lMultiChart.setChartTitle(lTabName);
         lMultiChart.setLegendVisible(false);
@@ -180,21 +155,16 @@ public class VisualConsolePanel extends BorderPane implements
   }
 
   @Override
-  public void addPoint(String pTabName,
-                       String pSeriesName,
-                       boolean pClear,
-                       double pX,
-                       double pY)
+  public void addPoint(String pTabName, String pSeriesName, boolean pClear, double pX, double pY)
   {
-    Platform.runLater(() -> {
+    Platform.runLater(() ->
+    {
 
       String lTabName = pTabName + " chart";
 
       MultiChart lMultiChart = mTabNameToMultiChartMap.get(lTabName);
 
-      ObservableList<Data<Number, Number>> lSeries =
-                                                   mTabNameAndSeriesNameToSeriesMap.get(Pair.of(lTabName,
-                                                                                                pSeriesName));
+      ObservableList<Data<Number, Number>> lSeries = mTabNameAndSeriesNameToSeriesMap.get(Pair.of(lTabName, pSeriesName));
       if (lMultiChart == null)
       {
         return;
@@ -202,13 +172,10 @@ public class VisualConsolePanel extends BorderPane implements
       if (lSeries == null)
       {
         lSeries = lMultiChart.addSeries(pSeriesName);
-        mTabNameAndSeriesNameToSeriesMap.put(Pair.of(lTabName,
-                                                     pSeriesName),
-                                             lSeries);
+        mTabNameAndSeriesNameToSeriesMap.put(Pair.of(lTabName, pSeriesName), lSeries);
       }
 
-      if (pClear)
-        lSeries.clear();
+      if (pClear) lSeries.clear();
 
       MultiChart.addData(lSeries, pX, pY);
     });

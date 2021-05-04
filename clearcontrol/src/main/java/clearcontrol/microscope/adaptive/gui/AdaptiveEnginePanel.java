@@ -13,9 +13,8 @@ public class AdaptiveEnginePanel extends VisualConsolePanel
 
   /**
    * Instantiates a panel for displaying information about the adaptive engine.
-   * 
-   * @param pAdaptiveEngine
-   *          adaptive engine
+   *
+   * @param pAdaptiveEngine adaptive engine
    */
   public AdaptiveEnginePanel(AdaptiveEngine<?> pAdaptiveEngine)
   {

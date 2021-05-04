@@ -1,21 +1,19 @@
 package clearcontrol.gui.jfx.var.bounds.demo;
 
+import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
+import clearcontrol.core.variable.bounded.BoundedVariable;
+import clearcontrol.gui.jfx.var.bounds.BoundedVariablePane;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
-import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.gui.jfx.var.bounds.BoundedVariablePane;
 
 /**
  * Univariate affine function pane demo
  *
  * @author royer
  */
-public class BoundedVariablePaneDemo extends Application implements
-                                     AsynchronousSchedulerFeature
+public class BoundedVariablePaneDemo extends Application implements AsynchronousSchedulerFeature
 {
 
   @Override
@@ -26,27 +24,25 @@ public class BoundedVariablePaneDemo extends Application implements
     stage.setScene(scene);
     stage.setTitle(this.getClass().getName());
 
-    BoundedVariable<Number> lVariable =
-                                      new BoundedVariable<Number>("var",
-                                                                  0.0,
-                                                                  -1.0,
-                                                                  1.0);
-    lVariable.addSetListener((o, n) -> {
+    BoundedVariable<Number> lVariable = new BoundedVariable<Number>("var", 0.0, -1.0, 1.0);
+    lVariable.addSetListener((o, n) ->
+    {
       System.out.println("change to value:" + n);
     });
-    lVariable.getMinVariable().addSetListener((o, n) -> {
+    lVariable.getMinVariable().addSetListener((o, n) ->
+    {
       System.out.println("change to min:" + n);
     });
-    lVariable.getMaxVariable().addSetListener((o, n) -> {
+    lVariable.getMaxVariable().addSetListener((o, n) ->
+    {
       System.out.println("change to max:" + n);
     });
-    lVariable.getGranularityVariable().addSetListener((o, n) -> {
+    lVariable.getGranularityVariable().addSetListener((o, n) ->
+    {
       System.out.println("change to granularity:" + n);
     });
 
-    BoundedVariablePane lBoundedVariablePane =
-                                             new BoundedVariablePane("MyFunction",
-                                                                     lVariable);
+    BoundedVariablePane lBoundedVariablePane = new BoundedVariablePane("MyFunction", lVariable);
 
     root.getChildren().add(lBoundedVariablePane);
 
@@ -55,9 +51,8 @@ public class BoundedVariablePaneDemo extends Application implements
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

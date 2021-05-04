@@ -1,7 +1,6 @@
 package clearcontrol.gui.video.util;
 
 import cleargl.ClearGLWindow;
-
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 

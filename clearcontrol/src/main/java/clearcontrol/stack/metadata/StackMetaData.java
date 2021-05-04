@@ -1,12 +1,12 @@
 package clearcontrol.stack.metadata;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Stack meta data
@@ -30,9 +30,8 @@ public class StackMetaData
 
   /**
    * Instantiates a meta data object
-   * 
-   * @param pStackMetaData
-   *          meta data object
+   *
+   * @param pStackMetaData meta data object
    */
   public StackMetaData(StackMetaData pStackMetaData)
   {
@@ -42,26 +41,21 @@ public class StackMetaData
 
   /**
    * Sets the meta data value for a given key
-   * 
-   * @param pEntryKey
-   *          entry key
-   * @param pValue
-   *          value
+   *
+   * @param pEntryKey entry key
+   * @param pValue    value
    */
 
-  public <T> void addEntry(MetaDataEntryInterface<T> pEntryKey,
-                           T pValue)
+  public <T> void addEntry(MetaDataEntryInterface<T> pEntryKey, T pValue)
   {
     mMetaDataMap.put(pEntryKey.toString(), pValue);
   }
 
   /**
    * Sets the meta data value for a given key
-   * 
-   * @param pEntryKey
-   *          entry key
-   * @param pValue
-   *          value
+   *
+   * @param pEntryKey entry key
+   * @param pValue    value
    */
 
   public <T> void addEntry(String pEntryKey, T pValue)
@@ -71,25 +65,22 @@ public class StackMetaData
 
   /**
    * Removes all meta data entries of a given type
-   * 
-   * @param pEntriesClass
-   *          class of entries to remove
+   *
+   * @param pEntriesClass class of entries to remove
    */
   public <T> void removeAllEntries(Class<T> pEntriesClass)
   {
 
     for (Entry<String, Object> lEntry : new ArrayList<>(mMetaDataMap.entrySet()))
     {
-      if (pEntriesClass.isInstance(lEntry.getValue()))
-        mMetaDataMap.remove(lEntry.getKey());
+      if (pEntriesClass.isInstance(lEntry.getValue())) mMetaDataMap.remove(lEntry.getKey());
     }
   }
 
   /**
    * Removed the given meta data entry
-   * 
-   * @param pEntryKey
-   *          entry to remove
+   *
+   * @param pEntryKey entry to remove
    */
 
   public <T> void removeEntry(MetaDataEntryInterface<T> pEntryKey)
@@ -99,9 +90,8 @@ public class StackMetaData
 
   /**
    * Returns true if this metadata object contains the given entry key
-   * 
-   * @param pEntryKey
-   *          entry
+   *
+   * @param pEntryKey entry
    * @return true -> entry(key) present
    */
   public <T> boolean hasEntry(MetaDataEntryInterface<T> pEntryKey)
@@ -111,9 +101,8 @@ public class StackMetaData
 
   /**
    * Returns true if this metadata object contains the given value
-   * 
-   * @param pValue
-   *          value
+   *
+   * @param pValue value
    * @return true -> value present
    */
   public <T> boolean hasValue(Object pValue)
@@ -123,10 +112,8 @@ public class StackMetaData
 
   /**
    * Returns a given meta data entry
-   * 
-   * 
-   * @param pEntryKey
-   *          key
+   *
+   * @param pEntryKey key
    * @return value
    */
   @SuppressWarnings("unchecked")
@@ -136,17 +123,10 @@ public class StackMetaData
 
     if (lT != null && !(pEntryKey.getMetaDataClass().isInstance(lT)))
     {
-      if (lT.getClass() == Long.class
-          && pEntryKey.getMetaDataClass() == Integer.class)
-        return (T) lT;
-      else if (lT.getClass() == Integer.class
-               && pEntryKey.getMetaDataClass() == Long.class)
-        return (T) lT;
+      if (lT.getClass() == Long.class && pEntryKey.getMetaDataClass() == Integer.class) return (T) lT;
+      else if (lT.getClass() == Integer.class && pEntryKey.getMetaDataClass() == Long.class) return (T) lT;
 
-      throw new IllegalArgumentException(String.format("Value of metadata '%s' value must be of type %s and not %s.",
-                                                       pEntryKey,
-                                                       pEntryKey.getMetaDataClass(),
-                                                       lT.getClass()));
+      throw new IllegalArgumentException(String.format("Value of metadata '%s' value must be of type %s and not %s.", pEntryKey, pEntryKey.getMetaDataClass(), lT.getClass()));
     }
 
     return lT;
@@ -163,9 +143,8 @@ public class StackMetaData
   /**
    * Adds all the entries from the provided metadata object to this metadata
    * object
-   * 
-   * @param pMetaData
-   *          metadata to copy entries from
+   *
+   * @param pMetaData metadata to copy entries from
    */
   public void addAll(StackMetaData pMetaData)
   {
@@ -174,7 +153,7 @@ public class StackMetaData
 
   /**
    * Clones this meta data
-   * 
+   *
    * @return cloned meta data
    */
 
@@ -186,23 +165,21 @@ public class StackMetaData
 
   /**
    * Returns stack's index
-   * 
+   *
    * @return stack's index
    */
 
   public Long getIndex()
   {
     Number lValue = getValue(MetaDataOrdinals.Index);
-    if (lValue == null)
-      return null;
+    if (lValue == null) return null;
     return lValue.longValue();
   }
 
   /**
    * Sets the stack's index
-   * 
-   * @param pStackIndex
-   *          stack's index
+   *
+   * @param pStackIndex stack's index
    */
 
   public void setIndex(final long pStackIndex)
@@ -212,34 +189,31 @@ public class StackMetaData
 
   /**
    * Returns the time stamp in nanoseconds
-   * 
+   *
    * @return time stamp in nanoseconds
    */
 
   public Long getTimeStampInNanoseconds()
   {
     Number lValue = getValue(MetaDataOrdinals.TimeStampInNanoSeconds);
-    if (lValue == null)
-      return null;
+    if (lValue == null) return null;
     return lValue.longValue();
   }
 
   /**
    * Sets the time stamp in nanoseconds
-   * 
-   * @param pTimeStampInNanoseconds
-   *          time stamp in nanoseconds
+   *
+   * @param pTimeStampInNanoseconds time stamp in nanoseconds
    */
 
   public void setTimeStampInNanoseconds(final long pTimeStampInNanoseconds)
   {
-    addEntry(MetaDataOrdinals.TimeStampInNanoSeconds,
-             pTimeStampInNanoseconds);
+    addEntry(MetaDataOrdinals.TimeStampInNanoSeconds, pTimeStampInNanoseconds);
   }
 
   /**
    * Returns the voxel dimension along x axis
-   * 
+   *
    * @return voxel dimension along x axis
    */
 
@@ -250,9 +224,8 @@ public class StackMetaData
 
   /**
    * Sets voxel dimensions along the x axis
-   * 
-   * @param pVoxelDimX
-   *          voxel dimensions along the x axis
+   *
+   * @param pVoxelDimX voxel dimensions along the x axis
    */
 
   public void setVoxelDimX(final double pVoxelDimX)
@@ -262,7 +235,7 @@ public class StackMetaData
 
   /**
    * Returns the voxel dimension along y axis
-   * 
+   *
    * @return voxel dimension along y axis
    */
 
@@ -273,9 +246,8 @@ public class StackMetaData
 
   /**
    * Sets voxel dimensions along the y axis
-   * 
-   * @param pVoxelDimY
-   *          voxel dimensions along the y axis
+   *
+   * @param pVoxelDimY voxel dimensions along the y axis
    */
 
   public void setVoxelDimY(final double pVoxelDimY)
@@ -285,7 +257,7 @@ public class StackMetaData
 
   /**
    * Returns the voxel dimension along z axis
-   * 
+   *
    * @return voxel dimension along z axis
    */
 
@@ -296,9 +268,8 @@ public class StackMetaData
 
   /**
    * Sets voxel dimensions along the z axis
-   * 
-   * @param pVoxelDimZ
-   *          voxel dimensions along the z axis
+   *
+   * @param pVoxelDimZ voxel dimensions along the z axis
    */
 
   public void setVoxelDimZ(final double pVoxelDimZ)
@@ -314,8 +285,7 @@ public class StackMetaData
 
       String lString = cMapper.writeValueAsString(mMetaDataMap);
       return lString;
-    }
-    catch (JsonProcessingException e)
+    } catch (JsonProcessingException e)
     {
       return toString();
     }
@@ -324,9 +294,8 @@ public class StackMetaData
   /**
    * Adds to this meta data object the entries contained in the given string (as
    * produced by toString())
-   * 
-   * @param pString
-   *          string
+   *
+   * @param pString string
    * @return values
    */
   public boolean fromString(String pString)
@@ -335,14 +304,10 @@ public class StackMetaData
 
     try
     {
-      @SuppressWarnings("unchecked")
-      HashMap<String, Object> lMapRead =
-                                       (HashMap<String, Object>) cMapper.readValue(pString,
-                                                                                   HashMap.class);
+      @SuppressWarnings("unchecked") HashMap<String, Object> lMapRead = (HashMap<String, Object>) cMapper.readValue(pString, HashMap.class);
       mMetaDataMap.putAll(lMapRead);
       return true;
-    }
-    catch (IOException e)
+    } catch (IOException e)
     {
       e.printStackTrace();
       return false;
@@ -352,7 +317,7 @@ public class StackMetaData
   /**
    * Applies transformations to the string to convert it t the new JSON format.
    * This is to make it possible to load older datasets
-   * 
+   *
    * @param pString
    * @return transformed string normalized from old format to new JSOn format
    */
@@ -369,10 +334,7 @@ public class StackMetaData
       {
         for (int c = 0; c < 2; c++)
         {
-          pString = pString.replaceAll("C" + c
-                                       + "L"
-                                       + l,
-                                       "\"C" + c + "L" + l + "\"");
+          pString = pString.replaceAll("C" + c + "L" + l, "\"C" + c + "L" + l + "\"");
         }
       }
     }

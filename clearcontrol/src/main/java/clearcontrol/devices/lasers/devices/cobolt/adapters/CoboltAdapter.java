@@ -7,14 +7,10 @@ import clearcontrol.devices.lasers.devices.cobolt.adapters.protocol.ProtocolCobo
 /**
  * base class providing common fields and methods for all Cobolt serial adapters
  *
- * @param <O>
- *          data type
+ * @param <O> data type
  * @author royer
  */
-public abstract class CoboltAdapter<O> extends
-                                   SerialDeviceAdapterAdapter<O>
-                                   implements
-                                   SerialTextDeviceAdapter<O>
+public abstract class CoboltAdapter<O> extends SerialDeviceAdapterAdapter<O> implements SerialTextDeviceAdapter<O>
 {
 
   @Override

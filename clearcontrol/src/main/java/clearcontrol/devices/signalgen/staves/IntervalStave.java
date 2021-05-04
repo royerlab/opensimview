@@ -1,7 +1,6 @@
 package clearcontrol.devices.signalgen.staves;
 
-public class IntervalStave extends StaveAbstract
-                           implements StaveInterface
+public class IntervalStave extends StaveAbstract implements StaveInterface
 {
 
   private volatile float mStart = 0;
@@ -14,11 +13,7 @@ public class IntervalStave extends StaveAbstract
     super(pName);
   }
 
-  public IntervalStave(final String pName,
-                       float pSyncStart,
-                       float pSyncStop,
-                       float pInsideValue,
-                       float pOutsideValue)
+  public IntervalStave(final String pName, float pSyncStart, float pSyncStop, float pInsideValue, float pOutsideValue)
   {
     super(pName);
     setStart(pSyncStart);
@@ -30,11 +25,7 @@ public class IntervalStave extends StaveAbstract
   @Override
   public StaveInterface duplicate()
   {
-    IntervalStave lStave = new IntervalStave(getName(),
-            getStart(),
-            getStop(),
-            getInsideValue(),
-            getOutsideValue());
+    IntervalStave lStave = new IntervalStave(getName(), getStart(), getStop(), getInsideValue(), getOutsideValue());
     lStave.setEnabled(this.isEnabled());
     return lStave;
   }
@@ -42,11 +33,8 @@ public class IntervalStave extends StaveAbstract
   @Override
   public float getValue(float pNormalizedTime)
   {
-    if ((pNormalizedTime < getStart())
-        || (pNormalizedTime > getStop()) || !isEnabled())
-      return getOutsideValue();
-    else
-      return getInsideValue();
+    if ((pNormalizedTime < getStart()) || (pNormalizedTime > getStop()) || !isEnabled()) return getOutsideValue();
+    else return getInsideValue();
   }
 
   public float getStart()

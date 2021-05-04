@@ -1,6 +1,7 @@
 package clearcontrol.stack.sourcesink.source.viewer.app;
 
-import java.io.File;
+import clearcontrol.stack.sourcesink.source.viewer.FileStackSourceViewer;
+import clearcontrol.stack.sourcesink.source.viewer.gui.FileStackSourceViewerPanel;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -8,8 +9,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import clearcontrol.stack.sourcesink.source.viewer.FileStackSourceViewer;
-import clearcontrol.stack.sourcesink.source.viewer.gui.FileStackSourceViewerPanel;
+import java.io.File;
 
 /**
  * Stack viewer app
@@ -28,11 +28,9 @@ public class StackViewerApp extends Application
     lDirectoryChooser.setTitle("Select root folder");
     File lChosenRootFolder = lDirectoryChooser.showDialog(stage);
 
-    FileStackSourceViewer lFileStackSourceViewer =
-                                                 new FileStackSourceViewer(lChosenRootFolder);
+    FileStackSourceViewer lFileStackSourceViewer = new FileStackSourceViewer(lChosenRootFolder);
 
-    FileStackSourceViewerPanel lFileStackSourceViewerPanel =
-                                                           new FileStackSourceViewerPanel(lFileStackSourceViewer);
+    FileStackSourceViewerPanel lFileStackSourceViewerPanel = new FileStackSourceViewerPanel(lFileStackSourceViewer);
 
     Scene scene = new Scene(lFileStackSourceViewerPanel, 600, 300);
     stage.setScene(scene);
@@ -48,8 +46,7 @@ public class StackViewerApp extends Application
           System.out.println("Closing App.");
           lFileStackSourceViewer.close();
           System.exit(0);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
           e.printStackTrace();
         }
@@ -61,9 +58,8 @@ public class StackViewerApp extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

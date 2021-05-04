@@ -1,9 +1,9 @@
 package clearcontrol.core.log.gui.demo;
 
-import java.util.logging.Logger;
-
 import clearcontrol.core.log.CompactFormatter;
 import clearcontrol.core.log.gui.LogWindowHandler;
+
+import java.util.logging.Logger;
 
 /**
  * Log window demo
@@ -21,8 +21,7 @@ public class LogWindowDemo
    */
   public LogWindowDemo()
   {
-    mLogWindowHandler =
-                      LogWindowHandler.getInstance("test", 768, 320);
+    mLogWindowHandler = LogWindowHandler.getInstance("test", 768, 320);
     mLogger = Logger.getLogger("test");
     // mLogger.setUseParentHandlers(false);
     mLogWindowHandler.setFormatter(new CompactFormatter());
@@ -31,9 +30,8 @@ public class LogWindowDemo
 
   /**
    * Logs a message
-   * 
-   * @param i
-   *          counter
+   *
+   * @param i counter
    */
   public void logMessage(int i)
   {
@@ -42,11 +40,9 @@ public class LogWindowDemo
 
   /**
    * Main
-   * 
-   * @param args
-   *          N/A
-   * @throws InterruptedException
-   *           N/A
+   *
+   * @param args N/A
+   * @throws InterruptedException N/A
    */
   public static void main(String args[]) throws InterruptedException
   {

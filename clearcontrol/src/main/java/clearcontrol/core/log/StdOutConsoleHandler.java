@@ -35,13 +35,11 @@ public class StdOutConsoleHandler extends ConsoleHandler
       if (record.getLevel().intValue() >= Level.WARNING.intValue())
       {
         System.err.write(message.getBytes());
-      }
-      else
+      } else
       {
         System.out.write(message.getBytes());
       }
-    }
-    catch (Exception exception)
+    } catch (Exception exception)
     {
       reportError(null, exception, ErrorManager.FORMAT_FAILURE);
     }

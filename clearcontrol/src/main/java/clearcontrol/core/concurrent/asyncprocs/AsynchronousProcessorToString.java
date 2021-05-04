@@ -4,14 +4,10 @@ package clearcontrol.core.concurrent.asyncprocs;
  * Asynchronous processor that receives an object and transforms into a string
  * by invoking the object's toString() method.
  *
- * @param <I>
- *          input type
+ * @param <I> input type
  * @author royer
  */
-public class AsynchronousProcessorToString<I> extends
-                                          AsynchronousProcessorBase<I, String>
-                                          implements
-                                          AsynchronousProcessorInterface<I, String>
+public class AsynchronousProcessorToString<I> extends AsynchronousProcessorBase<I, String> implements AsynchronousProcessorInterface<I, String>
 {
 
   /**

@@ -1,26 +1,22 @@
 package clearcontrol.ip.iqm;
 
-import static java.lang.Math.sqrt;
-import static java.lang.Math.toIntExact;
-
 import clearcontrol.stack.OffHeapPlanarStack;
-
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-
 import coremem.ContiguousMemoryInterface;
 import coremem.buffers.ContiguousBuffer;
 import coremem.util.Size;
-
 import org.jtransforms.dct.DoubleDCT_2D;
 import pl.edu.icm.jlargearrays.DoubleLargeArray;
+
+import static java.lang.Math.sqrt;
+import static java.lang.Math.toIntExact;
 
 public class DCTS2D implements ImageQualityMetricInterface
 {
   private ContiguousBuffer mWorkingBuffer;
 
-  private final Table<Long, Long, DoubleDCT_2D> mDoubleDCT2DCache =
-                                                                  HashBasedTable.create();
+  private final Table<Long, Long, DoubleDCT_2D> mDoubleDCT2DCache = HashBasedTable.create();
 
   private double mPSFSupportRadius = 3;
 
@@ -29,11 +25,9 @@ public class DCTS2D implements ImageQualityMetricInterface
     super();
   }
 
-  private DoubleDCT_2D getDCTForWidthAndHeight(long pWidth,
-                                               long pHeight)
+  private DoubleDCT_2D getDCTForWidthAndHeight(long pWidth, long pHeight)
   {
-    DoubleDCT_2D lDoubleDCT_2D =
-                               mDoubleDCT2DCache.get(pWidth, pHeight);
+    DoubleDCT_2D lDoubleDCT_2D = mDoubleDCT2DCache.get(pWidth, pHeight);
 
     if (lDoubleDCT_2D == null)
     {
@@ -41,8 +35,7 @@ public class DCTS2D implements ImageQualityMetricInterface
       {
         lDoubleDCT_2D = new DoubleDCT_2D(pHeight, pWidth, true);
         mDoubleDCT2DCache.put(pWidth, pHeight, lDoubleDCT_2D);
-      }
-      catch (final Throwable e)
+      } catch (final Throwable e)
       {
         e.printStackTrace();
       }
@@ -63,16 +56,11 @@ public class DCTS2D implements ImageQualityMetricInterface
     for (int z = 0; z < lDepth; z++)
     {
       long lNumberOfPixelsPerPlane = lWidth * lHeight;
-      final ContiguousMemoryInterface lPlaneContiguousMemory =
-                                                             pStack.getContiguousMemory(z);
+      final ContiguousMemoryInterface lPlaneContiguousMemory = pStack.getContiguousMemory(z);
 
-      if (mWorkingBuffer == null
-          || mWorkingBuffer.getSizeInBytes() != lNumberOfPixelsPerPlane
-                                                * Size.DOUBLE)
+      if (mWorkingBuffer == null || mWorkingBuffer.getSizeInBytes() != lNumberOfPixelsPerPlane * Size.DOUBLE)
       {
-        mWorkingBuffer =
-                       ContiguousBuffer.allocate(lNumberOfPixelsPerPlane
-                                                 * Size.DOUBLE);
+        mWorkingBuffer = ContiguousBuffer.allocate(lNumberOfPixelsPerPlane * Size.DOUBLE);
       }
 
       mWorkingBuffer.rewind();
@@ -82,18 +70,10 @@ public class DCTS2D implements ImageQualityMetricInterface
         mWorkingBuffer.writeDouble(lValue);
       }
 
-      final long lAddress = mWorkingBuffer.getContiguousMemory()
-                                          .getAddress();
-      final DoubleLargeArray lDoubleLargeArray =
-                                               new DoubleLargeArray(pStack,
-                                                                    lAddress,
-                                                                    lNumberOfPixelsPerPlane);
+      final long lAddress = mWorkingBuffer.getContiguousMemory().getAddress();
+      final DoubleLargeArray lDoubleLargeArray = new DoubleLargeArray(pStack, lAddress, lNumberOfPixelsPerPlane);
 
-      final double lDCTS =
-                         computeDCTSForSinglePlane(lDoubleLargeArray,
-                                                   lWidth,
-                                                   lHeight,
-                                                   getPSFSupportRadius());
+      final double lDCTS = computeDCTSForSinglePlane(lDoubleLargeArray, lWidth, lHeight, getPSFSupportRadius());
 
       lDCTSArray[z] = lDCTS;
     }
@@ -101,32 +81,18 @@ public class DCTS2D implements ImageQualityMetricInterface
     return lDCTSArray;
   }
 
-  private final double computeDCTSForSinglePlane(DoubleLargeArray pDoubleLargeArray,
-                                                 long pWidth,
-                                                 long pHeight,
-                                                 double pPSFSupportRadius)
+  private final double computeDCTSForSinglePlane(DoubleLargeArray pDoubleLargeArray, long pWidth, long pHeight, double pPSFSupportRadius)
   {
-    final DoubleDCT_2D lDCTForWidthAndHeight =
-                                             getDCTForWidthAndHeight(pWidth,
-                                                                     pHeight);
+    final DoubleDCT_2D lDCTForWidthAndHeight = getDCTForWidthAndHeight(pWidth, pHeight);
 
     lDCTForWidthAndHeight.forward(pDoubleLargeArray, false);
 
     normalizeL2(pDoubleLargeArray);
 
-    final long lOTFSupportRadiusX = Math.round(pWidth
-                                               / pPSFSupportRadius);
-    final long lOTFSupportRadiusY = Math.round(pHeight
-                                               / pPSFSupportRadius);
+    final long lOTFSupportRadiusX = Math.round(pWidth / pPSFSupportRadius);
+    final long lOTFSupportRadiusY = Math.round(pHeight / pPSFSupportRadius);
 
-    final double lEntropy =
-                          entropyPerPixelSubTriangle(pDoubleLargeArray,
-                                                     pWidth,
-                                                     pHeight,
-                                                     0,
-                                                     0,
-                                                     lOTFSupportRadiusX,
-                                                     lOTFSupportRadiusY);
+    final double lEntropy = entropyPerPixelSubTriangle(pDoubleLargeArray, pWidth, pHeight, 0, 0, lOTFSupportRadiusX, lOTFSupportRadiusY);
 
     return lEntropy;
   }
@@ -158,13 +124,7 @@ public class DCTS2D implements ImageQualityMetricInterface
     return sqrt(l2);
   }
 
-  private final double entropyPerPixelSubTriangle(DoubleLargeArray pDoubleLargeArray,
-                                                  final long pWidth,
-                                                  final long pHeight,
-                                                  final long xl,
-                                                  final long yl,
-                                                  final long xh,
-                                                  final long yh)
+  private final double entropyPerPixelSubTriangle(DoubleLargeArray pDoubleLargeArray, final long pWidth, final long pHeight, final long xl, final long yl, final long xh, final long yh)
   {
     double entropy = 0;
     for (long y = yl; y < yh; y++)
@@ -179,11 +139,7 @@ public class DCTS2D implements ImageQualityMetricInterface
     return entropy;
   }
 
-  private double entropySub(DoubleLargeArray pDoubleLargeArray,
-                            final long xl,
-                            final double entropy,
-                            final long yi,
-                            final long xend)
+  private double entropySub(DoubleLargeArray pDoubleLargeArray, final long xl, final double entropy, final long yi, final long xend)
   {
     double lEntropy = entropy;
     for (long x = xl; x < xend; x++)
@@ -193,8 +149,7 @@ public class DCTS2D implements ImageQualityMetricInterface
       if (value > 0)
       {
         lEntropy += value * Math.log(value);
-      }
-      else if (value < 0)
+      } else if (value < 0)
       {
         lEntropy += -value * Math.log(-value);
       }

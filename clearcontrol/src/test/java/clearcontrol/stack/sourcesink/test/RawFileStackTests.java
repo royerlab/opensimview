@@ -1,11 +1,5 @@
 package clearcontrol.stack.sourcesink.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-
 import clearcontrol.stack.ContiguousOffHeapPlanarStackFactory;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
@@ -15,9 +9,14 @@ import clearcontrol.stack.sourcesink.source.RawFileStackSource;
 import coremem.ContiguousMemoryInterface;
 import coremem.buffers.ContiguousBuffer;
 import coremem.recycling.BasicRecycler;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Raw file stack tests
@@ -39,9 +38,8 @@ public class RawFileStackTests
 
   /**
    * Test write speed
-   * 
-   * @throws IOException
-   *           NA
+   *
+   * @throws IOException NA
    */
   @Test
   public void testWriteSpeed() throws IOException
@@ -51,43 +49,28 @@ public class RawFileStackTests
     {
       System.gc();
 
-      final File lRootFolder =
-                             new File(File.createTempFile("test",
-                                                          "test")
-                                          .getParentFile(),
-                                      "LocalFileStackTests" + Math.random());/**/
+      final File lRootFolder = new File(File.createTempFile("test", "test").getParentFile(), "LocalFileStackTests" + Math.random());/**/
 
       lRootFolder.mkdirs();
       System.out.println(lRootFolder);
 
-      final RawFileStackSink lLocalFileStackSink =
-                                                 new RawFileStackSink();
+      final RawFileStackSink lLocalFileStackSink = new RawFileStackSink();
       lLocalFileStackSink.setLocation(lRootFolder, "testSink");
 
-      final OffHeapPlanarStack lStack =
-                                      OffHeapPlanarStack.createStack(cSizeX,
-                                                                     cSizeY,
-                                                                     cSizeZ);
+      final OffHeapPlanarStack lStack = OffHeapPlanarStack.createStack(cSizeX, cSizeY, cSizeZ);
 
       lStack.getMetaData().setIndex(0);
-      lStack.getMetaData()
-            .setTimeStampInNanoseconds(System.nanoTime());
+      lStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
 
       assertEquals(cSizeX * cSizeY * cSizeZ, lStack.getVolume());
 
-      assertEquals(cSizeX * cSizeY
-                   * cSizeZ
-                   * cBytesPerVoxel,
-                   lStack.getSizeInBytes());
+      assertEquals(cSizeX * cSizeY * cSizeZ * cBytesPerVoxel, lStack.getSizeInBytes());
 
       System.out.println("generating data...");
-      System.out.println("size: " + lStack.getSizeInBytes()
-                         + " bytes!");
-      ContiguousMemoryInterface lContiguousMemory =
-                                                  lStack.getContiguousMemory();
+      System.out.println("size: " + lStack.getSizeInBytes() + " bytes!");
+      ContiguousMemoryInterface lContiguousMemory = lStack.getContiguousMemory();
 
-      ContiguousBuffer lBuffer =
-                               ContiguousBuffer.wrap(lContiguousMemory);
+      ContiguousBuffer lBuffer = ContiguousBuffer.wrap(lContiguousMemory);
       int i = 0;
       while (lBuffer.hasRemainingByte())
       {
@@ -102,8 +85,7 @@ public class RawFileStackTests
 
       double lElapsedTimeInSeconds = (lStop - lStart) * 1e-9;
 
-      double lSpeed = (lStack.getSizeInBytes() * 1e-6)
-                      / lElapsedTimeInSeconds;
+      double lSpeed = (lStack.getSizeInBytes() * 1e-6) / lElapsedTimeInSeconds;
 
       System.out.format("speed: %g MB/s \n", lSpeed);
       System.out.format("time : %g   ms \n", (lStop - lStart) * 1e-6);
@@ -113,8 +95,7 @@ public class RawFileStackTests
       try
       {
         FileUtils.deleteDirectory(lRootFolder);
-      }
-      catch (Exception e)
+      } catch (Exception e)
       {
         System.out.println(e);
       }
@@ -126,19 +107,14 @@ public class RawFileStackTests
 
   /**
    * test sink and source
-   * 
-   * @throws IOException
-   *           NA
+   *
+   * @throws IOException NA
    */
   @Test
   public void testSinkAndSource() throws IOException
   {
 
-    final File lRootFolder =
-                           new File(File.createTempFile("test",
-                                                        "test")
-                                        .getParentFile(),
-                                    "LocalFileStackTests" + Math.random());/**/
+    final File lRootFolder = new File(File.createTempFile("test", "test").getParentFile(), "LocalFileStackTests" + Math.random());/**/
 
     // final File lRootFolder = new File("/Volumes/External/Temp");
 
@@ -146,37 +122,27 @@ public class RawFileStackTests
     System.out.println(lRootFolder);
 
     {
-      final RawFileStackSink lLocalFileStackSink =
-                                                 new RawFileStackSink();
+      final RawFileStackSink lLocalFileStackSink = new RawFileStackSink();
       lLocalFileStackSink.setLocation(lRootFolder, "testSink");
 
-      final OffHeapPlanarStack lStack =
-                                      OffHeapPlanarStack.createStack(cSizeX,
-                                                                     cSizeY,
-                                                                     cSizeZ);
+      final OffHeapPlanarStack lStack = OffHeapPlanarStack.createStack(cSizeX, cSizeY, cSizeZ);
 
       lStack.getMetaData().setIndex(0);
-      lStack.getMetaData()
-            .setTimeStampInNanoseconds(System.nanoTime());
+      lStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
 
       assertEquals(cSizeX * cSizeY * cSizeZ, lStack.getVolume());
       // System.out.println(lStack.mNDimensionalArray.getLengthInElements()
       // *
       // 2);
 
-      assertEquals(cSizeX * cSizeY
-                   * cSizeZ
-                   * cBytesPerVoxel,
-                   lStack.getSizeInBytes());
+      assertEquals(cSizeX * cSizeY * cSizeZ * cBytesPerVoxel, lStack.getSizeInBytes());
 
       for (int i = 0; i < cNumberOfStacks; i++)
       {
 
-        final ContiguousMemoryInterface lContiguousMemory =
-                                                          lStack.getContiguousMemory();
+        final ContiguousMemoryInterface lContiguousMemory = lStack.getContiguousMemory();
 
-        ContiguousBuffer lContiguousBuffer =
-                                           ContiguousBuffer.wrap(lContiguousMemory);
+        ContiguousBuffer lContiguousBuffer = ContiguousBuffer.wrap(lContiguousMemory);
 
         while (lContiguousBuffer.hasRemainingShort())
         {
@@ -194,36 +160,27 @@ public class RawFileStackTests
         assertTrue(lLocalFileStackSink.appendStack(lStack));
       }
 
-      assertEquals(cNumberOfStacks,
-                   lLocalFileStackSink.getNumberOfStacks());
+      assertEquals(cNumberOfStacks, lLocalFileStackSink.getNumberOfStacks());
 
       lLocalFileStackSink.close();
     }
 
     {
-      final ContiguousOffHeapPlanarStackFactory lOffHeapPlanarStackFactory =
-                                                                           new ContiguousOffHeapPlanarStackFactory();
+      final ContiguousOffHeapPlanarStackFactory lOffHeapPlanarStackFactory = new ContiguousOffHeapPlanarStackFactory();
 
-      final BasicRecycler<StackInterface, StackRequest> lStackRecycler =
-                                                                       new BasicRecycler<StackInterface, StackRequest>(lOffHeapPlanarStackFactory,
-                                                                                                                       cMaximalNumberOfAvailableStacks);
+      final BasicRecycler<StackInterface, StackRequest> lStackRecycler = new BasicRecycler<StackInterface, StackRequest>(lOffHeapPlanarStackFactory, cMaximalNumberOfAvailableStacks);
 
-      final RawFileStackSource lLocalFileStackSource =
-                                                     new RawFileStackSource(lStackRecycler);
+      final RawFileStackSource lLocalFileStackSource = new RawFileStackSource(lStackRecycler);
 
       lLocalFileStackSource.setLocation(lRootFolder, "testSink");
 
       lLocalFileStackSource.update();
 
-      assertEquals(cNumberOfStacks,
-                   lLocalFileStackSource.getNumberOfStacks());
+      assertEquals(cNumberOfStacks, lLocalFileStackSource.getNumberOfStacks());
 
-      assertEquals(cSizeX,
-                   lLocalFileStackSource.getStack(0).getWidth());
-      assertEquals(cSizeY,
-                   lLocalFileStackSource.getStack(0).getHeight());
-      assertEquals(cSizeZ,
-                   lLocalFileStackSource.getStack(0).getDepth());
+      assertEquals(cSizeX, lLocalFileStackSource.getStack(0).getWidth());
+      assertEquals(cSizeY, lLocalFileStackSource.getStack(0).getHeight());
+      assertEquals(cSizeZ, lLocalFileStackSource.getStack(0).getDepth());
 
       lLocalFileStackSource.close();
     }
@@ -231,8 +188,7 @@ public class RawFileStackTests
     try
     {
       FileUtils.deleteDirectory(lRootFolder);
-    }
-    catch (Exception e)
+    } catch (Exception e)
     {
     }
 

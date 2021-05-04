@@ -10,10 +10,9 @@ public interface UpdateListener
 {
   /**
    * Notifies of an update
-   * 
-   * @param pUpdatable
-   *          Updatable object (most likely a device from which this event
-   *          originates)
+   *
+   * @param pUpdatable Updatable object (most likely a device from which this event
+   *                   originates)
    */
   public void notifyUpdate(UpdatableInterface pUpdatable);
 }

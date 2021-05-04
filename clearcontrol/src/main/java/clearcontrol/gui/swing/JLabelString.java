@@ -1,18 +1,16 @@
 package clearcontrol.gui.swing;
 
-import java.awt.EventQueue;
-
-import javax.swing.JLabel;
-
 import clearcontrol.core.variable.Variable;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class JLabelString extends JLabel
 {
   private final Variable<String> mStringVariable;
   private JLabelString mThis;
 
-  public JLabelString(final String pLabelName,
-                      final String pInicialValue)
+  public JLabelString(final String pLabelName, final String pInicialValue)
   {
     super(pInicialValue);
     mThis = this;
@@ -20,8 +18,7 @@ public class JLabelString extends JLabel
     mStringVariable = new Variable<String>(pLabelName, pInicialValue)
     {
       @Override
-      public String setEventHook(final String pOldValue,
-                                 final String pNewValue)
+      public String setEventHook(final String pOldValue, final String pNewValue)
       {
         if (!pNewValue.equals(mThis.getText()))
         {

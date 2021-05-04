@@ -1,36 +1,28 @@
 package clearcontrol.core.math.argmax.methods;
 
+import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
+import gnu.trove.list.array.TDoubleArrayList;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
-
-import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
-import gnu.trove.list.array.TDoubleArrayList;
-
-import org.apache.commons.math3.stat.descriptive.rank.Median;
+import java.util.concurrent.*;
 
 /**
  * Ensemble argmax finder.
- * 
+ * <p>
  * Different argmax finders can be added to an ensemble argmax finder. The
  * median argmax finder of all resuling argmaxes will be returned.
- * 
  *
  * @author royer
  */
 public class EnsembleArgMaxFinder implements ArgMaxFinder1DInterface
 {
-  private static final Executor sExecutor =
-                                          Executors.newCachedThreadPool();
+  private static final Executor sExecutor = Executors.newCachedThreadPool();
   private static final int cTimeOutInSeconds = 1;
 
-  private final ArrayList<ArgMaxFinder1DInterface> mArgMaxFinder1DInterfaceList =
-                                                                                new ArrayList<ArgMaxFinder1DInterface>();
+  private final ArrayList<ArgMaxFinder1DInterface> mArgMaxFinder1DInterfaceList = new ArrayList<ArgMaxFinder1DInterface>();
   private final Median mMedian;
 
   private final boolean mDebug = false;
@@ -46,9 +38,8 @@ public class EnsembleArgMaxFinder implements ArgMaxFinder1DInterface
 
   /**
    * Adds the given argmax finder to the list of argmax finders to use.
-   * 
-   * @param pArgMaxFinder1D
-   *          argmax finder to add
+   *
+   * @param pArgMaxFinder1D argmax finder to add
    */
   public void add(ArgMaxFinder1DInterface pArgMaxFinder1D)
   {
@@ -61,9 +52,7 @@ public class EnsembleArgMaxFinder implements ArgMaxFinder1DInterface
     private final double[] mY;
     private final ArgMaxFinder1DInterface mArgMaxFinder1DInterface;
 
-    public ArgMaxCallable(ArgMaxFinder1DInterface pArgMaxFinder1DInterface,
-                          double[] pX,
-                          double[] pY)
+    public ArgMaxCallable(ArgMaxFinder1DInterface pArgMaxFinder1DInterface, double[] pX, double[] pY)
     {
       mArgMaxFinder1DInterface = pArgMaxFinder1DInterface;
       mX = pX;
@@ -97,22 +86,15 @@ public class EnsembleArgMaxFinder implements ArgMaxFinder1DInterface
   {
     println("pX=" + Arrays.toString(pX));
     println("pY=" + Arrays.toString(pY));
-    if (constant(pY))
-      return null;
+    if (constant(pY)) return null;
 
-    final ArrayList<FutureTask<Double>> lTaskList =
-                                                  new ArrayList<FutureTask<Double>>();
-    final HashMap<FutureTask<Double>, ArgMaxCallable> lTaskToCallableMap =
-                                                                         new HashMap<FutureTask<Double>, ArgMaxCallable>();
+    final ArrayList<FutureTask<Double>> lTaskList = new ArrayList<FutureTask<Double>>();
+    final HashMap<FutureTask<Double>, ArgMaxCallable> lTaskToCallableMap = new HashMap<FutureTask<Double>, ArgMaxCallable>();
 
     for (final ArgMaxFinder1DInterface lArgMaxFinder1DInterface : mArgMaxFinder1DInterfaceList)
     {
-      final ArgMaxCallable lArgMaxCallable =
-                                           new ArgMaxCallable(lArgMaxFinder1DInterface,
-                                                              pX,
-                                                              pY);
-      final FutureTask<Double> lArgMaxFutureTask =
-                                                 new FutureTask<Double>(lArgMaxCallable);
+      final ArgMaxCallable lArgMaxCallable = new ArgMaxCallable(lArgMaxFinder1DInterface, pX, pY);
+      final FutureTask<Double> lArgMaxFutureTask = new FutureTask<Double>(lArgMaxCallable);
       sExecutor.execute(lArgMaxFutureTask);
       lTaskList.add(lArgMaxFutureTask);
       lTaskToCallableMap.put(lArgMaxFutureTask, lArgMaxCallable);
@@ -123,28 +105,20 @@ public class EnsembleArgMaxFinder implements ArgMaxFinder1DInterface
     {
       try
       {
-        final Double lArgMax =
-                             lArgMaxFutureTask.get(cTimeOutInSeconds,
-                                                   TimeUnit.SECONDS);
+        final Double lArgMax = lArgMaxFutureTask.get(cTimeOutInSeconds, TimeUnit.SECONDS);
         if (lArgMax != null)
         {
           if (mDebug)
-            System.out.println("class: "
-                               + lTaskToCallableMap.get(lArgMaxFutureTask)
-                               + "\n\t\targmax="
-                               + lArgMax);
+            System.out.println("class: " + lTaskToCallableMap.get(lArgMaxFutureTask) + "\n\t\targmax=" + lArgMax);
           lArgMaxList.add(lArgMax);
         }
-      }
-      catch (final Throwable e)
+      } catch (final Throwable e)
       {
-        if (mDebug)
-          e.printStackTrace();
+        if (mDebug) e.printStackTrace();
       }
     }
 
-    final double lArgMaxMedian =
-                               mMedian.evaluate(lArgMaxList.toArray());
+    final double lArgMaxMedian = mMedian.evaluate(lArgMaxList.toArray());
 
     return lArgMaxMedian;
   }
@@ -152,16 +126,14 @@ public class EnsembleArgMaxFinder implements ArgMaxFinder1DInterface
   private boolean constant(double[] pY)
   {
     for (int i = 0; i < pY.length; i++)
-      if (pY[i] != pY[0])
-        return false;
+      if (pY[i] != pY[0]) return false;
     return true;
   }
 
   @Override
   public String toString()
   {
-    return String.format("EnsembleArgMaxFinder [mArgMaxFinder1DInterfaceList=%s]",
-                         mArgMaxFinder1DInterfaceList);
+    return String.format("EnsembleArgMaxFinder [mArgMaxFinder1DInterfaceList=%s]", mArgMaxFinder1DInterfaceList);
   }
 
   private void println(String pString)

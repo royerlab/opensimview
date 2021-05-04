@@ -1,12 +1,11 @@
 package clearcontrol.devices.stages.devices.ecc100.demo;
 
-import static org.junit.Assert.assertTrue;
+import clearcontrol.devices.stages.devices.ecc100.ECC100StageDevice;
+import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.devices.stages.devices.ecc100.ECC100StageDevice;
-
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 public class Ecc100StageDeviceDemo
 {
@@ -25,11 +24,8 @@ public class Ecc100StageDeviceDemo
 
     for (int dof = 0; dof < lNumberOfDOFs; dof++)
     {
-      double lCurrentPosition =
-                              lECC100StageDevice.getCurrentPosition(dof);
-      System.out.println("lCurrentPosition" + dof
-                         + "="
-                         + lCurrentPosition);
+      double lCurrentPosition = lECC100StageDevice.getCurrentPosition(dof);
+      System.out.println("lCurrentPosition" + dof + "=" + lCurrentPosition);
     }
 
     for (int dof = 0; dof < lNumberOfDOFs; dof++)
@@ -44,11 +40,8 @@ public class Ecc100StageDeviceDemo
     }
     for (int dof = 0; dof < lNumberOfDOFs; dof++)
     {
-      double lCurrentPosition =
-                              lECC100StageDevice.getCurrentPosition(dof);
-      System.out.println("lCurrentPosition" + dof
-                         + "="
-                         + lCurrentPosition);
+      double lCurrentPosition = lECC100StageDevice.getCurrentPosition(dof);
+      System.out.println("lCurrentPosition" + dof + "=" + lCurrentPosition);
     }
 
     assertTrue(lECC100StageDevice.stop());

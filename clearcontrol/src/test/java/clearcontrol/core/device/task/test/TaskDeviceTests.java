@@ -1,14 +1,13 @@
 package clearcontrol.core.device.task.test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.core.device.task.TaskDevice;
+import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.core.device.task.TaskDevice;
-
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Task device tests

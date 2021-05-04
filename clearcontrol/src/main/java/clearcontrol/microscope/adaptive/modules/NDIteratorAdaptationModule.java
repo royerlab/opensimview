@@ -1,30 +1,26 @@
 package clearcontrol.microscope.adaptive.modules;
 
+import clearcontrol.microscope.state.AcquisitionStateInterface;
+import clearcontrol.util.NDIterator;
+
 import java.util.Arrays;
 import java.util.concurrent.Future;
-
-import clearcontrol.util.NDIterator;
-import clearcontrol.microscope.state.AcquisitionStateInterface;
 
 /**
  * ND iterator adaptation module
  *
+ * @param <S> state type
  * @author royer
- * @param <S>
- *          state type
  */
-public abstract class NDIteratorAdaptationModule<S extends AcquisitionStateInterface<?, ?>>
-                                                extends
-                                                AdaptationModuleBase<S>
+public abstract class NDIteratorAdaptationModule<S extends AcquisitionStateInterface<?, ?>> extends AdaptationModuleBase<S>
 {
 
   private NDIterator mNDIterator;
 
   /**
    * Instantiates a ND iterator adaptation module
-   * 
-   * @param pModuleName
-   *          module name
+   *
+   * @param pModuleName module name
    */
   public NDIteratorAdaptationModule(String pModuleName)
   {
@@ -33,7 +29,7 @@ public abstract class NDIteratorAdaptationModule<S extends AcquisitionStateInter
 
   /**
    * Returns ND iterator
-   * 
+   *
    * @return ND iterator
    */
   public NDIterator getNDIterator()
@@ -43,9 +39,8 @@ public abstract class NDIteratorAdaptationModule<S extends AcquisitionStateInter
 
   /**
    * Sets the ND iterator
-   * 
-   * @param pNDIterator
-   *          ND iterator
+   *
+   * @param pNDIterator ND iterator
    */
   public void setNDIterator(NDIterator pNDIterator)
   {
@@ -56,7 +51,9 @@ public abstract class NDIteratorAdaptationModule<S extends AcquisitionStateInter
   public int getNumberOfSteps()
   {
     return mNDIterator.getNumberOfIterations();
-  };
+  }
+
+  ;
 
   @Override
   public int getRemainingNumberOfSteps()
@@ -89,16 +86,13 @@ public abstract class NDIteratorAdaptationModule<S extends AcquisitionStateInter
     {
       int[] lNextStepCoordinates = getNDIterator().next();
 
-      info("Next step: [%s] ->%s \n",
-           getName(),
-           Arrays.toString(lNextStepCoordinates));
+      info("Next step: [%s] ->%s \n", getName(), Arrays.toString(lNextStepCoordinates));
 
       Future<?> lFuture = atomicStep(lNextStepCoordinates);
 
       getStatusStringVariable().set(Arrays.toString(lNextStepCoordinates));
 
-      if (lFuture != null)
-        mListOfFuturTasks.add(lFuture);
+      if (lFuture != null) mListOfFuturTasks.add(lFuture);
     }
 
     return getNDIterator().hasNext();
@@ -106,10 +100,8 @@ public abstract class NDIteratorAdaptationModule<S extends AcquisitionStateInter
 
   /**
    * Performs an atomic step
-   * 
-   * @param pStepCoordinates
-   *          step coordinates
-   * 
+   *
+   * @param pStepCoordinates step coordinates
    * @return future
    */
   public abstract Future<?> atomicStep(int... pStepCoordinates);
@@ -132,10 +124,7 @@ public abstract class NDIteratorAdaptationModule<S extends AcquisitionStateInter
     boolean lAllTasksCompleted = areAllTasksCompleted();
     boolean lAllStepsCompleted = areAllStepsCompleted();
 
-    info("module: %s, all tasks completed: %s, all steps completed: %s \n",
-         getName(),
-         lAllTasksCompleted ? "yes" : "no",
-         lAllStepsCompleted ? "yes" : "no");
+    info("module: %s, all tasks completed: %s, all steps completed: %s \n", getName(), lAllTasksCompleted ? "yes" : "no", lAllStepsCompleted ? "yes" : "no");
 
     return lAllTasksCompleted && lAllStepsCompleted;
   }

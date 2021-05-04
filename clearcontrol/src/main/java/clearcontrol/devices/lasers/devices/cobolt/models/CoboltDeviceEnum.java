@@ -9,13 +9,7 @@ package clearcontrol.devices.lasers.devices.cobolt.models;
 public enum CoboltDeviceEnum
 {
 
- Zouk(355),
- Calypso(491),
- Samba(532),
- Jive(561),
- Mambo(594),
- Flamenco(660),
- Rumba(1064);
+  Zouk(355), Calypso(491), Samba(532), Jive(561), Mambo(594), Flamenco(660), Rumba(1064);
 
   int mWavelengthInNanometer;
 
@@ -26,7 +20,7 @@ public enum CoboltDeviceEnum
 
   /**
    * Returns the wavelength of this model.
-   * 
+   *
    * @return wavelegth in nanometer
    */
   public int getWavelengthInNanoMeter()

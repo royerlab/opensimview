@@ -1,12 +1,5 @@
 package clearcontrol.gui.video.video3d;
 
-import static java.lang.Math.*;
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
-
 import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorBase;
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.core.variable.Variable;
@@ -20,17 +13,19 @@ import cleargl.ClearGLWindow;
 import clearvolume.renderer.ClearVolumeRendererInterface;
 import clearvolume.renderer.cleargl.ClearGLVolumeRenderer;
 import clearvolume.renderer.factory.ClearVolumeRendererFactory;
-
 import com.jogamp.newt.event.KeyAdapter;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
-
 import coremem.ContiguousMemoryInterface;
 import coremem.enums.NativeTypeEnum;
 import coremem.util.Size;
 
-public class Stack3DDisplay extends VirtualDevice
-                            implements StackDisplayInterface
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static java.lang.Math.*;
+
+public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterface
 {
   private static final int cDefaultDisplayQueueLength = 2;
   protected static final long cTimeOutForBufferCopy = 5;
@@ -50,29 +45,18 @@ public class Stack3DDisplay extends VirtualDevice
     this(pWindowName, 512, 512, 1, cDefaultDisplayQueueLength);
   }
 
-  public Stack3DDisplay(final String pWindowName,
-                        final int pWindowWidth,
-                        final int pWindowHeight,
-                        final int pNumberOfLayers,
-                        final int pUpdaterQueueLength)
+  public Stack3DDisplay(final String pWindowName, final int pWindowWidth, final int pWindowHeight, final int pNumberOfLayers, final int pUpdaterQueueLength)
   {
     super(pWindowName);
 
     NativeTypeEnum lNativeTypeEnum = NativeTypeEnum.UnsignedShort;
 
-    mClearVolumeRenderer =
-                         ClearVolumeRendererFactory.newBestRenderer(pWindowName,
-                                                                    pWindowWidth,
-                                                                    pWindowHeight,
-                                                                    lNativeTypeEnum,
-                                                                    2048,
-                                                                    2048,
-                                                                    pNumberOfLayers,
-                                                                    false);
+    mClearVolumeRenderer = ClearVolumeRendererFactory.newBestRenderer(pWindowName, pWindowWidth, pWindowHeight, lNativeTypeEnum, 2048, 2048, pNumberOfLayers, false);
 
     mVisibleVariable = new Variable<Boolean>("Visible", false);
 
-    mVisibleVariable.addSetListener((o, n) -> {
+    mVisibleVariable.addSetListener((o, n) ->
+    {
       mClearVolumeRenderer.setVisible(n);
     });
 
@@ -83,10 +67,8 @@ public class Stack3DDisplay extends VirtualDevice
 
     if (mClearVolumeRenderer instanceof ClearGLVolumeRenderer)
     {
-      ClearGLVolumeRenderer lClearGLVolumeRenderer =
-                                                   (ClearGLVolumeRenderer) mClearVolumeRenderer;
-      ClearGLWindow lClearGLWindow =
-                                   lClearGLVolumeRenderer.getClearGLWindow();
+      ClearGLVolumeRenderer lClearGLVolumeRenderer = (ClearGLVolumeRenderer) mClearVolumeRenderer;
+      ClearGLWindow lClearGLWindow = lClearGLVolumeRenderer.getClearGLWindow();
       lClearGLWindow.addWindowListener(new WindowControl(lClearGLWindow));
 
       KeyListener lKeyAdapter = new KeyAdapter()
@@ -96,16 +78,16 @@ public class Stack3DDisplay extends VirtualDevice
         {
           switch (pE.getKeyCode())
           {
-          case KeyEvent.VK_F:
-            mManualVisualisationAdjustment = false;
-            break;
-          case KeyEvent.VK_G:
-            mManualVisualisationAdjustment = true;
-            break;
-          case KeyEvent.VK_V:
-            mManualVisualisationAdjustment = true;
-            MinMaxControlDialog.showDialog(mClearVolumeRenderer);
-            break;
+            case KeyEvent.VK_F:
+              mManualVisualisationAdjustment = false;
+              break;
+            case KeyEvent.VK_G:
+              mManualVisualisationAdjustment = true;
+              break;
+            case KeyEvent.VK_V:
+              mManualVisualisationAdjustment = true;
+              MinMaxControlDialog.showDialog(mClearVolumeRenderer);
+              break;
           }
         }
       };
@@ -114,11 +96,9 @@ public class Stack3DDisplay extends VirtualDevice
 
     }
 
-    class Aynchronous3DStackDisplayUpdater extends
-                                           AsynchronousProcessorBase<StackInterface, Object>
+    class Aynchronous3DStackDisplayUpdater extends AsynchronousProcessorBase<StackInterface, Object>
     {
-      public Aynchronous3DStackDisplayUpdater(String pName,
-                                              int pMaxQueueSize)
+      public Aynchronous3DStackDisplayUpdater(String pName, int pMaxQueueSize)
       {
         super(pName, pMaxQueueSize);
       }
@@ -126,8 +106,7 @@ public class Stack3DDisplay extends VirtualDevice
       @Override
       public Object process(final StackInterface pStack)
       {
-        if (pStack instanceof EmptyStack)
-          return null;
+        if (pStack instanceof EmptyStack) return null;
 
         if (mClearVolumeRenderer.isShowing() && pStack.getDepth() > 1)
         {
@@ -144,33 +123,24 @@ public class Stack3DDisplay extends VirtualDevice
           final long lHeight = pStack.getHeight();
           final long lDepth = pStack.getDepth();
 
-          final NativeTypeEnum lNativeTypeEnum =
-                                               mClearVolumeRenderer.getNativeType();
+          final NativeTypeEnum lNativeTypeEnum = mClearVolumeRenderer.getNativeType();
           final long lBytesPerVoxel = Size.of(lNativeTypeEnum);
 
           int lChannel = 0;
-          Long lChannelObj =
-                           pStack.getMetaData()
-                                 .getValue(MetaDataOrdinals.DisplayChannel);
-          if (lChannelObj != null)
-            lChannel = lChannelObj.intValue() % pNumberOfLayers;
+          Long lChannelObj = pStack.getMetaData().getValue(MetaDataOrdinals.DisplayChannel);
+          if (lChannelObj != null) lChannel = lChannelObj.intValue() % pNumberOfLayers;
 
-          if (lWidth * lHeight
-              * lDepth
-              * lBytesPerVoxel != lSizeInBytes)
+          if (lWidth * lHeight * lDepth * lBytesPerVoxel != lSizeInBytes)
           {
-            System.err.println(Stack3DDisplay.class.getSimpleName()
-                               + ": receiving wrong pointer size!");
+            System.err.println(Stack3DDisplay.class.getSimpleName() + ": receiving wrong pointer size!");
             return null;
           }
 
-          final ContiguousMemoryInterface lContiguousMemory =
-                                                            pStack.getContiguousMemory();
+          final ContiguousMemoryInterface lContiguousMemory = pStack.getContiguousMemory();
 
           if (lContiguousMemory.isFree())
           {
-            System.err.println(Stack3DDisplay.class.getSimpleName()
-                               + ": buffer released!");
+            System.err.println(Stack3DDisplay.class.getSimpleName() + ": buffer released!");
             return null;
           }
 
@@ -199,14 +169,7 @@ public class Stack3DDisplay extends VirtualDevice
 
           }
 
-          mClearVolumeRenderer.setVolumeDataBuffer(lChannel,
-                                                   lContiguousMemory,
-                                                   lWidth,
-                                                   lHeight,
-                                                   lDepth,
-                                                   lVoxelWidth,
-                                                   lVoxelHeight,
-                                                   lVoxelDepth);
+          mClearVolumeRenderer.setVolumeDataBuffer(lChannel, lContiguousMemory, lWidth, lHeight, lDepth, lVoxelWidth, lVoxelHeight, lVoxelDepth);
 
           // FIXME
           /*
@@ -214,17 +177,10 @@ public class Stack3DDisplay extends VirtualDevice
           pStack.getVoxelSizeInRealUnits(1),
           pStack.getVoxelSizeInRealUnits(2)); /**/
 
-          if (mWaitForLastChannel.get()
-              && ((lChannel + 1)
-                  % mClearVolumeRenderer.getNumberOfRenderLayers()) == 0)
+          if (mWaitForLastChannel.get() && ((lChannel + 1) % mClearVolumeRenderer.getNumberOfRenderLayers()) == 0)
           {
-            mClearVolumeRenderer.waitToFinishAllDataBufferCopy(cTimeOutForBufferCopy,
-                                                               TimeUnit.SECONDS);/**/
-          }
-          else
-            mClearVolumeRenderer.waitToFinishDataBufferCopy(lChannel,
-                                                            cTimeOutForBufferCopy,
-                                                            TimeUnit.SECONDS);/**/
+            mClearVolumeRenderer.waitToFinishAllDataBufferCopy(cTimeOutForBufferCopy, TimeUnit.SECONDS);/**/
+          } else mClearVolumeRenderer.waitToFinishDataBufferCopy(lChannel, cTimeOutForBufferCopy, TimeUnit.SECONDS);/**/
 
           adjustVisualisation(pStack);
 
@@ -236,17 +192,13 @@ public class Stack3DDisplay extends VirtualDevice
       }
     }
 
-    mAsynchronousDisplayUpdater =
-                                new Aynchronous3DStackDisplayUpdater("AsynchronousDisplayUpdater-"
-                                                                     + pWindowName,
-                                                                     pUpdaterQueueLength);
+    mAsynchronousDisplayUpdater = new Aynchronous3DStackDisplayUpdater("AsynchronousDisplayUpdater-" + pWindowName, pUpdaterQueueLength);
 
     mInputStackVariable = new Variable<StackInterface>("3DStackInput")
     {
 
       @Override
-      public StackInterface setEventHook(final StackInterface pOldStack,
-                                         final StackInterface pNewStack)
+      public StackInterface setEventHook(final StackInterface pOldStack, final StackInterface pNewStack)
       {
         if (!mAsynchronousDisplayUpdater.passOrFail(pNewStack))
         {
@@ -259,8 +211,7 @@ public class Stack3DDisplay extends VirtualDevice
 
     };
 
-    mWaitForLastChannel = new Variable<Boolean>("WaitForLastChannel",
-                                                false);
+    mWaitForLastChannel = new Variable<Boolean>("WaitForLastChannel", false);
 
   }
 
@@ -279,11 +230,7 @@ public class Stack3DDisplay extends VirtualDevice
     }
     mAdjustmentRunning.lock();
     {
-      fastMinMaxSampling(pStack.getContiguousMemory(),
-                         pStack.getDataType(),
-                         pStack.getWidth(),
-                         pStack.getHeight(),
-                         pStack.getDepth());
+      fastMinMaxSampling(pStack.getContiguousMemory(), pStack.getDataType(), pStack.getWidth(), pStack.getHeight(), pStack.getDepth());
 
       this.mClearVolumeRenderer.setTransferFunctionRangeMin(mSampledMinIntensity);
       this.mClearVolumeRenderer.setTransferFunctionRangeMax(mSampledMaxIntensity);
@@ -294,82 +241,60 @@ public class Stack3DDisplay extends VirtualDevice
   double mSampledMinIntensity;
   double mSampledMaxIntensity;
 
-  public void fastMinMaxSampling(final ContiguousMemoryInterface pMemory,
-                                 NativeTypeEnum pNativeTypeEnum,
-                                 long pBufferWidth,
-                                 long pBufferHeight,
-                                 long pBufferDepth)
+  public void fastMinMaxSampling(final ContiguousMemoryInterface pMemory, NativeTypeEnum pNativeTypeEnum, long pBufferWidth, long pBufferHeight, long pBufferDepth)
   {
-    if (pMemory.isFree())
-      return;
+    if (pMemory.isFree()) return;
 
-    final long lLength =
-                       min(pBufferWidth * pBufferHeight
-                           * pBufferDepth,
-                           pMemory.getSizeInBytes()
-                                           / Size.of(pNativeTypeEnum));
+    final long lLength = min(pBufferWidth * pBufferHeight * pBufferDepth, pMemory.getSizeInBytes() / Size.of(pNativeTypeEnum));
     final long lStep = 1 + round(0.001 * lLength);
     final int lStartPixel = (int) round(random() * lStep);
 
     double lMin = Double.POSITIVE_INFINITY;
     double lMax = Double.NEGATIVE_INFINITY;
 
-    if (pNativeTypeEnum == NativeTypeEnum.UnsignedByte)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final double lValue =
-                            (0xFF & pMemory.getByteAligned(i)) / 255d;
-        lMin = min(lMin, lValue);
-        lMax = max(lMax, lValue);
-      }
-    else if (pNativeTypeEnum == NativeTypeEnum.UnsignedShort)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final double lValue = (0xFFFF & pMemory.getCharAligned(i))
-                              / 65535d;
-        lMin = min(lMin, lValue);
-        lMax = max(lMax, lValue);
-      }
-    else if (pNativeTypeEnum == NativeTypeEnum.UnsignedInt)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final double lValue = (0xFFFFFFFF & pMemory.getIntAligned(i))
-                              / 4294967296d;
-        lMin = min(lMin, lValue);
-        lMax = max(lMax, lValue);
-      }
-    else if (pNativeTypeEnum == NativeTypeEnum.Float)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final float lFloatAligned = pMemory.getFloatAligned(i);
-        lMin = min(lMin, lFloatAligned);
-        lMax = max(lMax, lFloatAligned);
-      }
-    else if (pNativeTypeEnum == NativeTypeEnum.Double)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final double lDoubleAligned = pMemory.getDoubleAligned(i);
-        lMin = min(lMin, lDoubleAligned);
-        lMax = max(lMax, lDoubleAligned);
-      }
+    if (pNativeTypeEnum == NativeTypeEnum.UnsignedByte) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final double lValue = (0xFF & pMemory.getByteAligned(i)) / 255d;
+      lMin = min(lMin, lValue);
+      lMax = max(lMax, lValue);
+    }
+    else if (pNativeTypeEnum == NativeTypeEnum.UnsignedShort) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final double lValue = (0xFFFF & pMemory.getCharAligned(i)) / 65535d;
+      lMin = min(lMin, lValue);
+      lMax = max(lMax, lValue);
+    }
+    else if (pNativeTypeEnum == NativeTypeEnum.UnsignedInt) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final double lValue = (0xFFFFFFFF & pMemory.getIntAligned(i)) / 4294967296d;
+      lMin = min(lMin, lValue);
+      lMax = max(lMax, lValue);
+    }
+    else if (pNativeTypeEnum == NativeTypeEnum.Float) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final float lFloatAligned = pMemory.getFloatAligned(i);
+      lMin = min(lMin, lFloatAligned);
+      lMax = max(lMax, lFloatAligned);
+    }
+    else if (pNativeTypeEnum == NativeTypeEnum.Double) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final double lDoubleAligned = pMemory.getDoubleAligned(i);
+      lMin = min(lMin, lDoubleAligned);
+      lMax = max(lMax, lDoubleAligned);
+    }
 
-    if (Math.abs(this.mSampledMaxIntensity) < 0.0001
-        && Math.abs(this.mSampledMinIntensity) < 0.0001)
+    if (Math.abs(this.mSampledMaxIntensity) < 0.0001 && Math.abs(this.mSampledMinIntensity) < 0.0001)
     {
       mSampledMinIntensity = lMin;
       mSampledMaxIntensity = lMax;
     }
 
-    if (!Double.isFinite(this.mSampledMinIntensity))
-      this.mSampledMinIntensity = 0;
+    if (!Double.isFinite(this.mSampledMinIntensity)) this.mSampledMinIntensity = 0;
 
-    if (!Double.isFinite(this.mSampledMaxIntensity))
-      this.mSampledMaxIntensity = 1;
+    if (!Double.isFinite(this.mSampledMaxIntensity)) this.mSampledMaxIntensity = 1;
 
-    this.mSampledMinIntensity = (0.9) * this.mSampledMinIntensity
-                                + 0.1 * lMin;
-    this.mSampledMaxIntensity = (0.9) * this.mSampledMaxIntensity
-                                + 0.1 * lMax;
+    this.mSampledMinIntensity = (0.9) * this.mSampledMinIntensity + 0.1 * lMin;
+    this.mSampledMaxIntensity = (0.9) * this.mSampledMaxIntensity + 0.1 * lMax;
 
     // System.out.println("mSampledMinIntensity=" +
     // mSampledMinIntensity);
@@ -379,10 +304,8 @@ public class Stack3DDisplay extends VirtualDevice
 
   private void forwardStack(final StackInterface pNewStack)
   {
-    if (mOutputStackVariable != null)
-      mOutputStackVariable.set(pNewStack);
-    else if (!pNewStack.isReleased())
-      pNewStack.release();
+    if (mOutputStackVariable != null) mOutputStackVariable.set(pNewStack);
+    else if (!pNewStack.isReleased()) pNewStack.release();
   }
 
   @Override
@@ -427,13 +350,10 @@ public class Stack3DDisplay extends VirtualDevice
     {
       mAsynchronousDisplayUpdater.stop();
       mAsynchronousDisplayUpdater.waitToFinish(1, TimeUnit.SECONDS);
-      mClearVolumeRenderer.waitToFinishAllDataBufferCopy(1,
-                                                         TimeUnit.SECONDS);
-      if (mClearVolumeRenderer != null)
-        mClearVolumeRenderer.close();
+      mClearVolumeRenderer.waitToFinishAllDataBufferCopy(1, TimeUnit.SECONDS);
+      if (mClearVolumeRenderer != null) mClearVolumeRenderer.close();
       return true;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -449,10 +369,8 @@ public class Stack3DDisplay extends VirtualDevice
   {
     if (mClearVolumeRenderer instanceof ClearGLVolumeRenderer)
     {
-      ClearGLVolumeRenderer lClearGLVolumeRenderer =
-                                                   (ClearGLVolumeRenderer) mClearVolumeRenderer;
-      ClearGLWindow lClearGLWindow =
-                                   lClearGLVolumeRenderer.getClearGLWindow();
+      ClearGLVolumeRenderer lClearGLVolumeRenderer = (ClearGLVolumeRenderer) mClearVolumeRenderer;
+      ClearGLWindow lClearGLWindow = lClearGLVolumeRenderer.getClearGLWindow();
       lClearGLWindow.requestFocus();
     }
   }
@@ -474,18 +392,15 @@ public class Stack3DDisplay extends VirtualDevice
 
   /**
    * Gets GL window for handling size and position.
-   * 
+   *
    * @return the GL window
    */
   public ClearGLWindow getGLWindow()
   {
     if (mClearVolumeRenderer instanceof ClearGLVolumeRenderer)
     {
-      ClearGLVolumeRenderer lClearGLVolumeRenderer =
-                                                   (ClearGLVolumeRenderer) mClearVolumeRenderer;
+      ClearGLVolumeRenderer lClearGLVolumeRenderer = (ClearGLVolumeRenderer) mClearVolumeRenderer;
       return lClearGLVolumeRenderer.getClearGLWindow();
-    }
-    else
-      return null;
+    } else return null;
   }
 }

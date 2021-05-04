@@ -1,15 +1,15 @@
 package clearcontrol.stack.sourcesink.source.viewer.gui.demo;
 
-import java.io.File;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
 import clearcontrol.stack.sourcesink.source.viewer.FileStackSourceViewer;
 import clearcontrol.stack.sourcesink.source.viewer.gui.FileStackSourceViewerPanel;
 import clearcontrol.stack.sourcesink.synthetic.FractalStackSource;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.File;
 
 /**
  * Stack source viewer panel demo
@@ -23,10 +23,7 @@ public class FileStackSourceViewerPanelDemo extends Application
   public void start(Stage pPrimaryStage) throws Exception
   {
 
-    File lRootFolder = File.createTempFile(
-                                           this.getClass()
-                                               .getSimpleName(),
-                                           "rootfolder");
+    File lRootFolder = File.createTempFile(this.getClass().getSimpleName(), "rootfolder");
     // It actually creates a temp file so we need to delete it before creating a
     // folder...
     lRootFolder.delete();
@@ -40,8 +37,7 @@ public class FileStackSourceViewerPanelDemo extends Application
 
       lRawFileStackSink.setLocation(lRootFolder, "example");
 
-      FractalStackSource lFractalStackSource =
-                                             new FractalStackSource();
+      FractalStackSource lFractalStackSource = new FractalStackSource();
 
       for (int i = 0; i < 10; i++)
       {
@@ -54,14 +50,11 @@ public class FileStackSourceViewerPanelDemo extends Application
       lRawFileStackSink.close();
     }
 
-    FileStackSourceViewer lFileStackSourceViewer =
-                                                 new FileStackSourceViewer(lRootFolder);
+    FileStackSourceViewer lFileStackSourceViewer = new FileStackSourceViewer(lRootFolder);
 
-    FileStackSourceViewerPanel lFileStackSourceViewerPanel =
-                                                           new FileStackSourceViewerPanel(lFileStackSourceViewer);
+    FileStackSourceViewerPanel lFileStackSourceViewerPanel = new FileStackSourceViewerPanel(lFileStackSourceViewer);
 
-    Scene scene = new Scene(lFileStackSourceViewerPanel,
-                            javafx.scene.paint.Color.WHITE);
+    Scene scene = new Scene(lFileStackSourceViewerPanel, javafx.scene.paint.Color.WHITE);
 
     pPrimaryStage.setTitle(this.getClass().getSimpleName());
     pPrimaryStage.setScene(scene);
@@ -71,9 +64,8 @@ public class FileStackSourceViewerPanelDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

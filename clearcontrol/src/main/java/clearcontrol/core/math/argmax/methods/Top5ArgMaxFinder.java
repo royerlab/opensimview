@@ -5,7 +5,7 @@ import gnu.trove.list.array.TDoubleArrayList;
 
 /**
  * Top-5 argmax finder.
- * 
+ * <p>
  * keeps only the top 5 Y values and sends the corresponding (X,Y) pairs to a
  * delegated argmax finder
  *
@@ -18,9 +18,8 @@ public class Top5ArgMaxFinder implements ArgMaxFinder1DInterface
 
   /**
    * Instantiates a top-5 argmax finder given a delegated argmax finder.
-   * 
-   * @param pArgMaxFinder1D
-   *          delegated argmax finder
+   *
+   * @param pArgMaxFinder1D delegated argmax finder
    */
   public Top5ArgMaxFinder(ArgMaxFinder1DInterface pArgMaxFinder1D)
   {
@@ -74,8 +73,7 @@ public class Top5ArgMaxFinder implements ArgMaxFinder1DInterface
     double[] lTop5XArray = lTop5X.toArray();
     double[] lTop5YArray = lTop5Y.toArray();
 
-    Double lArgmax = mArgMaxFinder1DInterface.argmax(lTop5XArray,
-                                                     lTop5YArray);
+    Double lArgmax = mArgMaxFinder1DInterface.argmax(lTop5XArray, lTop5YArray);
 
     return lArgmax;
   }
@@ -83,8 +81,7 @@ public class Top5ArgMaxFinder implements ArgMaxFinder1DInterface
   @Override
   public String toString()
   {
-    return String.format("Top5ArgMaxFinder [mArgMaxFinder1DInterface=%s]",
-                         mArgMaxFinder1DInterface);
+    return String.format("Top5ArgMaxFinder [mArgMaxFinder1DInterface=%s]", mArgMaxFinder1DInterface);
   }
 
 }

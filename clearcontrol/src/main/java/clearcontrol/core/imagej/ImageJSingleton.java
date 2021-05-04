@@ -27,10 +27,8 @@ class ImageJSingleton
 
   public void showImageJ()
   {
-    if (sImageJ == null)
-      sImageJ = new ImageJ();
-    if (!sImageJ.isVisible())
-      sImageJ.setVisible(true);
+    if (sImageJ == null) sImageJ = new ImageJ();
+    if (!sImageJ.isVisible()) sImageJ.setVisible(true);
   }
 
 }

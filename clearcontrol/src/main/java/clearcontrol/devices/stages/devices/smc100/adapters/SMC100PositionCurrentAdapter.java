@@ -5,10 +5,7 @@ import clearcontrol.com.serial.adapters.SerialTextDeviceAdapter;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.stages.devices.smc100.SMC100StageDevice;
 
-public class SMC100PositionCurrentAdapter extends
-                                          SerialDeviceAdapterAdapter<Double>
-                                          implements
-                                          SerialTextDeviceAdapter<Double>
+public class SMC100PositionCurrentAdapter extends SerialDeviceAdapterAdapter<Double> implements SerialTextDeviceAdapter<Double>
 {
   protected static final double cEpsilon = 0.1; // 100nm
 
@@ -24,10 +21,8 @@ public class SMC100PositionCurrentAdapter extends
     mSmc100StageDevice = pSmc100StageDevice;
     mReadyVariable = pSmc100StageDevice.getReadyVariable(0);
     mStopVariable = pSmc100StageDevice.getStopVariable(0);
-    mMinPositionVariable =
-                         pSmc100StageDevice.getMinPositionVariable(0);
-    mMaxPositionVariable =
-                         pSmc100StageDevice.getMaxPositionVariable(0);
+    mMinPositionVariable = pSmc100StageDevice.getMinPositionVariable(0);
+    mMaxPositionVariable = pSmc100StageDevice.getMaxPositionVariable(0);
   }
 
   @Override
@@ -39,9 +34,7 @@ public class SMC100PositionCurrentAdapter extends
   @Override
   public Double parseValue(byte[] pMessage)
   {
-    return 1000
-           * SMC100Protocol.parseFloat(SMC100Protocol.cGetAbsPosCommand,
-                                       pMessage);
+    return 1000 * SMC100Protocol.parseFloat(SMC100Protocol.cGetAbsPosCommand, pMessage);
   }
 
   @Override

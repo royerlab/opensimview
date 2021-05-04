@@ -1,8 +1,8 @@
 package clearcontrol.stack.sourcesink;
 
-import java.util.ArrayList;
-
 import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 
 /**
  * Interface for stack sources and sinks.
@@ -39,12 +39,11 @@ public interface StackSinkSourceInterface
   /**
    * Format used to write the stacks filenames
    */
-  public static final String cFormat = cBasename
-                                       + cDefaultFileExtension;
+  public static final String cFormat = cBasename + cDefaultFileExtension;
 
   /**
    * Returns the list of available channels for this source or sink
-   * 
+   *
    * @return list of channels
    */
   default ArrayList<String> getChannelList()

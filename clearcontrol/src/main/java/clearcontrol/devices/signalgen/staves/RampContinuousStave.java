@@ -1,11 +1,8 @@
 package clearcontrol.devices.signalgen.staves;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.pow;
-import static java.lang.Math.signum;
+import static java.lang.Math.*;
 
-public class RampContinuousStave extends StaveAbstract
-                                 implements StaveInterface
+public class RampContinuousStave extends StaveAbstract implements StaveInterface
 {
   private volatile float mSyncStart;
   private volatile float mSyncStop;
@@ -20,29 +17,14 @@ public class RampContinuousStave extends StaveAbstract
     super(pName);
   }
 
-  public RampContinuousStave(final String pName,
-                             float pSyncStart,
-                             float pSyncStop,
-                             float pStartValue,
-                             float pStopValue,
-                             float pOutsideValue)
+  public RampContinuousStave(final String pName, float pSyncStart, float pSyncStop, float pStartValue, float pStopValue, float pOutsideValue)
   {
-    this(pName,
-         pSyncStart,
-         pSyncStop,
-         pStartValue,
-         pStopValue,
-         pOutsideValue,
-         1);
-  };
+    this(pName, pSyncStart, pSyncStop, pStartValue, pStopValue, pOutsideValue, 1);
+  }
 
-  public RampContinuousStave(final String pName,
-                             float pSyncStart,
-                             float pSyncStop,
-                             float pStartValue,
-                             float pStopValue,
-                             float pOutsideValue,
-                             float pExponent)
+  ;
+
+  public RampContinuousStave(final String pName, float pSyncStart, float pSyncStop, float pStartValue, float pStopValue, float pOutsideValue, float pExponent)
   {
     super(pName);
     setSyncStart(pSyncStart);
@@ -56,13 +38,7 @@ public class RampContinuousStave extends StaveAbstract
   @Override
   public StaveInterface duplicate()
   {
-    StaveInterface lStave =   new RampContinuousStave( getName(),
-                                                       getSyncStart(),
-                                                       getSyncStop(),
-                                                       getStartValue(),
-                                                       getStopValue(),
-                                                       getOutsideValue(),
-                                                       getExponent());
+    StaveInterface lStave = new RampContinuousStave(getName(), getSyncStart(), getSyncStop(), getStartValue(), getStopValue(), getOutsideValue(), getExponent());
 
     lStave.setEnabled(this.isEnabled());
 
@@ -73,29 +49,17 @@ public class RampContinuousStave extends StaveAbstract
   @Override
   public float getValue(float pNormalizedTime)
   {
-    if (pNormalizedTime < getSyncStart()
-        || pNormalizedTime > getSyncStop())
-      return getOutsideValue();
+    if (pNormalizedTime < getSyncStart() || pNormalizedTime > getSyncStop()) return getOutsideValue();
 
-    final float lNormalizedRampTime =
-                                    (pNormalizedTime - getSyncStart())
-                                      / (getSyncStop()
-                                         - getSyncStart());
+    final float lNormalizedRampTime = (pNormalizedTime - getSyncStart()) / (getSyncStop() - getSyncStart());
 
     if (mExponent == 1)
     {
-      final float lValue = getStartValue()
-                           + (getStopValue() - getStartValue())
-                             * lNormalizedRampTime;
+      final float lValue = getStartValue() + (getStopValue() - getStartValue()) * lNormalizedRampTime;
       return lValue;
-    }
-    else
+    } else
     {
-      final float lExponentiatedValue = getStartValue()
-                                        + (getStopValue()
-                                           - getStartValue())
-                                          * abspow(lNormalizedRampTime,
-                                                   mExponent);
+      final float lExponentiatedValue = getStartValue() + (getStopValue() - getStartValue()) * abspow(lNormalizedRampTime, mExponent);
 
       return lExponentiatedValue;
     }

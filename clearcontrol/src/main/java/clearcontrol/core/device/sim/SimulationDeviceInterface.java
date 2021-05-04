@@ -1,8 +1,8 @@
 package clearcontrol.core.device.sim;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import clearcontrol.core.variable.Variable;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Simulation device interface
@@ -12,12 +12,11 @@ import clearcontrol.core.variable.Variable;
 public interface SimulationDeviceInterface
 {
   @SuppressWarnings("javadoc")
-  static final ConcurrentHashMap<Object, Variable<Boolean>> sLoggingVariableMap =
-                                                                                new ConcurrentHashMap<>();
+  static final ConcurrentHashMap<Object, Variable<Boolean>> sLoggingVariableMap = new ConcurrentHashMap<>();
 
   /**
    * Returns the Simulation logging variable
-   * 
+   *
    * @return variable
    */
   default public Variable<Boolean> getSimLoggingVariable()
@@ -29,13 +28,14 @@ public interface SimulationDeviceInterface
       sLoggingVariableMap.put(this, lVariable);
     }
     return lVariable;
-  };
+  }
+
+  ;
 
   /**
    * Sets whether to log simulation messages or not
-   * 
-   * @param pSimulationLoggingOnFlag
-   *          true -> log simulation messages
+   *
+   * @param pSimulationLoggingOnFlag true -> log simulation messages
    */
   default public void setSimLogging(boolean pSimulationLoggingOnFlag)
   {
@@ -44,7 +44,7 @@ public interface SimulationDeviceInterface
 
   /**
    * Returns true if simulation messages are logged
-   * 
+   *
    * @return true -> simulation messages logged
    */
   default public boolean isSimLogging()

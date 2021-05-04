@@ -1,7 +1,5 @@
 package clearcontrol.devices.cameras;
 
-import java.util.concurrent.Future;
-
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableSetListener;
@@ -9,18 +7,15 @@ import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
 import coremem.recycling.RecyclerInterface;
 
+import java.util.concurrent.Future;
+
 /**
  * Base class providing common fields and methods for all stack camera devices.
  *
+ * @param <Q> queue type
  * @author royer
- * @param <Q>
- *          queue type
  */
-public abstract class StackCameraDeviceBase<Q extends StackCameraQueue<Q>>
-                                           extends CameraDeviceBase
-                                           implements
-                                           StackCameraDeviceInterface<Q>,
-                                           LoggingFeature
+public abstract class StackCameraDeviceBase<Q extends StackCameraQueue<Q>> extends CameraDeviceBase implements StackCameraDeviceInterface<Q>, LoggingFeature
 
 {
   protected Variable<Boolean> mStackMode;
@@ -33,18 +28,13 @@ public abstract class StackCameraDeviceBase<Q extends StackCameraQueue<Q>>
 
   /**
    * Instantiates a stack camera device with a given name
-   * 
-   * @param pDeviceName
-   *          device name
-   * @param pTriggerVariable
-   *          trigger variable
-   * @param pTemplateQueue
-   *          template queue
+   *
+   * @param pDeviceName      device name
+   * @param pTriggerVariable trigger variable
+   * @param pTemplateQueue   template queue
    */
   @SuppressWarnings("unchecked")
-  public StackCameraDeviceBase(String pDeviceName,
-                               Variable<Boolean> pTriggerVariable,
-                               Q pTemplateQueue)
+  public StackCameraDeviceBase(String pDeviceName, Variable<Boolean> pTriggerVariable, Q pTemplateQueue)
   {
     super(pDeviceName, pTriggerVariable);
 
@@ -52,22 +42,17 @@ public abstract class StackCameraDeviceBase<Q extends StackCameraQueue<Q>>
 
     mStackVariable = new Variable<>("StackReference");
 
-    @SuppressWarnings("rawtypes")
-    final VariableSetListener lVariableListener = (o, n) -> {
-      if (o != n)
-        notifyListeners(this);
+    @SuppressWarnings("rawtypes") final VariableSetListener lVariableListener = (o, n) ->
+    {
+      if (o != n) notifyListeners(this);
     };
 
     mTemplateQueue = pTemplateQueue;
 
-    mTemplateQueue.getStackWidthVariable()
-                  .addSetListener(lVariableListener);
-    mTemplateQueue.getStackHeightVariable()
-                  .addSetListener(lVariableListener);
-    mTemplateQueue.getStackDepthVariable()
-                  .addSetListener(lVariableListener);
-    mTemplateQueue.getExposureInSecondsVariable()
-                  .addSetListener(lVariableListener);
+    mTemplateQueue.getStackWidthVariable().addSetListener(lVariableListener);
+    mTemplateQueue.getStackHeightVariable().addSetListener(lVariableListener);
+    mTemplateQueue.getStackDepthVariable().addSetListener(lVariableListener);
+    mTemplateQueue.getExposureInSecondsVariable().addSetListener(lVariableListener);
 
   }
 

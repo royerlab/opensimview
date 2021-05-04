@@ -1,16 +1,15 @@
 package clearcontrol.devices.signalgen.score.demo;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.devices.signalgen.gui.swing.score.ScoreVisualizerJFrame;
 import clearcontrol.devices.signalgen.measure.Measure;
 import clearcontrol.devices.signalgen.score.Score;
 import clearcontrol.devices.signalgen.staves.RampSteppingStave;
 import clearcontrol.devices.signalgen.staves.TriggerStave;
-
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Score demo
@@ -22,11 +21,9 @@ public class ScoreDemo
 
   /**
    * Demo
-   * 
-   * @throws IOException
-   *           NA
-   * @throws InterruptedException
-   *           NA
+   *
+   * @throws IOException          NA
+   * @throws InterruptedException NA
    */
   @Test
   public void demo() throws IOException, InterruptedException
@@ -36,21 +33,18 @@ public class ScoreDemo
 
     final Measure lMeasure = new Measure("Test Measure");
 
-    final TriggerStave lCameraTriggerStave =
-                                           new TriggerStave("camera trigger");
+    final TriggerStave lCameraTriggerStave = new TriggerStave("camera trigger");
     lCameraTriggerStave.setStart(0.2f);
     lCameraTriggerStave.setStop(0.6f);
 
-    final RampSteppingStave lGalvoScannerStave =
-                                               new RampSteppingStave("galvo");
+    final RampSteppingStave lGalvoScannerStave = new RampSteppingStave("galvo");
     lGalvoScannerStave.setSyncStart(0.1f);
     lGalvoScannerStave.setSyncStop(0.7f);
     lGalvoScannerStave.setStartValue(0f);
     lGalvoScannerStave.setStopValue(1f);
     lGalvoScannerStave.setStepHeight(0.02f);
 
-    final TriggerStave lLaserTriggerStave =
-                                          new TriggerStave("laser trigger");
+    final TriggerStave lLaserTriggerStave = new TriggerStave("laser trigger");
     lLaserTriggerStave.setStart(0.3f);
     lLaserTriggerStave.setStop(0.5f);
 
@@ -66,9 +60,7 @@ public class ScoreDemo
       lScore.addMeasure(lMeasure.duplicate());
     }
 
-    final ScoreVisualizerJFrame lVisualize =
-                                           ScoreVisualizerJFrame.visualizeAndWait("test",
-                                                                                  lScore);/**/
+    final ScoreVisualizerJFrame lVisualize = ScoreVisualizerJFrame.visualizeAndWait("test", lScore);/**/
 
     while (lVisualize.isVisible())
     {

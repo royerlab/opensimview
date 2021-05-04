@@ -2,7 +2,6 @@ package clearcontrol.core.math.argmax.methods;
 
 import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
 import gnu.trove.list.array.TDoubleArrayList;
-
 import org.apache.commons.math3.fitting.PolynomialCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
 import org.apache.commons.math3.stat.descriptive.rank.Median;
@@ -13,8 +12,7 @@ import org.apache.commons.math3.stat.descriptive.rank.Median;
  *
  * @author royer
  */
-public class SymetricParabolaFitArgMaxFinder implements
-                                             ArgMaxFinder1DInterface
+public class SymetricParabolaFitArgMaxFinder implements ArgMaxFinder1DInterface
 {
 
   private PolynomialCurveFitter mPolynomialCurveFitter;
@@ -30,27 +28,20 @@ public class SymetricParabolaFitArgMaxFinder implements
 
   /**
    * Instantiates a symetric parabola fit argmax finder
-   * 
-   * @param pMaxIterations
-   *          max iterations
+   *
+   * @param pMaxIterations max iterations
    */
   public SymetricParabolaFitArgMaxFinder(int pMaxIterations)
   {
-    mPolynomialCurveFitter =
-                           PolynomialCurveFitter.create(2)
-                                                .withMaxIterations(pMaxIterations);
+    mPolynomialCurveFitter = PolynomialCurveFitter.create(2).withMaxIterations(pMaxIterations);
   }
 
   @Override
   public Double argmax(double[] pX, double[] pY)
   {
-    if (pX.length == 1)
-      return pX[0];
-    else if (pX.length == 2)
-      if (pY[0] > pY[1])
-        return pX[0];
-      else
-        return pX[1];
+    if (pX.length == 1) return pX[0];
+    else if (pX.length == 2) if (pY[0] > pY[1]) return pX[0];
+    else return pX[1];
 
     TDoubleArrayList lArgMaxList = new TDoubleArrayList();
     for (int i = 0; i < pX.length / 2; i++)
@@ -65,12 +56,9 @@ public class SymetricParabolaFitArgMaxFinder implements
     return lArgMax;
   }
 
-  private double argmaxWithOneParabola(int pIndex,
-                                       double[] pX,
-                                       double[] pY)
+  private double argmaxWithOneParabola(int pIndex, double[] pX, double[] pY)
   {
-    WeightedObservedPoints lObservedPoints =
-                                           new WeightedObservedPoints();
+    WeightedObservedPoints lObservedPoints = new WeightedObservedPoints();
 
     final int lIndexBegin = pIndex;
     final int lIndexMiddle = (pX.length / 2) + pIndex % 2;
@@ -80,8 +68,7 @@ public class SymetricParabolaFitArgMaxFinder implements
     lObservedPoints.add(pX[lIndexMiddle], pY[lIndexMiddle]);
     lObservedPoints.add(pX[lIndexEnd], pY[lIndexEnd]);
 
-    double[] lFitInfo =
-                      mPolynomialCurveFitter.fit(lObservedPoints.toList());
+    double[] lFitInfo = mPolynomialCurveFitter.fit(lObservedPoints.toList());
 
     double a = lFitInfo[2];
     double b = lFitInfo[1];
@@ -94,8 +81,7 @@ public class SymetricParabolaFitArgMaxFinder implements
   @Override
   public String toString()
   {
-    return String.format("SymetricParabolaFitArgMaxFinder [mPolynomialCurveFitter=%s]",
-                         mPolynomialCurveFitter);
+    return String.format("SymetricParabolaFitArgMaxFinder [mPolynomialCurveFitter=%s]", mPolynomialCurveFitter);
   }
 
 }

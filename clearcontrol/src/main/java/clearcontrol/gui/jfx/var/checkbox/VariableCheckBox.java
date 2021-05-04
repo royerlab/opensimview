@@ -1,12 +1,11 @@
 package clearcontrol.gui.jfx.var.checkbox;
 
+import clearcontrol.core.variable.Variable;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-
-import clearcontrol.core.variable.Variable;
 
 /**
  * Check box that is synced to a boolean variable
@@ -22,14 +21,11 @@ public class VariableCheckBox extends HBox
 
   /**
    * Instanciates a checkbox
-   * 
-   * @param pCheckBoxLabel
-   *          checkbox label
-   * @param pVariable
-   *          variable
+   *
+   * @param pCheckBoxLabel checkbox label
+   * @param pVariable      variable
    */
-  public VariableCheckBox(String pCheckBoxLabel,
-                          Variable<Boolean> pVariable)
+  public VariableCheckBox(String pCheckBoxLabel, Variable<Boolean> pVariable)
   {
     super();
     mVariable = pVariable;
@@ -45,19 +41,21 @@ public class VariableCheckBox extends HBox
     getChildren().add(getCheckBox());
     getChildren().add(getLabel());
 
-    mVariable.addSetListener((o, n) -> {
-      if (n != mCheckBox.isSelected() && n != null)
-        Platform.runLater(() -> {
-          mCheckBox.setSelected(n);
-        });
+    mVariable.addSetListener((o, n) ->
+    {
+      if (n != mCheckBox.isSelected() && n != null) Platform.runLater(() ->
+      {
+        mCheckBox.setSelected(n);
+      });
     });
 
-    mCheckBox.setOnAction((e) -> {
-      if (mCheckBox.isSelected() != mVariable.get())
-        mVariable.setAsync(mCheckBox.isSelected());
+    mCheckBox.setOnAction((e) ->
+    {
+      if (mCheckBox.isSelected() != mVariable.get()) mVariable.setAsync(mCheckBox.isSelected());
     });
 
-    Platform.runLater(() -> {
+    Platform.runLater(() ->
+    {
       mCheckBox.setSelected(mVariable.get());
     });
 
@@ -65,7 +63,7 @@ public class VariableCheckBox extends HBox
 
   /**
    * Returns label
-   * 
+   *
    * @return internal label
    */
   public Label getLabel()
@@ -75,7 +73,7 @@ public class VariableCheckBox extends HBox
 
   /**
    * Returns checkbox itself
-   * 
+   *
    * @return internal checkboxs
    */
   public CheckBox getCheckBox()

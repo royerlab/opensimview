@@ -1,7 +1,6 @@
 package clearcontrol.core.log.gui;
 
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 class LogWindow extends JFrame
 {

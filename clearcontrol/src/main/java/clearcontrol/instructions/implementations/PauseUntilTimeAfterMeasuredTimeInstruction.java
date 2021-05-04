@@ -9,54 +9,40 @@ import clearcontrol.util.TimeFormat;
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de) April
  * 2018
  */
-public class PauseUntilTimeAfterMeasuredTimeInstruction extends PauseInstruction implements
-                                                                                 InstructionInterface,
-                                                                                 LoggingFeature
+public class PauseUntilTimeAfterMeasuredTimeInstruction extends PauseInstruction implements InstructionInterface, LoggingFeature
 {
-  private final Variable<String>
-      mMeasuredTimeKeyVariable =
-      new Variable<String>("Time measurement key", "_");
+  private final Variable<String> mMeasuredTimeKeyVariable = new Variable<String>("Time measurement key", "_");
 
-  public PauseUntilTimeAfterMeasuredTimeInstruction(String pMeasuredTimeKey,
-                                                    int pPauseTimeInMilliseconds)
+  public PauseUntilTimeAfterMeasuredTimeInstruction(String pMeasuredTimeKey, int pPauseTimeInMilliseconds)
   {
-    super("Timing: Pause "
-          + TimeFormat.humanReadableTime(pPauseTimeInMilliseconds)
-          + " after time t_"
-          + pMeasuredTimeKey
-          + " measurement");
+    super("Timing: Pause " + TimeFormat.humanReadableTime(pPauseTimeInMilliseconds) + " after time t_" + pMeasuredTimeKey + " measurement");
     getPauseTimeInMilliseconds().set(pPauseTimeInMilliseconds);
     mMeasuredTimeKeyVariable.set(pMeasuredTimeKey);
   }
 
-  @Override public boolean initialize()
+  @Override
+  public boolean initialize()
   {
     return true;
   }
 
-  @Override public boolean enqueue(long pTimePoint)
+  @Override
+  public boolean enqueue(long pTimePoint)
   {
     if (!MeasureTimeInstruction.sMeasuredTime.containsKey(mMeasuredTimeKeyVariable.get()))
     {
-      warning("Time measurement t_"
-              + mMeasuredTimeKeyVariable.get()
-              + " does not exist!");
+      warning("Time measurement t_" + mMeasuredTimeKeyVariable.get() + " does not exist!");
       return false;
     }
-    Long
-        measuredTime =
-        MeasureTimeInstruction.sMeasuredTime.get(mMeasuredTimeKeyVariable.get());
-    long
-        timeToWait =
-        mPauseTimeInMilliseconds.get() - (System.currentTimeMillis() - measuredTime);
+    Long measuredTime = MeasureTimeInstruction.sMeasuredTime.get(mMeasuredTimeKeyVariable.get());
+    long timeToWait = mPauseTimeInMilliseconds.get() - (System.currentTimeMillis() - measuredTime);
     if (timeToWait > 0)
     {
 
       try
       {
         Thread.sleep(timeToWait);
-      }
-      catch (InterruptedException e)
+      } catch (InterruptedException e)
       {
         e.printStackTrace();
       }
@@ -64,10 +50,10 @@ public class PauseUntilTimeAfterMeasuredTimeInstruction extends PauseInstruction
     return true;
   }
 
-  @Override public PauseUntilTimeAfterMeasuredTimeInstruction copy()
+  @Override
+  public PauseUntilTimeAfterMeasuredTimeInstruction copy()
   {
-    return new PauseUntilTimeAfterMeasuredTimeInstruction(mMeasuredTimeKeyVariable.get(),
-                                                          mPauseTimeInMilliseconds.get());
+    return new PauseUntilTimeAfterMeasuredTimeInstruction(mMeasuredTimeKeyVariable.get(), mPauseTimeInMilliseconds.get());
   }
 
   public Variable<String> getMeasuredTimeKeyVariable()

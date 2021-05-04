@@ -3,10 +3,7 @@ package clearcontrol.devices.stages.devices.smc100.adapters;
 import clearcontrol.com.serial.adapters.SerialDeviceAdapterAdapter;
 import clearcontrol.com.serial.adapters.SerialTextDeviceAdapter;
 
-public class SMC100MaxPositionAdapter extends
-                                      SerialDeviceAdapterAdapter<Double>
-                                      implements
-                                      SerialTextDeviceAdapter<Double>
+public class SMC100MaxPositionAdapter extends SerialDeviceAdapterAdapter<Double> implements SerialTextDeviceAdapter<Double>
 {
 
   @Override
@@ -18,9 +15,7 @@ public class SMC100MaxPositionAdapter extends
   @Override
   public Double parseValue(byte[] pMessage)
   {
-    return 1000
-           * SMC100Protocol.parseFloat(SMC100Protocol.cGetMaxPosCommand,
-                                       pMessage);
+    return 1000 * SMC100Protocol.parseFloat(SMC100Protocol.cGetMaxPosCommand, pMessage);
   }
 
   @Override
@@ -30,12 +25,9 @@ public class SMC100MaxPositionAdapter extends
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(Double pOldValue,
-                                          Double pNewValue)
+  public byte[] getSetValueCommandMessage(Double pOldValue, Double pNewValue)
   {
-    String lSetMaxPositionMessage =
-                                  String.format(SMC100Protocol.cSetMaxPosCommand,
-                                                pNewValue * 0.001);
+    String lSetMaxPositionMessage = String.format(SMC100Protocol.cSetMaxPosCommand, pNewValue * 0.001);
     return lSetMaxPositionMessage.getBytes();
   }
 

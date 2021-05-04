@@ -4,22 +4,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Base class for providing basic change listener machinery for derived classes.
- * 
+ *
+ * @param <E> event type
  * @author royer
- * @param <E>
- *          event type
  */
-public abstract class ChangeListeningBase<E> implements
-                                         HasChangeListenerInterface<E>
+public abstract class ChangeListeningBase<E> implements HasChangeListenerInterface<E>
 {
-  CopyOnWriteArrayList<ChangeListener<E>> mListenersList =
-                                                         new CopyOnWriteArrayList<>();
+  CopyOnWriteArrayList<ChangeListener<E>> mListenersList = new CopyOnWriteArrayList<>();
 
   /**
    * Adds a change listener
-   * 
-   * @param pListener
-   *          listener to add
+   *
+   * @param pListener listener to add
    */
   @Override
   public void addChangeListener(ChangeListener<E> pListener)
@@ -29,9 +25,8 @@ public abstract class ChangeListeningBase<E> implements
 
   /**
    * Removed a change listener
-   * 
-   * @param pListener
-   *          listener to remove
+   *
+   * @param pListener listener to remove
    */
   @Override
   public void removeChangeListener(ChangeListener<E> pListener)

@@ -1,13 +1,10 @@
 package clearcontrol.core.units.test;
 
-import static clearcontrol.core.units.OrderOfMagnitude.Micro;
-import static clearcontrol.core.units.OrderOfMagnitude.Milli;
-import static clearcontrol.core.units.OrderOfMagnitude.Unit;
-import static org.junit.Assert.assertEquals;
-
 import clearcontrol.core.units.OrderOfMagnitude;
-
 import org.junit.Test;
+
+import static clearcontrol.core.units.OrderOfMagnitude.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Order of agnitude tests

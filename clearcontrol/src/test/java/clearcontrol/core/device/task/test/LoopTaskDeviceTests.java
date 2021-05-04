@@ -1,14 +1,13 @@
 package clearcontrol.core.device.task.test;
 
-import static org.junit.Assert.assertTrue;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.core.device.task.LoopTaskDevice;
+import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.core.device.task.LoopTaskDevice;
-
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Loop task device tests
@@ -40,9 +39,8 @@ public class LoopTaskDeviceTests
 
   /**
    * tests loop task devices
-   * 
-   * @throws ExecutionException
-   *           N/A
+   *
+   * @throws ExecutionException N/A
    */
   @Test
   public void test() throws ExecutionException
@@ -52,13 +50,11 @@ public class LoopTaskDeviceTests
     mCounter = 0;
     lTestLoopTaskDevice.getStartSignalVariable().set(true);
     System.out.println("Waiting to start");
-    assertTrue(lTestLoopTaskDevice.waitForStarted(1,
-                                                  TimeUnit.SECONDS));
+    assertTrue(lTestLoopTaskDevice.waitForStarted(1, TimeUnit.SECONDS));
     ThreadSleep.sleep(1, TimeUnit.SECONDS);
     lTestLoopTaskDevice.getStopSignalVariable().set(true);
 
-    assertTrue(lTestLoopTaskDevice.waitForStopped(10,
-                                                  TimeUnit.SECONDS));
+    assertTrue(lTestLoopTaskDevice.waitForStopped(10, TimeUnit.SECONDS));
     long lCounter = mCounter;
     System.out.println("lCounter=" + mCounter);
 

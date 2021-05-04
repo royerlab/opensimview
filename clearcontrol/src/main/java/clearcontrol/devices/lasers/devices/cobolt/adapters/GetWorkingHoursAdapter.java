@@ -8,9 +8,7 @@ import clearcontrol.devices.lasers.devices.cobolt.adapters.protocol.ProtocolCobo
  *
  * @author royer
  */
-public class GetWorkingHoursAdapter extends CoboltAdapter<Integer>
-                                    implements
-                                    SerialTextDeviceAdapter<Integer>
+public class GetWorkingHoursAdapter extends CoboltAdapter<Integer> implements SerialTextDeviceAdapter<Integer>
 {
 
   @Override

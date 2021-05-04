@@ -3,10 +3,7 @@ package clearcontrol.devices.signalgen.staves;
 public class EdgeStave extends IntervalStave implements StaveInterface
 {
 
-  public EdgeStave(final String pName,
-                   float pEdgePosition,
-                   float mValueBefore,
-                   float mValueAfter)
+  public EdgeStave(final String pName, float pEdgePosition, float mValueBefore, float mValueAfter)
   {
     super(pName);
     setEdgePosition(pEdgePosition);
@@ -17,10 +14,7 @@ public class EdgeStave extends IntervalStave implements StaveInterface
   @Override
   public StaveInterface duplicate()
   {
-    StaveInterface lStave =  new EdgeStave(getName(),
-                         getEdgePosition(),
-                         getValueBefore(),
-                         getValueAfter());
+    StaveInterface lStave = new EdgeStave(getName(), getEdgePosition(), getValueBefore(), getValueAfter());
 
     lStave.setEnabled(this.isEnabled());
     return lStave;
@@ -29,10 +23,8 @@ public class EdgeStave extends IntervalStave implements StaveInterface
   @Override
   public float getValue(float pNormalizedTime)
   {
-    if (isEnabled() && pNormalizedTime > getEdgePosition())
-      return getValueAfter();
-    else
-      return getValueBefore();
+    if (isEnabled() && pNormalizedTime > getEdgePosition()) return getValueAfter();
+    else return getValueBefore();
   }
 
   public float getEdgePosition()

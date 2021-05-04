@@ -1,13 +1,13 @@
 package clearcontrol.scripting.gui;
 
-import java.awt.HeadlessException;
+import clearcontrol.scripting.engine.ScriptingEngine;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingNode;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
-import clearcontrol.scripting.engine.ScriptingEngine;
+import java.awt.*;
 
 public class ScriptingWindow extends BorderPane
 {
@@ -21,24 +21,17 @@ public class ScriptingWindow extends BorderPane
     this("Scripting Window", null, 60, 80);
   }
 
-  public ScriptingWindow(String pTitle,
-                         ScriptingEngine pScriptingEngine,
-                         int pNumberOfRows,
-                         int pNumberOfCols) throws HeadlessException
+  public ScriptingWindow(String pTitle, ScriptingEngine pScriptingEngine, int pNumberOfRows, int pNumberOfCols) throws HeadlessException
   {
-    mScriptingPanel = new ScriptingPanel(pTitle,
-                                         pScriptingEngine,
+    mScriptingPanel = new ScriptingPanel(pTitle, pScriptingEngine,
 
-                                         pNumberOfRows,
-                                         pNumberOfCols);
+            pNumberOfRows, pNumberOfCols);
     final SwingNode node = new SwingNode();
 
     sceneProperty().addListener(new ChangeListener<Scene>()
     {
       @Override
-      public void changed(ObservableValue<? extends Scene> observable,
-                          Scene oldValue,
-                          Scene newValue)
+      public void changed(ObservableValue<? extends Scene> observable, Scene oldValue, Scene newValue)
       {
         if (newValue != null)
         {
@@ -48,14 +41,13 @@ public class ScriptingWindow extends BorderPane
       }
     });
 
-    focusedProperty().addListener((observable,
-                                   oldValue,
-                                   newValue) -> {
-      if (newValue)
-        node.setContent(mScriptingPanel);
+    focusedProperty().addListener((observable, oldValue, newValue) ->
+    {
+      if (newValue) node.setContent(mScriptingPanel);
     });
 
-    setOnMouseClicked(event -> {
+    setOnMouseClicked(event ->
+    {
       this.requestFocus();
     });
   }

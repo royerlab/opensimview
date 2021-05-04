@@ -1,13 +1,12 @@
 package clearcontrol.gui.video.video2d.videowindow.demo;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.gui.video.video2d.videowindow.VideoWindow;
 import coremem.enums.NativeTypeEnum;
 import coremem.offheap.OffHeapMemory;
-
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class VideoWindowDemo
 {
@@ -15,21 +14,13 @@ public class VideoWindowDemo
   static volatile long rnd = 123456789;
 
   @Test
-  public void simpleRandomUnsignedByteDataWithAspectRatioTest() throws InterruptedException,
-                                                                IOException
+  public void simpleRandomUnsignedByteDataWithAspectRatioTest() throws InterruptedException, IOException
   {
     final int lWidth = 512;
     final int lHeight = 128;
-    final OffHeapMemory lBuffer =
-                                OffHeapMemory.allocateBytes(lWidth
-                                                            * lHeight);
+    final OffHeapMemory lBuffer = OffHeapMemory.allocateBytes(lWidth * lHeight);
 
-    final VideoWindow lVideoWindow =
-                                   new VideoWindow("VideoWindow test",
-                                                   NativeTypeEnum.UnsignedByte,
-                                                   768,
-                                                   768,
-                                                   false);
+    final VideoWindow lVideoWindow = new VideoWindow("VideoWindow test", NativeTypeEnum.UnsignedByte, 768, 768, false);
     lVideoWindow.setDisplayOn(true);
     lVideoWindow.setManualMinMax(true);
     // lVideoWindow.setLinearInterpolation(true);
@@ -51,20 +42,12 @@ public class VideoWindowDemo
   }
 
   @Test
-  public void simpleRandomUnsignedByteDataTest() throws InterruptedException,
-                                                 IOException
+  public void simpleRandomUnsignedByteDataTest() throws InterruptedException, IOException
   {
     final int lSize = 512;
-    final OffHeapMemory lBuffer =
-                                OffHeapMemory.allocateBytes(lSize
-                                                            * lSize);
+    final OffHeapMemory lBuffer = OffHeapMemory.allocateBytes(lSize * lSize);
 
-    final VideoWindow lVideoWindow =
-                                   new VideoWindow("VideoWindow test",
-                                                   NativeTypeEnum.UnsignedByte,
-                                                   768,
-                                                   768,
-                                                   false);
+    final VideoWindow lVideoWindow = new VideoWindow("VideoWindow test", NativeTypeEnum.UnsignedByte, 768, 768, false);
     lVideoWindow.setDisplayOn(true);
     lVideoWindow.setManualMinMax(true);
     // lVideoWindow.setLinearInterpolation(true);
@@ -86,20 +69,12 @@ public class VideoWindowDemo
   }
 
   @Test
-  public void simpleRandomUnsignedShortDataTest() throws InterruptedException,
-                                                  IOException
+  public void simpleRandomUnsignedShortDataTest() throws InterruptedException, IOException
   {
     final int lSize = 512;
-    final OffHeapMemory lBuffer =
-                                OffHeapMemory.allocateShorts(lSize
-                                                             * lSize);
+    final OffHeapMemory lBuffer = OffHeapMemory.allocateShorts(lSize * lSize);
 
-    final VideoWindow lVideoWindow =
-                                   new VideoWindow("VideoWindow test",
-                                                   NativeTypeEnum.UnsignedShort,
-                                                   768,
-                                                   768,
-                                                   false);
+    final VideoWindow lVideoWindow = new VideoWindow("VideoWindow test", NativeTypeEnum.UnsignedShort, 768, 768, false);
     lVideoWindow.setDisplayOn(true);
     lVideoWindow.setManualMinMax(true);
     // lVideoWindow.setLinearInterpolation(true);
@@ -121,19 +96,12 @@ public class VideoWindowDemo
   }
 
   @Test
-  public void simpleRandomUnsignedIntDataTest() throws InterruptedException,
-                                                IOException
+  public void simpleRandomUnsignedIntDataTest() throws InterruptedException, IOException
   {
     final int lSize = 512;
-    final OffHeapMemory lBuffer = OffHeapMemory.allocateInts(lSize
-                                                             * lSize);
+    final OffHeapMemory lBuffer = OffHeapMemory.allocateInts(lSize * lSize);
 
-    final VideoWindow lVideoWindow =
-                                   new VideoWindow("VideoWindow test",
-                                                   NativeTypeEnum.UnsignedInt,
-                                                   768,
-                                                   768,
-                                                   false);
+    final VideoWindow lVideoWindow = new VideoWindow("VideoWindow test", NativeTypeEnum.UnsignedInt, 768, 768, false);
     lVideoWindow.setDisplayOn(true);
     lVideoWindow.setManualMinMax(true);
     // lVideoWindow.setLinearInterpolation(true);
@@ -155,20 +123,12 @@ public class VideoWindowDemo
   }
 
   @Test
-  public void simpleRandomFloatDataTest() throws InterruptedException,
-                                          IOException
+  public void simpleRandomFloatDataTest() throws InterruptedException, IOException
   {
     final int lSize = 512;
-    final OffHeapMemory lBuffer =
-                                OffHeapMemory.allocateFloats(lSize
-                                                             * lSize);
+    final OffHeapMemory lBuffer = OffHeapMemory.allocateFloats(lSize * lSize);
 
-    final VideoWindow lVideoWindow =
-                                   new VideoWindow("VideoWindow test",
-                                                   NativeTypeEnum.Float,
-                                                   768,
-                                                   768,
-                                                   false);
+    final VideoWindow lVideoWindow = new VideoWindow("VideoWindow test", NativeTypeEnum.Float, 768, 768, false);
     lVideoWindow.setDisplayOn(true);
     lVideoWindow.setManualMinMax(true);
     // lVideoWindow.setLinearInterpolation(true);
@@ -190,20 +150,12 @@ public class VideoWindowDemo
   }
 
   @Test
-  public void simpleRandomDoubleDataTest() throws InterruptedException,
-                                           IOException
+  public void simpleRandomDoubleDataTest() throws InterruptedException, IOException
   {
     final int lSize = 512;
-    final OffHeapMemory lBuffer =
-                                OffHeapMemory.allocateDoubles(lSize
-                                                              * lSize);
+    final OffHeapMemory lBuffer = OffHeapMemory.allocateDoubles(lSize * lSize);
 
-    final VideoWindow lVideoWindow =
-                                   new VideoWindow("VideoWindow test",
-                                                   NativeTypeEnum.Double,
-                                                   768,
-                                                   768,
-                                                   false);
+    final VideoWindow lVideoWindow = new VideoWindow("VideoWindow test", NativeTypeEnum.Double, 768, 768, false);
     lVideoWindow.setDisplayOn(true);
     lVideoWindow.setManualMinMax(true);
     // lVideoWindow.setLinearInterpolation(true);
@@ -247,8 +199,7 @@ public class VideoWindowDemo
   private void generateUnsignedIntNoiseBuffer(final OffHeapMemory pOffHeapMemory)
   {
 
-    final int lNumberOfInts =
-                            (int) pOffHeapMemory.getSizeInBytes() / 4;
+    final int lNumberOfInts = (int) pOffHeapMemory.getSizeInBytes() / 4;
     for (int i = 0; i < lNumberOfInts; i++)
     {
       rnd = ((rnd % 257) * i) + 1 + (rnd << 7);
@@ -261,8 +212,7 @@ public class VideoWindowDemo
   private void generateUnsignedShortNoiseBuffer(final OffHeapMemory pOffHeapMemory)
   {
 
-    final int lNumberOfShorts = (int) pOffHeapMemory.getSizeInBytes()
-                                / 2;
+    final int lNumberOfShorts = (int) pOffHeapMemory.getSizeInBytes() / 2;
     for (int i = 0; i < lNumberOfShorts; i++)
     {
       rnd = ((rnd % 257) * i) + 1 + (rnd << 7);

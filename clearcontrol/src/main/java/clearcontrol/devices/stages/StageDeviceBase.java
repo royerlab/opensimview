@@ -1,13 +1,12 @@
 package clearcontrol.devices.stages;
 
-import java.util.ArrayList;
-
 import clearcontrol.core.concurrent.timing.WaitingInterface;
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.core.variable.Variable;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+
+import java.util.ArrayList;
 
 /**
  * Base class providing common fields and methods for all stage device interface
@@ -15,29 +14,20 @@ import com.google.common.collect.HashBiMap;
  *
  * @author royer
  */
-public abstract class StageDeviceBase extends VirtualDevice implements
-                                      StageDeviceInterface,
-                                      WaitingInterface
+public abstract class StageDeviceBase extends VirtualDevice implements StageDeviceInterface, WaitingInterface
 {
   private final StageType mStageType;
 
-  protected ArrayList<Variable<Boolean>> mEnableVariables,
-      mReadyVariables, mHomingVariables, mStopVariables,
-      mResetVariables;
-  protected ArrayList<Variable<Double>> mTargetPositionVariables,
-      mCurrentPositionVariables, mMinPositionVariables,
-      mMaxPositionVariables, mGranularityPositionVariables;
+  protected ArrayList<Variable<Boolean>> mEnableVariables, mReadyVariables, mHomingVariables, mStopVariables, mResetVariables;
+  protected ArrayList<Variable<Double>> mTargetPositionVariables, mCurrentPositionVariables, mMinPositionVariables, mMaxPositionVariables, mGranularityPositionVariables;
 
-  protected final BiMap<Integer, String> mIndexToNameMap =
-                                                         HashBiMap.create();
+  protected final BiMap<Integer, String> mIndexToNameMap = HashBiMap.create();
 
   /**
    * Instantiates a stage device given a device name
-   * 
-   * @param pDeviceName
-   *          device name
-   * @param pStageType
-   *          stage type
+   *
+   * @param pDeviceName device name
+   * @param pStageType  stage type
    */
   public StageDeviceBase(String pDeviceName, StageType pStageType)
   {

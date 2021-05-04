@@ -1,13 +1,12 @@
 package clearcontrol.devices.stages.devices.tst.demo;
 
-import java.util.concurrent.TimeUnit;
-
 import aptj.APTJExeption;
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.core.concurrent.timing.WaitingInterface;
 import clearcontrol.devices.stages.devices.tst.TSTStageDevice;
-
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * TST001 stage device demo
@@ -19,11 +18,9 @@ public class TSTStageDeviceDemo implements WaitingInterface
 
   /**
    * Test
-   * 
-   * @throws InterruptedException
-   *           NA
-   * @throws APTJExeption
-   *           NA
+   *
+   * @throws InterruptedException NA
+   * @throws APTJExeption         NA
    */
   @Test
   public void test() throws InterruptedException, APTJExeption

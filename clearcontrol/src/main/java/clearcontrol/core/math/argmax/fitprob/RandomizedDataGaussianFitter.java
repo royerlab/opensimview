@@ -1,14 +1,13 @@
 package clearcontrol.core.math.argmax.fitprob;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import clearcontrol.core.math.argmax.methods.GaussianFitArgMaxFinder;
+import clearcontrol.core.math.argmax.methods.ParabolaFitArgMaxFinder;
+import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction;
 
 import java.util.Random;
 
-import clearcontrol.core.math.argmax.methods.GaussianFitArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.ParabolaFitArgMaxFinder;
-
-import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 /**
  * Randomized data Gaussian Fitter
@@ -17,14 +16,10 @@ import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiabl
  */
 public class RandomizedDataGaussianFitter
 {
-  private static final int cMaxIterationsForRandomizedDataFitting =
-                                                                  512;
+  private static final int cMaxIterationsForRandomizedDataFitting = 512;
 
-  GaussianFitArgMaxFinder mGaussianFitArgMaxFinder =
-                                                   new GaussianFitArgMaxFinder(cMaxIterationsForRandomizedDataFitting);
-  ParabolaFitArgMaxFinder mParabolaFitArgMaxFinder =
-                                                   new ParabolaFitArgMaxFinder(cMaxIterationsForRandomizedDataFitting
-                                                                               / 2);
+  GaussianFitArgMaxFinder mGaussianFitArgMaxFinder = new GaussianFitArgMaxFinder(cMaxIterationsForRandomizedDataFitting);
+  ParabolaFitArgMaxFinder mParabolaFitArgMaxFinder = new ParabolaFitArgMaxFinder(cMaxIterationsForRandomizedDataFitting / 2);
 
   private Random mRandom = new Random(System.nanoTime());
   private double[] mX;
@@ -40,11 +35,9 @@ public class RandomizedDataGaussianFitter
 
   /**
    * Instantiates a randomized data gaussian fitter with a given (X,Y) pair.
-   * 
-   * @param pX
-   *          x data
-   * @param pY
-   *          y data
+   *
+   * @param pX x data
+   * @param pY y data
    */
   public RandomizedDataGaussianFitter(double[] pX, double[] pY)
   {
@@ -54,24 +47,21 @@ public class RandomizedDataGaussianFitter
 
   /**
    * Computes RMSD for random data on a given X
-   * 
-   * @param pX
-   *          x data to use
+   *
+   * @param pX x data to use
    * @return RMSD for a given X and random Y
    */
   public Double computeRMSDForRandomData(double[] pX)
   {
-    double[] lRandomY = generateRandomVector(mRandom,
-                                             new double[pX.length]);
+    double[] lRandomY = generateRandomVector(mRandom, new double[pX.length]);
     return computeRMSD(pX, lRandomY);
   }
 
   /**
    * Computes the RMSD for the (X,Y) pair (given at construction time)
-   * 
+   *
    * @return RMSD
-   * @throws Exception
-   *           thrown if exception occurs during concurrent execution
+   * @throws Exception thrown if exception occurs during concurrent execution
    */
   public Double computeRMSD() throws Exception
   {
@@ -80,7 +70,7 @@ public class RandomizedDataGaussianFitter
 
   /**
    * Returns the fitted function
-   * 
+   *
    * @return fitted function
    */
   public UnivariateDifferentiableFunction getFunction()
@@ -91,8 +81,7 @@ public class RandomizedDataGaussianFitter
   private Double computeRMSD(double[] pX, double[] pY)
   {
     Double lRMSD = fitGaussian(pX, pY);
-    if (lRMSD == null)
-      lRMSD = fitparabola(pX, pY);
+    if (lRMSD == null) lRMSD = fitparabola(pX, pY);
     return lRMSD;
   }
 
@@ -102,27 +91,21 @@ public class RandomizedDataGaussianFitter
     try
     {
       double[] lFit = mParabolaFitArgMaxFinder.fit(pX, pY);
-      if (lFit == null)
-        return null;
+      if (lFit == null) return null;
       setFunction(mParabolaFitArgMaxFinder.getFunction());
       double lRMSD = mParabolaFitArgMaxFinder.getRMSD();
 
-      double[] lCoefficients =
-                             mParabolaFitArgMaxFinder.getFunction()
-                                                     .getCoefficients();
+      double[] lCoefficients = mParabolaFitArgMaxFinder.getFunction().getCoefficients();
 
-      if (lCoefficients.length == 1)
-        return null;
+      if (lCoefficients.length == 1) return null;
       if (lCoefficients.length == 3)
       {
         double a = lCoefficients[2];
-        if (a > 0)
-          return null;
+        if (a > 0) return null;
       }
 
       return lRMSD;
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       e.printStackTrace();
       return null;
@@ -134,14 +117,12 @@ public class RandomizedDataGaussianFitter
     try
     {
       double[] lFit = mGaussianFitArgMaxFinder.fit(pX, pY);
-      if (lFit == null)
-        return null;
+      if (lFit == null) return null;
       setFunction(mGaussianFitArgMaxFinder.getFunction());
 
       double lRMSD = mGaussianFitArgMaxFinder.getRMSD();
       return lRMSD;
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       e.printStackTrace();
       return null;
@@ -150,21 +131,17 @@ public class RandomizedDataGaussianFitter
 
   private void setFunction(UnivariateDifferentiableFunction pUnivariateDifferentiableFunction)
   {
-    mUnivariateDifferentiableFunction =
-                                      pUnivariateDifferentiableFunction;
+    mUnivariateDifferentiableFunction = pUnivariateDifferentiableFunction;
   }
 
   /**
    * Generates a random vector of doubles between 0 and 1.
-   * 
-   * @param pRandom
-   *          random object
-   * @param pArray
-   *          array to store random doubles
+   *
+   * @param pRandom random object
+   * @param pArray  array to store random doubles
    * @return given array
    */
-  public static double[] generateRandomVector(Random pRandom,
-                                              double[] pArray)
+  public static double[] generateRandomVector(Random pRandom, double[] pArray)
   {
     for (int i = pArray.length - 1; i > 0; i--)
     {
@@ -178,9 +155,8 @@ public class RandomizedDataGaussianFitter
 
   /**
    * Returns a normalized copy of the given array.
-   * 
-   * @param pY
-   *          y data
+   *
+   * @param pY y data
    * @return normalized copy
    */
   public static double[] normalizeCopy(double[] pY)
@@ -204,9 +180,8 @@ public class RandomizedDataGaussianFitter
 
   /**
    * Returns a normalized copy of the given array.
-   * 
-   * @param pY
-   *          y data
+   *
+   * @param pY y data
    * @return normalized in place
    */
   public static double[] normalizeInPlace(double[] pY)

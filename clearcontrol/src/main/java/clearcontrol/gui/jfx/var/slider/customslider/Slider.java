@@ -25,25 +25,14 @@ package clearcontrol.gui.jfx.var.slider.customslider;
  *
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.DoublePropertyBase;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import clearcontrol.gui.jfx.var.slider.customslider.skin.SliderSkin;
+import com.sun.javafx.css.converters.BooleanConverter;
+import com.sun.javafx.css.converters.EnumConverter;
+import com.sun.javafx.css.converters.SizeConverter;
+import com.sun.javafx.util.Utils;
+import javafx.beans.property.*;
 import javafx.beans.value.WritableValue;
-import javafx.css.CssMetaData;
-import javafx.css.PseudoClass;
-import javafx.css.Styleable;
-import javafx.css.StyleableBooleanProperty;
-import javafx.css.StyleableDoubleProperty;
-import javafx.css.StyleableIntegerProperty;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import javafx.css.*;
 import javafx.geometry.Orientation;
 import javafx.scene.AccessibleAction;
 import javafx.scene.AccessibleAttribute;
@@ -52,12 +41,9 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.util.StringConverter;
 
-import clearcontrol.gui.jfx.var.slider.customslider.skin.SliderSkin;
-
-import com.sun.javafx.css.converters.BooleanConverter;
-import com.sun.javafx.css.converters.EnumConverter;
-import com.sun.javafx.css.converters.SizeConverter;
-import com.sun.javafx.util.Utils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The Slider Control is used to display a continuous or discrete range of valid
@@ -79,7 +65,7 @@ import com.sun.javafx.util.Utils;
  *
  * <pre>
  * import javafx.scene.control.Slider;
- * 
+ *
  * Slider slider = new Slider(0, 1, 0.5);
  * </pre>
  *
@@ -89,18 +75,17 @@ import com.sun.javafx.util.Utils;
  *
  * <pre>
  * import javafx.scene.control.Slider;
- * 
+ *
  * Slider slider = new Slider(0, 1, 0.5);
  * slider.setShowTickMarks(true);
  * slider.setShowTickLabels(true);
  * slider.setMajorTickUnit(0.25f);
  * slider.setBlockIncrement(0.1f);
  * </pre>
- * 
+ *
  * @since JavaFX 2.0
  */
-@SuppressWarnings(
-{ "javadoc", "restriction", "unchecked" })
+@SuppressWarnings({"javadoc", "restriction", "unchecked"})
 public class Slider extends Control
 {
 
@@ -115,13 +100,10 @@ public class Slider extends Control
   /**
    * Constructs a Slider control with the specified slider min, max and current
    * value values.
-   * 
-   * @param min
-   *          Slider minimum value
-   * @param max
-   *          Slider maximum value
-   * @param value
-   *          Slider current value
+   *
+   * @param min   Slider minimum value
+   * @param max   Slider maximum value
+   * @param value Slider current value
    */
   public Slider(double min, double max, double value)
   {
@@ -248,8 +230,7 @@ public class Slider extends Control
 
   public final void setValue(double value)
   {
-    if (!valueProperty().isBound())
-      valueProperty().set(value);
+    if (!valueProperty().isBound()) valueProperty().set(value);
   }
 
   public final double getValue()
@@ -307,10 +288,7 @@ public class Slider extends Control
   {
     if (valueChanging == null)
     {
-      valueChanging =
-                    new SimpleBooleanProperty(this,
-                                              "valueChanging",
-                                              false);
+      valueChanging = new SimpleBooleanProperty(this, "valueChanging", false);
     }
     return valueChanging;
   }
@@ -334,46 +312,41 @@ public class Slider extends Control
 
   public final Orientation getOrientation()
   {
-    return orientation == null ? Orientation.HORIZONTAL
-                               : orientation.get();
+    return orientation == null ? Orientation.HORIZONTAL : orientation.get();
   }
 
   public final ObjectProperty<Orientation> orientationProperty()
   {
     if (orientation == null)
     {
-      orientation =
-                  new StyleableObjectProperty<Orientation>(Orientation.HORIZONTAL)
-                  {
-                    @Override
-                    protected void invalidated()
-                    {
-                      final boolean vertical =
-                                             (get() == Orientation.VERTICAL);
-                      pseudoClassStateChanged(VERTICAL_PSEUDOCLASS_STATE,
-                                              vertical);
-                      pseudoClassStateChanged(HORIZONTAL_PSEUDOCLASS_STATE,
-                                              !vertical);
-                    }
+      orientation = new StyleableObjectProperty<Orientation>(Orientation.HORIZONTAL)
+      {
+        @Override
+        protected void invalidated()
+        {
+          final boolean vertical = (get() == Orientation.VERTICAL);
+          pseudoClassStateChanged(VERTICAL_PSEUDOCLASS_STATE, vertical);
+          pseudoClassStateChanged(HORIZONTAL_PSEUDOCLASS_STATE, !vertical);
+        }
 
-                    @Override
-                    public CssMetaData<Slider, Orientation> getCssMetaData()
-                    {
-                      return StyleableProperties.ORIENTATION;
-                    }
+        @Override
+        public CssMetaData<Slider, Orientation> getCssMetaData()
+        {
+          return StyleableProperties.ORIENTATION;
+        }
 
-                    @Override
-                    public Object getBean()
-                    {
-                      return Slider.this;
-                    }
+        @Override
+        public Object getBean()
+        {
+          return Slider.this;
+        }
 
-                    @Override
-                    public String getName()
-                    {
-                      return "orientation";
-                    }
-                  };
+        @Override
+        public String getName()
+        {
+          return "orientation";
+        }
+      };
     }
     return orientation;
   }
@@ -646,9 +619,7 @@ public class Slider extends Control
   {
     if (labelFormatter == null)
     {
-      labelFormatter =
-                     new SimpleObjectProperty<StringConverter<Double>>(this,
-                                                                       "labelFormatter");
+      labelFormatter = new SimpleObjectProperty<StringConverter<Double>>(this, "labelFormatter");
     }
     return labelFormatter;
   }
@@ -709,16 +680,15 @@ public class Slider extends Control
    * valid number between min and max.
    *
    * @expert This function is intended to be used by experts, primarily by those
-   *         implementing new Skins or Behaviors. It is not common for
-   *         developers or designers to access this function directly.
+   * implementing new Skins or Behaviors. It is not common for
+   * developers or designers to access this function directly.
    */
   public void adjustValue(double newValue)
   {
     // figure out the "value" associated with the specified position
     final double _min = getMin();
     final double _max = getMax();
-    if (_max <= _min)
-      return;
+    if (_max <= _min) return;
     newValue = newValue < _min ? _min : newValue;
     newValue = newValue > _max ? _max : newValue;
 
@@ -752,8 +722,7 @@ public class Slider extends Control
    */
   private void adjustValues()
   {
-    if ((getValue() < getMin()
-         || getValue() > getMax()) /* &&  !isReadOnly(value)*/)
+    if ((getValue() < getMin() || getValue() > getMax()) /* &&  !isReadOnly(value)*/)
       setValue(Utils.clamp(getMin(), getValue(), getMax()));
   }
 
@@ -763,8 +732,8 @@ public class Slider extends Control
    * whether snapToTicks is set.
    *
    * @expert This function is intended to be used by experts, primarily by those
-   *         implementing new Skins or Behaviors. It is not common for
-   *         developers or designers to access this function directly.
+   * implementing new Skins or Behaviors. It is not common for
+   * developers or designers to access this function directly.
    */
   private double snapValueToTicks(double val)
   {
@@ -775,10 +744,8 @@ public class Slider extends Control
       // compute the nearest tick to this value
       if (getMinorTickCount() != 0)
       {
-        tickSpacing = getMajorTickUnit()
-                      / (Math.max(getMinorTickCount(), 0) + 1);
-      }
-      else
+        tickSpacing = getMajorTickUnit() / (Math.max(getMinorTickCount(), 0) + 1);
+      } else
       {
         tickSpacing = getMajorTickUnit();
       }
@@ -790,7 +757,9 @@ public class Slider extends Control
     return Utils.clamp(getMin(), v, getMax());
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected Skin<?> createDefaultSkin()
   {
@@ -805,163 +774,135 @@ public class Slider extends Control
 
   private static class StyleableProperties
   {
-    private static final CssMetaData<Slider, Number> BLOCK_INCREMENT =
-                                                                     new CssMetaData<Slider, Number>("-fx-block-increment",
-                                                                                                     SizeConverter.getInstance(),
-                                                                                                     10.0)
-                                                                     {
+    private static final CssMetaData<Slider, Number> BLOCK_INCREMENT = new CssMetaData<Slider, Number>("-fx-block-increment", SizeConverter.getInstance(), 10.0)
+    {
 
-                                                                       @Override
-                                                                       public boolean isSettable(Slider n)
-                                                                       {
-                                                                         return n.blockIncrement == null
-                                                                                || !n.blockIncrement.isBound();
-                                                                       }
+      @Override
+      public boolean isSettable(Slider n)
+      {
+        return n.blockIncrement == null || !n.blockIncrement.isBound();
+      }
 
-                                                                       @Override
-                                                                       public StyleableProperty<Number> getStyleableProperty(Slider n)
-                                                                       {
-                                                                         return (StyleableProperty<Number>) n.blockIncrementProperty();
-                                                                       }
-                                                                     };
+      @Override
+      public StyleableProperty<Number> getStyleableProperty(Slider n)
+      {
+        return (StyleableProperty<Number>) n.blockIncrementProperty();
+      }
+    };
 
-    private static final CssMetaData<Slider, Boolean> SHOW_TICK_LABELS =
-                                                                       new CssMetaData<Slider, Boolean>("-fx-show-tick-labels",
-                                                                                                        BooleanConverter.getInstance(),
-                                                                                                        Boolean.FALSE)
-                                                                       {
+    private static final CssMetaData<Slider, Boolean> SHOW_TICK_LABELS = new CssMetaData<Slider, Boolean>("-fx-show-tick-labels", BooleanConverter.getInstance(), Boolean.FALSE)
+    {
 
-                                                                         @Override
-                                                                         public boolean isSettable(Slider n)
-                                                                         {
-                                                                           return n.showTickLabels == null
-                                                                                  || !n.showTickLabels.isBound();
-                                                                         }
+      @Override
+      public boolean isSettable(Slider n)
+      {
+        return n.showTickLabels == null || !n.showTickLabels.isBound();
+      }
 
-                                                                         @Override
-                                                                         public StyleableProperty<Boolean> getStyleableProperty(Slider n)
-                                                                         {
-                                                                           return (StyleableProperty<Boolean>) n.showTickLabelsProperty();
-                                                                         }
-                                                                       };
+      @Override
+      public StyleableProperty<Boolean> getStyleableProperty(Slider n)
+      {
+        return (StyleableProperty<Boolean>) n.showTickLabelsProperty();
+      }
+    };
 
-    private static final CssMetaData<Slider, Boolean> SHOW_TICK_MARKS =
-                                                                      new CssMetaData<Slider, Boolean>("-fx-show-tick-marks",
-                                                                                                       BooleanConverter.getInstance(),
-                                                                                                       Boolean.FALSE)
-                                                                      {
+    private static final CssMetaData<Slider, Boolean> SHOW_TICK_MARKS = new CssMetaData<Slider, Boolean>("-fx-show-tick-marks", BooleanConverter.getInstance(), Boolean.FALSE)
+    {
 
-                                                                        @Override
-                                                                        public boolean isSettable(Slider n)
-                                                                        {
-                                                                          return n.showTickMarks == null
-                                                                                 || !n.showTickMarks.isBound();
-                                                                        }
+      @Override
+      public boolean isSettable(Slider n)
+      {
+        return n.showTickMarks == null || !n.showTickMarks.isBound();
+      }
 
-                                                                        @Override
-                                                                        public StyleableProperty<Boolean> getStyleableProperty(Slider n)
-                                                                        {
-                                                                          return (StyleableProperty<Boolean>) n.showTickMarksProperty();
-                                                                        }
-                                                                      };
+      @Override
+      public StyleableProperty<Boolean> getStyleableProperty(Slider n)
+      {
+        return (StyleableProperty<Boolean>) n.showTickMarksProperty();
+      }
+    };
 
-    private static final CssMetaData<Slider, Boolean> SNAP_TO_TICKS =
-                                                                    new CssMetaData<Slider, Boolean>("-fx-snap-to-ticks",
-                                                                                                     BooleanConverter.getInstance(),
-                                                                                                     Boolean.FALSE)
-                                                                    {
+    private static final CssMetaData<Slider, Boolean> SNAP_TO_TICKS = new CssMetaData<Slider, Boolean>("-fx-snap-to-ticks", BooleanConverter.getInstance(), Boolean.FALSE)
+    {
 
-                                                                      @Override
-                                                                      public boolean isSettable(Slider n)
-                                                                      {
-                                                                        return n.snapToTicks == null
-                                                                               || !n.snapToTicks.isBound();
-                                                                      }
+      @Override
+      public boolean isSettable(Slider n)
+      {
+        return n.snapToTicks == null || !n.snapToTicks.isBound();
+      }
 
-                                                                      @Override
-                                                                      public StyleableProperty<Boolean> getStyleableProperty(Slider n)
-                                                                      {
-                                                                        return (StyleableProperty<Boolean>) n.snapToTicksProperty();
-                                                                      }
-                                                                    };
+      @Override
+      public StyleableProperty<Boolean> getStyleableProperty(Slider n)
+      {
+        return (StyleableProperty<Boolean>) n.snapToTicksProperty();
+      }
+    };
 
-    private static final CssMetaData<Slider, Number> MAJOR_TICK_UNIT =
-                                                                     new CssMetaData<Slider, Number>("-fx-major-tick-unit",
-                                                                                                     SizeConverter.getInstance(),
-                                                                                                     25.0)
-                                                                     {
+    private static final CssMetaData<Slider, Number> MAJOR_TICK_UNIT = new CssMetaData<Slider, Number>("-fx-major-tick-unit", SizeConverter.getInstance(), 25.0)
+    {
 
-                                                                       @Override
-                                                                       public boolean isSettable(Slider n)
-                                                                       {
-                                                                         return n.majorTickUnit == null
-                                                                                || !n.majorTickUnit.isBound();
-                                                                       }
+      @Override
+      public boolean isSettable(Slider n)
+      {
+        return n.majorTickUnit == null || !n.majorTickUnit.isBound();
+      }
 
-                                                                       @Override
-                                                                       public StyleableProperty<Number> getStyleableProperty(Slider n)
-                                                                       {
-                                                                         return (StyleableProperty<Number>) n.majorTickUnitProperty();
-                                                                       }
-                                                                     };
+      @Override
+      public StyleableProperty<Number> getStyleableProperty(Slider n)
+      {
+        return (StyleableProperty<Number>) n.majorTickUnitProperty();
+      }
+    };
 
-    private static final CssMetaData<Slider, Number> MINOR_TICK_COUNT =
-                                                                      new CssMetaData<Slider, Number>("-fx-minor-tick-count",
-                                                                                                      SizeConverter.getInstance(),
-                                                                                                      3.0)
-                                                                      {
+    private static final CssMetaData<Slider, Number> MINOR_TICK_COUNT = new CssMetaData<Slider, Number>("-fx-minor-tick-count", SizeConverter.getInstance(), 3.0)
+    {
 
-                                                                        @Override
-                                                                        public boolean isSettable(Slider n)
-                                                                        {
-                                                                          return n.minorTickCount == null
-                                                                                 || !n.minorTickCount.isBound();
-                                                                        }
+      @Override
+      public boolean isSettable(Slider n)
+      {
+        return n.minorTickCount == null || !n.minorTickCount.isBound();
+      }
 
-                                                                        @Override
-                                                                        public StyleableProperty<Number> getStyleableProperty(Slider n)
-                                                                        {
-                                                                          return (StyleableProperty<Number>) n.minorTickCountProperty();
-                                                                        }
-                                                                      };
+      @Override
+      public StyleableProperty<Number> getStyleableProperty(Slider n)
+      {
+        return (StyleableProperty<Number>) n.minorTickCountProperty();
+      }
+    };
 
-    private static final CssMetaData<Slider, Orientation> ORIENTATION =
-                                                                      new CssMetaData<Slider, Orientation>("-fx-orientation",
-                                                                                                           new EnumConverter<Orientation>(Orientation.class),
-                                                                                                           Orientation.HORIZONTAL)
-                                                                      {
+    private static final CssMetaData<Slider, Orientation> ORIENTATION = new CssMetaData<Slider, Orientation>("-fx-orientation", new EnumConverter<Orientation>(Orientation.class), Orientation.HORIZONTAL)
+    {
 
-                                                                        @Override
-                                                                        public Orientation getInitialValue(Slider node)
-                                                                        {
-                                                                          // A
-                                                                          // vertical
-                                                                          // Slider
-                                                                          // should
-                                                                          // remain
-                                                                          // vertical
-                                                                          return node.getOrientation();
-                                                                        }
+      @Override
+      public Orientation getInitialValue(Slider node)
+      {
+        // A
+        // vertical
+        // Slider
+        // should
+        // remain
+        // vertical
+        return node.getOrientation();
+      }
 
-                                                                        @Override
-                                                                        public boolean isSettable(Slider n)
-                                                                        {
-                                                                          return n.orientation == null
-                                                                                 || !n.orientation.isBound();
-                                                                        }
+      @Override
+      public boolean isSettable(Slider n)
+      {
+        return n.orientation == null || !n.orientation.isBound();
+      }
 
-                                                                        @Override
-                                                                        public StyleableProperty<Orientation> getStyleableProperty(Slider n)
-                                                                        {
-                                                                          return (StyleableProperty<Orientation>) (WritableValue<Orientation>) n.orientationProperty();
-                                                                        }
-                                                                      };
+      @Override
+      public StyleableProperty<Orientation> getStyleableProperty(Slider n)
+      {
+        return (StyleableProperty<Orientation>) (WritableValue<Orientation>) n.orientationProperty();
+      }
+    };
 
     private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
     static
     {
-      final List<CssMetaData<? extends Styleable, ?>> styleables =
-                                                                 new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
+      final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<CssMetaData<? extends Styleable, ?>>(Control.getClassCssMetaData());
       styleables.add(BLOCK_INCREMENT);
       styleables.add(SHOW_TICK_LABELS);
       styleables.add(SHOW_TICK_MARKS);
@@ -976,7 +917,7 @@ public class Slider extends Control
 
   /**
    * @return The CssMetaData associated with this class, which may include the
-   *         CssMetaData of its super classes.
+   * CssMetaData of its super classes.
    * @since JavaFX 8.0
    */
   public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData()
@@ -986,11 +927,11 @@ public class Slider extends Control
 
   /**
    * RT-19263
-   * 
+   *
    * @treatAsPrivate implementation detail
-   * @deprecated This is an experimental API that is not intended for general
-   *             use and is subject to change in future versions
    * @since JavaFX 8.0
+   * @deprecated This is an experimental API that is not intended for general
+   * use and is subject to change in future versions
    */
   @Deprecated
   @Override
@@ -999,55 +940,50 @@ public class Slider extends Control
     return getClassCssMetaData();
   }
 
-  private static final PseudoClass VERTICAL_PSEUDOCLASS_STATE =
-                                                              PseudoClass.getPseudoClass("vertical");
-  private static final PseudoClass HORIZONTAL_PSEUDOCLASS_STATE =
-                                                                PseudoClass.getPseudoClass("horizontal");
+  private static final PseudoClass VERTICAL_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("vertical");
+  private static final PseudoClass HORIZONTAL_PSEUDOCLASS_STATE = PseudoClass.getPseudoClass("horizontal");
 
   /***************************************************************************
    * * Accessibility handling * *
    **************************************************************************/
 
   @Override
-  public Object queryAccessibleAttribute(AccessibleAttribute attribute,
-                                         Object... parameters)
+  public Object queryAccessibleAttribute(AccessibleAttribute attribute, Object... parameters)
   {
     switch (attribute)
     {
-    case VALUE:
-      return getValue();
-    case MAX_VALUE:
-      return getMax();
-    case MIN_VALUE:
-      return getMin();
-    case ORIENTATION:
-      return getOrientation();
-    default:
-      return super.queryAccessibleAttribute(attribute, parameters);
+      case VALUE:
+        return getValue();
+      case MAX_VALUE:
+        return getMax();
+      case MIN_VALUE:
+        return getMin();
+      case ORIENTATION:
+        return getOrientation();
+      default:
+        return super.queryAccessibleAttribute(attribute, parameters);
     }
   }
 
   @Override
-  public void executeAccessibleAction(AccessibleAction action,
-                                      Object... parameters)
+  public void executeAccessibleAction(AccessibleAction action, Object... parameters)
   {
     switch (action)
     {
-    case INCREMENT:
-      increment();
-      break;
-    case DECREMENT:
-      decrement();
-      break;
-    case SET_VALUE:
-    {
-      Double value = (Double) parameters[0];
-      if (value != null)
-        setValue(value);
-      break;
-    }
-    default:
-      super.executeAccessibleAction(action, parameters);
+      case INCREMENT:
+        increment();
+        break;
+      case DECREMENT:
+        decrement();
+        break;
+      case SET_VALUE:
+      {
+        Double value = (Double) parameters[0];
+        if (value != null) setValue(value);
+        break;
+      }
+      default:
+        super.executeAccessibleAction(action, parameters);
     }
   }
 }

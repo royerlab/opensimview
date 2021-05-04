@@ -1,12 +1,11 @@
 package clearcontrol.gui.jfx.var.onoffarray.demo;
 
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.var.onoffarray.OnOffArrayPane;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.var.onoffarray.OnOffArrayPane;
 
 /**
  * On/Off array demo
@@ -31,10 +30,9 @@ public class OnOffArrayPaneDemo extends Application
     {
       final int fi = i;
 
-      Variable<Boolean> lBoolVariable =
-                                      new Variable<>("DemoBoolVar"
-                                                     + i, i % 2 == 0);
-      lBoolVariable.addSetListener((o, n) -> {
+      Variable<Boolean> lBoolVariable = new Variable<>("DemoBoolVar" + i, i % 2 == 0);
+      lBoolVariable.addSetListener((o, n) ->
+      {
         System.out.println("bool " + fi + ": " + n);
       });
 
@@ -48,9 +46,8 @@ public class OnOffArrayPaneDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

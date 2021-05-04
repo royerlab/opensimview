@@ -1,39 +1,26 @@
 package clearcontrol.scripting.engine;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Formatter;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.scripting.lang.ScriptingLanguageInterface;
-
 import org.apache.commons.io.IOUtils;
+
+import java.io.*;
+import java.util.Formatter;
+import java.util.Map;
+import java.util.concurrent.*;
 
 public class ScriptingEngine implements AsynchronousExecutorFeature
 {
-  private static ThreadLocal<Boolean> mCancelThreadLocal =
-                                                         new ThreadLocal<>();
+  private static ThreadLocal<Boolean> mCancelThreadLocal = new ThreadLocal<>();
 
   private final ScriptingLanguageInterface mScriptingLanguageInterface;
 
   private final Class<?> mClassForFindingScripts;
   private final String mPathForFindingScripts;
 
-  private static ConcurrentLinkedQueue<ScriptingEngineListener> mScriptListenerList =
-                                                                                    new ConcurrentLinkedQueue<ScriptingEngineListener>();
+  private static ConcurrentLinkedQueue<ScriptingEngineListener> mScriptListenerList = new ConcurrentLinkedQueue<ScriptingEngineListener>();
   private final boolean mDebugMode = false;
-  protected Map<String, Object> mVariableMap =
-                                             new ConcurrentHashMap<String, Object>();
+  protected Map<String, Object> mVariableMap = new ConcurrentHashMap<String, Object>();
   private final File mLastExecutedScriptFile;
 
   private volatile Future<?> mScriptExecutionFuture;
@@ -47,23 +34,18 @@ public class ScriptingEngine implements AsynchronousExecutorFeature
 
   private OutputStream mOutputStream;
 
-  public ScriptingEngine(ScriptingLanguageInterface pScriptingLanguageInterface,
-                         Class<?> pClassForFindingScripts,
-                         String pPathForFindingScripts)
+  public ScriptingEngine(ScriptingLanguageInterface pScriptingLanguageInterface, Class<?> pClassForFindingScripts, String pPathForFindingScripts)
   {
     mScriptingLanguageInterface = pScriptingLanguageInterface;
     mClassForFindingScripts = pClassForFindingScripts;
     mPathForFindingScripts = pPathForFindingScripts;
-    mLastExecutedScriptFile =
-                            new File(System.getProperty("user.home"),
-                                     ".script.last.groovy");
+    mLastExecutedScriptFile = new File(System.getProperty("user.home"), ".script.last.groovy");
 
     appendToPreamble(mScriptingLanguageInterface.getPreamble());
     appendToPostamble(mScriptingLanguageInterface.getPostamble());
   }
 
-  public ScriptingEngine(ScriptingLanguageInterface pScriptingLanguageInterface,
-                         Class<?> pClassForFindingScripts)
+  public ScriptingEngine(ScriptingLanguageInterface pScriptingLanguageInterface, Class<?> pClassForFindingScripts)
   {
     this(pScriptingLanguageInterface, pClassForFindingScripts, "");
 
@@ -71,18 +53,17 @@ public class ScriptingEngine implements AsynchronousExecutorFeature
 
   public final Future<?> executeScriptAsynchronously()
   {
-    if (mScriptExecutionFuture != null
-        && !mScriptExecutionFuture.isDone())
+    if (mScriptExecutionFuture != null && !mScriptExecutionFuture.isDone())
     {
       for (final ScriptingEngineListener lScriptListener : mScriptListenerList)
       {
         lScriptListener.scriptAlreadyExecuting(this);
       }
       return null;
-    }
-    else
+    } else
     {
-      return mScriptExecutionFuture = executeAsynchronously(() -> {
+      return mScriptExecutionFuture = executeAsynchronously(() ->
+      {
         execute();
         mScriptExecutionFuture = null;
       });
@@ -92,8 +73,7 @@ public class ScriptingEngine implements AsynchronousExecutorFeature
 
   public final void stopAsynchronousExecution()
   {
-    if (mScriptExecutionFuture != null
-        && !mScriptExecutionFuture.isDone())
+    if (mScriptExecutionFuture != null && !mScriptExecutionFuture.isDone())
     {
       try
       {
@@ -101,24 +81,13 @@ public class ScriptingEngine implements AsynchronousExecutorFeature
 
         mScriptExecutionFuture.cancel(false);
 
-        final String lPreprocessedPostamble =
-                                            ScriptingPreprocessor.process(mClassForFindingScripts,
-                                                                          mPathForFindingScripts,
-                                                                          mPostambleString);
-        mScriptingLanguageInterface.runScript("Postamble",
-                                              lPreprocessedPostamble,
-                                              "",
-                                              "",
-                                              mVariableMap,
-                                              mOutputStream,
-                                              mDebugMode);
+        final String lPreprocessedPostamble = ScriptingPreprocessor.process(mClassForFindingScripts, mPathForFindingScripts, mPostambleString);
+        mScriptingLanguageInterface.runScript("Postamble", lPreprocessedPostamble, "", "", mVariableMap, mOutputStream, mDebugMode);
 
-      }
-      catch (final java.lang.ThreadDeath e)
+      } catch (final java.lang.ThreadDeath e)
       {
         System.err.println(e.getLocalizedMessage());
-      }
-      catch (final Throwable e)
+      } catch (final Throwable e)
       {
         System.err.println(e.getLocalizedMessage());
       }
@@ -127,23 +96,19 @@ public class ScriptingEngine implements AsynchronousExecutorFeature
 
   public boolean isReady()
   {
-    return mScriptExecutionFuture == null
-           || mScriptExecutionFuture.isDone()
-           || mScriptExecutionFuture.isCancelled();
+    return mScriptExecutionFuture == null || mScriptExecutionFuture.isDone() || mScriptExecutionFuture.isCancelled();
   }
 
   public boolean isCancelRequested()
   {
-    if (mScriptExecutionFuture == null)
-      return true;
+    if (mScriptExecutionFuture == null) return true;
     return mScriptExecutionFuture.isCancelled();
   }
 
   public static boolean isCancelRequestedStatic()
   {
     Boolean lBoolean = mCancelThreadLocal.get();
-    if (lBoolean == null)
-      return false;
+    if (lBoolean == null) return false;
     return lBoolean;
   }
 
@@ -207,45 +172,29 @@ public class ScriptingEngine implements AsynchronousExecutorFeature
       try
       {
         mVariableMap.put("scriptengine", this);
-        mScriptingLanguageInterface.runScript(mScriptName,
-                                              mPreambleString,
-                                              mScriptString,
-                                              mPostambleString,
-                                              mVariableMap,
-                                              mOutputStream,
-                                              mDebugMode);
-      }
-      catch (final Throwable e)
+        mScriptingLanguageInterface.runScript(mScriptName, mPreambleString, mScriptString, mPostambleString, mVariableMap, mOutputStream, mDebugMode);
+      } catch (final Throwable e)
       {
         lThrowable = e;
       }
 
-      final String lErrorMessage =
-                                 mScriptingLanguageInterface.getErrorMessage(lThrowable);
+      final String lErrorMessage = mScriptingLanguageInterface.getErrorMessage(lThrowable);
 
       for (final ScriptingEngineListener lScriptListener : mScriptListenerList)
       {
         try
         {
-          lScriptListener.afterScriptExecution(this,
-                                               mRawScriptString);
-          lScriptListener.asynchronousResult(this,
-                                             mScriptString,
-                                             mVariableMap,
-                                             lThrowable,
-                                             lErrorMessage);
-        }
-        catch (final Throwable e)
+          lScriptListener.afterScriptExecution(this, mRawScriptString);
+          lScriptListener.asynchronousResult(this, mScriptString, mVariableMap, lThrowable, lErrorMessage);
+        } catch (final Throwable e)
         {
           e.printStackTrace();
         }
       }
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
-    }
-    finally
+    } finally
     {
       mScriptExecutionFuture = null;
     }
@@ -276,8 +225,7 @@ public class ScriptingEngine implements AsynchronousExecutorFeature
         return loadScript(mLastExecutedScriptFile);
       }
       return false;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       return false;
     }
@@ -287,24 +235,20 @@ public class ScriptingEngine implements AsynchronousExecutorFeature
   {
     try
     {
-      final FileInputStream lFileInputStream =
-                                             new FileInputStream(pScriptFile);
+      final FileInputStream lFileInputStream = new FileInputStream(pScriptFile);
       final String lScriptString = IOUtils.toString(lFileInputStream);
       setScript(lScriptString);
       return true;
-    }
-    catch (final IOException e)
+    } catch (final IOException e)
     {
-      System.err.format("Could not read script: %s",
-                        pScriptFile.getAbsolutePath());
+      System.err.format("Could not read script: %s", pScriptFile.getAbsolutePath());
       return false;
     }
   }
 
   public void addListener(final ScriptingEngineListener pScriptListener)
   {
-    if (!mScriptListenerList.contains(pScriptListener))
-      mScriptListenerList.add(pScriptListener);
+    if (!mScriptListenerList.contains(pScriptListener)) mScriptListenerList.add(pScriptListener);
   }
 
   public void set(final String pVariableName, final Object pObject)
@@ -320,26 +264,20 @@ public class ScriptingEngine implements AsynchronousExecutorFeature
   public String preProcess()
   {
     ensureScriptStringNotNull();
-    mScriptString =
-                  ScriptingPreprocessor.process(mClassForFindingScripts,
-                                                mPathForFindingScripts,
-                                                mScriptString);
+    mScriptString = ScriptingPreprocessor.process(mClassForFindingScripts, mPathForFindingScripts, mScriptString);
     return mScriptString;
   }
 
-  public boolean waitForScriptExecutionToFinish(long pTimeout,
-                                                TimeUnit pTimeUnit) throws ExecutionException
+  public boolean waitForScriptExecutionToFinish(long pTimeout, TimeUnit pTimeUnit) throws ExecutionException
   {
     try
     {
       mScriptExecutionFuture.get(pTimeout, pTimeUnit);
       return true;
-    }
-    catch (final InterruptedException e)
+    } catch (final InterruptedException e)
     {
       waitForScriptExecutionToFinish(pTimeout, pTimeUnit);
-    }
-    catch (final TimeoutException e)
+    } catch (final TimeoutException e)
     {
       return false;
     }

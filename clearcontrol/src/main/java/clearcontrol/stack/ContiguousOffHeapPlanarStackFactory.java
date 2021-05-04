@@ -11,32 +11,17 @@ import coremem.util.Size;
  *
  * @author royer
  */
-public class ContiguousOffHeapPlanarStackFactory implements
-                                                 RecyclableFactoryInterface<StackInterface, StackRequest>
+public class ContiguousOffHeapPlanarStackFactory implements RecyclableFactoryInterface<StackInterface, StackRequest>
 {
 
   @Override
   public OffHeapPlanarStack create(StackRequest pStackRequest)
   {
     final long lBytesPerVoxel = Size.of(NativeTypeEnum.UnsignedShort);
-    final long lVolume = pStackRequest.getWidth()
-                         * pStackRequest.getHeight()
-                         * pStackRequest.getDepth();
-    final long lBufferSizeInBytesWithMetaData =
-                                              lVolume * lBytesPerVoxel
-                                                + pStackRequest.getMetadataSizeInBytes();
-    final ContiguousMemoryInterface lContiguousMemoryInterface =
-                                                               OffHeapMemory.allocateAlignedBytes("OffHeapPlanarStack"
-                                                                                                  + pStackRequest,
-                                                                                                  lBufferSizeInBytesWithMetaData,
-                                                                                                  pStackRequest.getAlignment());
+    final long lVolume = pStackRequest.getWidth() * pStackRequest.getHeight() * pStackRequest.getDepth();
+    final long lBufferSizeInBytesWithMetaData = lVolume * lBytesPerVoxel + pStackRequest.getMetadataSizeInBytes();
+    final ContiguousMemoryInterface lContiguousMemoryInterface = OffHeapMemory.allocateAlignedBytes("OffHeapPlanarStack" + pStackRequest, lBufferSizeInBytesWithMetaData, pStackRequest.getAlignment());
 
-    return new OffHeapPlanarStack(lContiguousMemoryInterface,
-                                  false,
-                                  NativeTypeEnum.UnsignedShort,
-                                  1,
-                                  pStackRequest.getWidth(),
-                                  pStackRequest.getHeight(),
-                                  pStackRequest.getDepth());
+    return new OffHeapPlanarStack(lContiguousMemoryInterface, false, NativeTypeEnum.UnsignedShort, 1, pStackRequest.getWidth(), pStackRequest.getHeight(), pStackRequest.getDepth());
   }
 }

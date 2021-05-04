@@ -1,10 +1,9 @@
 package clearcontrol.gui.jfx.var.togglebutton;
 
+import clearcontrol.core.variable.Variable;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
-
-import clearcontrol.core.variable.Variable;
 
 /**
  * Toggle button syncs to a boolean variable.
@@ -25,11 +24,9 @@ public class VariableToggleButton extends ToggleButton
 
   /**
    * Instantiates an ordinary toggle button.
-   * 
-   * @param pText
-   *          button text
-   * @param pGraphic
-   *          button graphic
+   *
+   * @param pText    button text
+   * @param pGraphic button graphic
    */
   public VariableToggleButton(String pText, Node pGraphic)
   {
@@ -39,9 +36,8 @@ public class VariableToggleButton extends ToggleButton
 
   /**
    * Instantiates an ordinary toggle button.
-   * 
-   * @param pText
-   *          button text
+   *
+   * @param pText button text
    */
   public VariableToggleButton(String pText)
   {
@@ -51,24 +47,21 @@ public class VariableToggleButton extends ToggleButton
 
   /**
    * Instantiates an ordinary toggle button.
-   * 
-   * @param pSelectedText
-   *          selected text
-   * @param pUnselectedText
-   *          unselected text
+   *
+   * @param pSelectedText   selected text
+   * @param pUnselectedText unselected text
    */
-  public VariableToggleButton(String pSelectedText,
-                              String pUnselectedText)
+  public VariableToggleButton(String pSelectedText, String pUnselectedText)
   {
     super(pUnselectedText);
     setStyle();
 
-    selectedProperty().addListener((e) -> {
+    selectedProperty().addListener((e) ->
+    {
       if (selectedProperty().get())
       {
         setText(pSelectedText);
-      }
-      else
+      } else
       {
         setText(pUnselectedText);
       }
@@ -77,44 +70,41 @@ public class VariableToggleButton extends ToggleButton
 
   /**
    * Instantiates an ordinary toggle button.
-   * 
-   * @param pSelectedText
-   *          selected text
-   * @param pUnselectedText
-   *          unselected text
-   * @param pBooleanVariable
-   *          boolean variable to sync with
+   *
+   * @param pSelectedText    selected text
+   * @param pUnselectedText  unselected text
+   * @param pBooleanVariable boolean variable to sync with
    */
-  public VariableToggleButton(String pSelectedText,
-                              String pUnselectedText,
-                              Variable<Boolean> pBooleanVariable)
+  public VariableToggleButton(String pSelectedText, String pUnselectedText, Variable<Boolean> pBooleanVariable)
   {
     this(pSelectedText, pUnselectedText);
 
-    pBooleanVariable.addSetListener((o, n) -> {
+    pBooleanVariable.addSetListener((o, n) ->
+    {
       if (selectedProperty().get() != n && n != null)
       {
-        Platform.runLater(() -> {
+        Platform.runLater(() ->
+        {
           selectedProperty().set(n);
         });
       }
     });
 
-    selectedProperty().addListener((e) -> {
+    selectedProperty().addListener((e) ->
+    {
       pBooleanVariable.setAsync(selectedProperty().get());
     });
 
-    Platform.runLater(() -> {
-      if (pBooleanVariable.get() != null)
-        selectedProperty().set(pBooleanVariable.get());
+    Platform.runLater(() ->
+    {
+      if (pBooleanVariable.get() != null) selectedProperty().set(pBooleanVariable.get());
     });
 
   }
 
   private void setStyle()
   {
-    getStylesheets().add(getClass().getResource("css/coloredbutton.css")
-                                   .toExternalForm());
+    getStylesheets().add(getClass().getResource("css/coloredbutton.css").toExternalForm());
 
   }
 

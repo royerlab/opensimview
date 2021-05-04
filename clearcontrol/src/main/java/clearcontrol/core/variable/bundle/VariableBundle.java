@@ -1,10 +1,10 @@
 package clearcontrol.core.variable.bundle;
 
-import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
-
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableBase;
+
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Variable bundle
@@ -14,14 +14,12 @@ import clearcontrol.core.variable.VariableBase;
 public class VariableBundle extends VariableBase<VariableBundle>
 {
 
-  private ConcurrentHashMap<String, Variable<?>> mVariableNameToVariableMap =
-                                                                            new ConcurrentHashMap<String, Variable<?>>();
+  private ConcurrentHashMap<String, Variable<?>> mVariableNameToVariableMap = new ConcurrentHashMap<String, Variable<?>>();
 
   /**
    * Variable bundle
-   * 
-   * @param pBundleName
-   *          bundle name
+   *
+   * @param pBundleName bundle name
    */
   public VariableBundle(final String pBundleName)
   {
@@ -41,9 +39,8 @@ public class VariableBundle extends VariableBase<VariableBundle>
 
   /**
    * Adds given variable to bundle
-   * 
-   * @param pVariable
-   *          variable to add
+   *
+   * @param pVariable variable to add
    */
   public <O> void addVariable(final Variable<O> pVariable)
   {
@@ -52,9 +49,8 @@ public class VariableBundle extends VariableBase<VariableBundle>
 
   /**
    * Removes variable from bundle
-   * 
-   * @param pVariable
-   *          variable to remove
+   *
+   * @param pVariable variable to remove
    */
   public <O> void removeVariable(final Variable<O> pVariable)
   {
@@ -62,7 +58,7 @@ public class VariableBundle extends VariableBase<VariableBundle>
   }
 
   /**
-   * 
+   *
    */
   public void removeAllVariables()
   {
@@ -71,9 +67,8 @@ public class VariableBundle extends VariableBase<VariableBundle>
 
   /**
    * Returns variable for given name
-   * 
-   * @param pVariableName
-   *          variable name
+   *
+   * @param pVariableName variable name
    * @return variable of given name
    */
   @SuppressWarnings("unchecked")
@@ -85,14 +80,11 @@ public class VariableBundle extends VariableBase<VariableBundle>
   /**
    * Sends updates from the variable in bundle of given name to teh given
    * variable.
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pToVariable
-   *          variable to send updates to
+   *
+   * @param pVariableName variable name
+   * @param pToVariable   variable to send updates to
    */
-  public <O> void sendUpdatesTo(final String pVariableName,
-                                final Variable<O> pToVariable)
+  public <O> void sendUpdatesTo(final String pVariableName, final Variable<O> pToVariable)
   {
     final Variable<O> lFromVariable = getVariable(pVariableName);
 
@@ -106,14 +98,11 @@ public class VariableBundle extends VariableBase<VariableBundle>
   /**
    * Do not send (anymore) updates from teh variable in bundle of given nae to
    * the given variable.
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pToVariable
-   *          variable to _not_ send updates to
+   *
+   * @param pVariableName variable name
+   * @param pToVariable   variable to _not_ send updates to
    */
-  public <O> void doNotSendUpdatesTo(final String pVariableName,
-                                     final Variable<O> pToVariable)
+  public <O> void doNotSendUpdatesTo(final String pVariableName, final Variable<O> pToVariable)
   {
     final Variable<O> lFromVariable = getVariable(pVariableName);
 
@@ -127,14 +116,11 @@ public class VariableBundle extends VariableBase<VariableBundle>
   /**
    * Get updates from a given variable to the variable in the bundle of given
    * name.
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pFromVariable
-   *          variable to get updates from.
+   *
+   * @param pVariableName variable name
+   * @param pFromVariable variable to get updates from.
    */
-  public <O> void getUpdatesFrom(final String pVariableName,
-                                 final Variable<O> pFromVariable)
+  public <O> void getUpdatesFrom(final String pVariableName, final Variable<O> pFromVariable)
   {
     final Variable<O> lToVariable = getVariable(pVariableName);
 
@@ -148,14 +134,11 @@ public class VariableBundle extends VariableBase<VariableBundle>
   /**
    * Do not get (anymore) updates from a given variable to the variable in
    * bundle of given name.
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pFromVariable
-   *          variable _not_ to get updates from.
+   *
+   * @param pVariableName variable name
+   * @param pFromVariable variable _not_ to get updates from.
    */
-  public <O> void doNotGetUpdatesFrom(final String pVariableName,
-                                      final Variable<O> pFromVariable)
+  public <O> void doNotGetUpdatesFrom(final String pVariableName, final Variable<O> pFromVariable)
   {
     final Variable<O> lToVariable = getVariable(pVariableName);
 
@@ -168,14 +151,11 @@ public class VariableBundle extends VariableBase<VariableBundle>
 
   /**
    * Sync the variable in bundle of given name to the given variable.
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pVariable
-   *          variable
+   *
+   * @param pVariableName variable name
+   * @param pVariable     variable
    */
-  public <O> void syncWith(final String pVariableName,
-                           final Variable<O> pVariable)
+  public <O> void syncWith(final String pVariableName, final Variable<O> pVariable)
   {
     this.sendUpdatesTo(pVariableName, pVariable);
     this.getUpdatesFrom(pVariableName, pVariable);
@@ -184,14 +164,11 @@ public class VariableBundle extends VariableBase<VariableBundle>
   /**
    * Do not Sync (anymore) the variable in bundle of given name to the given
    * variable.
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pVariable
-   *          variable
+   *
+   * @param pVariableName variable name
+   * @param pVariable     variable
    */
-  public <O> void doNotSyncWith(final String pVariableName,
-                                final Variable<O> pVariable)
+  public <O> void doNotSyncWith(final String pVariableName, final Variable<O> pVariable)
   {
     this.doNotSendUpdatesTo(pVariableName, pVariable);
     this.doNotGetUpdatesFrom(pVariableName, pVariable);
@@ -200,9 +177,7 @@ public class VariableBundle extends VariableBase<VariableBundle>
   @Override
   public String toString()
   {
-    return String.format("VariableBundle(%s,%s)",
-                         getName(),
-                         mVariableNameToVariableMap);
+    return String.format("VariableBundle(%s,%s)", getName(), mVariableNameToVariableMap);
   }
 
 }

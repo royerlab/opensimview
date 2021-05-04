@@ -11,7 +11,7 @@ import clearcontrol.stack.metadata.MetaDataEntryInterface;
 public enum MetaDataOther implements MetaDataEntryInterface<Double>
 {
 
- ColorWavelength(Double.class);
+  ColorWavelength(Double.class);
 
   private final Class<Double> mClass;
 

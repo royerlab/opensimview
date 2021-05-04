@@ -1,12 +1,11 @@
 package clearcontrol.gui.swing;
 
-import java.awt.EventQueue;
+import clearcontrol.core.variable.Variable;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JCheckBox;
-
-import clearcontrol.core.variable.Variable;
 
 public class JCheckBoxBoolean extends JCheckBox
 {
@@ -19,8 +18,7 @@ public class JCheckBoxBoolean extends JCheckBox
     this(pLabel, false);
   }
 
-  public JCheckBoxBoolean(final String pLabel,
-                          final boolean pInitialState)
+  public JCheckBoxBoolean(final String pLabel, final boolean pInitialState)
   {
     super(pLabel);
     mThis = this;
@@ -28,8 +26,7 @@ public class JCheckBoxBoolean extends JCheckBox
     {
 
       @Override
-      public Boolean setEventHook(final Boolean pOldValue,
-                                  final Boolean pNewValue)
+      public Boolean setEventHook(final Boolean pOldValue, final Boolean pNewValue)
       {
         final boolean lButtonState = pNewValue;
         // if (pDoubleEventSource != mThis)
@@ -42,8 +39,7 @@ public class JCheckBoxBoolean extends JCheckBox
               try
               {
                 setCheckmarkFromState(lButtonState);
-              }
-              catch (final Throwable e)
+              } catch (final Throwable e)
               {
                 e.printStackTrace();
               }
@@ -75,8 +71,7 @@ public class JCheckBoxBoolean extends JCheckBox
             try
             {
               setCheckmarkFromState(lButtonState);
-            }
-            catch (final Throwable e)
+            } catch (final Throwable e)
             {
               e.printStackTrace();
             }

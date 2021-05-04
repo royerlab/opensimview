@@ -7,21 +7,21 @@ package clearcontrol.microscope.state;
  */
 public enum AcquisitionType
 {
- /**
-  * Interactive acquisition stack
-  */
- Interactive,
+  /**
+   * Interactive acquisition stack
+   */
+  Interactive,
 
- /**
-  * Timelapse stack
-  */
- TimeLapse,
+  /**
+   * Timelapse stack
+   */
+  TimeLapse,
 
- TimelapseSequential,
+  TimelapseSequential,
 
- TimeLapseInterleaved,
+  TimeLapseInterleaved,
 
- TimeLapseOpticallyCameraFused,
+  TimeLapseOpticallyCameraFused,
 
- TimeLapseHybridInterleavedOpticsPrefused
+  TimeLapseHybridInterleavedOpticsPrefused
 }

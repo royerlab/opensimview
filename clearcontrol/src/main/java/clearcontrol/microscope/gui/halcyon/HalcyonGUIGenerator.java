@@ -1,14 +1,5 @@
 package clearcontrol.microscope.gui.halcyon;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Node;
-import javafx.stage.Stage;
-
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.name.NameableInterface;
 import clearcontrol.core.log.LoggingFeature;
@@ -19,14 +10,18 @@ import clearcontrol.microscope.gui.MicroscopeGUI;
 import clearcontrol.scripting.engine.ScriptingEngine;
 import clearcontrol.scripting.gui.ScriptingWindow;
 import halcyon.HalcyonFrame;
-import halcyon.model.node.HalcyonNode;
-import halcyon.model.node.HalcyonNodeInterface;
-import halcyon.model.node.HalcyonNodeType;
-import halcyon.model.node.HalcyonOtherNode;
-import halcyon.model.node.Window;
+import halcyon.model.node.*;
 import halcyon.view.TreePanel;
-
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Node;
+import javafx.stage.Stage;
 import org.dockfx.DockNode;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 /**
  * Halcyon GUI generator. Uses the Halcyon library (based on DockFX) to build a
@@ -39,40 +34,26 @@ public class HalcyonGUIGenerator implements LoggingFeature
   private MicroscopeInterface<?> mMicroscopeInterface;
   private HalcyonFrame mHalcyonFrame;
   private MicroscopeGUI mMicroscopeGUI;
-  private HashMap<Class<?>, Class<?>> mDeviceClassToPanelMap =
-                                                             new HashMap<>();
-  private HashMap<Class<?>, HalcyonNodeType> mDeviceClassToHalcyonTypeMap =
-                                                                          new HashMap<>();
-  private HashMap<Class<?>, Class<?>> mDeviceClassToToolbarMap =
-                                                               new HashMap<>();
+  private HashMap<Class<?>, Class<?>> mDeviceClassToPanelMap = new HashMap<>();
+  private HashMap<Class<?>, HalcyonNodeType> mDeviceClassToHalcyonTypeMap = new HashMap<>();
+  private HashMap<Class<?>, Class<?>> mDeviceClassToToolbarMap = new HashMap<>();
 
   /**
    * Instanciates a Halcyon GUI generator from a given microscope, microscope
    * parent GUI, and a collection of halcyon node types.
-   * 
-   * @param pMicroscopeInterface
-   *          micrscope
-   * @param pMicroscopeGUI
-   *          microscope GUI (parent of this generator)
-   * @param pNodeTypeCollection
-   *          node type list
-   * @param pPrimaryStage
-   *          JFX primary stage
+   *
+   * @param pMicroscopeInterface micrscope
+   * @param pMicroscopeGUI       microscope GUI (parent of this generator)
+   * @param pNodeTypeCollection  node type list
+   * @param pPrimaryStage        JFX primary stage
    */
-  public HalcyonGUIGenerator(MicroscopeInterface<?> pMicroscopeInterface,
-                             MicroscopeGUI pMicroscopeGUI,
-                             Collection<HalcyonNodeType> pNodeTypeCollection,
-                             Stage pPrimaryStage)
+  public HalcyonGUIGenerator(MicroscopeInterface<?> pMicroscopeInterface, MicroscopeGUI pMicroscopeGUI, Collection<HalcyonNodeType> pNodeTypeCollection, Stage pPrimaryStage)
   {
     mMicroscopeInterface = pMicroscopeInterface;
     mMicroscopeGUI = pMicroscopeGUI;
     initJavaFX(pPrimaryStage);
 
-    TreePanel lTreePanel = new TreePanel("Device tree",
-                                         "Devices",
-                                         this.getClass()
-                                             .getResourceAsStream("icons/folder_16.png"),
-                                         pNodeTypeCollection);
+    TreePanel lTreePanel = new TreePanel("Device tree", "Devices", this.getClass().getResourceAsStream("icons/folder_16.png"), pNodeTypeCollection);
 
     mHalcyonFrame = new HalcyonFrame(pMicroscopeInterface.getName());
 
@@ -82,17 +63,12 @@ public class HalcyonGUIGenerator implements LoggingFeature
 
   /**
    * Adds a mapping between a device class, panel class and node type.
-   * 
-   * @param pDeviceClass
-   *          device class
-   * @param pPanelClass
-   *          panel class
-   * @param pNodeType
-   *          node type
+   *
+   * @param pDeviceClass device class
+   * @param pPanelClass  panel class
+   * @param pNodeType    node type
    */
-  public <U, V> void addPanelMappingEntry(Class<U> pDeviceClass,
-                                          Class<V> pPanelClass,
-                                          HalcyonNodeType pNodeType)
+  public <U, V> void addPanelMappingEntry(Class<U> pDeviceClass, Class<V> pPanelClass, HalcyonNodeType pNodeType)
   {
     mDeviceClassToPanelMap.put(pDeviceClass, pPanelClass);
     mDeviceClassToHalcyonTypeMap.put(pDeviceClass, pNodeType);
@@ -100,21 +76,18 @@ public class HalcyonGUIGenerator implements LoggingFeature
 
   /**
    * Adds a toolbar mapping entry
-   * 
-   * @param pDeviceClass
-   *          device class
-   * @param pToolbarClass
-   *          toolbar class
+   *
+   * @param pDeviceClass  device class
+   * @param pToolbarClass toolbar class
    */
-  public <U, V> void addToolbarMappingEntry(Class<U> pDeviceClass,
-                                            Class<V> pToolbarClass)
+  public <U, V> void addToolbarMappingEntry(Class<U> pDeviceClass, Class<V> pToolbarClass)
   {
     mDeviceClassToToolbarMap.put(pDeviceClass, pToolbarClass);
   }
 
   /**
    * Returns the halcyon frame used internally
-   * 
+   *
    * @return halcyon frame
    */
   public HalcyonFrame getHalcyonFrame()
@@ -125,7 +98,7 @@ public class HalcyonGUIGenerator implements LoggingFeature
   /**
    * Returns true if the halcyon frame (the window that this object handles) is
    * visible.
-   * 
+   *
    * @return true if visible
    */
   public boolean isVisible()
@@ -144,9 +117,7 @@ public class HalcyonGUIGenerator implements LoggingFeature
       Class<?> lDeviceClass = lEntry.getKey();
       Class<?> lGUIElementClass = lEntry.getValue();
 
-      info("Setting up device GUI element class %s for device class: %s \n",
-           lGUIElementClass.getSimpleName(),
-           lDeviceClass.getSimpleName());
+      info("Setting up device GUI element class %s for device class: %s \n", lGUIElementClass.getSimpleName(), lDeviceClass.getSimpleName());
       setupDevicePanels(lDeviceClass, lGUIElementClass);
     }
 
@@ -155,9 +126,7 @@ public class HalcyonGUIGenerator implements LoggingFeature
       Class<?> lDeviceClass = lEntry.getKey();
       Class<?> lGUIElementClass = lEntry.getValue();
 
-      info("Setting up device GUI element class %s for device class: %s \n",
-           lGUIElementClass.getSimpleName(),
-           lDeviceClass.getSimpleName());
+      info("Setting up device GUI element class %s for device class: %s \n", lGUIElementClass.getSimpleName(), lDeviceClass.getSimpleName());
       setupDeviceToolbars(lDeviceClass, lGUIElementClass);
     }
 
@@ -188,76 +157,63 @@ public class HalcyonGUIGenerator implements LoggingFeature
     for (Stack3DDisplay lStack3DDisplay : mMicroscopeGUI.get3DDisplayDeviceList())
     {
       info("Setting up %s", lStack3DDisplay);
-      HalcyonNodeInterface node =
-                                new HalcyonOtherNode(lStack3DDisplay.getName(),
-                                                     MicroscopeNodeType.StackDisplay3D,
-                                                     new Window()
-                                                     {
-                                                       @Override
-                                                       public int getWidth()
-                                                       {
-                                                         return lStack3DDisplay.getGLWindow()
-                                                                               .getWindowWidth();
-                                                       }
+      HalcyonNodeInterface node = new HalcyonOtherNode(lStack3DDisplay.getName(), MicroscopeNodeType.StackDisplay3D, new Window()
+      {
+        @Override
+        public int getWidth()
+        {
+          return lStack3DDisplay.getGLWindow().getWindowWidth();
+        }
 
-                                                       @Override
-                                                       public int getHeight()
-                                                       {
-                                                         return lStack3DDisplay.getGLWindow()
-                                                                               .getWindowHeight();
-                                                       }
+        @Override
+        public int getHeight()
+        {
+          return lStack3DDisplay.getGLWindow().getWindowHeight();
+        }
 
-                                                       @Override
-                                                       public void setSize(int width,
-                                                                           int height)
-                                                       {
-                                                         lStack3DDisplay.getGLWindow()
-                                                                        .setSize(width,
-                                                                                 height);
-                                                       }
+        @Override
+        public void setSize(int width, int height)
+        {
+          lStack3DDisplay.getGLWindow().setSize(width, height);
+        }
 
-                                                       @Override
-                                                       public int getX()
-                                                       {
-                                                         return lStack3DDisplay.getGLWindow()
-                                                                               .getWindowX();
-                                                       }
+        @Override
+        public int getX()
+        {
+          return lStack3DDisplay.getGLWindow().getWindowX();
+        }
 
-                                                       @Override
-                                                       public int getY()
-                                                       {
-                                                         return lStack3DDisplay.getGLWindow()
-                                                                               .getWindowY();
-                                                       }
+        @Override
+        public int getY()
+        {
+          return lStack3DDisplay.getGLWindow().getWindowY();
+        }
 
-                                                       @Override
-                                                       public void setPosition(int x,
-                                                                               int y)
-                                                       {
-                                                         lStack3DDisplay.getGLWindow()
-                                                                        .setWindowPosition(x,
-                                                                                           y);
-                                                       }
+        @Override
+        public void setPosition(int x, int y)
+        {
+          lStack3DDisplay.getGLWindow().setWindowPosition(x, y);
+        }
 
-                                                       @Override
-                                                       public void show()
-                                                       {
-                                                         lStack3DDisplay.setVisible(true);
-                                                         lStack3DDisplay.requestFocus();
-                                                       }
+        @Override
+        public void show()
+        {
+          lStack3DDisplay.setVisible(true);
+          lStack3DDisplay.requestFocus();
+        }
 
-                                                       @Override
-                                                       public void hide()
-                                                       {
-                                                         lStack3DDisplay.setVisible(false);
-                                                       }
+        @Override
+        public void hide()
+        {
+          lStack3DDisplay.setVisible(false);
+        }
 
-                                                       @Override
-                                                       public void close()
-                                                       {
-                                                         lStack3DDisplay.close();
-                                                       }
-                                                     });
+        @Override
+        public void close()
+        {
+          lStack3DDisplay.close();
+        }
+      });
       mHalcyonFrame.addNode(node);
     }
   }
@@ -273,76 +229,63 @@ public class HalcyonGUIGenerator implements LoggingFeature
     {
       info("Setting up %s", lStack2DDisplay);
 
-      HalcyonNodeInterface node =
-                                new HalcyonOtherNode(lStack2DDisplay.getName(),
-                                                     MicroscopeNodeType.StackDisplay2D,
-                                                     new Window()
-                                                     {
-                                                       @Override
-                                                       public int getWidth()
-                                                       {
-                                                         return lStack2DDisplay.getGLWindow()
-                                                                               .getWindowWidth();
-                                                       }
+      HalcyonNodeInterface node = new HalcyonOtherNode(lStack2DDisplay.getName(), MicroscopeNodeType.StackDisplay2D, new Window()
+      {
+        @Override
+        public int getWidth()
+        {
+          return lStack2DDisplay.getGLWindow().getWindowWidth();
+        }
 
-                                                       @Override
-                                                       public int getHeight()
-                                                       {
-                                                         return lStack2DDisplay.getGLWindow()
-                                                                               .getWindowHeight();
-                                                       }
+        @Override
+        public int getHeight()
+        {
+          return lStack2DDisplay.getGLWindow().getWindowHeight();
+        }
 
-                                                       @Override
-                                                       public void setSize(int width,
-                                                                           int height)
-                                                       {
-                                                         lStack2DDisplay.getGLWindow()
-                                                                        .setSize(width,
-                                                                                 height);
-                                                       }
+        @Override
+        public void setSize(int width, int height)
+        {
+          lStack2DDisplay.getGLWindow().setSize(width, height);
+        }
 
-                                                       @Override
-                                                       public int getX()
-                                                       {
-                                                         return lStack2DDisplay.getGLWindow()
-                                                                               .getWindowX();
-                                                       }
+        @Override
+        public int getX()
+        {
+          return lStack2DDisplay.getGLWindow().getWindowX();
+        }
 
-                                                       @Override
-                                                       public int getY()
-                                                       {
-                                                         return lStack2DDisplay.getGLWindow()
-                                                                               .getWindowY();
-                                                       }
+        @Override
+        public int getY()
+        {
+          return lStack2DDisplay.getGLWindow().getWindowY();
+        }
 
-                                                       @Override
-                                                       public void setPosition(int x,
-                                                                               int y)
-                                                       {
-                                                         lStack2DDisplay.getGLWindow()
-                                                                        .setWindowPosition(x,
-                                                                                           y);
-                                                       }
+        @Override
+        public void setPosition(int x, int y)
+        {
+          lStack2DDisplay.getGLWindow().setWindowPosition(x, y);
+        }
 
-                                                       @Override
-                                                       public void show()
-                                                       {
-                                                         lStack2DDisplay.setVisible(true);
-                                                         lStack2DDisplay.requestFocus();
-                                                       }
+        @Override
+        public void show()
+        {
+          lStack2DDisplay.setVisible(true);
+          lStack2DDisplay.requestFocus();
+        }
 
-                                                       @Override
-                                                       public void hide()
-                                                       {
-                                                         lStack2DDisplay.setVisible(false);
-                                                       }
+        @Override
+        public void hide()
+        {
+          lStack2DDisplay.setVisible(false);
+        }
 
-                                                       @Override
-                                                       public void close()
-                                                       {
-                                                         lStack2DDisplay.close();
-                                                       }
-                                                     });
+        @Override
+        public void close()
+        {
+          lStack2DDisplay.close();
+        }
+      });
       mHalcyonFrame.addNode(node);
     }
   }
@@ -355,31 +298,18 @@ public class HalcyonGUIGenerator implements LoggingFeature
     for (ScriptingEngine lScriptingEngine : mMicroscopeGUI.getScriptingEnginesList())
     {
       info("Setting up %s", lScriptingEngine);
-      MachineConfiguration lCurrentMachineConfiguration =
-                                                        MachineConfiguration.get();
+      MachineConfiguration lCurrentMachineConfiguration = MachineConfiguration.get();
 
-      ScriptingWindow lScriptingWindow =
-                                       new ScriptingWindow(pMicroscopeInterface.getName()
-                                                           + " scripting window",
-                                                           lScriptingEngine,
-                                                           lCurrentMachineConfiguration.getIntegerProperty("scripting.nbrows",
-                                                                                                           60),
-                                                           lCurrentMachineConfiguration.getIntegerProperty("scripting.nbcols",
-                                                                                                           80));
+      ScriptingWindow lScriptingWindow = new ScriptingWindow(pMicroscopeInterface.getName() + " scripting window", lScriptingEngine, lCurrentMachineConfiguration.getIntegerProperty("scripting.nbrows", 60), lCurrentMachineConfiguration.getIntegerProperty("scripting.nbcols", 80));
 
       lScriptingWindow.loadLastLoadedScriptFile();
 
-      HalcyonNodeInterface node = new HalcyonNode(
-                                                  lScriptingEngine.getScriptingLanguageInterface()
-                                                                  .getName(),
-                                                  MicroscopeNodeType.Scripting,
-                                                  lScriptingWindow);
+      HalcyonNodeInterface node = new HalcyonNode(lScriptingEngine.getScriptingLanguageInterface().getName(), MicroscopeNodeType.Scripting, lScriptingWindow);
       mHalcyonFrame.addNode(node);
     } /**/
   }
 
-  private <T> void setupDevicePanels(Class<T> pDeviceClass,
-                                     Class<?> pGUIElementClass)
+  private <T> void setupDevicePanels(Class<T> pDeviceClass, Class<?> pGUIElementClass)
   {
 
     try
@@ -388,21 +318,18 @@ public class HalcyonGUIGenerator implements LoggingFeature
       if (pGUIElementClass == null)
       {
         String lDeviceClassSimpleName = pDeviceClass.getSimpleName();
-        System.err.println("Could not find panel class for: "
-                           + lDeviceClassSimpleName);
+        System.err.println("Could not find panel class for: " + lDeviceClassSimpleName);
         return;
       }
 
-      HalcyonNodeType lNodeType =
-                                mDeviceClassToHalcyonTypeMap.get(pDeviceClass);
+      HalcyonNodeType lNodeType = mDeviceClassToHalcyonTypeMap.get(pDeviceClass);
 
       for (Object lDevice : mMicroscopeInterface.getDevices(pDeviceClass))
       {
 
         try
         {
-          Constructor<?> lConstructor =
-                                      pGUIElementClass.getConstructor(pDeviceClass);
+          Constructor<?> lConstructor = pGUIElementClass.getConstructor(pDeviceClass);
 
           Object lPanelAsObject = lConstructor.newInstance(lDevice);
           Node lPanelAsNode = (Node) lPanelAsObject;
@@ -410,39 +337,27 @@ public class HalcyonGUIGenerator implements LoggingFeature
           HalcyonNode node;
           if (lDevice instanceof NameableInterface)
           {
-            NameableInterface lNameableDevice =
-                                              (NameableInterface) lDevice;
-            node =
-                 new HalcyonNode(lNameableDevice.getName() + " Panel",
-                                 lNodeType,
-                                 lPanelAsNode);
-          }
-          else
+            NameableInterface lNameableDevice = (NameableInterface) lDevice;
+            node = new HalcyonNode(lNameableDevice.getName() + " Panel", lNodeType, lPanelAsNode);
+          } else
           {
-            node = new HalcyonNode(pDeviceClass.getSimpleName(),
-                                   lNodeType,
-                                   lPanelAsNode);
+            node = new HalcyonNode(pDeviceClass.getSimpleName(), lNodeType, lPanelAsNode);
           }
           mHalcyonFrame.addNode(node);
-        }
-        catch (NoSuchMethodException | SecurityException
-            | InstantiationException | IllegalAccessException
-            | IllegalArgumentException | InvocationTargetException e)
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
         {
           e.printStackTrace();
         }
 
       }
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       e.printStackTrace();
     }
 
   }
 
-  private <T> void setupDeviceToolbars(Class<T> pClass,
-                                       Class<?> pGUIElementClass)
+  private <T> void setupDeviceToolbars(Class<T> pClass, Class<?> pGUIElementClass)
   {
 
     try
@@ -451,8 +366,7 @@ public class HalcyonGUIGenerator implements LoggingFeature
       if (pGUIElementClass == null)
       {
         String lDeviceClassSimpleName = pClass.getSimpleName();
-        System.err.println("Could not find panel class for: "
-                           + lDeviceClassSimpleName);
+        System.err.println("Could not find panel class for: " + lDeviceClassSimpleName);
         return;
       }
 
@@ -461,8 +375,7 @@ public class HalcyonGUIGenerator implements LoggingFeature
 
         try
         {
-          Constructor<?> lConstructor =
-                                      pGUIElementClass.getConstructor(pClass);
+          Constructor<?> lConstructor = pGUIElementClass.getConstructor(pClass);
 
           Object lToolbarAsObject = lConstructor.newInstance(lDevice);
           Node lToolbarAsNode = (Node) lToolbarAsObject;
@@ -470,23 +383,18 @@ public class HalcyonGUIGenerator implements LoggingFeature
 
           if (lDevice instanceof NameableInterface)
           {
-            NameableInterface lNameableInterface =
-                                                 (NameableInterface) lDevice;
+            NameableInterface lNameableInterface = (NameableInterface) lDevice;
             lDockNode.setTitle(lNameableInterface.getName());
           }
 
           mHalcyonFrame.addToolbar(lDockNode);
-        }
-        catch (NoSuchMethodException | SecurityException
-            | InstantiationException | IllegalAccessException
-            | IllegalArgumentException | InvocationTargetException e)
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
         {
           e.printStackTrace();
         }
 
       }
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       e.printStackTrace();
     }

@@ -10,9 +10,8 @@ public interface NameableInterface extends ReadOnlyNameableInterface
 
   /**
    * Sets the name of this object
-   * 
-   * @param pName
-   *          name
+   *
+   * @param pName name
    */
   public abstract void setName(String pName);
 

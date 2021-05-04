@@ -1,9 +1,5 @@
 package clearcontrol.gui.jfx.custom.datetime;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.DatePicker;
@@ -11,11 +7,16 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * A DateTimePicker with configurable datetime format where both date and time
  * can be changed via the text field and the date can additionally be changed
  * via the JavaFX default date picker.
- * 
+ * <p>
  * from:
  * https://stackoverflow.com/questions/28493097/is-there-any-date-and-time-picker-available-for-javafx
  */
@@ -28,19 +29,16 @@ public class DateTimePicker extends DatePicker
   public static final String DefaultFormat = "yyyy-MM-dd HH:mm";
 
   private DateTimeFormatter formatter;
-  private ObjectProperty<LocalDateTime> mDateTimeValueProperty =
-                                                               new SimpleObjectProperty<>(LocalDateTime.now());
-  private ObjectProperty<String> mDateAndTimeFormat =
-                                                    new SimpleObjectProperty<String>()
-                                                    {
-                                                      @Override
-                                                      public void set(String newValue)
-                                                      {
-                                                        super.set(newValue);
-                                                        formatter =
-                                                                  DateTimeFormatter.ofPattern(newValue);
-                                                      }
-                                                    };
+  private ObjectProperty<LocalDateTime> mDateTimeValueProperty = new SimpleObjectProperty<>(LocalDateTime.now());
+  private ObjectProperty<String> mDateAndTimeFormat = new SimpleObjectProperty<String>()
+  {
+    @Override
+    public void set(String newValue)
+    {
+      super.set(newValue);
+      formatter = DateTimeFormatter.ofPattern(newValue);
+    }
+  };
 
   /**
    * Instanciates a local date and time picker
@@ -53,29 +51,27 @@ public class DateTimePicker extends DatePicker
     setConverter(lInternalConverter);
 
     // Syncronize changes to the underlying date value back to the dateTimeValue
-    valueProperty().addListener((observable, oldValue, newValue) -> {
+    valueProperty().addListener((observable, oldValue, newValue) ->
+    {
       if (newValue == null)
       {
         mDateTimeValueProperty.set(null);
-      }
-      else
+      } else
       {
         if (mDateTimeValueProperty.get() == null)
         {
-          mDateTimeValueProperty.set(LocalDateTime.of(newValue,
-                                                      LocalTime.now()));
-        }
-        else
+          mDateTimeValueProperty.set(LocalDateTime.of(newValue, LocalTime.now()));
+        } else
         {
           LocalTime time = mDateTimeValueProperty.get().toLocalTime();
-          mDateTimeValueProperty.set(LocalDateTime.of(newValue,
-                                                      time));
+          mDateTimeValueProperty.set(LocalDateTime.of(newValue, time));
         }
       }
     });
 
     // Syncronize changes to dateTimeValue back to the underlying date value
-    mDateTimeValueProperty.addListener((observable, o, n) -> {
+    mDateTimeValueProperty.addListener((observable, o, n) ->
+    {
       if (o != n)
       {
         LocalDate lLocalDate = n.toLocalDate();
@@ -85,31 +81,21 @@ public class DateTimePicker extends DatePicker
     });
 
     // Persist changes onblur
-    getEditor().focusedProperty()
-               .addListener((observable, oldValue, newValue) -> {
-                 if (!newValue)
-                   simulateEnterPressed();
-               });
+    getEditor().focusedProperty().addListener((observable, oldValue, newValue) ->
+    {
+      if (!newValue) simulateEnterPressed();
+    });
 
   }
 
   private void simulateEnterPressed()
   {
-    getEditor().fireEvent(new KeyEvent(getEditor(),
-                                       getEditor(),
-                                       KeyEvent.KEY_PRESSED,
-                                       null,
-                                       null,
-                                       KeyCode.ENTER,
-                                       false,
-                                       false,
-                                       false,
-                                       false));
+    getEditor().fireEvent(new KeyEvent(getEditor(), getEditor(), KeyEvent.KEY_PRESSED, null, null, KeyCode.ENTER, false, false, false, false));
   }
 
   /**
    * Returns picked local date and time
-   * 
+   *
    * @return picked local date and time
    */
   public LocalDateTime getDateTimeValue()
@@ -119,9 +105,8 @@ public class DateTimePicker extends DatePicker
 
   /**
    * Sets picked local date and time
-   * 
-   * @param pDateTimeValue
-   *          date and time value
+   *
+   * @param pDateTimeValue date and time value
    */
   public void setDateTimeValue(LocalDateTime pDateTimeValue)
   {
@@ -130,7 +115,7 @@ public class DateTimePicker extends DatePicker
 
   /**
    * Returns date and time property
-   * 
+   *
    * @return date and time property
    */
   public ObjectProperty<LocalDateTime> getDateTimeValueProperty()
@@ -140,7 +125,7 @@ public class DateTimePicker extends DatePicker
 
   /**
    * Returns date and time format string
-   * 
+   *
    * @return format string
    */
   public String getFormat()
@@ -150,7 +135,7 @@ public class DateTimePicker extends DatePicker
 
   /**
    * Retuns date and time format property
-   * 
+   *
    * @return date and time format property
    */
   public ObjectProperty<String> formatProperty()
@@ -160,9 +145,8 @@ public class DateTimePicker extends DatePicker
 
   /**
    * Sets date and time format
-   * 
-   * @param pFormat
-   *          date and time format
+   *
+   * @param pFormat date and time format
    */
   public void setFormat(String pFormat)
   {
@@ -187,8 +171,7 @@ public class DateTimePicker extends DatePicker
         return null;
       }
 
-      mDateTimeValueProperty.set(LocalDateTime.parse(value,
-                                                     formatter));
+      mDateTimeValueProperty.set(LocalDateTime.parse(value, formatter));
       return mDateTimeValueProperty.get().toLocalDate();
     }
   }

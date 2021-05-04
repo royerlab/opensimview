@@ -4,8 +4,7 @@ import java.util.regex.Pattern;
 
 public class ScriptChecks
 {
-  final static Pattern cWhilePattern =
-                                     Pattern.compile("\\s*while\\W+");
+  final static Pattern cWhilePattern = Pattern.compile("\\s*while\\W+");
   final static Pattern cForPattern = Pattern.compile("\\s*for\\W");
 
   public final static boolean check(final String pScriptString)

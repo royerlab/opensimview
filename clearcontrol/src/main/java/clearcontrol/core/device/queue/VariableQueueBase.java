@@ -1,12 +1,11 @@
 package clearcontrol.core.device.queue;
 
+import clearcontrol.core.variable.Variable;
+import org.apache.commons.math3.analysis.UnivariateFunction;
+
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-
-import clearcontrol.core.variable.Variable;
-
-import org.apache.commons.math3.analysis.UnivariateFunction;
 
 /**
  * The state of variables register to instances of this class can be recorded
@@ -16,8 +15,7 @@ import org.apache.commons.math3.analysis.UnivariateFunction;
  */
 public class VariableQueueBase implements QueueInterface, Cloneable
 {
-  private ConcurrentHashMap<Variable<?>, ArrayList<Object>> mVariablesToQueueListsMap =
-                                                                                      new ConcurrentHashMap<>();
+  private ConcurrentHashMap<Variable<?>, ArrayList<Object>> mVariablesToQueueListsMap = new ConcurrentHashMap<>();
 
   private Object mLock = new Object();
 
@@ -31,9 +29,8 @@ public class VariableQueueBase implements QueueInterface, Cloneable
 
   /**
    * Instanciates a copy of this variable state queue object.
-   * 
-   * @param pVariableStateQueues
-   *          state queues object to copy.
+   *
+   * @param pVariableStateQueues state queues object to copy.
    */
   public VariableQueueBase(VariableQueueBase pVariableStateQueues)
   {
@@ -45,8 +42,7 @@ public class VariableQueueBase implements QueueInterface, Cloneable
       {
         Variable<?> lVariable = lEntrySet.getKey();
 
-        ArrayList<Object> lQueueStatesList =
-                                           new ArrayList<>(lEntrySet.getValue());
+        ArrayList<Object> lQueueStatesList = new ArrayList<>(lEntrySet.getValue());
 
         mVariablesToQueueListsMap.put(lVariable, lQueueStatesList);
       }
@@ -62,9 +58,8 @@ public class VariableQueueBase implements QueueInterface, Cloneable
 
   /**
    * Register a list of variables with normal queueing mode.
-   * 
-   * @param pVariables
-   *          var arg list of variables to register
+   *
+   * @param pVariables var arg list of variables to register
    */
   public void registerVariables(Variable<?>... pVariables)
   {
@@ -76,9 +71,8 @@ public class VariableQueueBase implements QueueInterface, Cloneable
 
   /**
    * Register a variable.
-   * 
-   * @param pVariable
-   *          variable
+   *
+   * @param pVariable variable
    */
   public <T> void registerVariable(Variable<T> pVariable)
   {
@@ -92,57 +86,42 @@ public class VariableQueueBase implements QueueInterface, Cloneable
   /**
    * Returns the boolean value of a given variable at a given position of the
    * queue.
-   * 
-   * @param pVariable
-   *          variable
-   * @param pQueuePositionIndex
-   *          position in queue
+   *
+   * @param pVariable           variable
+   * @param pQueuePositionIndex position in queue
    * @return boolean value
    */
-  public Boolean getQueuedBooleanValue(Variable<Boolean> pVariable,
-                                       int pQueuePositionIndex)
+  public Boolean getQueuedBooleanValue(Variable<Boolean> pVariable, int pQueuePositionIndex)
 
   {
-    Boolean lValue =
-                   (Boolean) mVariablesToQueueListsMap.get(pVariable)
-                                                      .get(pQueuePositionIndex);
+    Boolean lValue = (Boolean) mVariablesToQueueListsMap.get(pVariable).get(pQueuePositionIndex);
     return lValue;
   }
 
   /**
    * Returns the value of a given variable at a given position of the queue.
-   * 
-   * @param pVariable
-   *          variable
-   * @param pQueuePositionIndex
-   *          position in queue
+   *
+   * @param pVariable           variable
+   * @param pQueuePositionIndex position in queue
    * @return value
    */
-  public Number getQueuedValue(Variable<Number> pVariable,
-                               int pQueuePositionIndex)
+  public Number getQueuedValue(Variable<Number> pVariable, int pQueuePositionIndex)
 
   {
-    Number lValue =
-                  (Number) mVariablesToQueueListsMap.get(pVariable)
-                                                    .get(pQueuePositionIndex);
+    Number lValue = (Number) mVariablesToQueueListsMap.get(pVariable).get(pQueuePositionIndex);
     return lValue;
   }
 
   /**
    * Returns the value of a given variable at a given position of the queue
    * after transforming with a given univariate function.
-   * 
-   * @param pFunction
-   *          univariate function
-   * @param pVariable
-   *          variable
-   * @param pQueuePositionIndex
-   *          position in queue
+   *
+   * @param pFunction           univariate function
+   * @param pVariable           variable
+   * @param pQueuePositionIndex position in queue
    * @return value
    */
-  public Number getQueuedValue(UnivariateFunction pFunction,
-                               Variable<Number> pVariable,
-                               int pQueuePositionIndex)
+  public Number getQueuedValue(UnivariateFunction pFunction, Variable<Number> pVariable, int pQueuePositionIndex)
 
   {
     Number lValue = getQueuedValue(pVariable, pQueuePositionIndex);
@@ -154,16 +133,13 @@ public class VariableQueueBase implements QueueInterface, Cloneable
    * Returns the list of states from the current queue of a given variable. This
    * is an actual copy of the original list of states, this means that it is not
    * altered by subsequent clearing or modifications of the state queue.
-   * 
-   * @param pVariable
-   *          variable
+   *
+   * @param pVariable variable
    * @return state queue as list
    */
   public <T> ArrayList<T> getVariableQueue(Variable<T> pVariable)
   {
-    @SuppressWarnings("unchecked")
-    ArrayList<T> lArrayList =
-                            (ArrayList<T>) new ArrayList<>(mVariablesToQueueListsMap.get(pVariable));
+    @SuppressWarnings("unchecked") ArrayList<T> lArrayList = (ArrayList<T>) new ArrayList<>(mVariablesToQueueListsMap.get(pVariable));
     return lArrayList;
   }
 
@@ -172,23 +148,18 @@ public class VariableQueueBase implements QueueInterface, Cloneable
    * transforming these values using the given univariate function. This is an
    * actual copy of the original list of states, this means that it is not
    * altered by subsequent clearing or modifications of the state queue.
-   * 
-   * @param pFunction
-   *          function to apply to each enqueued state value
-   * @param pValueVariable
-   *          variable
+   *
+   * @param pFunction      function to apply to each enqueued state value
+   * @param pValueVariable variable
    * @return list of state values transformed using the given function.
    */
-  public ArrayList<Number> getVariableQueue(UnivariateFunction pFunction,
-                                            Variable<Number> pValueVariable)
+  public ArrayList<Number> getVariableQueue(UnivariateFunction pFunction, Variable<Number> pValueVariable)
   {
     ArrayList<Number> lTransformedValueList = new ArrayList<Number>();
 
-    ArrayList<Object> lStateList =
-                                 mVariablesToQueueListsMap.get(pValueVariable);
+    ArrayList<Object> lStateList = mVariablesToQueueListsMap.get(pValueVariable);
 
-    if (lStateList.size() == 0)
-      return lTransformedValueList;
+    if (lStateList.size() == 0) return lTransformedValueList;
 
     if (!(lStateList.get(0) instanceof Number))
       throw new IllegalArgumentException("Should be a variable of type Number");
@@ -196,8 +167,7 @@ public class VariableQueueBase implements QueueInterface, Cloneable
     for (Object lObject : lStateList)
     {
       Number lNumber = (Number) lObject;
-      double lTransformedValue =
-                               pFunction.value(lNumber.doubleValue());
+      double lTransformedValue = pFunction.value(lNumber.doubleValue());
       lTransformedValueList.add(lTransformedValue);
     }
 
@@ -244,10 +214,7 @@ public class VariableQueueBase implements QueueInterface, Cloneable
   {
     synchronized (mLock)
     {
-      return mVariablesToQueueListsMap.values()
-                                      .iterator()
-                                      .next()
-                                      .size();
+      return mVariablesToQueueListsMap.values().iterator().next().size();
     }
   }
 

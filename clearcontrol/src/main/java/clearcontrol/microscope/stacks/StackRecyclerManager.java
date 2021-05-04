@@ -1,7 +1,5 @@
 package clearcontrol.microscope.stacks;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.stack.ContiguousOffHeapPlanarStackFactory;
 import clearcontrol.stack.StackInterface;
@@ -9,20 +7,20 @@ import clearcontrol.stack.StackRequest;
 import coremem.recycling.BasicRecycler;
 import coremem.recycling.RecyclerInterface;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * StackRecyclerManager handle a collection of named stack recyclers used for
  * different purposes. Methods are available to clear all recyclers.
- * 
+ *
  * @author royer
  */
 public class StackRecyclerManager extends VirtualDevice
 {
 
-  final private ContiguousOffHeapPlanarStackFactory mOffHeapPlanarStackFactory =
-                                                                               new ContiguousOffHeapPlanarStackFactory();
+  final private ContiguousOffHeapPlanarStackFactory mOffHeapPlanarStackFactory = new ContiguousOffHeapPlanarStackFactory();
 
-  final private ConcurrentHashMap<String, RecyclerInterface<StackInterface, StackRequest>> mRecyclerMap =
-                                                                                                        new ConcurrentHashMap<>();
+  final private ConcurrentHashMap<String, RecyclerInterface<StackInterface, StackRequest>> mRecyclerMap = new ConcurrentHashMap<>();
 
   private boolean mAutoFree = false;
 
@@ -38,30 +36,19 @@ public class StackRecyclerManager extends VirtualDevice
    * Requests a recycler with given characteristics, if it already exists and it
    * has the right characteristics then it is used, otherwise a new one is
    * created.
-   * 
-   * @param pName
-   *          recycler's name
-   * @param pMaximumNumberOfLiveObjects
-   *          maximum number of live objects
-   * @param pMaximumNumberOfAvailableObjects
-   *          maximum number of available objects
+   *
+   * @param pName                            recycler's name
+   * @param pMaximumNumberOfLiveObjects      maximum number of live objects
+   * @param pMaximumNumberOfAvailableObjects maximum number of available objects
    * @return requested recycler
    */
-  public RecyclerInterface<StackInterface, StackRequest> getRecycler(String pName,
-                                                                     int pMaximumNumberOfLiveObjects,
-                                                                     int pMaximumNumberOfAvailableObjects)
+  public RecyclerInterface<StackInterface, StackRequest> getRecycler(String pName, int pMaximumNumberOfLiveObjects, int pMaximumNumberOfAvailableObjects)
   {
-    RecyclerInterface<StackInterface, StackRequest> lRecycler =
-                                                              getRecyclerMap().get(pName);
+    RecyclerInterface<StackInterface, StackRequest> lRecycler = getRecyclerMap().get(pName);
 
-    if (lRecycler == null
-        || lRecycler.getMaxNumberOfAvailableObjects() != pMaximumNumberOfAvailableObjects
-        || lRecycler.getMaxNumberOfLiveObjects() != pMaximumNumberOfLiveObjects)
+    if (lRecycler == null || lRecycler.getMaxNumberOfAvailableObjects() != pMaximumNumberOfAvailableObjects || lRecycler.getMaxNumberOfLiveObjects() != pMaximumNumberOfLiveObjects)
     {
-      lRecycler = new BasicRecycler<>(mOffHeapPlanarStackFactory,
-                                      pMaximumNumberOfLiveObjects,
-                                      pMaximumNumberOfAvailableObjects,
-                                      mAutoFree);
+      lRecycler = new BasicRecycler<>(mOffHeapPlanarStackFactory, pMaximumNumberOfLiveObjects, pMaximumNumberOfAvailableObjects, mAutoFree);
       getRecyclerMap().put(pName, lRecycler);
       notifyListeners(this);
     }
@@ -74,9 +61,8 @@ public class StackRecyclerManager extends VirtualDevice
 
   /**
    * Clears recyclers with given name.
-   * 
-   * @param pName
-   *          recycler name
+   *
+   * @param pName recycler name
    */
   public void clear(String pName)
   {
@@ -95,7 +81,7 @@ public class StackRecyclerManager extends VirtualDevice
 
   /**
    * Returns recycler map
-   * 
+   *
    * @return recycler map
    */
   public ConcurrentHashMap<String, RecyclerInterface<StackInterface, StackRequest>> getRecyclerMap()
@@ -105,7 +91,7 @@ public class StackRecyclerManager extends VirtualDevice
 
   /**
    * Returns underlying stack factory
-   * 
+   *
    * @return stack factory
    */
   public ContiguousOffHeapPlanarStackFactory getStackFactory()

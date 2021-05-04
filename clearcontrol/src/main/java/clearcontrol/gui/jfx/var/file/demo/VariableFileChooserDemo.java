@@ -1,14 +1,14 @@
 package clearcontrol.gui.jfx.var.file.demo;
 
-import java.io.File;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.var.file.VariableFileChooser;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.var.file.VariableFileChooser;
+import java.io.File;
 
 /**
  * Univariate affine function pane demo
@@ -26,41 +26,33 @@ public class VariableFileChooserDemo extends Application
     stage.setScene(scene);
     stage.setTitle(this.getClass().getName());
 
-    Variable<File> lFileVariable = new Variable<>("File",
-                                                  new File("."));
+    Variable<File> lFileVariable = new Variable<>("File", new File("."));
 
-    lFileVariable.addSetListener((o, n) -> {
+    lFileVariable.addSetListener((o, n) ->
+    {
       System.out.println("new file: " + n);
     });
 
-    VariableFileChooser lVariableFileChooser =
-                                             new VariableFileChooser("File: ",
-                                                                     lFileVariable,
-                                                                     false);
+    VariableFileChooser lVariableFileChooser = new VariableFileChooser("File: ", lFileVariable, false);
 
-    Variable<File> lFolderVariable = new Variable<>("Folder",
-                                                    new File("."));
+    Variable<File> lFolderVariable = new Variable<>("Folder", new File("."));
 
-    lFolderVariable.addSetListener((o, n) -> {
+    lFolderVariable.addSetListener((o, n) ->
+    {
       System.out.println("new folder: " + n);
     });
 
-    VariableFileChooser lVariableFolderChooser =
-                                               new VariableFileChooser("Folder: ",
-                                                                       lFileVariable,
-                                                                       true);
+    VariableFileChooser lVariableFolderChooser = new VariableFileChooser("Folder: ", lFileVariable, true);
 
-    root.getChildren()
-        .add(new VBox(lVariableFileChooser, lVariableFolderChooser));
+    root.getChildren().add(new VBox(lVariableFileChooser, lVariableFolderChooser));
 
     stage.show();
   }
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

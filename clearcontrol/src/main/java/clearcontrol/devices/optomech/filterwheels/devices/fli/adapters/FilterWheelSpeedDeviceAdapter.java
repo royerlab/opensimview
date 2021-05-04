@@ -2,8 +2,7 @@ package clearcontrol.devices.optomech.filterwheels.devices.fli.adapters;
 
 import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
 
-public class FilterWheelSpeedDeviceAdapter extends
-                                           FilterWheelDeviceAdapter
+public class FilterWheelSpeedDeviceAdapter extends FilterWheelDeviceAdapter
 {
 
   public FilterWheelSpeedDeviceAdapter(final FLIFilterWheelDevice pFLIFilterWheelDevice)
@@ -18,11 +17,9 @@ public class FilterWheelSpeedDeviceAdapter extends
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(final Integer pOldSpeed,
-                                          final Integer pNewSpeed)
+  public byte[] getSetValueCommandMessage(final Integer pOldSpeed, final Integer pNewSpeed)
   {
-    return getSetPositionAndSpeedCommandMessage(mFLIFilterWheelDevice.getCachedPosition(),
-                                                pNewSpeed);
+    return getSetPositionAndSpeedCommandMessage(mFLIFilterWheelDevice.getCachedPosition(), pNewSpeed);
   }
 
   @Override

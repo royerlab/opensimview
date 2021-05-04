@@ -2,12 +2,11 @@ package clearcontrol.core.math.regression.linear;
 
 import clearcontrol.core.math.functions.UnivariateAffineFunction;
 import gnu.trove.list.array.TDoubleArrayList;
-
 import org.apache.commons.math3.stat.descriptive.rank.Median;
 
 /**
  * Theil-Sen estimator
- * 
+ * <p>
  * In non-parametric statistics, the Theil-Sen estimator, also known as Sen's
  * slope estimator, slope selection, the single median method, or the Kendall
  * robust line-fit method,[6] is a method for robust linear regression that
@@ -19,12 +18,12 @@ import org.apache.commons.math3.stat.descriptive.rank.Median;
  * and competes well against simple least squares even for normally distributed
  * data. It has been called "the most popular nonparametric technique for
  * estimating a linear trend" .
- * 
+ * <p>
  * A variation of the Theil-Sen estimator due to Siegel (1982) determines, for
  * each sample point (xi,yi), the median mi of the slopes (yj - yi)/(xj - xi) of
  * lines through that point, and then determines the overall estimator as the
  * median of these medians.
- * 
+ * <p>
  * The Theil-Sen estimator is an unbiased estimator of the true slope in simple
  * linear regression. For many distributions of the response error, this
  * estimator has high asymptotic efficiency relative to least-squares
@@ -37,9 +36,9 @@ import org.apache.commons.math3.stat.descriptive.rank.Median;
  * breakdown point decreases for higher-dimensional generalizations of the
  * method. A higher breakdown point, 50%, holds for the repeated median
  * estimator of Siegel.
- * 
+ * <p>
  * Source: http://en.wikipedia.org/wiki/Theil%E2%80%93 Sen_estimator
- * 
+ *
  * @author royerloic
  */
 public class TheilSenEstimator
@@ -64,11 +63,9 @@ public class TheilSenEstimator
 
   /**
    * Enters a data point
-   * 
-   * @param pX
-   *          x coordinate
-   * @param pY
-   *          y coordinate
+   *
+   * @param pX x coordinate
+   * @param pY y coordinate
    */
   public final void enter(final double pX, final double pY)
   {
@@ -79,7 +76,7 @@ public class TheilSenEstimator
 
   /**
    * Returns (or computes if not done already) the affine fit model.
-   * 
+   *
    * @return affine function
    */
   public final UnivariateAffineFunction getModel()
@@ -89,8 +86,7 @@ public class TheilSenEstimator
       if (mClassicMethod)
       {
         classicmethod();
-      }
-      else
+      } else
       {
         newmethod();
       }
@@ -208,9 +204,8 @@ public class TheilSenEstimator
 
   /**
    * Computes the fit error of a given function to the entered data.
-   * 
-   * @param pModel
-   *          model to compute fit error for.
+   *
+   * @param pModel model to compute fit error for.
    * @return fit error
    */
   public final double computeError(final UnivariateAffineFunction pModel)
@@ -239,9 +234,8 @@ public class TheilSenEstimator
 
   /**
    * Predicts value y from x with fit model
-   * 
-   * @param pX
-   *          x value
+   *
+   * @param pX x value
    * @return y value
    */
   public final double predict(final double pX)
@@ -256,7 +250,6 @@ public class TheilSenEstimator
   @Override
   public String toString()
   {
-    return String.format("TheilSenEstimator [mLinear1to1=%s]",
-                         getModel());
+    return String.format("TheilSenEstimator [mLinear1to1=%s]", getModel());
   }
 }

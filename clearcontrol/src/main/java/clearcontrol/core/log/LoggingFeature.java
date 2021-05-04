@@ -23,39 +23,30 @@ public interface LoggingFeature
 
   /**
    * Static method that returns the logger
-   * 
+   *
    * @return logger instance
    */
   static Logger getLoggerStatic()
   {
 
-    if (sLoggerReference.get() != null)
-      return sLoggerReference.get();
+    if (sLoggerReference.get() != null) return sLoggerReference.get();
 
     sLoggerReference.set(Logger.getLogger(cMainLoggerName));
 
     sLoggerReference.get().setUseParentHandlers(true);
 
-    Handler[] lHandlers = sLoggerReference.get()
-                                          .getParent()
-                                          .getHandlers();
+    Handler[] lHandlers = sLoggerReference.get().getParent().getHandlers();
 
     for (Handler lHandler : lHandlers)
       sLoggerReference.get().getParent().removeHandler(lHandler);
 
-    StdOutConsoleHandler lStdOutConsoleHandler =
-                                               new StdOutConsoleHandler();
-    sLoggerReference.get()
-                    .getParent()
-                    .addHandler(lStdOutConsoleHandler);
+    StdOutConsoleHandler lStdOutConsoleHandler = new StdOutConsoleHandler();
+    sLoggerReference.get().getParent().addHandler(lStdOutConsoleHandler);
 
-    for (final Handler lHandler : sLoggerReference.get()
-                                                  .getHandlers())
+    for (final Handler lHandler : sLoggerReference.get().getHandlers())
       lHandler.setFormatter(new CompactFormatter());
 
-    for (final Handler lHandler : sLoggerReference.get()
-                                                  .getParent()
-                                                  .getHandlers())
+    for (final Handler lHandler : sLoggerReference.get().getParent().getHandlers())
       lHandler.setFormatter(new CompactFormatter());
 
     return sLoggerReference.get();
@@ -63,9 +54,8 @@ public interface LoggingFeature
 
   /**
    * Returns the logger for a given subsystem
-   * 
-   * @param pSubSystemName
-   *          subsystem name
+   *
+   * @param pSubSystemName subsystem name
    * @return logger
    */
   public default Logger getLogger(final String pSubSystemName)
@@ -75,87 +65,71 @@ public interface LoggingFeature
 
   /**
    * Logs an information message
-   * 
-   * @param pMessage
-   *          message
+   *
+   * @param pMessage message
    */
   public default void info(String pMessage)
   {
-    getLoggerStatic().info(getClassName(this) + ": "
-                           + pMessage.trim());
+    getLoggerStatic().info(getClassName(this) + ": " + pMessage.trim());
   }
 
   /**
    * Logs an information message
-   * 
-   * @param pFormat
-   *          format string
-   * @param args
-   *          format string parameters
+   *
+   * @param pFormat format string
+   * @param args    format string parameters
    */
   public default void info(String pFormat, Object... args)
   {
-    getLoggerStatic().info(getClassName(this) + ": "
-                           + String.format(pFormat, args).trim());
+    getLoggerStatic().info(getClassName(this) + ": " + String.format(pFormat, args).trim());
   }
 
   /**
    * Logs a warning message
-   * 
-   * @param pMessage
-   *          warning message
+   *
+   * @param pMessage warning message
    */
   public default void warning(String pMessage)
   {
-    getLoggerStatic().warning(getClassName(this) + ": "
-                              + pMessage.trim());
+    getLoggerStatic().warning(getClassName(this) + ": " + pMessage.trim());
   }
 
   /**
    * Logs a warning message
-   * 
-   * @param pFormat
-   *          format string
-   * @param args
-   *          format string parameters
+   *
+   * @param pFormat format string
+   * @param args    format string parameters
    */
   public default void warning(String pFormat, Object... args)
   {
-    getLoggerStatic().warning(getClassName(this) + ": "
-                              + String.format(pFormat, args).trim());
+    getLoggerStatic().warning(getClassName(this) + ": " + String.format(pFormat, args).trim());
   }
 
   /**
    * Logs a severe message
-   * 
-   * @param pMessage
-   *          severe message
+   *
+   * @param pMessage severe message
    */
   public default void severe(String pMessage)
   {
-    getLoggerStatic().severe(getClassName(this) + ": "
-                             + pMessage.trim());
+    getLoggerStatic().severe(getClassName(this) + ": " + pMessage.trim());
   }
 
   /**
    * Logs a sever message
-   * 
-   * @param pFormat
-   *          format string
-   * @param args
-   *          format string parameters
+   *
+   * @param pFormat format string
+   * @param args    format string parameters
    */
   public default void severe(String pFormat, Object... args)
   {
-    getLoggerStatic().severe(getClassName(this) + ": "
-                             + String.format(pFormat, args).trim());
+    getLoggerStatic().severe(getClassName(this) + ": " + String.format(pFormat, args).trim());
   }
 
   /**
    * Utility method to return the class name for a given object
-   * 
-   * @param pObject
-   *          object
+   *
+   * @param pObject object
    * @return object's class name
    */
   public default String getClassName(Object pObject)
@@ -164,9 +138,7 @@ public interface LoggingFeature
 
     if (lSimpleName == null || lSimpleName.trim().isEmpty())
     {
-      lSimpleName = pObject.getClass()
-                           .getEnclosingClass()
-                           .getSimpleName();
+      lSimpleName = pObject.getClass().getEnclosingClass().getSimpleName();
     }
 
     return lSimpleName;

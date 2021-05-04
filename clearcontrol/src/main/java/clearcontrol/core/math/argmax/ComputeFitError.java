@@ -11,11 +11,9 @@ public class ComputeFitError
 {
   /**
    * Computes the RMSD between Y and Y' (fitted Y)
-   * 
-   * @param pY
-   *          y data
-   * @param pFittedY
-   *          y fit data
+   *
+   * @param pY       y data
+   * @param pFittedY y fit data
    * @return RMSD
    */
   public static final double rmsd(double[] pY, double[] pFittedY)

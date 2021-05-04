@@ -13,39 +13,26 @@ import clearcontrol.stack.StackInterface;
  *
  * @author royer
  */
-public class AsynchronousPoolStackProcessorPipeline extends
-                                                    StackProcessorPipelineBase
-                                                    implements
-                                                    StackProcessingPipelineInterface,
-                                                    OpenCloseDeviceInterface
+public class AsynchronousPoolStackProcessorPipeline extends StackProcessorPipelineBase implements StackProcessingPipelineInterface, OpenCloseDeviceInterface
 {
 
   private AsynchronousProcessorPool<StackInterface, StackInterface> mAsynchStackProcessorPool;
 
   /**
    * Instanciates an asynchronous thread pool stack processing pipeline
-   * 
-   * @param pName
-   *          pipeline name
-   * @param pStackRecyclerManager
-   *          stack recycler manager
-   * @param pMaxQueueSize
-   *          max queue size
-   * @param pThreadPoolSize
-   *          thread pool size.
+   *
+   * @param pName                 pipeline name
+   * @param pStackRecyclerManager stack recycler manager
+   * @param pMaxQueueSize         max queue size
+   * @param pThreadPoolSize       thread pool size.
    */
-  public AsynchronousPoolStackProcessorPipeline(String pName,
-                                                StackRecyclerManager pStackRecyclerManager,
-                                                final int pMaxQueueSize,
-                                                final int pThreadPoolSize)
+  public AsynchronousPoolStackProcessorPipeline(String pName, StackRecyclerManager pStackRecyclerManager, final int pMaxQueueSize, final int pThreadPoolSize)
   {
     super(pName, pStackRecyclerManager);
 
-    getInputVariable().addSetListener((o,
-                                       n) -> mAsynchStackProcessorPool.passOrWait(n));
+    getInputVariable().addSetListener((o, n) -> mAsynchStackProcessorPool.passOrWait(n));
 
-    class Processor extends
-                    AsynchronousProcessorBase<StackInterface, StackInterface>
+    class Processor extends AsynchronousProcessorBase<StackInterface, StackInterface>
     {
 
       public Processor(String pName, int pMaxQueueSize)
@@ -59,11 +46,9 @@ public class AsynchronousPoolStackProcessorPipeline extends
         try
         {
           StackInterface lProcessedStack = doProcess(pInput);
-          if (lProcessedStack != null)
-            getOutputVariable().set(lProcessedStack);
+          if (lProcessedStack != null) getOutputVariable().set(lProcessedStack);
           return lProcessedStack;
-        }
-        catch (Throwable e)
+        } catch (Throwable e)
         {
           e.printStackTrace();
           pInput.release();
@@ -72,15 +57,9 @@ public class AsynchronousPoolStackProcessorPipeline extends
       }
     }
 
-    final ProcessorInterface<StackInterface, StackInterface> lProcessor =
-                                                                        new Processor(pName,
-                                                                                      pMaxQueueSize);
+    final ProcessorInterface<StackInterface, StackInterface> lProcessor = new Processor(pName, pMaxQueueSize);
 
-    mAsynchStackProcessorPool =
-                              new AsynchronousProcessorPool<>(pName,
-                                                              pMaxQueueSize,
-                                                              pThreadPoolSize,
-                                                              lProcessor);
+    mAsynchStackProcessorPool = new AsynchronousProcessorPool<>(pName, pMaxQueueSize, pThreadPoolSize, lProcessor);
 
   }
 

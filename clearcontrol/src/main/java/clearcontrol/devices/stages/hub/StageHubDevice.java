@@ -1,5 +1,14 @@
 package clearcontrol.devices.stages.hub;
 
+import clearcontrol.core.concurrent.timing.WaitingInterface;
+import clearcontrol.core.device.VirtualDevice;
+import clearcontrol.core.device.startstop.StartStopDeviceInterface;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.devices.stages.StageDeviceInterface;
+import clearcontrol.devices.stages.StageType;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -7,41 +16,24 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.core.concurrent.timing.WaitingInterface;
-import clearcontrol.core.device.VirtualDevice;
-import clearcontrol.core.device.startstop.StartStopDeviceInterface;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.devices.stages.StageDeviceInterface;
-import clearcontrol.devices.stages.StageType;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
 /**
  * Stage hub device
  *
  * @author royer
  */
-public class StageHubDevice extends VirtualDevice implements
-                            StageDeviceInterface,
-                            StartStopDeviceInterface,
-                            WaitingInterface
+public class StageHubDevice extends VirtualDevice implements StageDeviceInterface, StartStopDeviceInterface, WaitingInterface
 {
 
   private final StageType mStageType;
 
-  private final ArrayList<StageDeviceInterface> mStageDeviceInterfaceList =
-                                                                          new ArrayList<StageDeviceInterface>();
-  private final ArrayList<StageDOF> mDOFList =
-                                             new ArrayList<StageDOF>();
-  private final BiMap<String, StageDOF> mNameToStageDeviceDOFMap =
-                                                                 HashBiMap.create();
+  private final ArrayList<StageDeviceInterface> mStageDeviceInterfaceList = new ArrayList<StageDeviceInterface>();
+  private final ArrayList<StageDOF> mDOFList = new ArrayList<StageDOF>();
+  private final BiMap<String, StageDOF> mNameToStageDeviceDOFMap = HashBiMap.create();
 
   /**
    * Instantiates a stage hub device with given name
-   * 
-   * @param pDeviceName
-   *          device name
+   *
+   * @param pDeviceName device name
    */
   public StageHubDevice(String pDeviceName)
   {
@@ -50,11 +42,9 @@ public class StageHubDevice extends VirtualDevice implements
 
   /**
    * Instantiates a stage hub device with given name and stage type
-   * 
-   * @param pDeviceName
-   *          device name
-   * @param pStageType
-   *          stage type
+   *
+   * @param pDeviceName device name
+   * @param pStageType  stage type
    */
   public StageHubDevice(String pDeviceName, StageType pStageType)
   {
@@ -70,15 +60,12 @@ public class StageHubDevice extends VirtualDevice implements
 
   /**
    * Adds a stage device DOF to this hub
-   * 
-   * @param pStageDeviceInterface
-   *          stage device
-   * @param pDOFIndex
-   *          DOF index
+   *
+   * @param pStageDeviceInterface stage device
+   * @param pDOFIndex             DOF index
    * @return DOF name
    */
-  public String addDOF(StageDeviceInterface pStageDeviceInterface,
-                       int pDOFIndex)
+  public String addDOF(StageDeviceInterface pStageDeviceInterface, int pDOFIndex)
   {
     return addDOF(null, pStageDeviceInterface, pDOFIndex);
   }
@@ -86,26 +73,17 @@ public class StageHubDevice extends VirtualDevice implements
   /**
    * Adds a stage device DOF to this hub, a new name for the DOF can be
    * provided.
-   * 
-   * @param pDOFName
-   *          new DOF name, if null the original DOF name is used
-   * @param pStageDeviceInterface
-   *          stage device
-   * @param pDOFIndex
-   *          DOF index
+   *
+   * @param pDOFName              new DOF name, if null the original DOF name is used
+   * @param pStageDeviceInterface stage device
+   * @param pDOFIndex             DOF index
    * @return DOF name (either original name or provided one)
    */
-  public String addDOF(String pDOFName,
-                       StageDeviceInterface pStageDeviceInterface,
-                       int pDOFIndex)
+  public String addDOF(String pDOFName, StageDeviceInterface pStageDeviceInterface, int pDOFIndex)
   {
     mStageDeviceInterfaceList.add(pStageDeviceInterface);
-    final String lDOFName =
-                          pDOFName != null ? pDOFName
-                                           : pStageDeviceInterface.getDOFNameByIndex(pDOFIndex);
-    final StageDOF lStageDeviceDOF = new StageDOF(lDOFName,
-                                                  pStageDeviceInterface,
-                                                  pDOFIndex);
+    final String lDOFName = pDOFName != null ? pDOFName : pStageDeviceInterface.getDOFNameByIndex(pDOFIndex);
+    final StageDOF lStageDeviceDOF = new StageDOF(lDOFName, pStageDeviceInterface, pDOFIndex);
 
     mDOFList.add(lStageDeviceDOF);
     mNameToStageDeviceDOFMap.put(lDOFName, lStageDeviceDOF);
@@ -114,7 +92,7 @@ public class StageHubDevice extends VirtualDevice implements
 
   /**
    * Returns the list of DOFs
-   * 
+   *
    * @return list of DOFs
    */
   public List<StageDOF> getDOFList()
@@ -138,8 +116,7 @@ public class StageHubDevice extends VirtualDevice implements
     for (final StageDeviceInterface lStageDeviceInterface : new HashSet<>(mStageDeviceInterfaceList))
       if (lStageDeviceInterface instanceof StartStopDeviceInterface)
       {
-        final StartStopDeviceInterface lStartStopDevice =
-                                                        (StartStopDeviceInterface) lStageDeviceInterface;
+        final StartStopDeviceInterface lStartStopDevice = (StartStopDeviceInterface) lStageDeviceInterface;
         lStart &= lStartStopDevice.start();
       }
     return lStart;
@@ -152,8 +129,7 @@ public class StageHubDevice extends VirtualDevice implements
     for (final StageDeviceInterface lStageDeviceInterface : new HashSet<>(mStageDeviceInterfaceList))
       if (lStageDeviceInterface instanceof StartStopDeviceInterface)
       {
-        final StartStopDeviceInterface lStartStopDevice =
-                                                        (StartStopDeviceInterface) lStageDeviceInterface;
+        final StartStopDeviceInterface lStartStopDevice = (StartStopDeviceInterface) lStageDeviceInterface;
         lStop &= lStartStopDevice.stop();
       }
     return lStop;
@@ -178,8 +154,7 @@ public class StageHubDevice extends VirtualDevice implements
   @Override
   public int getDOFIndexByName(String pName)
   {
-    final StageDOF lStageDeviceDOF =
-                                   mNameToStageDeviceDOFMap.get(pName);
+    final StageDOF lStageDeviceDOF = mNameToStageDeviceDOFMap.get(pName);
     final int lIndex = mDOFList.indexOf(lStageDeviceDOF);
     return lIndex;
   }
@@ -213,9 +188,7 @@ public class StageHubDevice extends VirtualDevice implements
   @Override
   public void setTargetPosition(int pDOFIndex, double pPosition)
   {
-    mDOFList.get(pDOFIndex)
-            .getTargetPositionVariable()
-            .set(pPosition);
+    mDOFList.get(pDOFIndex).getTargetPositionVariable().set(pPosition);
   }
 
   @Override
@@ -231,9 +204,7 @@ public class StageHubDevice extends VirtualDevice implements
   }
 
   @Override
-  public Boolean waitToBeReady(int pDOFIndex,
-                               long pTimeOut,
-                               TimeUnit pTimeUnit)
+  public Boolean waitToBeReady(int pDOFIndex, long pTimeOut, TimeUnit pTimeUnit)
   {
     return mDOFList.get(pDOFIndex).waitToBeReady(pTimeOut, pTimeUnit);
   }
@@ -243,10 +214,10 @@ public class StageHubDevice extends VirtualDevice implements
   {
     int lNumberOfDOFs = getNumberOfDOFs();
 
-    Callable<Boolean> lCallable = () -> {
+    Callable<Boolean> lCallable = () ->
+    {
       for (int i = 0; i < lNumberOfDOFs; i++)
-        if (!mDOFList.get(i).getReadyVariable().get())
-          return false;
+        if (!mDOFList.get(i).getReadyVariable().get()) return false;
       return true;
     };
 
@@ -316,10 +287,7 @@ public class StageHubDevice extends VirtualDevice implements
   @Override
   public String toString()
   {
-    return "StageHub [mDOFList=" + mDOFList
-           + ", getNumberOfDOFs()="
-           + getNumberOfDOFs()
-           + "]";
+    return "StageHub [mDOFList=" + mDOFList + ", getNumberOfDOFs()=" + getNumberOfDOFs() + "]";
   }
 
 }

@@ -12,14 +12,11 @@ public class PositionTargetVariable extends TSTDoubleVariableBase
 {
   /**
    * Instantiates a target position variable
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pAPTJDevice
-   *          APTJ device
+   *
+   * @param pVariableName variable name
+   * @param pAPTJDevice   APTJ device
    */
-  public PositionTargetVariable(String pVariableName,
-                                APTJDevice pAPTJDevice)
+  public PositionTargetVariable(String pVariableName, APTJDevice pAPTJDevice)
   {
     super(pVariableName, pAPTJDevice);
   }
@@ -32,11 +29,9 @@ public class PositionTargetVariable extends TSTDoubleVariableBase
       final double lValue = super.setEventHook(pOldValue, pNewValue);
       mAPTJDevice.moveTo(lValue);
       return lValue;
-    }
-    catch (APTJExeption e)
+    } catch (APTJExeption e)
     {
-      severe("Error while setting a new target position for device: %s",
-             mAPTJDevice);
+      severe("Error while setting a new target position for device: %s", mAPTJDevice);
       e.printStackTrace();
     }
     return pNewValue;

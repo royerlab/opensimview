@@ -1,10 +1,5 @@
 package clearcontrol.gui.jfx.sandbox;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -12,24 +7,24 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
+
 public class DirectImageTest extends Application
 {
 
   @Override
-  public void start(Stage primaryStage) throws NoSuchFieldException,
-                                        SecurityException,
-                                        IllegalArgumentException,
-                                        IllegalAccessException,
-                                        NoSuchMethodException,
-                                        InvocationTargetException
+  public void start(Stage primaryStage) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException
   {
 
     int width = 1000;
     int height = 1000;
     int bpp = 4;
 
-    ByteBuffer direct =
-                      ByteBuffer.allocateDirect(width * height * bpp);
+    ByteBuffer direct = ByteBuffer.allocateDirect(width * height * bpp);
 
     for (int i = 0; i < width * height; i++)
     {
@@ -55,22 +50,15 @@ public class DirectImageTest extends Application
     primaryStage.show();
   }
 
-  protected void writeToImageDirectly(ByteBuffer direct,
-                                      WritableImage writableImg) throws NoSuchMethodException,
-                                                                 IllegalAccessException,
-                                                                 InvocationTargetException,
-                                                                 NoSuchFieldException
+  protected void writeToImageDirectly(ByteBuffer direct, WritableImage writableImg) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException
   {
     // Get the platform image
-    Method getWritablePlatformImage =
-                                    javafx.scene.image.Image.class.getDeclaredMethod("getWritablePlatformImage");
+    Method getWritablePlatformImage = javafx.scene.image.Image.class.getDeclaredMethod("getWritablePlatformImage");
     getWritablePlatformImage.setAccessible(true);
-    com.sun.prism.Image prismImg =
-                                 (com.sun.prism.Image) getWritablePlatformImage.invoke(writableImg);
+    com.sun.prism.Image prismImg = (com.sun.prism.Image) getWritablePlatformImage.invoke(writableImg);
 
     // Replace the buffer
-    Field pixelBuffer =
-                      com.sun.prism.Image.class.getDeclaredField("pixelBuffer");
+    Field pixelBuffer = com.sun.prism.Image.class.getDeclaredField("pixelBuffer");
     pixelBuffer.setAccessible(true);
     ByteBuffer lByteBuffer = (ByteBuffer) pixelBuffer.get(prismImg);
 
@@ -80,50 +68,35 @@ public class DirectImageTest extends Application
     lByteBuffer.rewind();
 
     // Invalidate the platform image
-    Field serial =
-                 com.sun.prism.Image.class.getDeclaredField("serial");
+    Field serial = com.sun.prism.Image.class.getDeclaredField("serial");
     serial.setAccessible(true);
-    Array.setInt(serial.get(prismImg),
-                 0,
-                 Array.getInt(serial.get(prismImg), 0) + 1);
+    Array.setInt(serial.get(prismImg), 0, Array.getInt(serial.get(prismImg), 0) + 1);
 
     // Invalidate the WritableImage
-    Method pixelsDirty =
-                       javafx.scene.image.Image.class.getDeclaredMethod("pixelsDirty");
+    Method pixelsDirty = javafx.scene.image.Image.class.getDeclaredMethod("pixelsDirty");
     pixelsDirty.setAccessible(true);
     pixelsDirty.invoke(writableImg);
   }
 
-  protected void replaceImageBuffer(ByteBuffer direct,
-                                    WritableImage writableImg) throws NoSuchMethodException,
-                                                               IllegalAccessException,
-                                                               InvocationTargetException,
-                                                               NoSuchFieldException
+  protected void replaceImageBuffer(ByteBuffer direct, WritableImage writableImg) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException
   {
     // Get the platform image
-    Method getWritablePlatformImage =
-                                    javafx.scene.image.Image.class.getDeclaredMethod("getWritablePlatformImage");
+    Method getWritablePlatformImage = javafx.scene.image.Image.class.getDeclaredMethod("getWritablePlatformImage");
     getWritablePlatformImage.setAccessible(true);
-    com.sun.prism.Image prismImg =
-                                 (com.sun.prism.Image) getWritablePlatformImage.invoke(writableImg);
+    com.sun.prism.Image prismImg = (com.sun.prism.Image) getWritablePlatformImage.invoke(writableImg);
 
     // Replace the buffer
-    Field pixelBuffer =
-                      com.sun.prism.Image.class.getDeclaredField("pixelBuffer");
+    Field pixelBuffer = com.sun.prism.Image.class.getDeclaredField("pixelBuffer");
     pixelBuffer.setAccessible(true);
     pixelBuffer.set(prismImg, direct);
 
     // Invalidate the platform image
-    Field serial =
-                 com.sun.prism.Image.class.getDeclaredField("serial");
+    Field serial = com.sun.prism.Image.class.getDeclaredField("serial");
     serial.setAccessible(true);
-    Array.setInt(serial.get(prismImg),
-                 0,
-                 Array.getInt(serial.get(prismImg), 0) + 1);
+    Array.setInt(serial.get(prismImg), 0, Array.getInt(serial.get(prismImg), 0) + 1);
 
     // Invalidate the WritableImage
-    Method pixelsDirty =
-                       javafx.scene.image.Image.class.getDeclaredMethod("pixelsDirty");
+    Method pixelsDirty = javafx.scene.image.Image.class.getDeclaredMethod("pixelsDirty");
     pixelsDirty.setAccessible(true);
     pixelsDirty.invoke(writableImg);
   }

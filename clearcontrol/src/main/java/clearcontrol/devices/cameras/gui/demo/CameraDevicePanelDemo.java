@@ -1,15 +1,14 @@
 package clearcontrol.devices.cameras.gui.demo;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.cameras.devices.sim.StackCameraDeviceSimulator;
 import clearcontrol.devices.cameras.devices.sim.StackCameraSimulationProvider;
 import clearcontrol.devices.cameras.devices.sim.providers.FractalStackProvider;
 import clearcontrol.devices.cameras.gui.CameraDevicePanel;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * Camera device demo
@@ -23,24 +22,17 @@ public class CameraDevicePanelDemo extends Application
   public void start(Stage pPrimaryStage) throws Exception
   {
 
-    StackCameraSimulationProvider lStackCameraSimulationProvider =
-                                                                 new FractalStackProvider();
+    StackCameraSimulationProvider lStackCameraSimulationProvider = new FractalStackProvider();
 
-    Variable<Boolean> lTrigger =
-                               new Variable<Boolean>("CameraTrigger",
-                                                     false);
+    Variable<Boolean> lTrigger = new Variable<Boolean>("CameraTrigger", false);
 
-    StackCameraDeviceSimulator lStackCameraDeviceSimulator =
-                                                           new StackCameraDeviceSimulator("StackCamera",
-                                                                                          lStackCameraSimulationProvider,
-                                                                                          lTrigger);
+    StackCameraDeviceSimulator lStackCameraDeviceSimulator = new StackCameraDeviceSimulator("StackCamera", lStackCameraSimulationProvider, lTrigger);
     lStackCameraDeviceSimulator.setSimLogging(true);
 
     lStackCameraDeviceSimulator.getStackWidthVariable().set(316L);
     lStackCameraDeviceSimulator.getStackHeightVariable().set(632L);
 
-    CameraDevicePanel lCameraDevicePanel =
-                                         new CameraDevicePanel(lStackCameraDeviceSimulator);
+    CameraDevicePanel lCameraDevicePanel = new CameraDevicePanel(lStackCameraDeviceSimulator);
 
     VBox pane = new VBox();
 
@@ -56,9 +48,8 @@ public class CameraDevicePanelDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

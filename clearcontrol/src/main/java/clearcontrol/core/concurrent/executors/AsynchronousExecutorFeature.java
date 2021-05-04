@@ -1,11 +1,6 @@
 package clearcontrol.core.concurrent.executors;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * This interface provides classes that implement it the basic infrastructure to
@@ -13,13 +8,13 @@ import java.util.concurrent.TimeoutException;
  * instance of this class is provided with an Executor (configurable) that is
  * automatically allocated. You simply have to call the method
  * 'executeAsynchronously' such as for example:
- * 
+ * <p>
  * executeAsynchronously(() -> {System.out.println("tada...")})
- * 
+ * <p>
  * And this code will be executed in a separate thread. The
  * executAsynchronously(0 method returns a Future that can be used to determine
  * when is the task finished.
- * 
+ *
  * @author royer
  */
 public interface AsynchronousExecutorFeature
@@ -28,124 +23,93 @@ public interface AsynchronousExecutorFeature
   /**
    * The default executor has infinite queue length and a single execution
    * thread.
-   * 
+   *
    * @return thread pool executor
    */
   public default ThreadPoolExecutor initializeDefaultExecutor()
   {
-    return ClearControlExecutors.getOrCreateThreadPoolExecutor(this,
-                                                               Thread.NORM_PRIORITY,
-                                                               1,
-                                                               1,
-                                                               Integer.MAX_VALUE);
+    return ClearControlExecutors.getOrCreateThreadPoolExecutor(this, Thread.NORM_PRIORITY, 1, 1, Integer.MAX_VALUE);
   }
 
   /**
    * Call this method (typically in the constructor) to configure the instance's
    * executor to use a a certain number of Threads and a given queue length for
    * concurrent execution.
-   * 
-   * @param pQueueLength
-   *          task queue length
-   * @param pNumberOfThreads
-   *          number of threads that can concurrently executed queued tasks.
+   *
+   * @param pQueueLength     task queue length
+   * @param pNumberOfThreads number of threads that can concurrently executed queued tasks.
    * @return thread pool executor
    */
-  public default ThreadPoolExecutor initializeExecutor(int pQueueLength,
-                                                       int pNumberOfThreads)
+  public default ThreadPoolExecutor initializeExecutor(int pQueueLength, int pNumberOfThreads)
   {
-    return ClearControlExecutors.getOrCreateThreadPoolExecutor(this,
-                                                               Thread.NORM_PRIORITY,
-                                                               pNumberOfThreads,
-                                                               pNumberOfThreads,
-                                                               pQueueLength);
+    return ClearControlExecutors.getOrCreateThreadPoolExecutor(this, Thread.NORM_PRIORITY, pNumberOfThreads, pNumberOfThreads, pQueueLength);
   }
 
   /**
    * Call this method (typically in the constructor) to configure the instance's
    * executor to use a single Thread for concurrent execution. Successive call
    * are queued.
-   * 
+   *
    * @return executor (most of the time you can ignore this)
    */
   public default ThreadPoolExecutor initializeSerialExecutor()
   {
-    return ClearControlExecutors.getOrCreateThreadPoolExecutor(this,
-                                                               Thread.NORM_PRIORITY,
-                                                               1,
-                                                               1,
-                                                               Integer.MAX_VALUE);
+    return ClearControlExecutors.getOrCreateThreadPoolExecutor(this, Thread.NORM_PRIORITY, 1, 1, Integer.MAX_VALUE);
   }
 
   /**
    * Call this method (typically in the constructor) to configure the instance's
    * executor to use as many threads as there are cores on the system, and an
    * infinite queue.
-   * 
+   *
    * @return thread pool executor
    */
   public default ThreadPoolExecutor initializeConcurentExecutor()
   {
-    return ClearControlExecutors.getOrCreateThreadPoolExecutor(this,
-                                                               Thread.NORM_PRIORITY,
-                                                               1,
-                                                               Runtime.getRuntime()
-                                                                      .availableProcessors(),
-                                                               Integer.MAX_VALUE);
+    return ClearControlExecutors.getOrCreateThreadPoolExecutor(this, Thread.NORM_PRIORITY, 1, Runtime.getRuntime().availableProcessors(), Integer.MAX_VALUE);
   }
 
   /**
    * Executes the given Runnable on this instance's executor.
-   * 
-   * @param pRunnable
-   *          Runnable
+   *
+   * @param pRunnable Runnable
    * @return Future
    */
   public default Future<?> executeAsynchronously(final Runnable pRunnable)
   {
-    ThreadPoolExecutor lThreadPoolExecutor =
-                                           ClearControlExecutors.getThreadPoolExecutor(this);
+    ThreadPoolExecutor lThreadPoolExecutor = ClearControlExecutors.getThreadPoolExecutor(this);
 
-    if (lThreadPoolExecutor == null)
-      lThreadPoolExecutor = initializeDefaultExecutor();
+    if (lThreadPoolExecutor == null) lThreadPoolExecutor = initializeDefaultExecutor();
 
     return lThreadPoolExecutor.submit(pRunnable);
   }
 
   /**
    * Executes the given Callable on this instance's executor.
-   * 
-   * @param pCallable
-   *          Callable
+   *
+   * @param pCallable Callable
    * @return Future
    */
   public default <O> Future<O> executeAsynchronously(final Callable<O> pCallable)
   {
-    ThreadPoolExecutor lThreadPoolExecutor =
-                                           ClearControlExecutors.getThreadPoolExecutor(this);
-    if (lThreadPoolExecutor == null)
-      lThreadPoolExecutor = initializeDefaultExecutor();
+    ThreadPoolExecutor lThreadPoolExecutor = ClearControlExecutors.getThreadPoolExecutor(this);
+    if (lThreadPoolExecutor == null) lThreadPoolExecutor = initializeDefaultExecutor();
 
     return lThreadPoolExecutor.submit(pCallable);
   }
 
   /**
    * This method shuts down the executor and waits for termination of all tasks.
-   * 
-   * @param pTimeOut
-   *          timeout
-   * @param pTimeUnit
-   *          timeout unit
+   *
+   * @param pTimeOut  timeout
+   * @param pTimeUnit timeout unit
    * @return true if this executor terminated and false if the timeout elapsed
-   *         before termination
-   * @throws InterruptedException
-   *           if interrupted
+   * before termination
+   * @throws InterruptedException if interrupted
    */
-  public default boolean resetThreadPoolAndWaitForCompletion(long pTimeOut,
-                                                             TimeUnit pTimeUnit) throws InterruptedException
+  public default boolean resetThreadPoolAndWaitForCompletion(long pTimeOut, TimeUnit pTimeUnit) throws InterruptedException
   {
-    final ThreadPoolExecutor lThreadPoolExecutor =
-                                                 ClearControlExecutors.getThreadPoolExecutor(this);
+    final ThreadPoolExecutor lThreadPoolExecutor = ClearControlExecutors.getThreadPoolExecutor(this);
 
     lThreadPoolExecutor.shutdown();
     ClearControlExecutors.resetThreadPoolExecutor(this);
@@ -155,30 +119,23 @@ public interface AsynchronousExecutorFeature
 
   /**
    * Waits for completion of all tasks.
-   * 
-   * @param pTimeOut
-   *          timeout
-   * @param pTimeUnit
-   *          timeout unit
+   *
+   * @param pTimeOut  timeout
+   * @param pTimeUnit timeout unit
    * @return true if completed before timeout, false otherwise.
-   * @throws ExecutionException
-   *           if exception occured during executions
+   * @throws ExecutionException if exception occured during executions
    */
-  public default boolean waitForCompletion(long pTimeOut,
-                                           TimeUnit pTimeUnit) throws ExecutionException
+  public default boolean waitForCompletion(long pTimeOut, TimeUnit pTimeUnit) throws ExecutionException
   {
-    final CompletingThreadPoolExecutor lThreadPoolExecutor =
-                                                           ClearControlExecutors.getThreadPoolExecutor(this);
+    final CompletingThreadPoolExecutor lThreadPoolExecutor = ClearControlExecutors.getThreadPoolExecutor(this);
 
-    if (lThreadPoolExecutor == null)
-      return true;
+    if (lThreadPoolExecutor == null) return true;
 
     try
     {
       lThreadPoolExecutor.waitForCompletion(pTimeOut, pTimeUnit);
       return true;
-    }
-    catch (final TimeoutException e)
+    } catch (final TimeoutException e)
     {
       return false;
     }
@@ -187,10 +144,9 @@ public interface AsynchronousExecutorFeature
 
   /**
    * Waits for completion
-   * 
+   *
    * @return true if completed, false otherwise
-   * @throws ExecutionException
-   *           thrown if exception occurs during execution
+   * @throws ExecutionException thrown if exception occurs during execution
    */
   public default boolean waitForCompletion() throws ExecutionException
   {

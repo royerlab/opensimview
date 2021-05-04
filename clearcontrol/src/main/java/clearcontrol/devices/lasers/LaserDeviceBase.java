@@ -1,31 +1,25 @@
 package clearcontrol.devices.lasers;
 
+import clearcontrol.core.device.VirtualDevice;
+import clearcontrol.core.variable.Variable;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import clearcontrol.core.device.VirtualDevice;
-import clearcontrol.core.variable.Variable;
 
 /**
  * Base class providing common fields and methods for all laser devices.
  *
  * @author royer
  */
-public class LaserDeviceBase extends VirtualDevice
-                             implements LaserDeviceInterface
+public class LaserDeviceBase extends VirtualDevice implements LaserDeviceInterface
 {
 
-  private final ScheduledExecutorService mScheduledExecutorService =
-                                                                   Executors.newScheduledThreadPool(1);
+  private final ScheduledExecutorService mScheduledExecutorService = Executors.newScheduledThreadPool(1);
 
-  protected Variable<Number> mSpecInMilliWattPowerVariable,
-      mMaxPowerInMilliWattVariable, mTargetPowerInMilliWattVariable,
-      mCurrentPowerInMilliWattVariable;
-  protected Variable<Integer> mWorkingHoursVariable,
-      mSetOperatingModeVariable, mDeviceIdVariable,
-      mWavelengthVariable;
+  protected Variable<Number> mSpecInMilliWattPowerVariable, mMaxPowerInMilliWattVariable, mTargetPowerInMilliWattVariable, mCurrentPowerInMilliWattVariable;
+  protected Variable<Integer> mWorkingHoursVariable, mSetOperatingModeVariable, mDeviceIdVariable, mWavelengthVariable;
   protected Variable<Boolean> mPowerOnVariable, mLaserOnVariable;
   private Runnable mCurrentPowerPoller;
 
@@ -33,9 +27,8 @@ public class LaserDeviceBase extends VirtualDevice
 
   /**
    * Instanciates a laser device
-   * 
-   * @param pDeviceName
-   *          device name
+   *
+   * @param pDeviceName device name
    */
   public LaserDeviceBase(final String pDeviceName)
   {
@@ -51,8 +44,7 @@ public class LaserDeviceBase extends VirtualDevice
       lOpen = super.open();
 
       return lOpen;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -71,27 +63,19 @@ public class LaserDeviceBase extends VirtualDevice
         {
           try
           {
-            final double lNewPowerValue =
-                                        mCurrentPowerInMilliWattVariable.get()
-                                                                        .doubleValue();
+            final double lNewPowerValue = mCurrentPowerInMilliWattVariable.get().doubleValue();
             // info("Current laser power: " + lNewPowerValue);
             mCurrentPowerInMilliWattVariable.set(lNewPowerValue);
-          }
-          catch (final Throwable e)
+          } catch (final Throwable e)
           {
             e.printStackTrace();
           }
         }
       };
-      mCurrentPowerPollerScheduledFutur =
-                                        mScheduledExecutorService.scheduleAtFixedRate(mCurrentPowerPoller,
-                                                                                      1,
-                                                                                      300,
-                                                                                      TimeUnit.MILLISECONDS);
+      mCurrentPowerPollerScheduledFutur = mScheduledExecutorService.scheduleAtFixedRate(mCurrentPowerPoller, 1, 300, TimeUnit.MILLISECONDS);
 
       return true;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -106,8 +90,7 @@ public class LaserDeviceBase extends VirtualDevice
 
       mCurrentPowerPollerScheduledFutur.cancel(true);
       return true;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -120,8 +103,7 @@ public class LaserDeviceBase extends VirtualDevice
     try
     {
       return super.close();
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -191,15 +173,13 @@ public class LaserDeviceBase extends VirtualDevice
   @Override
   public final double getTargetPowerInPercent()
   {
-    return mTargetPowerInMilliWattVariable.get().doubleValue()
-           / getMaxPowerInMilliWatt();
+    return mTargetPowerInMilliWattVariable.get().doubleValue() / getMaxPowerInMilliWatt();
   }
 
   @Override
   public final void setTargetPowerInPercent(final double pPowerInPercent)
   {
-    final double lPowerInMilliWatt = pPowerInPercent
-                                     * getMaxPowerInMilliWatt();
+    final double lPowerInMilliWatt = pPowerInPercent * getMaxPowerInMilliWatt();
     mTargetPowerInMilliWattVariable.set(lPowerInMilliWatt);
   }
 
@@ -278,20 +258,12 @@ public class LaserDeviceBase extends VirtualDevice
   @Override
   public String toString()
   {
-    if (mDeviceIdVariable == null || mWavelengthVariable == null
-        || mMaxPowerInMilliWattVariable == null
-        || mDeviceIdVariable.get() == null
-        || mWavelengthVariable.get() == null
-        || mMaxPowerInMilliWattVariable.get() == null)
+    if (mDeviceIdVariable == null || mWavelengthVariable == null || mMaxPowerInMilliWattVariable == null || mDeviceIdVariable.get() == null || mWavelengthVariable.get() == null || mMaxPowerInMilliWattVariable.get() == null)
     {
       return String.format("LaserDevice [null]");
-    }
-    else
+    } else
     {
-      return String.format("LaserDevice [mDeviceIdVariable=%d, mWavelengthVariable=%d, mMaxPowerVariable=%g]",
-                           (int) mDeviceIdVariable.get(),
-                           (int) mWavelengthVariable.get(),
-                           mMaxPowerInMilliWattVariable.get());
+      return String.format("LaserDevice [mDeviceIdVariable=%d, mWavelengthVariable=%d, mMaxPowerVariable=%g]", (int) mDeviceIdVariable.get(), (int) mWavelengthVariable.get(), mMaxPowerInMilliWattVariable.get());
     }
   }
 

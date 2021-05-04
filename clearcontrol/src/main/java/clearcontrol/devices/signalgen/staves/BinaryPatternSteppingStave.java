@@ -5,8 +5,7 @@ package clearcontrol.devices.signalgen.staves;
  *
  * @author royer
  */
-public class BinaryPatternSteppingStave extends PatternSteppingStave
-                                        implements StaveInterface
+public class BinaryPatternSteppingStave extends PatternSteppingStave implements StaveInterface
 {
 
   private volatile int mPatternPeriod = 9;
@@ -16,9 +15,8 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
 
   /**
    * Instantiates a binary pattern stepping stave given a name
-   * 
-   * @param pName
-   *          stave name
+   *
+   * @param pName stave name
    */
   public BinaryPatternSteppingStave(final String pName)
   {
@@ -28,32 +26,17 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
   /**
    * Instantiates a binary stepping stave for a iven name, sync start, sync
    * stop, number of steps, period, phase index, on-length and phase increment.
-   * 
-   * @param pName
-   *          name
-   * @param pSyncStart
-   *          sync start
-   * @param pSyncStop
-   *          sync stop
-   * @param pNumberOfSteps
-   *          number of steps
-   * @param pPeriod
-   *          period
-   * @param pPhaseIndex
-   *          phase index
-   * @param pOnLength
-   *          on-length
-   * @param pPhaseIncrement
-   *          phase increment
+   *
+   * @param pName           name
+   * @param pSyncStart      sync start
+   * @param pSyncStop       sync stop
+   * @param pNumberOfSteps  number of steps
+   * @param pPeriod         period
+   * @param pPhaseIndex     phase index
+   * @param pOnLength       on-length
+   * @param pPhaseIncrement phase increment
    */
-  public BinaryPatternSteppingStave(final String pName,
-                                    float pSyncStart,
-                                    float pSyncStop,
-                                    int pNumberOfSteps,
-                                    int pPeriod,
-                                    int pPhaseIndex,
-                                    int pOnLength,
-                                    int pPhaseIncrement)
+  public BinaryPatternSteppingStave(final String pName, float pSyncStart, float pSyncStop, int pNumberOfSteps, int pPeriod, int pPhaseIndex, int pOnLength, int pPhaseIncrement)
   {
     super(pName);
     setNumberOfSteps(pNumberOfSteps);
@@ -68,14 +51,7 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
   @Override
   public StaveInterface duplicate()
   {
-    StaveInterface lStave = new BinaryPatternSteppingStave(getName(),
-                                          getSyncStart(),
-                                          getSyncStop(),
-                                          getNumberOfSteps(),
-                                          getPatternPeriod(),
-                                          getPatternPhaseIndex(),
-                                          getPatternOnLength(),
-                                          getPatternPhaseIncrement());
+    StaveInterface lStave = new BinaryPatternSteppingStave(getName(), getSyncStart(), getSyncStop(), getNumberOfSteps(), getPatternPeriod(), getPatternPhaseIndex(), getPatternOnLength(), getPatternPhaseIncrement());
 
     lStave.setEnabled(this.isEnabled());
     return lStave;
@@ -84,14 +60,13 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
   @Override
   public float function(int pIndex)
   {
-    final int modulo = (pIndex + getPatternPhaseIndex())
-                       % getPatternPeriod();
+    final int modulo = (pIndex + getPatternPhaseIndex()) % getPatternPeriod();
     return modulo < getPatternOnLength() ? 1 : 0;
   }
 
   /**
    * Returns pattern period
-   * 
+   *
    * @return pattern period
    */
   public int getPatternPeriod()
@@ -101,9 +76,8 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
 
   /**
    * Sets pattern period
-   * 
-   * @param pPatternPeriod
-   *          pattern period
+   *
+   * @param pPatternPeriod pattern period
    */
   public void setPatternPeriod(int pPatternPeriod)
   {
@@ -112,7 +86,7 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
 
   /**
    * Returns pattern phase index
-   * 
+   *
    * @return pattern phase index
    */
   public int getPatternPhaseIndex()
@@ -122,9 +96,8 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
 
   /**
    * Returns pattern phase index
-   * 
-   * @param pPatternPhaseIndex
-   *          pattern phase index
+   *
+   * @param pPatternPhaseIndex pattern phase index
    */
   public void setPatternPhaseIndex(int pPatternPhaseIndex)
   {
@@ -133,7 +106,7 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
 
   /**
    * Returns pattern on-length
-   * 
+   *
    * @return pattern on-length
    */
   public int getPatternOnLength()
@@ -143,9 +116,8 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
 
   /**
    * Set pattern on-length
-   * 
-   * @param pPatternOnLength
-   *          pattern on-length
+   *
+   * @param pPatternOnLength pattern on-length
    */
   public void setPatternOnLength(int pPatternOnLength)
   {
@@ -154,7 +126,7 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
 
   /**
    * Pattern phase increment
-   * 
+   *
    * @return pattern phase increment
    */
   public int getPatternPhaseIncrement()
@@ -164,9 +136,8 @@ public class BinaryPatternSteppingStave extends PatternSteppingStave
 
   /**
    * Pattern phase increment
-   * 
-   * @param pPatternPhaseIncrement
-   *          pattern phase increment
+   *
+   * @param pPatternPhaseIncrement pattern phase increment
    */
   public void setPatternPhaseIncrement(int pPatternPhaseIncrement)
   {

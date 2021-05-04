@@ -12,7 +12,7 @@ public interface StackSinkSourceFactoryInterface
 
   /**
    * Returns stack sink
-   * 
+   *
    * @return stack sink
    */
   public StackSinkInterface getStackSink();

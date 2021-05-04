@@ -1,8 +1,8 @@
 package clearcontrol.devices.signalgen.score;
 
-import java.util.concurrent.locks.ReentrantLock;
-
 import clearcontrol.core.device.update.UpdatableInterface;
+
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Compiled score interface
@@ -13,7 +13,7 @@ public interface CompiledScoreInterface extends UpdatableInterface
 {
   /**
    * Returns lock
-   * 
+   *
    * @return lock
    */
   ReentrantLock getLock();

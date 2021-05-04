@@ -10,9 +10,7 @@ import clearcontrol.instructions.InstructionInterface;
  * <p>
  * Author: @haesleinhuepf September 2018
  */
-public class SwitchLaserOnOffInstruction extends InstructionBase implements
-                                                                 InstructionInterface,
-                                                                 LoggingFeature
+public class SwitchLaserOnOffInstruction extends InstructionBase implements InstructionInterface, LoggingFeature
 {
   LaserDeviceInterface mLaserDevice;
   boolean mTurnOn;
@@ -24,12 +22,14 @@ public class SwitchLaserOnOffInstruction extends InstructionBase implements
     mTurnOn = pTurnOn;
   }
 
-  @Override public boolean initialize()
+  @Override
+  public boolean initialize()
   {
     return true;
   }
 
-  @Override public boolean enqueue(long pTimePoint)
+  @Override
+  public boolean enqueue(long pTimePoint)
   {
     mLaserDevice.setLaserOn(mTurnOn);
     mLaserDevice.getLaserOnVariable().set(mTurnOn);
@@ -37,7 +37,8 @@ public class SwitchLaserOnOffInstruction extends InstructionBase implements
     return true;
   }
 
-  @Override public SwitchLaserOnOffInstruction copy()
+  @Override
+  public SwitchLaserOnOffInstruction copy()
   {
     return new SwitchLaserOnOffInstruction(mLaserDevice, mTurnOn);
   }

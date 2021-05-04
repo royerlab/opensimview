@@ -7,9 +7,7 @@ import clearcontrol.stack.sourcesink.FileStackInterface;
  *
  * @author royer
  */
-public interface FileStackSinkInterface extends
-                                        StackSinkInterface,
-                                        FileStackInterface
+public interface FileStackSinkInterface extends StackSinkInterface, FileStackInterface
 {
 
 }

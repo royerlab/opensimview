@@ -1,15 +1,13 @@
 package clearcontrol.gui.jfx.custom.singlechecklist;
 
+import clearcontrol.core.device.name.NameableInterface;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 
-import clearcontrol.core.device.name.NameableInterface;
-
-public class SingleCheckListView<T extends NameableInterface>
-                                extends ListView<T>
+public class SingleCheckListView<T extends NameableInterface> extends ListView<T>
 {
 
   final int cLIST_CELL_HEIGHT = 26;
@@ -22,8 +20,7 @@ public class SingleCheckListView<T extends NameableInterface>
 
   }
 
-  public SingleCheckListView(SingleCheckCellManager<T> pSingleCheckCellManager,
-                             ObservableList<T> pItems)
+  public SingleCheckListView(SingleCheckCellManager<T> pSingleCheckCellManager, ObservableList<T> pItems)
   {
     super(pItems);
     mSingleCheckCellManager = pSingleCheckCellManager;
@@ -37,9 +34,7 @@ public class SingleCheckListView<T extends NameableInterface>
       @Override
       public ListCell<T> call(ListView<T> param)
       {
-        SingleCheckCell<T> lCell =
-                                 new SingleCheckCell<T>(lSingleCheckListView,
-                                                        pSingleCheckCellManager);
+        SingleCheckCell<T> lCell = new SingleCheckCell<T>(lSingleCheckListView, pSingleCheckCellManager);
         pSingleCheckCellManager.addCell(lCell);
         return lCell;
       }

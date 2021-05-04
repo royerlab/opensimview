@@ -1,7 +1,5 @@
 package clearcontrol.stack.sourcesink.synthetic;
 
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.units.OrderOfMagnitude;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.stack.StackInterface;
@@ -10,6 +8,8 @@ import clearcontrol.stack.sourcesink.source.StackSourceInterface;
 import coremem.ContiguousMemoryInterface;
 import coremem.buffers.ContiguousBuffer;
 import coremem.recycling.RecyclerInterface;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Random stack source
@@ -20,25 +20,17 @@ public class RandomStackSource implements StackSourceInterface
 {
 
   private RecyclerInterface<StackInterface, StackRequest> mStackRecycler;
-  private final Variable<Long> mWidthVariable, mHeightVariable,
-      mDepthVariable;
+  private final Variable<Long> mWidthVariable, mHeightVariable, mDepthVariable;
 
   /**
    * Instanciates a random stack source.
-   * 
-   * @param pWidth
-   *          width
-   * @param pHeight
-   *          height
-   * @param pDepth
-   *          depth
-   * @param pStackRecycler
-   *          stack recycler
+   *
+   * @param pWidth         width
+   * @param pHeight        height
+   * @param pDepth         depth
+   * @param pStackRecycler stack recycler
    */
-  public RandomStackSource(long pWidth,
-                           long pHeight,
-                           long pDepth,
-                           final RecyclerInterface<StackInterface, StackRequest> pStackRecycler)
+  public RandomStackSource(long pWidth, long pHeight, long pDepth, final RecyclerInterface<StackInterface, StackRequest> pStackRecycler)
   {
     mWidthVariable = new Variable<Long>("Width", pWidth);
     mHeightVariable = new Variable<Long>("Height", pHeight);
@@ -77,8 +69,7 @@ public class RandomStackSource implements StackSourceInterface
   }
 
   @Override
-  public Double getStackTimeStampInSeconds(String pChannel,
-                                           long pStackIndex)
+  public Double getStackTimeStampInSeconds(String pChannel, long pStackIndex)
   {
     return OrderOfMagnitude.nano2unit(System.nanoTime());
   }
@@ -86,10 +77,7 @@ public class RandomStackSource implements StackSourceInterface
   @Override
   public StackInterface getStack(final long pStackIndex)
   {
-    return getStack(cDefaultChannel,
-                    pStackIndex,
-                    0,
-                    TimeUnit.NANOSECONDS);
+    return getStack(cDefaultChannel, pStackIndex, 0, TimeUnit.NANOSECONDS);
   }
 
   @Override
@@ -99,10 +87,7 @@ public class RandomStackSource implements StackSourceInterface
   }
 
   @Override
-  public StackInterface getStack(String pChannel,
-                                 final long pStackIndex,
-                                 long pTime,
-                                 TimeUnit pTimeUnit)
+  public StackInterface getStack(String pChannel, final long pStackIndex, long pTime, TimeUnit pTimeUnit)
   {
     if (mStackRecycler == null)
     {
@@ -114,24 +99,17 @@ public class RandomStackSource implements StackSourceInterface
       final long lHeight = getHeightVariable().get();
       final long lDepth = getDepthVariable().get();
 
-      final StackRequest lStackRequest = StackRequest.build(lWidth,
-                                                            lHeight,
-                                                            lDepth);
+      final StackRequest lStackRequest = StackRequest.build(lWidth, lHeight, lDepth);
 
-      final StackInterface lStack =
-                                  mStackRecycler.getOrWait(pTime,
-                                                           pTimeUnit,
-                                                           lStackRequest);
+      final StackInterface lStack = mStackRecycler.getOrWait(pTime, pTimeUnit, lStackRequest);
 
-      ContiguousMemoryInterface lContiguousMemory =
-                                                  lStack.getContiguousMemory();
+      ContiguousMemoryInterface lContiguousMemory = lStack.getContiguousMemory();
 
       if (lStack != null)
       {
         if (lContiguousMemory != null)
         {
-          final ContiguousBuffer lContiguousBuffer =
-                                                   new ContiguousBuffer(lContiguousMemory);
+          final ContiguousBuffer lContiguousBuffer = new ContiguousBuffer(lContiguousMemory);
           lContiguousBuffer.rewind();
           for (int z = 0; z < lDepth; z++)
           {
@@ -139,8 +117,7 @@ public class RandomStackSource implements StackSourceInterface
             {
               for (int x = 0; x < lWidth; x++)
               {
-                final short lValue =
-                                   (short) (pStackIndex + x ^ y ^ z);
+                final short lValue = (short) (pStackIndex + x ^ y ^ z);
                 lContiguousBuffer.writeShort(lValue);
               }
             }
@@ -148,15 +125,13 @@ public class RandomStackSource implements StackSourceInterface
 
         }
 
-        lStack.getMetaData()
-              .setTimeStampInNanoseconds(System.nanoTime());
+        lStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
         lStack.getMetaData().setIndex(pStackIndex);
 
       }
 
       return lStack;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return null;
@@ -166,7 +141,7 @@ public class RandomStackSource implements StackSourceInterface
 
   /**
    * Returns the width variable
-   * 
+   *
    * @return width variable
    */
   public Variable<Long> getWidthVariable()
@@ -176,7 +151,7 @@ public class RandomStackSource implements StackSourceInterface
 
   /**
    * Returns the height variable
-   * 
+   *
    * @return height variable
    */
   public Variable<Long> getHeightVariable()
@@ -186,7 +161,7 @@ public class RandomStackSource implements StackSourceInterface
 
   /**
    * Returns the depth variable
-   * 
+   *
    * @return depth variable
    */
   public Variable<Long> getDepthVariable()

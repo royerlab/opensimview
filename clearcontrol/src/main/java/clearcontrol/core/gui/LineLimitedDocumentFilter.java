@@ -1,6 +1,6 @@
 package clearcontrol.core.gui;
 
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
@@ -8,7 +8,7 @@ import javax.swing.text.DocumentFilter;
 
 /**
  * Line limited document filter.
- * 
+ * <p>
  * This is a document filter that limits the number of lines in a TextArea.
  *
  * @author royer
@@ -25,14 +25,11 @@ public class LineLimitedDocumentFilter extends DocumentFilter
 
   /**
    * Instantiates a line limited document filter
-   * 
-   * @param pTextArea
-   *          text area
-   * @param pMaxNumberOfLines
-   *          max number of lines
+   *
+   * @param pTextArea         text area
+   * @param pMaxNumberOfLines max number of lines
    */
-  public LineLimitedDocumentFilter(JTextArea pTextArea,
-                                   int pMaxNumberOfLines)
+  public LineLimitedDocumentFilter(JTextArea pTextArea, int pMaxNumberOfLines)
   {
     this.area = pTextArea;
     this.max = pMaxNumberOfLines;
@@ -42,21 +39,14 @@ public class LineLimitedDocumentFilter extends DocumentFilter
   }
 
   @Override
-  public void replace(FilterBypass fb,
-                      int offset,
-                      int length,
-                      String text,
-                      AttributeSet attrs) throws BadLocationException
+  public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException
   {
     super.replace(fb, offset, length, text, attrs);
     controlSize(fb);
   }
 
   @Override
-  public void insertString(FilterBypass pFb,
-                           int pOffset,
-                           String pString,
-                           AttributeSet pAttr) throws BadLocationException
+  public void insertString(FilterBypass pFb, int pOffset, String pString, AttributeSet pAttr) throws BadLocationException
   {
     super.insertString(pFb, pOffset, pString, pAttr);
     controlSize(pFb);
@@ -73,8 +63,7 @@ public class LineLimitedDocumentFilter extends DocumentFilter
         final int lUpdatePolicy = mDefaultCaret.getUpdatePolicy();
         mDefaultCaret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         final int linesToRemove = lines - max - 1;
-        final int lengthToRemove =
-                                 area.getLineStartOffset(linesToRemove);
+        final int lengthToRemove = area.getLineStartOffset(linesToRemove);
         remove(fb, 0, lengthToRemove);
         mDefaultCaret.setUpdatePolicy(lUpdatePolicy);
       }

@@ -11,7 +11,7 @@ import com.jogamp.newt.event.KeyListener;
 class KeyboardControl extends KeyAdapter implements KeyListener
 {
   /**
-   * 
+   *
    */
   private final VideoWindow mVideoWindow;
 
@@ -30,25 +30,24 @@ class KeyboardControl extends KeyAdapter implements KeyListener
 
     switch (pE.getKeyCode())
     {
-    case KeyEvent.VK_G:
-      mVideoWindow.setGamma(1);
-      break;
-    case KeyEvent.VK_M:
-      mVideoWindow.setManualMinMax(true);
-      break;
-    case KeyEvent.VK_A:
-      mVideoWindow.setManualMinMax(false);
-      break;
-    case KeyEvent.VK_F:
-      mVideoWindow.setMinMaxFixed(!mVideoWindow.isMinMaxFixed());
-      break;
-    case KeyEvent.VK_L:
-      mVideoWindow.setDisplayLines(!mVideoWindow.isDisplayLines());
-      break;
-    case KeyEvent.VK_ESCAPE:
-      if (mVideoWindow.isFullScreen())
-        mVideoWindow.setFullScreen(false);
-      break;
+      case KeyEvent.VK_G:
+        mVideoWindow.setGamma(1);
+        break;
+      case KeyEvent.VK_M:
+        mVideoWindow.setManualMinMax(true);
+        break;
+      case KeyEvent.VK_A:
+        mVideoWindow.setManualMinMax(false);
+        break;
+      case KeyEvent.VK_F:
+        mVideoWindow.setMinMaxFixed(!mVideoWindow.isMinMaxFixed());
+        break;
+      case KeyEvent.VK_L:
+        mVideoWindow.setDisplayLines(!mVideoWindow.isDisplayLines());
+        break;
+      case KeyEvent.VK_ESCAPE:
+        if (mVideoWindow.isFullScreen()) mVideoWindow.setFullScreen(false);
+        break;
     }
 
   }

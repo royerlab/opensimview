@@ -1,11 +1,11 @@
 package clearcontrol.devices.signalgen;
 
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.device.queue.QueueInterface;
 import clearcontrol.devices.signalgen.measure.MeasureInterface;
 import clearcontrol.devices.signalgen.score.Score;
 import clearcontrol.devices.signalgen.score.ScoreInterface;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Real time queue for signal generator devices
@@ -23,10 +23,8 @@ public class SignalGeneratorQueue implements QueueInterface
 
   /**
    * Instantiates a real-time signal generator queue
-   * 
-   * @param pSignalGenerator
-   *          parent signal generator
-   * 
+   *
+   * @param pSignalGenerator parent signal generator
    */
   public SignalGeneratorQueue(SignalGeneratorInterface pSignalGenerator)
   {
@@ -39,7 +37,7 @@ public class SignalGeneratorQueue implements QueueInterface
 
   /**
    * Returns this queue's parent signal generator
-   * 
+   *
    * @return parent signal generator
    */
   public SignalGeneratorInterface getSignalGenerator()
@@ -49,7 +47,7 @@ public class SignalGeneratorQueue implements QueueInterface
 
   /**
    * Returns staging score
-   * 
+   *
    * @return staging score
    */
   public ScoreInterface getStagingScore()
@@ -59,7 +57,7 @@ public class SignalGeneratorQueue implements QueueInterface
 
   /**
    * Returns finalisation score
-   * 
+   *
    * @return finalisation score
    */
   public ScoreInterface getFinalizationScore()
@@ -69,7 +67,7 @@ public class SignalGeneratorQueue implements QueueInterface
 
   /**
    * Returns queued score
-   * 
+   *
    * @return queued score
    */
   public ScoreInterface getQueuedScore()
@@ -79,9 +77,8 @@ public class SignalGeneratorQueue implements QueueInterface
 
   /**
    * Estimates the play time in the given time unit.
-   * 
-   * @param pTimeUnit
-   *          time unit
+   *
+   * @param pTimeUnit time unit
    * @return play time estimate
    */
   public long estimatePlayTime(TimeUnit pTimeUnit)

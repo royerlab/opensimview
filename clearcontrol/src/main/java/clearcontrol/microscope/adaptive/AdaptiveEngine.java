@@ -1,13 +1,5 @@
 package clearcontrol.microscope.adaptive;
 
-import static java.lang.Math.max;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.core.concurrent.executors.ClearControlExecutors;
 import clearcontrol.core.concurrent.thread.ThreadSleep;
@@ -22,91 +14,59 @@ import clearcontrol.microscope.adaptive.modules.AdaptationModuleInterface;
 import clearcontrol.microscope.state.AcquisitionStateInterface;
 import clearcontrol.microscope.state.AcquisitionStateManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import static java.lang.Math.max;
+
 /**
  * adaptive engine
  *
+ * @param <S> state type
  * @author royer
- * 
- * @param <S>
- *          state type
  */
-public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
-                           extends TaskDevice implements
-                           Function<Integer, Boolean>,
-                           AdaptiveEngineInterface<S>,
-                           LoggingFeature,
-                           AsynchronousExecutorFeature,
-                           VisualConsoleInterface
+public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>> extends TaskDevice implements Function<Integer, Boolean>, AdaptiveEngineInterface<S>, LoggingFeature, AsynchronousExecutorFeature, VisualConsoleInterface
 {
   private static final double cEpsilon = 0.8;
 
   private final MicroscopeInterface<?> mMicroscope;
-  private ArrayList<AdaptationModuleInterface<S>> mAdaptationModuleList =
-                                                                        new ArrayList<>();
+  private ArrayList<AdaptationModuleInterface<S>> mAdaptationModuleList = new ArrayList<>();
 
-  private HashMap<AdaptationModuleInterface<S>, Long> mTimmingMap =
-                                                                  new HashMap<>();
+  private HashMap<AdaptationModuleInterface<S>, Long> mTimmingMap = new HashMap<>();
 
-  private final Variable<Long> mAcquisitionStateCounterVariable =
-                                                                new Variable<>("AcquisitionStateCounter",
-                                                                               0L);
+  private final Variable<Long> mAcquisitionStateCounterVariable = new Variable<>("AcquisitionStateCounter", 0L);
 
-  private final Variable<S> mAcquisitionStateVariable =
-                                                      new Variable<>("CurrentAcquisitionState",
-                                                                     null);
+  private final Variable<S> mAcquisitionStateVariable = new Variable<>("CurrentAcquisitionState", null);
 
-  private final Variable<Double> mCurrentAdaptationModuleVariable =
-                                                                  new Variable<>("CurrentAdaptationModule",
-                                                                                 0.0);
+  private final Variable<Double> mCurrentAdaptationModuleVariable = new Variable<>("CurrentAdaptationModule", 0.0);
 
-  private final Variable<Double> mProgressVariable =
-                                                   new Variable<Double>("Progress",
-                                                                        0.0);
+  private final Variable<Double> mProgressVariable = new Variable<Double>("Progress", 0.0);
 
-  private final Variable<Boolean> mConcurrentExecutionVariable =
-                                                               new Variable<>("ConcurrentExecution",
-                                                                              true);
+  private final Variable<Boolean> mConcurrentExecutionVariable = new Variable<>("ConcurrentExecution", true);
 
-  private final Variable<Boolean> mRunUntilAllModulesReadyVariable =
-                                                                   new Variable<>("ConcurrentExecution",
-                                                                                  false);
+  private final Variable<Boolean> mRunUntilAllModulesReadyVariable = new Variable<>("ConcurrentExecution", false);
 
   /**
    * Instantiates an adaptive engine given a parent microscope
-   * 
-   * @param pMicroscope
-   *          parent microscope
-   * @param pAcquisitionState
-   *          acquisition state
+   *
+   * @param pMicroscope       parent microscope
+   * @param pAcquisitionState acquisition state
    */
-  public AdaptiveEngine(MicroscopeInterface<?> pMicroscope,
-                        S pAcquisitionState)
+  public AdaptiveEngine(MicroscopeInterface<?> pMicroscope, S pAcquisitionState)
   {
     super("Adaptive");
     mMicroscope = pMicroscope;
 
-    double lCPULoadRatio =
-                         MachineConfiguration.get()
-                                             .getDoubleProperty("autopilot.cpuloadratio",
-                                                                0.2);
+    double lCPULoadRatio = MachineConfiguration.get().getDoubleProperty("autopilot.cpuloadratio", 0.2);
 
-    int pMaxQueueLengthPerWorker =
-                                 MachineConfiguration.get()
-                                                     .getIntegerProperty("autopilot.worker.maxqueuelength",
-                                                                         10);
+    int pMaxQueueLengthPerWorker = MachineConfiguration.get().getIntegerProperty("autopilot.worker.maxqueuelength", 10);
 
-    int lNumberOfWorkers =
-                         (int) max(1,
-                                   (lCPULoadRatio
-                                    * Runtime.getRuntime()
-                                             .availableProcessors()));
+    int lNumberOfWorkers = (int) max(1, (lCPULoadRatio * Runtime.getRuntime().availableProcessors()));
 
-    ClearControlExecutors.getOrCreateThreadPoolExecutor(this,
-                                                        Thread.MIN_PRIORITY,
-                                                        lNumberOfWorkers,
-                                                        lNumberOfWorkers,
-                                                        pMaxQueueLengthPerWorker
-                                                                          * lNumberOfWorkers);
+    ClearControlExecutors.getOrCreateThreadPoolExecutor(this, Thread.MIN_PRIORITY, lNumberOfWorkers, lNumberOfWorkers, pMaxQueueLengthPerWorker * lNumberOfWorkers);
 
     getAcquisitionStateVariable().set(pAcquisitionState);
     getAcquisitionStateCounterVariable().set(0L);
@@ -193,25 +153,19 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
   public double estimateNextStepInSeconds()
   {
     boolean lModulesReady = isReady();
-    if (lModulesReady)
-      return 0;
+    if (lModulesReady) return 0;
     else
     {
-      AdaptationModuleInterface<S> lAdaptationModule =
-                                                     mAdaptationModuleList.get(getCurrentAdaptationModuleVariable().get()
-                                                                                                                   .intValue());
+      AdaptationModuleInterface<S> lAdaptationModule = mAdaptationModuleList.get(getCurrentAdaptationModuleVariable().get().intValue());
       int lPriority = lAdaptationModule.getPriority();
 
-      Long lMethodTimming =
-                          getModuleEstimatedStepTimeInNanoseconds(lAdaptationModule);
+      Long lMethodTimming = getModuleEstimatedStepTimeInNanoseconds(lAdaptationModule);
 
-      if (lMethodTimming == null)
-        return 0;
+      if (lMethodTimming == null) return 0;
 
       long lEstimatedTimeInNanoseconds = lPriority * lMethodTimming;
 
-      double lEstimatedTimeInSeconds = 1e-9
-                                       * lEstimatedTimeInNanoseconds;
+      double lEstimatedTimeInSeconds = 1e-9 * lEstimatedTimeInNanoseconds;
 
       return lEstimatedTimeInSeconds;
     }
@@ -237,17 +191,11 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
     if (getMicroscope() != null)
     {
 
-      @SuppressWarnings("unchecked")
-      AcquisitionStateManager<S> lAcquisitionStateManager =
-                                                          (AcquisitionStateManager<S>) getMicroscope().getAcquisitionStateManager();
+      @SuppressWarnings("unchecked") AcquisitionStateManager<S> lAcquisitionStateManager = (AcquisitionStateManager<S>) getMicroscope().getAcquisitionStateManager();
 
-      S lCurrentAcquisitionState =
-                                 (S) getAcquisitionStateVariable().get();
+      S lCurrentAcquisitionState = (S) getAcquisitionStateVariable().get();
 
-      @SuppressWarnings("unchecked")
-      S lLoggedState =
-                     (S) lCurrentAcquisitionState.duplicate("state "
-                                                            + getAcquisitionStateCounterVariable().get());
+      @SuppressWarnings("unchecked") S lLoggedState = (S) lCurrentAcquisitionState.duplicate("state " + getAcquisitionStateCounterVariable().get());
 
       lAcquisitionStateManager.addState(lLoggedState);
     }
@@ -261,17 +209,13 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
     {
       if (getRunUntilAllModulesReadyVariable().get())
       {
-        while (step())
-          if (getStopSignalVariable().get())
-          {
-            reset();
-            break;
-          }
-      }
-      else
-        step();
-    }
-    catch (Throwable e)
+        while (step()) if (getStopSignalVariable().get())
+        {
+          reset();
+          break;
+        }
+      } else step();
+    } catch (Throwable e)
     {
       e.printStackTrace();
     }
@@ -281,23 +225,22 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
   @Override
   public Future<?> steps(int pNumberOfRounds, boolean pWaitToFinish)
   {
-    Runnable lRunnable = () -> {
+    Runnable lRunnable = () ->
+    {
       for (int i = 0; i < pNumberOfRounds; i++)
       {
         info("round: %d \n", i);
-        while (apply(1))
-          ThreadSleep.sleep(100, TimeUnit.MILLISECONDS);
+        while (apply(1)) ThreadSleep.sleep(100, TimeUnit.MILLISECONDS);
       }
     };
 
     if (pWaitToFinish)
     {
       lRunnable.run();
-      return executeAsynchronously(() -> {
+      return executeAsynchronously(() ->
+      {
       });
-    }
-    else
-      return executeAsynchronously(lRunnable);
+    } else return executeAsynchronously(lRunnable);
 
   }
 
@@ -312,14 +255,11 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
   {
     info("begin step \n");
 
-    int lTotalRemainingNumberOfSteps =
-                                     getTotalRemainingNumberOfSteps();
+    int lTotalRemainingNumberOfSteps = getTotalRemainingNumberOfSteps();
 
-    info("total remaining steps: %d \n",
-         lTotalRemainingNumberOfSteps);
+    info("total remaining steps: %d \n", lTotalRemainingNumberOfSteps);
 
-    if (lTotalRemainingNumberOfSteps == 0)
-      return false;
+    if (lTotalRemainingNumberOfSteps == 0) return false;
 
     if (pTimes <= 0 || mAdaptationModuleList.size() == 0)
     {
@@ -327,40 +267,29 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
       return false;
     }
 
-    AdaptationModuleInterface<S> lAdaptationModule =
-                                                   getCurrentModule();
+    AdaptationModuleInterface<S> lAdaptationModule = getCurrentModule();
 
-    if (!lAdaptationModule.isActive())
-      while (!(lAdaptationModule =
-                                 incrementCurrentModule(1)).isActive())
-      {
-        info("Skipping module: %s \n" + lAdaptationModule);
-      }
+    if (!lAdaptationModule.isActive()) while (!(lAdaptationModule = incrementCurrentModule(1)).isActive())
+    {
+      info("Skipping module: %s \n" + lAdaptationModule);
+    }
 
-    int lAdaptationModuleIndex =
-                               getCurrentAdaptationModuleVariable().get()
-                                                                   .intValue();
+    int lAdaptationModuleIndex = getCurrentAdaptationModuleVariable().get().intValue();
 
     boolean lModuleWasReady = lAdaptationModule.isReady();
 
-    info("Adaptation module: [%d] -> %s (is ready before apply: %s) \n",
-         lAdaptationModuleIndex,
-         lAdaptationModule,
-         lModuleWasReady);
+    info("Adaptation module: [%d] -> %s (is ready before apply: %s) \n", lAdaptationModuleIndex, lAdaptationModule, lModuleWasReady);
 
     double lStepSize = 1.0 / lAdaptationModule.getPriority();
 
-    info("Applying: [%d] -> %s \n",
-         lAdaptationModuleIndex,
-         lAdaptationModule);
+    info("Applying: [%d] -> %s \n", lAdaptationModuleIndex, lAdaptationModule);
     time(lAdaptationModule, lAdaptationModule::apply);
 
     incrementCurrentModule(lStepSize);
 
     boolean lAreAllStepsCompleted = areAllStepsCompleted();
 
-    info("Are all steps for all modules completed? %s \n",
-         lAreAllStepsCompleted);
+    info("Are all steps for all modules completed? %s \n", lAreAllStepsCompleted);
 
     if (lModuleWasReady && !lAreAllStepsCompleted)
     {
@@ -370,9 +299,7 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
       return apply(pTimes);
     }
 
-    double lProgress =
-                     1.0 - ((double) getTotalRemainingNumberOfSteps())
-                           / getTotalNumberOfSteps();
+    double lProgress = 1.0 - ((double) getTotalRemainingNumberOfSteps()) / getTotalNumberOfSteps();
     getProgressVariable().set(lProgress);
 
     if (lAreAllStepsCompleted)
@@ -389,16 +316,13 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
       // reset();
       info("end step with false\n");
       return false;
-    }
-    else if (pTimes - 1 >= 1)
+    } else if (pTimes - 1 >= 1)
     {
-      info("Modules are not yet ready, applying %d more time \n",
-           (pTimes - 1));
+      info("Modules are not yet ready, applying %d more time \n", (pTimes - 1));
 
       info("end step with recursive call\n");
       return apply(pTimes - 1);
-    }
-    else
+    } else
     {
       info("end step with true... \n");
       return true;
@@ -408,42 +332,34 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
   private void updateState(S pStateToUpdate)
   {
     for (AdaptationModuleInterface<S> lAdaptationModule : mAdaptationModuleList)
-      if (lAdaptationModule.isActive())
-        lAdaptationModule.updateState(pStateToUpdate);
+      if (lAdaptationModule.isActive()) lAdaptationModule.updateState(pStateToUpdate);
   }
 
   private AdaptationModuleInterface<S> getCurrentModule()
   {
-    int lAdaptationModuleIndex =
-                               getCurrentAdaptationModuleVariable().get()
-                                                                   .intValue();
-    AdaptationModuleInterface<S> lAdaptationModule =
-                                                   mAdaptationModuleList.get(lAdaptationModuleIndex);
+    int lAdaptationModuleIndex = getCurrentAdaptationModuleVariable().get().intValue();
+    AdaptationModuleInterface<S> lAdaptationModule = mAdaptationModuleList.get(lAdaptationModuleIndex);
 
     return lAdaptationModule;
   }
 
   protected AdaptationModuleInterface<S> incrementCurrentModule(double lStepSize)
   {
-    double lCurrentModuleIndex =
-                               getCurrentAdaptationModuleVariable().get();
+    double lCurrentModuleIndex = getCurrentAdaptationModuleVariable().get();
 
     lCurrentModuleIndex = (lCurrentModuleIndex + lStepSize);
 
     if (lCurrentModuleIndex >= mAdaptationModuleList.size())
-      lCurrentModuleIndex = lCurrentModuleIndex
-                            - mAdaptationModuleList.size();
+      lCurrentModuleIndex = lCurrentModuleIndex - mAdaptationModuleList.size();
 
     getCurrentAdaptationModuleVariable().set(lCurrentModuleIndex);
 
-    AdaptationModuleInterface<S> lAdaptationModule =
-                                                   mAdaptationModuleList.get((int) lCurrentModuleIndex);
+    AdaptationModuleInterface<S> lAdaptationModule = mAdaptationModuleList.get((int) lCurrentModuleIndex);
 
     return lAdaptationModule;
   }
 
-  private boolean time(AdaptationModuleInterface<S> pAdaptationModule,
-                       Function<Void, Boolean> pMethod)
+  private boolean time(AdaptationModuleInterface<S> pAdaptationModule, Function<Void, Boolean> pMethod)
   {
     long lStartTimeNS = System.nanoTime();
     Boolean lResult = pMethod.apply(null);
@@ -457,8 +373,7 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
 
     if (lCurrentEstimate != null)
     {
-      lElapsedTimeInNS = (long) ((1 - cEpsilon) * lCurrentEstimate
-                                 + cEpsilon * lElapsedTimeInNS);
+      lElapsedTimeInNS = (long) ((1 - cEpsilon) * lCurrentEstimate + cEpsilon * lElapsedTimeInNS);
     }
 
     mTimmingMap.put(pAdaptationModule, lElapsedTimeInNS);
@@ -475,31 +390,24 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
   /**
    * Returns estimated step execution time for the given module in the given
    * time unit.time
-   * 
-   * @param pModule
-   *          module
-   * @param pTimeUnit
-   *          time unit
+   *
+   * @param pModule   module
+   * @param pTimeUnit time unit
    * @return estimated time
    */
   @SuppressWarnings("rawtypes")
-  public Long getEstimatedModuleStepTime(AdaptationModuleInterface pModule,
-                                         TimeUnit pTimeUnit)
+  public Long getEstimatedModuleStepTime(AdaptationModuleInterface pModule, TimeUnit pTimeUnit)
   {
-    Long lModuleTimmimgInNs =
-                            getModuleEstimatedStepTimeInNanoseconds(pModule);
-    if (lModuleTimmimgInNs == null)
-      return null;
-    return pTimeUnit.convert(lModuleTimmimgInNs.longValue(),
-                             TimeUnit.NANOSECONDS);
+    Long lModuleTimmimgInNs = getModuleEstimatedStepTimeInNanoseconds(pModule);
+    if (lModuleTimmimgInNs == null) return null;
+    return pTimeUnit.convert(lModuleTimmimgInNs.longValue(), TimeUnit.NANOSECONDS);
   }
 
   private boolean isReady()
   {
     boolean lAllReady = true;
     for (AdaptationModuleInterface<S> lAdaptationModule : mAdaptationModuleList)
-      if (lAdaptationModule.isActive())
-        lAllReady &= lAdaptationModule.isReady();
+      if (lAdaptationModule.isActive()) lAllReady &= lAdaptationModule.isReady();
 
     return lAllReady;
   }
@@ -508,8 +416,7 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
   {
     boolean lCompleted = true;
     for (AdaptationModuleInterface<S> lAdaptationModule : mAdaptationModuleList)
-      if (lAdaptationModule.isActive())
-        lCompleted &= lAdaptationModule.areAllTasksCompleted();
+      if (lAdaptationModule.isActive()) lCompleted &= lAdaptationModule.areAllTasksCompleted();
 
     return lCompleted;
   }
@@ -523,8 +430,7 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
   {
     boolean lCompleted = true;
     for (AdaptationModuleInterface<S> lAdaptationModule : mAdaptationModuleList)
-      if (lAdaptationModule.isActive())
-        lCompleted &= lAdaptationModule.areAllStepsCompleted();
+      if (lAdaptationModule.isActive()) lCompleted &= lAdaptationModule.areAllStepsCompleted();
 
     return lCompleted;
   }
@@ -533,8 +439,7 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
   {
     int lTotalNumberOfSteps = 0;
     for (AdaptationModuleInterface<S> lAdaptationModule : mAdaptationModuleList)
-      if (lAdaptationModule.isActive())
-        lTotalNumberOfSteps += lAdaptationModule.getNumberOfSteps();
+      if (lAdaptationModule.isActive()) lTotalNumberOfSteps += lAdaptationModule.getNumberOfSteps();
     return lTotalNumberOfSteps;
   }
 
@@ -542,10 +447,8 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>>
   {
     int lTotalRemainingNumberOfSteps = 0;
     for (AdaptationModuleInterface<S> lAdaptationModule : mAdaptationModuleList)
-      if (lAdaptationModule.isActive())
-        if (!lAdaptationModule.areAllStepsCompleted())
-          lTotalRemainingNumberOfSteps +=
-                                       1 + lAdaptationModule.getRemainingNumberOfSteps();
+      if (lAdaptationModule.isActive()) if (!lAdaptationModule.areAllStepsCompleted())
+        lTotalRemainingNumberOfSteps += 1 + lAdaptationModule.getRemainingNumberOfSteps();
     return lTotalRemainingNumberOfSteps;
   }
 

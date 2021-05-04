@@ -9,17 +9,13 @@ import clearcontrol.devices.optomech.opticalswitch.devices.optojena.OptoJenaFibe
  *
  * @author royer
  */
-public class FiberSwitchPositionAdapter extends
-                                        SerialDeviceAdapterAdapter<Integer>
-                                        implements
-                                        SerialTextDeviceAdapter<Integer>
+public class FiberSwitchPositionAdapter extends SerialDeviceAdapterAdapter<Integer> implements SerialTextDeviceAdapter<Integer>
 {
 
   /**
    * Instantiates an OptoJena fiber switch position adapter
-   * 
-   * @param pOptoJenaFiberSwitchDevice
-   *          OptoJena fiber switch device
+   *
+   * @param pOptoJenaFiberSwitchDevice OptoJena fiber switch device
    */
   public FiberSwitchPositionAdapter(final OptoJenaFiberSwitchDevice pOptoJenaFiberSwitchDevice)
   {
@@ -27,8 +23,7 @@ public class FiberSwitchPositionAdapter extends
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(Integer pOldValue,
-                                          Integer pNewValue)
+  public byte[] getSetValueCommandMessage(Integer pOldValue, Integer pNewValue)
   {
     String lMessage = String.format("ch%d\r\n", pNewValue + 1);
     return lMessage.getBytes();
@@ -56,6 +51,8 @@ public class FiberSwitchPositionAdapter extends
   public Character getGetValueReturnMessageTerminationCharacter()
   {
     return '\n';
-  };
+  }
+
+  ;
 
 }

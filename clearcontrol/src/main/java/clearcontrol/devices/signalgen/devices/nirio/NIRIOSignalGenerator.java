@@ -1,35 +1,31 @@
 package clearcontrol.devices.signalgen.devices.nirio;
 
-import static java.lang.Math.toIntExact;
-
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import nirioj.direttore.Direttore;
 import clearcontrol.devices.signalgen.SignalGeneratorBase;
 import clearcontrol.devices.signalgen.SignalGeneratorInterface;
 import clearcontrol.devices.signalgen.SignalGeneratorQueue;
 import clearcontrol.devices.signalgen.devices.nirio.compiler.NIRIOCompiledScore;
 import clearcontrol.devices.signalgen.devices.nirio.compiler.NIRIOScoreCompiler;
 import clearcontrol.devices.signalgen.score.ScoreInterface;
+import nirioj.direttore.Direttore;
+
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Math.toIntExact;
 
 /**
- *
- *
  * @author royer
  */
-public class NIRIOSignalGenerator extends SignalGeneratorBase
-                                  implements SignalGeneratorInterface
+public class NIRIOSignalGenerator extends SignalGeneratorBase implements SignalGeneratorInterface
 
 {
 
   double mWaitTimeInMilliseconds = 0;
   private final Direttore mDirettore;
-  private final NIRIOCompiledScore mNIRIOCompiledScore =
-                                                       new NIRIOCompiledScore();
+  private final NIRIOCompiledScore mNIRIOCompiledScore = new NIRIOCompiledScore();
 
   /**
-   * 
+   *
    */
   public NIRIOSignalGenerator()
   {
@@ -60,27 +56,12 @@ public class NIRIOSignalGenerator extends SignalGeneratorBase
 
     boolean lPlayed = false;
 
-    prependTransitionMeasure(pScore,
-                              getTransitionDurationInNanosecondsVariable().get(),
-                              TimeUnit.NANOSECONDS);
+    prependTransitionMeasure(pScore, getTransitionDurationInNanosecondsVariable().get(), TimeUnit.NANOSECONDS);
 
     NIRIOScoreCompiler.compile(mNIRIOCompiledScore, pScore);
 
     System.out.println("Start playing score...");
-    lPlayed = mDirettore.play(
-                              mNIRIOCompiledScore.getDeltaTimeBuffer()
-                                                 .getContiguousMemory()
-                                                 .getBridJPointer(Integer.class),
-                              mNIRIOCompiledScore.getNumberOfTimePointsBuffer()
-                                                 .getContiguousMemory()
-                                                 .getBridJPointer(Integer.class),
-                              mNIRIOCompiledScore.getSyncBuffer()
-                                                 .getContiguousMemory()
-                                                 .getBridJPointer(Integer.class),
-                              toIntExact(mNIRIOCompiledScore.getNumberOfMeasures()),
-                              mNIRIOCompiledScore.getScoreBuffer()
-                                                 .getContiguousMemory()
-                                                 .getBridJPointer(Short.class));
+    lPlayed = mDirettore.play(mNIRIOCompiledScore.getDeltaTimeBuffer().getContiguousMemory().getBridJPointer(Integer.class), mNIRIOCompiledScore.getNumberOfTimePointsBuffer().getContiguousMemory().getBridJPointer(Integer.class), mNIRIOCompiledScore.getSyncBuffer().getContiguousMemory().getBridJPointer(Integer.class), toIntExact(mNIRIOCompiledScore.getNumberOfMeasures()), mNIRIOCompiledScore.getScoreBuffer().getContiguousMemory().getBridJPointer(Short.class));
     System.out.println("Stop playing score...");
 
     lCurrentThread.setPriority(lCurrentThreadPriority);
@@ -100,8 +81,7 @@ public class NIRIOSignalGenerator extends SignalGeneratorBase
       }
 
       return mDirettore.start();
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -111,8 +91,7 @@ public class NIRIOSignalGenerator extends SignalGeneratorBase
 
   public boolean resume()
   {
-    System.out.println(this.getClass().getSimpleName()
-                       + ": resume()");
+    System.out.println(this.getClass().getSimpleName() + ": resume()");
     return true;
   }
 
@@ -121,13 +100,11 @@ public class NIRIOSignalGenerator extends SignalGeneratorBase
   {
     try
     {
-      System.out.println(this.getClass().getSimpleName()
-                         + ": close()");
+      System.out.println(this.getClass().getSimpleName() + ": close()");
       mDirettore.stop();
       mDirettore.close();
       return true;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;

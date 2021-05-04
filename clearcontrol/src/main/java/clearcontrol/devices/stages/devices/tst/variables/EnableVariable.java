@@ -12,11 +12,9 @@ public class EnableVariable extends TSTBooleanVariableBase
 
   /**
    * Instantiates an enable variable
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pAPTJDevice
-   *          APTJ device
+   *
+   * @param pVariableName variable name
+   * @param pAPTJDevice   APTJ device
    */
   public EnableVariable(String pVariableName, APTJDevice pAPTJDevice)
   {

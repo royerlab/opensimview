@@ -1,13 +1,12 @@
 package clearcontrol.core.math.interpolation.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import clearcontrol.core.math.interpolation.LinearInterpolationTable;
 import clearcontrol.core.math.interpolation.Row;
 import clearcontrol.core.math.interpolation.SplineInterpolationTable;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Interpolation table tests
@@ -24,8 +23,7 @@ public class InterpolationTableTests
   @Test
   public void test()
   {
-    final SplineInterpolationTable lInterpolationTable =
-                                                       new SplineInterpolationTable(2);
+    final SplineInterpolationTable lInterpolationTable = new SplineInterpolationTable(2);
 
     final Row lAddRow3 = lInterpolationTable.addRow(3.0);
     final Row lAddRow1 = lInterpolationTable.addRow(1.0);
@@ -49,11 +47,9 @@ public class InterpolationTableTests
     lAddRow4.setY(1, 0.5);
     lAddRow5.setY(1, Double.NaN);
 
-    System.out.println(lInterpolationTable.getInterpolatedValue(0,
-                                                                1.2));
+    System.out.println(lInterpolationTable.getInterpolatedValue(0, 1.2));
 
-    System.out.println(lInterpolationTable.getInterpolatedValue(1,
-                                                                1.2));
+    System.out.println(lInterpolationTable.getInterpolatedValue(1, 1.2));
 
     /*final MultiPlot lDisplayTable =
                                   lInterpolationTable.displayTable("test");
@@ -63,21 +59,16 @@ public class InterpolationTableTests
       ThreadUtils.sleep(10L, TimeUnit.MILLISECONDS);
     } /**/
 
-    assertEquals(5.47,
-                 lInterpolationTable.getInterpolatedValue(0, 4),
-                 0.03);
+    assertEquals(5.47, lInterpolationTable.getInterpolatedValue(0, 4), 0.03);
 
-    assertEquals(-2.11,
-                 lInterpolationTable.getInterpolatedValue(1, 4),
-                 0.03);
+    assertEquals(-2.11, lInterpolationTable.getInterpolatedValue(1, 4), 0.03);
 
   }
 
   @Test
   public void testSplineInterpolation()
   {
-    final SplineInterpolationTable lInterpolationTable =
-                                                       new SplineInterpolationTable(2);
+    final SplineInterpolationTable lInterpolationTable = new SplineInterpolationTable(2);
 
     Row lAddRow1 = lInterpolationTable.addRow(1.0);
     lAddRow1.setY(0, 0);
@@ -92,8 +83,7 @@ public class InterpolationTableTests
     lAddRow1 = lInterpolationTable.addRow(6.0);
     lAddRow1.setY(0, 0);
 
-    System.out.println(lInterpolationTable.getInterpolatedValue(0,
-                                                                3.5));
+    System.out.println(lInterpolationTable.getInterpolatedValue(0, 3.5));
     assertTrue(lInterpolationTable.getInterpolatedValue(0, 3.5) > 1);
 
   }
@@ -101,8 +91,7 @@ public class InterpolationTableTests
   @Test
   public void testLinearInterpolation()
   {
-    final LinearInterpolationTable lInterpolationTable =
-                                                       new LinearInterpolationTable(2);
+    final LinearInterpolationTable lInterpolationTable = new LinearInterpolationTable(2);
 
     Row lAddRow1 = lInterpolationTable.addRow(1.0);
     lAddRow1.setY(0, 0);
@@ -117,29 +106,23 @@ public class InterpolationTableTests
     lAddRow1 = lInterpolationTable.addRow(6.0);
     lAddRow1.setY(0, 0);
 
-    System.out.println(lInterpolationTable.getInterpolatedValue(0,
-                                                                3.5));
+    System.out.println(lInterpolationTable.getInterpolatedValue(0, 3.5));
     assertTrue(lInterpolationTable.getInterpolatedValue(0, 3.5) == 1);
 
     lAddRow1 = lInterpolationTable.getRow(3);
     lAddRow1.setY(0, 2);
-    System.out.println(lInterpolationTable.getInterpolatedValue(0,
-                                                                3.5));
-    assertTrue(lInterpolationTable.getInterpolatedValue(0,
-                                                        3.5) == 1.5);
+    System.out.println(lInterpolationTable.getInterpolatedValue(0, 3.5));
+    assertTrue(lInterpolationTable.getInterpolatedValue(0, 3.5) == 1.5);
 
-    System.out.println(lInterpolationTable.getInterpolatedValue(0,
-                                                                3.75));
-    assertTrue(lInterpolationTable.getInterpolatedValue(0,
-                                                        3.75) == 1.75);
+    System.out.println(lInterpolationTable.getInterpolatedValue(0, 3.75));
+    assertTrue(lInterpolationTable.getInterpolatedValue(0, 3.75) == 1.75);
 
   }
 
   @Test
   public void testLinearInterpolation2()
   {
-    final LinearInterpolationTable lInterpolationTable =
-                                                       new LinearInterpolationTable(2);
+    final LinearInterpolationTable lInterpolationTable = new LinearInterpolationTable(2);
 
     Row lAddRow1 = lInterpolationTable.addRow(1.0);
     lAddRow1.setY(0, 1);

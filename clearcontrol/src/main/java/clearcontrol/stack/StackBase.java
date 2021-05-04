@@ -1,20 +1,19 @@
 package clearcontrol.stack;
 
-import java.util.Arrays;
-
 import clearcontrol.stack.metadata.StackMetaData;
 import coremem.enums.NativeTypeEnum;
 import coremem.recycling.RecyclerInterface;
 import coremem.rgc.FreeableBase;
 import coremem.util.Size;
 
+import java.util.Arrays;
+
 /**
  * Base class providing common fields and methods for all stack implementations
  *
  * @author royer
  */
-public abstract class StackBase extends FreeableBase
-                                implements StackInterface
+public abstract class StackBase extends FreeableBase implements StackInterface
 {
 
   protected RecyclerInterface<StackInterface, StackRequest> mStackRecycler;
@@ -29,17 +28,12 @@ public abstract class StackBase extends FreeableBase
   /**
    * Instantiates a stack with given data type, number of channels, and
    * dimensions
-   * 
-   * @param pDataType
-   *          data type
-   * @param pNumberOfChannels
-   *          number of channels
-   * @param pDimensions
-   *          dimensions
+   *
+   * @param pDataType         data type
+   * @param pNumberOfChannels number of channels
+   * @param pDimensions       dimensions
    */
-  public StackBase(final NativeTypeEnum pDataType,
-                   final long pNumberOfChannels,
-                   final long... pDimensions)
+  public StackBase(final NativeTypeEnum pDataType, final long pNumberOfChannels, final long... pDimensions)
   {
     mDataType = pDataType;
     mNumberOfChannels = pNumberOfChannels;
@@ -48,7 +42,7 @@ public abstract class StackBase extends FreeableBase
 
   /**
    * Returns the stack's data type
-   * 
+   *
    * @return data type
    */
   public NativeTypeEnum getDataType()
@@ -58,7 +52,7 @@ public abstract class StackBase extends FreeableBase
 
   /**
    * Returns the stack's dimensions
-   * 
+   *
    * @return dimensions
    */
   public long[] getDimensions()
@@ -91,24 +85,21 @@ public abstract class StackBase extends FreeableBase
   @Override
   public long getWidth()
   {
-    if (getNumberOfDimensions() < 1)
-      return 1;
+    if (getNumberOfDimensions() < 1) return 1;
     return getDimension(0);
   }
 
   @Override
   public long getHeight()
   {
-    if (getNumberOfDimensions() < 2)
-      return 1;
+    if (getNumberOfDimensions() < 2) return 1;
     return getDimension(1);
   }
 
   @Override
   public long getDepth()
   {
-    if (getNumberOfDimensions() < 3)
-      return 1;
+    if (getNumberOfDimensions() < 3) return 1;
     return getDimension(2);
   }
 
@@ -128,7 +119,7 @@ public abstract class StackBase extends FreeableBase
 
   /**
    * Returns the number of channels per voxel
-   * 
+   *
    * @return number of channels
    */
   public long getNumberOfChannels()
@@ -169,8 +160,7 @@ public abstract class StackBase extends FreeableBase
   @Override
   public void release()
   {
-    if (mStackRecycler != null)
-      mStackRecycler.release(this);
+    if (mStackRecycler != null) mStackRecycler.release(this);
   }
 
   @Override
@@ -188,14 +178,7 @@ public abstract class StackBase extends FreeableBase
   @Override
   public String toString()
   {
-    return String.format("StackBase [index=%d, timestamp=%d ns, voxeldim=[%g,%g,%g], is-released=%s, recycler=%s]",
-                         getMetaData().getIndex(),
-                         getMetaData().getTimeStampInNanoseconds(),
-                         getMetaData().getVoxelDimX(),
-                         getMetaData().getVoxelDimY(),
-                         getMetaData().getVoxelDimZ(),
-                         mIsReleased,
-                         mStackRecycler);
+    return String.format("StackBase [index=%d, timestamp=%d ns, voxeldim=[%g,%g,%g], is-released=%s, recycler=%s]", getMetaData().getIndex(), getMetaData().getTimeStampInNanoseconds(), getMetaData().getVoxelDimX(), getMetaData().getVoxelDimY(), getMetaData().getVoxelDimZ(), mIsReleased, mStackRecycler);
   }
 
 }

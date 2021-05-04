@@ -4,21 +4,18 @@ import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
 import clearcontrol.core.math.argmax.ComputeFitError;
 import clearcontrol.core.math.argmax.Fitting1DBase;
 import clearcontrol.core.math.argmax.Fitting1DInterface;
-
 import org.apache.commons.math3.analysis.function.Gaussian;
 import org.apache.commons.math3.fitting.GaussianCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
 
 /**
  * Gaussian fit argmax finder.
- * 
+ * <p>
  * Fits a Gaussian and returns the Gaussian mean center as argmax.
  *
  * @author royer
  */
-public class GaussianFitArgMaxFinder extends Fitting1DBase implements
-                                     ArgMaxFinder1DInterface,
-                                     Fitting1DInterface
+public class GaussianFitArgMaxFinder extends Fitting1DBase implements ArgMaxFinder1DInterface, Fitting1DInterface
 {
 
   private double mLastMean;
@@ -27,7 +24,6 @@ public class GaussianFitArgMaxFinder extends Fitting1DBase implements
 
   /**
    * Instantiates an argmax finder.
-   * 
    */
   public GaussianFitArgMaxFinder()
   {
@@ -36,24 +32,19 @@ public class GaussianFitArgMaxFinder extends Fitting1DBase implements
 
   /**
    * Instantiates an argmax finder with a given number of iterations.
-   * 
-   * @param pMaxIterations
-   *          max iterations
+   *
+   * @param pMaxIterations max iterations
    */
   public GaussianFitArgMaxFinder(int pMaxIterations)
   {
     super();
-    mGaussianCurveFitter =
-                         GaussianCurveFitter.create()
-                                            .withMaxIterations(pMaxIterations);
+    mGaussianCurveFitter = GaussianCurveFitter.create().withMaxIterations(pMaxIterations);
   }
 
   @Override
   public Double argmax(double[] pX, double[] pY)
   {
-    if (mGaussian == null)
-      if (fit(pX, pY) == null)
-        return null;
+    if (mGaussian == null) if (fit(pX, pY) == null) return null;
 
     mGaussian = null;
     return mLastMean;
@@ -62,8 +53,7 @@ public class GaussianFitArgMaxFinder extends Fitting1DBase implements
   @Override
   public double[] fit(double[] pX, double[] pY)
   {
-    WeightedObservedPoints lObservedPoints =
-                                           new WeightedObservedPoints();
+    WeightedObservedPoints lObservedPoints = new WeightedObservedPoints();
 
     for (int i = 0; i < pX.length; i++)
       lObservedPoints.add(pX[i], pY[i]);
@@ -72,8 +62,7 @@ public class GaussianFitArgMaxFinder extends Fitting1DBase implements
 
     try
     {
-      double[] lFitInfo =
-                        mGaussianCurveFitter.fit(lObservedPoints.toList());
+      double[] lFitInfo = mGaussianCurveFitter.fit(lObservedPoints.toList());
       // System.out.println(Arrays.toString(lFitInfo));
 
       double lNorm = lFitInfo[0];
@@ -92,8 +81,7 @@ public class GaussianFitArgMaxFinder extends Fitting1DBase implements
       mRMSD = ComputeFitError.rmsd(pY, lFittedY);
 
       return lFittedY;
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       return null;
     }
@@ -102,7 +90,7 @@ public class GaussianFitArgMaxFinder extends Fitting1DBase implements
 
   /**
    * Returns Gaussian function for last fit.
-   * 
+   *
    * @return last Gaussian fit function
    */
   public Gaussian getFunction()
@@ -113,9 +101,7 @@ public class GaussianFitArgMaxFinder extends Fitting1DBase implements
   @Override
   public String toString()
   {
-    return String.format("GaussianFitArgMaxFinder [mLastMean=%s, mGaussian=%s]",
-                         mLastMean,
-                         mGaussian);
+    return String.format("GaussianFitArgMaxFinder [mLastMean=%s, mGaussian=%s]", mLastMean, mGaussian);
   }
 
 }

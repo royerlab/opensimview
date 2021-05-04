@@ -4,7 +4,7 @@ import javafx.scene.chart.XYChart.Series;
 
 /**
  * MultiChartListItem wraps a series and a label for it.
- * 
+ *
  * @author royer
  */
 public class MultiChartListItem
@@ -14,14 +14,11 @@ public class MultiChartListItem
 
   /**
    * Instantiates a chart series
-   * 
-   * @param pName
-   *          series name
-   * @param pSeries
-   *          series
+   *
+   * @param pName   series name
+   * @param pSeries series
    */
-  public MultiChartListItem(String pName,
-                            Series<Number, Number> pSeries)
+  public MultiChartListItem(String pName, Series<Number, Number> pSeries)
   {
     super();
     mName = pName;
@@ -30,7 +27,7 @@ public class MultiChartListItem
 
   /**
    * Returns series
-   * 
+   *
    * @return series
    */
   public Series<Number, Number> getSeries()
@@ -49,28 +46,21 @@ public class MultiChartListItem
   {
     final int prime = 31;
     int result = 1;
-    result = prime * result
-             + ((mSeries == null) ? 0 : mSeries.hashCode());
+    result = prime * result + ((mSeries == null) ? 0 : mSeries.hashCode());
     return result;
   }
 
   @Override
   public boolean equals(Object obj)
   {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     MultiChartListItem other = (MultiChartListItem) obj;
     if (mSeries == null)
     {
-      if (other.mSeries != null)
-        return false;
-    }
-    else if (!mSeries.equals(other.mSeries))
-      return false;
+      if (other.mSeries != null) return false;
+    } else if (!mSeries.equals(other.mSeries)) return false;
     return true;
   }
 

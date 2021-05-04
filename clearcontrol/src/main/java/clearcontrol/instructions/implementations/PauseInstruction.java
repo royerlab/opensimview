@@ -11,9 +11,7 @@ import clearcontrol.util.TimeFormat;
  */
 public class PauseInstruction extends InstructionBase implements InstructionInterface
 {
-  BoundedVariable<Integer>
-      mPauseTimeInMilliseconds =
-      new BoundedVariable<>("Pause in ms", 0, 0, Integer.MAX_VALUE);
+  BoundedVariable<Integer> mPauseTimeInMilliseconds = new BoundedVariable<>("Pause in ms", 0, 0, Integer.MAX_VALUE);
 
   /**
    * INstanciates a virtual device with a given name
@@ -34,35 +32,39 @@ public class PauseInstruction extends InstructionBase implements InstructionInte
     super(pName);
   }
 
-  @Override public boolean initialize()
+  @Override
+  public boolean initialize()
   {
     return true;
   }
 
-  @Override public boolean enqueue(long pTimePoint)
+  @Override
+  public boolean enqueue(long pTimePoint)
   {
     try
     {
       Thread.sleep(mPauseTimeInMilliseconds.get());
-    }
-    catch (InterruptedException e)
+    } catch (InterruptedException e)
     {
       e.printStackTrace();
     }
     return true;
   }
 
-  @Override public PauseInstruction copy()
+  @Override
+  public PauseInstruction copy()
   {
     return new PauseInstruction(mPauseTimeInMilliseconds.get());
   }
 
-  @Override public String toString()
+  @Override
+  public String toString()
   {
     return "Timing: Pause " + TimeFormat.humanReadableTime(mPauseTimeInMilliseconds.get());
   }
 
-  @Override public String getName()
+  @Override
+  public String getName()
   {
     return toString();
   }

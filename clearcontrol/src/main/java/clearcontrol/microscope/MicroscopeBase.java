@@ -1,17 +1,5 @@
 package clearcontrol.microscope;
 
-import static java.lang.Math.max;
-
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.ReentrantLock;
-
 import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
 import clearcontrol.core.concurrent.future.FutureBooleanList;
 import clearcontrol.core.configuration.MachineConfiguration;
@@ -41,21 +29,21 @@ import clearcontrol.stack.processor.StackProcessingPipelineInterface;
 import clearcontrol.stack.processor.StackProcessorInterface;
 import coremem.recycling.RecyclerInterface;
 
+import java.util.ArrayList;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static java.lang.Math.max;
+
 /**
  * Microscope base class providing common fields and methods for all microscopes
  *
+ * @param <M> microscope type
+ * @param <Q> queue type
  * @author royer
- * @param <M>
- *          microscope type
- * @param <Q>
- *          queue type
  */
-public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends MicroscopeQueueBase<M, Q>>
-                                    extends VirtualDevice implements
-                                    MicroscopeInterface<Q>,
-                                    StartStopDeviceInterface,
-                                    AsynchronousSchedulerFeature,
-                                    LoggingFeature
+public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends MicroscopeQueueBase<M, Q>> extends VirtualDevice implements MicroscopeInterface<Q>, StartStopDeviceInterface, AsynchronousSchedulerFeature, LoggingFeature
 {
 
   protected final StackRecyclerManager mStackRecyclerManager;
@@ -64,13 +52,10 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   protected volatile long mAverageTimeInNS;
   private volatile boolean mSimulation;
 
-  private final ArrayList<Variable<Double>> mCameraPixelSizeInNanometerVariableList =
-                                                                                    new ArrayList<>();
+  private final ArrayList<Variable<Double>> mCameraPixelSizeInNanometerVariableList = new ArrayList<>();
 
   // Played queue variable:
-  private final Variable<Q> mPlayedQueueVariable =
-                                                 new Variable<Q>("LastPlayedQueue",
-                                                                 null);
+  private final Variable<Q> mPlayedQueueVariable = new Variable<Q>("LastPlayedQueue", null);
 
   // Stack processing pipeline:
   protected volatile StackProcessingPipelineInterface mStackProcessingPipeline;
@@ -79,22 +64,16 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   protected ReentrantLock mMasterLock = new ReentrantLock();
 
   //
-  protected AtomicReference<Object> mCurrentTask =
-                                                 new AtomicReference<>();
+  protected AtomicReference<Object> mCurrentTask = new AtomicReference<>();
 
   /**
    * Instantiates the microscope base class.
-   * 
-   * @param pDeviceName
-   *          device name
-   * @param pMaxStackProcessingQueueLength
-   *          max stack processing queue lengths
-   * @param pThreadPoolSize
-   *          number of threads in execution pool
+   *
+   * @param pDeviceName                    device name
+   * @param pMaxStackProcessingQueueLength max stack processing queue lengths
+   * @param pThreadPoolSize                number of threads in execution pool
    */
-  public MicroscopeBase(String pDeviceName,
-                        int pMaxStackProcessingQueueLength,
-                        int pThreadPoolSize)
+  public MicroscopeBase(String pDeviceName, int pMaxStackProcessingQueueLength, int pThreadPoolSize)
   {
     super(pDeviceName);
 
@@ -105,41 +84,21 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
 
     for (int i = 0; i < 128; i++)
     {
-      Double lPixelSizeInNanometers =
-                                    MachineConfiguration.get()
-                                                        .getDoubleProperty("device.camera"
-                                                                           + i
-                                                                           + ".pixelsizenm",
-                                                                           null);
+      Double lPixelSizeInNanometers = MachineConfiguration.get().getDoubleProperty("device.camera" + i + ".pixelsizenm", null);
 
-      if (lPixelSizeInNanometers == null)
-        break;
+      if (lPixelSizeInNanometers == null) break;
 
-      Variable<Double> lPixelSizeInNanometersVariable =
-                                                      new Variable<Double>("Camera"
-                                                                           + i
-                                                                           + "PixelSizeNm",
-                                                                           lPixelSizeInNanometers);
+      Variable<Double> lPixelSizeInNanometersVariable = new Variable<Double>("Camera" + i + "PixelSizeNm", lPixelSizeInNanometers);
       mCameraPixelSizeInNanometerVariableList.add(lPixelSizeInNanometersVariable);
     }
 
     if (pThreadPoolSize <= 1)
-      mStackProcessingPipeline =
-                               new AsynchronousStackProcessorPipeline("Stack Pipeline",
-                                                                      mStackRecyclerManager,
-                                                                      pMaxStackProcessingQueueLength);
+      mStackProcessingPipeline = new AsynchronousStackProcessorPipeline("Stack Pipeline", mStackRecyclerManager, pMaxStackProcessingQueueLength);
     else
-      mStackProcessingPipeline =
-                               new AsynchronousPoolStackProcessorPipeline("Stack Pipeline",
-                                                                          mStackRecyclerManager,
-                                                                          pMaxStackProcessingQueueLength,
-                                                                          pThreadPoolSize);
+      mStackProcessingPipeline = new AsynchronousPoolStackProcessorPipeline("Stack Pipeline", mStackRecyclerManager, pMaxStackProcessingQueueLength, pThreadPoolSize);
 
-    CleanupStackVariable lCleanupStackVariable =
-                                               new CleanupStackVariable("CleanupStackVariable",
-                                                                        3);
-    mStackProcessingPipeline.getOutputVariable()
-                            .sendUpdatesTo(lCleanupStackVariable);
+    CleanupStackVariable lCleanupStackVariable = new CleanupStackVariable("CleanupStackVariable", 3);
+    mStackProcessingPipeline.getOutputVariable().sendUpdatesTo(lCleanupStackVariable);
 
     /*
     mStackProcessingPipeline.getInputVariable()
@@ -170,9 +129,8 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
 
   /**
    * Executes a portion of code while holding the master lock.
-   * 
-   * @param pCallable
-   *          callable to execute
+   *
+   * @param pCallable callable to execute
    * @return return of the callable
    */
   public <R> R lock(Callable<R> pCallable)
@@ -181,17 +139,14 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
     try
     {
       return pCallable.call();
-    }
-    catch (Exception e)
+    } catch (Exception e)
     {
       String lMessage = "Exception wile executing locked code";
       severe(lMessage);
       throw new RuntimeException(lMessage, e);
-    }
-    finally
+    } finally
     {
-      if (getMasterLock().isHeldByCurrentThread())
-        getMasterLock().unlock();
+      if (getMasterLock().isHeldByCurrentThread()) getMasterLock().unlock();
     }
   }
 
@@ -251,9 +206,7 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
     {
       if (lDevice instanceof HasChangeListenerInterface)
       {
-        @SuppressWarnings("unchecked")
-        final HasChangeListenerInterface<VirtualDevice> lHasChangeListenersInterface =
-                                                                                     (HasChangeListenerInterface<VirtualDevice>) lDevice;
+        @SuppressWarnings("unchecked") final HasChangeListenerInterface<VirtualDevice> lHasChangeListenersInterface = (HasChangeListenerInterface<VirtualDevice>) lDevice;
         lHasChangeListenersInterface.addChangeListener(pChangeListener);
       }
     }
@@ -268,9 +221,7 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
 
       if (lDevice instanceof HasChangeListenerInterface)
       {
-        @SuppressWarnings("unchecked")
-        final HasChangeListenerInterface<VirtualDevice> lHasChangeListenersInterface =
-                                                                                     (HasChangeListenerInterface<VirtualDevice>) lDevice;
+        @SuppressWarnings("unchecked") final HasChangeListenerInterface<VirtualDevice> lHasChangeListenersInterface = (HasChangeListenerInterface<VirtualDevice>) lDevice;
         lHasChangeListenersInterface.removeChangeListener(pChangeListener);
       }
     }
@@ -279,8 +230,7 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   @Override
   public AcquisitionStateManager<?> addAcquisitionStateManager()
   {
-    AcquisitionStateManager<?> lAcquisitionStateManager =
-                                                        new AcquisitionStateManager<>(this);
+    AcquisitionStateManager<?> lAcquisitionStateManager = new AcquisitionStateManager<>(this);
     addDevice(0, lAcquisitionStateManager);
     return lAcquisitionStateManager;
   }
@@ -292,15 +242,9 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   }
 
   @Override
-  public void addStackProcessor(StackProcessorInterface pStackProcessor,
-                                String pRecyclerName,
-                                int pMaximumNumberOfLiveObjects,
-                                int pMaximumNumberOfAvailableObjects)
+  public void addStackProcessor(StackProcessorInterface pStackProcessor, String pRecyclerName, int pMaximumNumberOfLiveObjects, int pMaximumNumberOfAvailableObjects)
   {
-    mStackProcessingPipeline.addStackProcessor(pStackProcessor,
-                                               pRecyclerName,
-                                               pMaximumNumberOfLiveObjects,
-                                               pMaximumNumberOfAvailableObjects);
+    mStackProcessingPipeline.addStackProcessor(pStackProcessor, pRecyclerName, pMaximumNumberOfLiveObjects, pMaximumNumberOfAvailableObjects);
   }
 
   @Override
@@ -330,7 +274,8 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   @Override
   public boolean open()
   {
-    return lock(() -> {
+    return lock(() ->
+    {
       boolean lIsOpen = true;
 
       for (final Object lDevice : mDeviceLists.getAllDeviceList())
@@ -338,15 +283,12 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
 
         if (lDevice instanceof OpenCloseDeviceInterface)
         {
-          final OpenCloseDeviceInterface lOpenCloseDevice =
-                                                          (OpenCloseDeviceInterface) lDevice;
+          final OpenCloseDeviceInterface lOpenCloseDevice = (OpenCloseDeviceInterface) lDevice;
 
           info("Opening device: " + lDevice);
           final boolean lResult = lOpenCloseDevice.open();
-          if (lResult)
-            info("Successfully opened device: " + lDevice);
-          else
-            warning("Failed to open device: " + lDevice);
+          if (lResult) info("Successfully opened device: " + lDevice);
+          else warning("Failed to open device: " + lDevice);
 
           lIsOpen &= lResult;
         }
@@ -359,22 +301,20 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   @Override
   public boolean close()
   {
-    return lock(() -> {
+    return lock(() ->
+    {
       boolean lIsClosed = true;
       for (final Object lDevice : mDeviceLists.getAllDeviceList())
       {
         if (lDevice instanceof OpenCloseDeviceInterface)
         {
-          final OpenCloseDeviceInterface lOpenCloseDevice =
-                                                          (OpenCloseDeviceInterface) lDevice;
+          final OpenCloseDeviceInterface lOpenCloseDevice = (OpenCloseDeviceInterface) lDevice;
 
           info("Closing device: " + lDevice);
           boolean lResult = lOpenCloseDevice.close();
 
-          if (lResult)
-            info("Successfully closed device: " + lDevice);
-          else
-            warning("Failed to close device: " + lDevice);
+          if (lResult) info("Successfully closed device: " + lDevice);
+          else warning("Failed to close device: " + lDevice);
 
           lIsClosed &= lResult;
         }
@@ -389,22 +329,20 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   @Override
   public boolean start()
   {
-    return lock(() -> {
+    return lock(() ->
+    {
       boolean lIsStarted = true;
       for (final Object lDevice : mDeviceLists.getAllDeviceList())
       {
         if (lDevice instanceof StartStopDeviceInterface)
         {
-          final StartStopDeviceInterface lStartStopDevice =
-                                                          (StartStopDeviceInterface) lDevice;
+          final StartStopDeviceInterface lStartStopDevice = (StartStopDeviceInterface) lDevice;
 
           info("Starting device: " + lDevice);
           boolean lResult = lStartStopDevice.start();
 
-          if (lResult)
-            info("Successfully started device: " + lDevice);
-          else
-            warning("Failed to start device: " + lDevice);
+          if (lResult) info("Successfully started device: " + lDevice);
+          else warning("Failed to start device: " + lDevice);
 
           lIsStarted &= lResult;
         }
@@ -417,22 +355,20 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   @Override
   public boolean stop()
   {
-    return lock(() -> {
+    return lock(() ->
+    {
       boolean lIsStopped = true;
       for (final Object lDevice : mDeviceLists.getAllDeviceList())
       {
         if (lDevice instanceof StartStopDeviceInterface)
         {
-          final StartStopDeviceInterface lStartStopDevice =
-                                                          (StartStopDeviceInterface) lDevice;
+          final StartStopDeviceInterface lStartStopDevice = (StartStopDeviceInterface) lDevice;
 
           info("Stoping device: " + lDevice);
           boolean lResult = lStartStopDevice.stop();
 
-          if (lResult)
-            info("Successfully stopped device: " + lDevice);
-          else
-            warning("Failed to stop device: " + lDevice);
+          if (lResult) info("Successfully stopped device: " + lDevice);
+          else warning("Failed to stop device: " + lDevice);
 
           lIsStopped &= lResult;
         }
@@ -447,8 +383,7 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
     boolean lIsActive = true;
     if (lDevice instanceof ActivableDeviceInterface)
     {
-      ActivableDeviceInterface lActivableDeviceInterface =
-                                                         (ActivableDeviceInterface) lDevice;
+      ActivableDeviceInterface lActivableDeviceInterface = (ActivableDeviceInterface) lDevice;
       lIsActive = lActivableDeviceInterface.isActive();
     }
     return lIsActive;
@@ -470,28 +405,15 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   @Override
   public Variable<StackInterface> getCameraStackVariable(int pIndex)
   {
-    return mDeviceLists.getDevice(StackCameraDeviceInterface.class,
-                                  pIndex)
-                       .getStackVariable();
+    return mDeviceLists.getDevice(StackCameraDeviceInterface.class, pIndex).getStackVariable();
 
   }
 
   @Override
-  public void useRecycler(final String pName,
-                          final int pMinimumNumberOfAvailableStacks,
-                          final int pMaximumNumberOfAvailableObjects,
-                          final int pMaximumNumberOfLiveObjects)
+  public void useRecycler(final String pName, final int pMinimumNumberOfAvailableStacks, final int pMaximumNumberOfAvailableObjects, final int pMaximumNumberOfLiveObjects)
   {
-    int lNumberOfStackCameraDevices =
-                                    getNumberOfDevices(StackCameraDeviceInterface.class);
-    RecyclerInterface<StackInterface, StackRequest> lRecycler =
-                                                              mStackRecyclerManager.getRecycler(pName,
-                                                                                                max(1,
-                                                                                                    lNumberOfStackCameraDevices
-                                                                                                       * pMaximumNumberOfAvailableObjects),
-                                                                                                max(1,
-                                                                                                    1 + lNumberOfStackCameraDevices
-                                                                                                        * pMaximumNumberOfLiveObjects));
+    int lNumberOfStackCameraDevices = getNumberOfDevices(StackCameraDeviceInterface.class);
+    RecyclerInterface<StackInterface, StackRequest> lRecycler = mStackRecyclerManager.getRecycler(pName, max(1, lNumberOfStackCameraDevices * pMaximumNumberOfAvailableObjects), max(1, 1 + lNumberOfStackCameraDevices * pMaximumNumberOfLiveObjects));
 
     // for (int i = 0; i < lNumberOfStackCameraDevices; i++)
     // getDevice(StackCameraDeviceInterface.class,
@@ -503,29 +425,23 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   @Override
   public void setRecycler(RecyclerInterface<StackInterface, StackRequest> pRecycler)
   {
-    int lNumberOfStackCameraDevices =
-                                    getDeviceLists().getNumberOfDevices(StackCameraDeviceInterface.class);
+    int lNumberOfStackCameraDevices = getDeviceLists().getNumberOfDevices(StackCameraDeviceInterface.class);
     for (int i = 0; i < lNumberOfStackCameraDevices; i++)
       setRecycler(i, pRecycler);
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public void setRecycler(int pStackCameraDeviceIndex,
-                          RecyclerInterface<StackInterface, StackRequest> pRecycler)
+  public void setRecycler(int pStackCameraDeviceIndex, RecyclerInterface<StackInterface, StackRequest> pRecycler)
   {
-    getDeviceLists().getDevice(StackCameraDeviceInterface.class,
-                               pStackCameraDeviceIndex)
-                    .setStackRecycler(pRecycler);
+    getDeviceLists().getDevice(StackCameraDeviceInterface.class, pStackCameraDeviceIndex).setStackRecycler(pRecycler);
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public RecyclerInterface<StackInterface, StackRequest> getRecycler(int pStackCameraDeviceIndex)
   {
-    return getDeviceLists().getDevice(StackCameraDeviceInterface.class,
-                                      pStackCameraDeviceIndex)
-                           .getStackRecycler();
+    return getDeviceLists().getDevice(StackCameraDeviceInterface.class, pStackCameraDeviceIndex).getStackRecycler();
   }
 
   @Override
@@ -546,13 +462,13 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   @Override
   public FutureBooleanList playQueue(Q pQueue)
   {
-    return lock(() -> {
+    return lock(() ->
+    {
       GarbageCollector.trigger();
 
       getPlayedQueueVariable().set(pQueue);
 
-      final FutureBooleanList lFutureBooleanList =
-                                                 new FutureBooleanList();
+      final FutureBooleanList lFutureBooleanList = new FutureBooleanList();
 
       for (final Object lDevice : mDeviceLists.getAllDeviceList())
       {
@@ -560,19 +476,13 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
         if (lDevice instanceof QueueDeviceInterface)
         {
           /*info("playQueue() on device: %s \n", lDevice);/**/
-          @SuppressWarnings("unchecked")
-          final QueueDeviceInterface<QueueInterface> lStateQueueDeviceInterface =
-                                                                                (QueueDeviceInterface<QueueInterface>) lDevice;
+          @SuppressWarnings("unchecked") final QueueDeviceInterface<QueueInterface> lStateQueueDeviceInterface = (QueueDeviceInterface<QueueInterface>) lDevice;
 
-          QueueInterface lDeviceQueue =
-                                      pQueue.getDeviceQueue(lStateQueueDeviceInterface);
+          QueueInterface lDeviceQueue = pQueue.getDeviceQueue(lStateQueueDeviceInterface);
 
-          final Future<Boolean> lPlayQueueFuture =
-                                                 lStateQueueDeviceInterface.playQueue(lDeviceQueue);
+          final Future<Boolean> lPlayQueueFuture = lStateQueueDeviceInterface.playQueue(lDeviceQueue);
 
-          if (lPlayQueueFuture != null)
-            lFutureBooleanList.addFuture(lDevice.toString(),
-                                         lPlayQueueFuture);
+          if (lPlayQueueFuture != null) lFutureBooleanList.addFuture(lDevice.toString(), lPlayQueueFuture);
         }
       }
 
@@ -581,67 +491,50 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   }
 
   @Override
-  public Boolean playQueueAndWait(Q pQueue,
-                                  long pTimeOut,
-                                  TimeUnit pTimeUnit) throws InterruptedException,
-                                                      ExecutionException,
-                                                      TimeoutException
+  public Boolean playQueueAndWait(Q pQueue, long pTimeOut, TimeUnit pTimeUnit) throws InterruptedException, ExecutionException, TimeoutException
   {
-    return lock(() -> {
+    return lock(() ->
+    {
       final FutureBooleanList lPlayQueue = playQueue(pQueue);
       return lPlayQueue.get(pTimeOut, pTimeUnit);
     });
   }
 
   @Override
-  public Boolean playQueueAndWaitForStacks(Q pQueue,
-                                           long pTimeOut,
-                                           TimeUnit pTimeUnit) throws InterruptedException,
-                                                               ExecutionException,
-                                                               TimeoutException
+  public Boolean playQueueAndWaitForStacks(Q pQueue, long pTimeOut, TimeUnit pTimeUnit) throws InterruptedException, ExecutionException, TimeoutException
   {
-    return lock(() -> {
+    return lock(() ->
+    {
 
-      int lNumberOfStackCameras =
-                                getDeviceLists().getNumberOfDevices(StackCameraDeviceInterface.class);
-      CountDownLatch[] lStacksReceivedLatches =
-                                              new CountDownLatch[lNumberOfStackCameras];
+      int lNumberOfStackCameras = getDeviceLists().getNumberOfDevices(StackCameraDeviceInterface.class);
+      CountDownLatch[] lStacksReceivedLatches = new CountDownLatch[lNumberOfStackCameras];
 
       mAverageTimeInNS = 0;
 
-      ArrayList<VariableSetListener<StackInterface>> lListenerList =
-                                                                   new ArrayList<>();
+      ArrayList<VariableSetListener<StackInterface>> lListenerList = new ArrayList<>();
       for (int i = 0; i < lNumberOfStackCameras; i++)
       {
         lStacksReceivedLatches[i] = new CountDownLatch(1);
 
         final int fi = i;
 
-        VariableSetListener<StackInterface> lVariableSetListener =
-                                                                 new VariableSetListener<StackInterface>()
-                                                                 {
+        VariableSetListener<StackInterface> lVariableSetListener = new VariableSetListener<StackInterface>()
+        {
 
-                                                                   @Override
-                                                                   public void setEvent(StackInterface pCurrentValue,
-                                                                                        StackInterface pNewValue)
-                                                                   {
+          @Override
+          public void setEvent(StackInterface pCurrentValue, StackInterface pNewValue)
+          {
                                                                      /*System.out.println("Received: "
                                                                                         + pNewValue);/**/
-                                                                     lStacksReceivedLatches[fi].countDown();
-                                                                     if (pNewValue == null)
-                                                                       return;
-                                                                     StackMetaData lMetaData =
-                                                                                             pNewValue.getMetaData();
-                                                                     if (lMetaData == null
-                                                                         || lMetaData.getTimeStampInNanoseconds() == null)
-                                                                       return;
+            lStacksReceivedLatches[fi].countDown();
+            if (pNewValue == null) return;
+            StackMetaData lMetaData = pNewValue.getMetaData();
+            if (lMetaData == null || lMetaData.getTimeStampInNanoseconds() == null) return;
 
-                                                                     mAverageTimeInNS +=
-                                                                                      lMetaData.getTimeStampInNanoseconds()
-                                                                                         / lNumberOfStackCameras;
+            mAverageTimeInNS += lMetaData.getTimeStampInNanoseconds() / lNumberOfStackCameras;
 
-                                                                   }
-                                                                 };
+          }
+        };
 
         lListenerList.add(lVariableSetListener);
 
@@ -676,85 +569,67 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   @Override
   public StageDeviceInterface getMainStage()
   {
-    StageDeviceInterface lDevice =
-                                 getDevice(StageDeviceInterface.class,
-                                           0);
+    StageDeviceInterface lDevice = getDevice(StageDeviceInterface.class, 0);
     return lDevice;
   }
 
   @Override
   public void setStageX(double pXValue)
   {
-    Variable<Double> lTargetPositionVariable =
-                                             getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("X"));
-    if (lTargetPositionVariable != null)
-      lTargetPositionVariable.set(pXValue);
+    Variable<Double> lTargetPositionVariable = getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("X"));
+    if (lTargetPositionVariable != null) lTargetPositionVariable.set(pXValue);
   }
 
   @Override
   public void setStageY(double pYValue)
   {
-    Variable<Double> lTargetPositionVariable =
-                                             getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("Y"));
-    if (lTargetPositionVariable != null)
-      lTargetPositionVariable.set(pYValue);
+    Variable<Double> lTargetPositionVariable = getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("Y"));
+    if (lTargetPositionVariable != null) lTargetPositionVariable.set(pYValue);
   }
 
   @Override
   public void setStageZ(double pZValue)
   {
-    Variable<Double> lTargetPositionVariable =
-                                             getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("Z"));
-    if (lTargetPositionVariable != null)
-      lTargetPositionVariable.set(pZValue);
+    Variable<Double> lTargetPositionVariable = getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("Z"));
+    if (lTargetPositionVariable != null) lTargetPositionVariable.set(pZValue);
   }
 
   @Override
   public void setStageR(double pZValue)
   {
-    Variable<Double> lTargetPositionVariable =
-                                             getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("R"));
-    if (lTargetPositionVariable != null)
-      lTargetPositionVariable.set(pZValue);
+    Variable<Double> lTargetPositionVariable = getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("R"));
+    if (lTargetPositionVariable != null) lTargetPositionVariable.set(pZValue);
   }
 
   @Override
   public double getStageX()
   {
-    Variable<Double> lTargetPositionVariable =
-                                             getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("X"));
-    if (lTargetPositionVariable != null)
-      return lTargetPositionVariable.get();
+    Variable<Double> lTargetPositionVariable = getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("X"));
+    if (lTargetPositionVariable != null) return lTargetPositionVariable.get();
     return 0;
   }
 
   @Override
   public double getStageY()
   {
-    Variable<Double> lTargetPositionVariable =
-                                             getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("Y"));
-    if (lTargetPositionVariable != null)
-      return lTargetPositionVariable.get();
+    Variable<Double> lTargetPositionVariable = getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("Y"));
+    if (lTargetPositionVariable != null) return lTargetPositionVariable.get();
     return 0;
   }
 
   @Override
   public double getStageZ()
   {
-    Variable<Double> lTargetPositionVariable =
-                                             getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("Z"));
-    if (lTargetPositionVariable != null)
-      return lTargetPositionVariable.get();
+    Variable<Double> lTargetPositionVariable = getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("Z"));
+    if (lTargetPositionVariable != null) return lTargetPositionVariable.get();
     return 0;
   }
 
   @Override
   public double getStageR()
   {
-    Variable<Double> lTargetPositionVariable =
-                                             getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("R"));
-    if (lTargetPositionVariable != null)
-      return lTargetPositionVariable.get();
+    Variable<Double> lTargetPositionVariable = getMainStage().getTargetPositionVariable(getMainStage().getDOFIndexByName("R"));
+    if (lTargetPositionVariable != null) return lTargetPositionVariable.get();
     return 0;
   }
 

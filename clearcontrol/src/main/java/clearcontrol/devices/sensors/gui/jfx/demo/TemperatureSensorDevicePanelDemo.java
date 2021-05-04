@@ -1,11 +1,10 @@
 package clearcontrol.devices.sensors.gui.jfx.demo;
 
+import clearcontrol.devices.sensors.devices.sim.TemperatureSensorDeviceSimulator;
+import clearcontrol.devices.sensors.gui.jfx.TemperatureSensorDevicePanel;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import clearcontrol.devices.sensors.devices.sim.TemperatureSensorDeviceSimulator;
-import clearcontrol.devices.sensors.gui.jfx.TemperatureSensorDevicePanel;
 
 /**
  * Temperature Sensor Device Panel Demo
@@ -19,15 +18,12 @@ public class TemperatureSensorDevicePanelDemo extends Application
   public void start(Stage pPrimaryStage) throws Exception
   {
 
-    TemperatureSensorDeviceSimulator lTemperatureSensorDeviceSimulator =
-                                                                       new TemperatureSensorDeviceSimulator("demotempsesor");
+    TemperatureSensorDeviceSimulator lTemperatureSensorDeviceSimulator = new TemperatureSensorDeviceSimulator("demotempsesor");
     lTemperatureSensorDeviceSimulator.setSimLogging(true);
 
-    TemperatureSensorDevicePanel lTemperatureSensorDevicePanel =
-                                                               new TemperatureSensorDevicePanel(lTemperatureSensorDeviceSimulator);
+    TemperatureSensorDevicePanel lTemperatureSensorDevicePanel = new TemperatureSensorDevicePanel(lTemperatureSensorDeviceSimulator);
 
-    Scene scene = new Scene(lTemperatureSensorDevicePanel,
-                            javafx.scene.paint.Color.WHITE);
+    Scene scene = new Scene(lTemperatureSensorDevicePanel, javafx.scene.paint.Color.WHITE);
 
     pPrimaryStage.setTitle(this.getClass().getSimpleName());
     pPrimaryStage.setScene(scene);
@@ -41,9 +37,8 @@ public class TemperatureSensorDevicePanelDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

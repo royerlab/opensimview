@@ -11,20 +11,16 @@ public class TimeFormat
     String lPauseTimeHumanReadable = "";
     if (pPauseTimeInMilliseconds == 0)
     {
-    }
-    else if (pPauseTimeInMilliseconds < 1000)
+    } else if (pPauseTimeInMilliseconds < 1000)
     {
       lPauseTimeHumanReadable = "" + pPauseTimeInMilliseconds + " msec";
-    }
-    else if (pPauseTimeInMilliseconds < 60000)
+    } else if (pPauseTimeInMilliseconds < 60000)
     {
       lPauseTimeHumanReadable = "" + (pPauseTimeInMilliseconds / 1000) + " sec";
-    }
-    else if (pPauseTimeInMilliseconds < 3600000)
+    } else if (pPauseTimeInMilliseconds < 3600000)
     {
       lPauseTimeHumanReadable = "" + (pPauseTimeInMilliseconds / 60000) + " min";
-    }
-    else
+    } else
     {
       lPauseTimeHumanReadable = "" + (pPauseTimeInMilliseconds / 3600000) + " h";
     }

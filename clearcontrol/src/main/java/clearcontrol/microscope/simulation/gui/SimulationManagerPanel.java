@@ -14,9 +14,8 @@ public class SimulationManagerPanel extends CustomVariablePane
 
   /**
    * Instanciates a simulation manager panel.
-   * 
-   * @param pSimulationManager
-   *          simulation manager
+   *
+   * @param pSimulationManager simulation manager
    */
   public SimulationManagerPanel(SimulationManager pSimulationManager)
   {
@@ -24,10 +23,7 @@ public class SimulationManagerPanel extends CustomVariablePane
 
     addTab("Logging");
 
-    VariableToggleButton lToggleButton =
-                                       addToggleButton("Logging On",
-                                                       "Logging Off",
-                                                       pSimulationManager.getLoggingOnVariable());
+    VariableToggleButton lToggleButton = addToggleButton("Logging On", "Logging Off", pSimulationManager.getLoggingOnVariable());
 
     lToggleButton.setMinWidth(250);
 

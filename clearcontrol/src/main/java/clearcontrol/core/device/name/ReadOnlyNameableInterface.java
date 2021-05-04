@@ -9,7 +9,7 @@ public interface ReadOnlyNameableInterface
 {
   /**
    * Returns the name of this class
-   * 
+   *
    * @return name
    */
   String getName();

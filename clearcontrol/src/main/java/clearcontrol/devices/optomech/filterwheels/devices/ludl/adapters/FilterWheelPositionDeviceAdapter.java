@@ -1,6 +1,5 @@
 package clearcontrol.devices.optomech.filterwheels.devices.ludl.adapters;
 
-import clearcontrol.com.serial.adapters.SerialDeviceAdapterAdapter;
 import clearcontrol.com.serial.adapters.SerialTextDeviceAdapter;
 import clearcontrol.devices.optomech.filterwheels.devices.ludl.LudlFilterWheelDevice;
 
@@ -17,7 +16,8 @@ public class FilterWheelPositionDeviceAdapter implements SerialTextDeviceAdapter
     mLudlFilterWheelDevice = pLudlFilterWheelDevice;
   }
 
-  @Override public byte[] getGetValueCommandMessage()
+  @Override
+  public byte[] getGetValueCommandMessage()
   {
     String lMessage = "#g\n";
     return lMessage.getBytes();
@@ -27,46 +27,50 @@ public class FilterWheelPositionDeviceAdapter implements SerialTextDeviceAdapter
   public Integer parseValue(final byte[] pMessage)
   {
     Scanner lScanner = new Scanner(String.valueOf(pMessage));
-    if (lScanner.hasNextInt())
-      return lScanner.nextInt();
+    if (lScanner.hasNextInt()) return lScanner.nextInt();
     else return null;
   }
 
-  @Override public long getGetValueReturnWaitTimeInMilliseconds()
+  @Override
+  public long getGetValueReturnWaitTimeInMilliseconds()
   {
     return 0;
-  }
-
-  @Override public boolean hasResponseForGet()
-  {
-    return true;
-  }
-
-  @Override public boolean purgeAfterGet()
-  {
-    return true;
-  }
-
-  @Override public Integer clampSetValue(Integer pNewValue)
-  {
-    int lNumberOfvalidPositions = mLudlFilterWheelDevice.getValidPositions().length;
-    return pNewValue%lNumberOfvalidPositions;
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(final Integer pOldPosition,
-                                          final Integer pNewPosition)
+  public boolean hasResponseForGet()
   {
-    String lMessage = "#s"+pNewPosition.intValue()+"\n";
+    return true;
+  }
+
+  @Override
+  public boolean purgeAfterGet()
+  {
+    return true;
+  }
+
+  @Override
+  public Integer clampSetValue(Integer pNewValue)
+  {
+    int lNumberOfvalidPositions = mLudlFilterWheelDevice.getValidPositions().length;
+    return pNewValue % lNumberOfvalidPositions;
+  }
+
+  @Override
+  public byte[] getSetValueCommandMessage(final Integer pOldPosition, final Integer pNewPosition)
+  {
+    String lMessage = "#s" + pNewPosition.intValue() + "\n";
     return lMessage.getBytes();
   }
 
-  @Override public long getSetValueReturnWaitTimeInMilliseconds()
+  @Override
+  public long getSetValueReturnWaitTimeInMilliseconds()
   {
     return 0;
   }
 
-  @Override public boolean hasResponseForSet()
+  @Override
+  public boolean hasResponseForSet()
   {
     return true;
   }
@@ -74,21 +78,24 @@ public class FilterWheelPositionDeviceAdapter implements SerialTextDeviceAdapter
   @Override
   public boolean checkAcknowledgementSetValueReturnMessage(final byte[] pMessage)
   {
-    String lAcknowledgments =  new String(pMessage);
+    String lAcknowledgments = new String(pMessage);
     return lAcknowledgments.contains("done!");
   }
 
-  @Override public boolean purgeAfterSet()
+  @Override
+  public boolean purgeAfterSet()
   {
     return true;
   }
 
-  @Override public Character getGetValueReturnMessageTerminationCharacter()
+  @Override
+  public Character getGetValueReturnMessageTerminationCharacter()
   {
     return '\n';
   }
 
-  @Override public Character getSetValueReturnMessageTerminationCharacter()
+  @Override
+  public Character getSetValueReturnMessageTerminationCharacter()
   {
     return '\n';
   }

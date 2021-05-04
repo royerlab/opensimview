@@ -1,23 +1,22 @@
 package clearcontrol.gui.jfx.custom.visualconsole.demo;
 
-import java.util.concurrent.TimeUnit;
+import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsolePanel;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface;
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsolePanel;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Simulation manager demo
  *
  * @author royer
  */
-public class VisualConsoleDemo extends Application
-                               implements AsynchronousSchedulerFeature
+public class VisualConsoleDemo extends Application implements AsynchronousSchedulerFeature
 {
 
   private int mCounter;
@@ -31,69 +30,36 @@ public class VisualConsoleDemo extends Application
     stage.setTitle(VisualConsoleDemo.class.getSimpleName());
     // scene.setFill(Color.BLACK);
 
-    VisualConsoleInterface lVisualConsoleClient =
-                                                new VisualConsoleInterface()
-                                                {
-                                                };
+    VisualConsoleInterface lVisualConsoleClient = new VisualConsoleInterface()
+    {
+    };
 
-    VisualConsolePanel lVisualConsolePanel =
-                                           new VisualConsolePanel(lVisualConsoleClient);
+    VisualConsolePanel lVisualConsolePanel = new VisualConsolePanel(lVisualConsoleClient);
 
     root.getChildren().add(lVisualConsolePanel);
 
-    Runnable lRunnable = () -> {
-      lVisualConsoleClient.configureChart("A" + mCounter,
-                                          "test",
-                                          "x",
-                                          "y",
-                                          ChartType.Line);
+    Runnable lRunnable = () ->
+    {
+      lVisualConsoleClient.configureChart("A" + mCounter, "test", "x", "y", ChartType.Line);
 
-      lVisualConsoleClient.configureChart("B" + mCounter,
-                                          "test",
-                                          "x",
-                                          "y",
-                                          ChartType.Line);
+      lVisualConsoleClient.configureChart("B" + mCounter, "test", "x", "y", ChartType.Line);
 
-      lVisualConsoleClient.configureChart("C" + mCounter,
-                                          "test1",
-                                          "x",
-                                          "y",
-                                          ChartType.Scatter);
+      lVisualConsoleClient.configureChart("C" + mCounter, "test1", "x", "y", ChartType.Scatter);
 
-      lVisualConsoleClient.configureChart("C",
-                                          "testu" + mCounter,
-                                          "x",
-                                          "y",
-                                          ChartType.Scatter);
+      lVisualConsoleClient.configureChart("C", "testu" + mCounter, "x", "y", ChartType.Scatter);
 
       for (int i = 0; i < 100; i++)
       {
         double x = i;
         double y = Math.cos(0.1 * x + mCounter);
 
-        lVisualConsoleClient.addPoint("A" + mCounter,
-                                      "test",
-                                      i == 0,
-                                      x,
-                                      y);
+        lVisualConsoleClient.addPoint("A" + mCounter, "test", i == 0, x, y);
 
-        lVisualConsoleClient.addPoint("B" + mCounter,
-                                      "test",
-                                      i == 0,
-                                      x,
-                                      y);
+        lVisualConsoleClient.addPoint("B" + mCounter, "test", i == 0, x, y);
 
-        lVisualConsoleClient.addPoint("C" + mCounter,
-                                      "test1",
-                                      i == 0,
-                                      x,
-                                      y * y);
+        lVisualConsoleClient.addPoint("C" + mCounter, "test1", i == 0, x, y * y);
 
-        lVisualConsoleClient.addPoint("C",
-                                      "testu" + mCounter,
-                                      i == 0,
-                                      x,
-                                      y * (1 - y) * y);
+        lVisualConsoleClient.addPoint("C", "testu" + mCounter, i == 0, x, y * (1 - y) * y);
 
       }
 
@@ -107,9 +73,8 @@ public class VisualConsoleDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

@@ -8,32 +8,18 @@ package clearcontrol.core.units;
 @SuppressWarnings("javadoc")
 public enum SIUnit
 {
- ArbitraryUnit(OrderOfMagnitude.Unit, "AU"),
- Meter(OrderOfMagnitude.Unit, "m"),
- Gram(OrderOfMagnitude.Unit, "g"),
- Second(OrderOfMagnitude.Unit, "s"),
- Kelvin(OrderOfMagnitude.Unit, "m"),
- Mole(OrderOfMagnitude.Kilo, "mol"),
- Candela(OrderOfMagnitude.Unit, "cd"),
- Ampere(OrderOfMagnitude.Unit, "A"),
+  ArbitraryUnit(OrderOfMagnitude.Unit, "AU"), Meter(OrderOfMagnitude.Unit, "m"), Gram(OrderOfMagnitude.Unit, "g"), Second(OrderOfMagnitude.Unit, "s"), Kelvin(OrderOfMagnitude.Unit, "m"), Mole(OrderOfMagnitude.Kilo, "mol"), Candela(OrderOfMagnitude.Unit, "cd"), Ampere(OrderOfMagnitude.Unit, "A"),
 
- MilliMeter(OrderOfMagnitude.Milli, "mm"),
- MicroMeter(OrderOfMagnitude.Micro, "um"),
- NanoMeter(OrderOfMagnitude.Nano, "nm"),
- Kilogram(OrderOfMagnitude.Kilo, "Kg"),
- MilliSecond(OrderOfMagnitude.Milli, "ms"),
- MicroSecond(OrderOfMagnitude.Micro, "us");
+  MilliMeter(OrderOfMagnitude.Milli, "mm"), MicroMeter(OrderOfMagnitude.Micro, "um"), NanoMeter(OrderOfMagnitude.Nano, "nm"), Kilogram(OrderOfMagnitude.Kilo, "Kg"), MilliSecond(OrderOfMagnitude.Milli, "ms"), MicroSecond(OrderOfMagnitude.Micro, "us");
 
   private final OrderOfMagnitude mMagnitude;
   private final String mAbbreviation;
 
   /**
    * Instantiates a SI unit given a magnitude and abbreviation
-   * 
-   * @param pMagnitude
-   *          magnitiude
-   * @param pAbbreviation
-   *          abbreviation
+   *
+   * @param pMagnitude    magnitiude
+   * @param pAbbreviation abbreviation
    */
   SIUnit(OrderOfMagnitude pMagnitude, String pAbbreviation)
   {
@@ -43,7 +29,7 @@ public enum SIUnit
 
   /**
    * Returns magnitude
-   * 
+   *
    * @return magnitude
    */
   public OrderOfMagnitude getMagnitude()
@@ -53,7 +39,7 @@ public enum SIUnit
 
   /**
    * Returns the abbreviation
-   * 
+   *
    * @return abbreviation
    */
   public String getAbbreviation()
@@ -63,7 +49,7 @@ public enum SIUnit
 
   /**
    * Returns true if this unit is a base unit.
-   * 
+   *
    * @return true if base unit
    */
   public boolean isBaseUnit()

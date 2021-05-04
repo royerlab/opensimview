@@ -1,26 +1,21 @@
 package clearcontrol.devices.signalamp.devices.srs.adapters;
 
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.com.serial.adapters.SerialDeviceAdapterAdapter;
 import clearcontrol.com.serial.adapters.SerialTextDeviceAdapter;
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.devices.signalamp.devices.srs.SIM900MainframeDevice;
 import clearcontrol.devices.signalamp.devices.srs.adapters.protocol.ProtocolSIM;
 
-public abstract class SIMAdapter extends
-                                 SerialDeviceAdapterAdapter<Number>
-                                 implements
-                                 SerialTextDeviceAdapter<Number>
+import java.util.concurrent.TimeUnit;
+
+public abstract class SIMAdapter extends SerialDeviceAdapterAdapter<Number> implements SerialTextDeviceAdapter<Number>
 {
 
   private final SIM900MainframeDevice mSim900MainframeDevice;
   private final int mPort;
   private final String mVariableName;
 
-  public SIMAdapter(SIM900MainframeDevice pSim900MainframeDevice,
-                    int pPort,
-                    String pVariableName)
+  public SIMAdapter(SIM900MainframeDevice pSim900MainframeDevice, int pPort, String pVariableName)
   {
     mSim900MainframeDevice = pSim900MainframeDevice;
     mPort = pPort;
@@ -30,11 +25,8 @@ public abstract class SIMAdapter extends
   @Override
   public byte[] getGetValueCommandMessage()
   {
-    String lCommand = String.format(ProtocolSIM.cGetCommand,
-                                    mVariableName);
-    String lWrappedCommand =
-                           mSim900MainframeDevice.wrapCommand(mPort,
-                                                              lCommand);
+    String lCommand = String.format(ProtocolSIM.cGetCommand, mVariableName);
+    String lWrappedCommand = mSim900MainframeDevice.wrapCommand(mPort, lCommand);
 
     // System.out.println("GET sending: '" + lWrappedCommand + "'");
     return lWrappedCommand.getBytes();
@@ -51,20 +43,13 @@ public abstract class SIMAdapter extends
       // System.out.println("Received: '" + lAnswer + "'");
 
       int lLengthlHeaderStart = lAnswer.indexOf(',');
-      String lLengthIntLengthString =
-                                    lAnswer.substring(lLengthlHeaderStart
-                                                      + 2,
-                                                      lLengthlHeaderStart
-                                                           + 3);
+      String lLengthIntLengthString = lAnswer.substring(lLengthlHeaderStart + 2, lLengthlHeaderStart + 3);
       int lNumberOfDigits = Integer.parseInt(lLengthIntLengthString);
 
-      String lValueString = lAnswer.substring(lLengthlHeaderStart + 2
-                                              + lNumberOfDigits
-                                              + 1);
+      String lValueString = lAnswer.substring(lLengthlHeaderStart + 2 + lNumberOfDigits + 1);
 
       lValue = Double.parseDouble(lValueString.trim());
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       e.printStackTrace();
       return null;
@@ -73,24 +58,17 @@ public abstract class SIMAdapter extends
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(Number pOldValue,
-                                          Number pNewValue)
+  public byte[] getSetValueCommandMessage(Number pOldValue, Number pNewValue)
   {
 
-    final String lSetCommandString =
-                                   String.format(ProtocolSIM.cSetCommand,
-                                                 mVariableName,
-                                                 pNewValue);
+    final String lSetCommandString = String.format(ProtocolSIM.cSetCommand, mVariableName, pNewValue);
 
-    final String lWrappedSetCommandString =
-                                          mSim900MainframeDevice.wrapCommand(mPort,
-                                                                             lSetCommandString);
+    final String lWrappedSetCommandString = mSim900MainframeDevice.wrapCommand(mPort, lSetCommandString);
 
     /*System.out.println("SET sending: '" + lWrappedSetCommandString
     										+ "'");/**/
 
-    final byte[] lWrappedSetCommandBytes =
-                                         lWrappedSetCommandString.getBytes();
+    final byte[] lWrappedSetCommandBytes = lWrappedSetCommandString.getBytes();
 
     return lWrappedSetCommandBytes;
   }

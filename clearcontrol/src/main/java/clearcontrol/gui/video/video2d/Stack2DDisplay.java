@@ -1,9 +1,5 @@
 package clearcontrol.gui.video.video2d;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
-
 import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorBase;
 import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
 import clearcontrol.core.device.VirtualDevice;
@@ -15,25 +11,21 @@ import clearcontrol.stack.EmptyStack;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.imglib2.ImageJStackDisplay;
 import cleargl.ClearGLWindow;
-
-import com.jogamp.newt.event.KeyAdapter;
-import com.jogamp.newt.event.KeyEvent;
-import com.jogamp.newt.event.KeyListener;
-import com.jogamp.newt.event.MouseAdapter;
-import com.jogamp.newt.event.MouseEvent;
-
+import com.jogamp.newt.event.*;
 import coremem.ContiguousMemoryInterface;
 import coremem.enums.NativeTypeEnum;
 import coremem.exceptions.FreedException;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Stack 2D display
  *
  * @author royer
  */
-public class Stack2DDisplay extends VirtualDevice implements
-                            StackDisplayInterface,
-                            AsynchronousSchedulerFeature
+public class Stack2DDisplay extends VirtualDevice implements StackDisplayInterface, AsynchronousSchedulerFeature
 {
   private final VideoWindow mVideoWindow;
 
@@ -64,11 +56,9 @@ public class Stack2DDisplay extends VirtualDevice implements
 
   /**
    * Instantiates a stack 2D display
-   * 
-   * @param pVideoWidth
-   *          window width
-   * @param pVideoHeight
-   *          window height
+   *
+   * @param pVideoWidth  window width
+   * @param pVideoHeight window height
    */
   public Stack2DDisplay(final int pVideoWidth, final int pVideoHeight)
   {
@@ -77,52 +67,31 @@ public class Stack2DDisplay extends VirtualDevice implements
 
   /**
    * Instantiates a stack 2D display
-   * 
-   * @param pWindowName
-   *          window name
-   * @param pWindowWidth
-   *          window width
-   * @param pWindowHeight
-   *          window height
-   * @param pFlipX
-   *          flip image horizontally
+   *
+   * @param pWindowName   window name
+   * @param pWindowWidth  window width
+   * @param pWindowHeight window height
+   * @param pFlipX        flip image horizontally
    */
-  public Stack2DDisplay(final String pWindowName,
-                        final int pWindowWidth,
-                        final int pWindowHeight,
-                        final boolean pFlipX)
+  public Stack2DDisplay(final String pWindowName, final int pWindowWidth, final int pWindowHeight, final boolean pFlipX)
   {
     this(pWindowName, pWindowWidth, pWindowHeight, pFlipX, 10);
   }
 
   /**
    * Instantiates a stack 2D display
-   * 
-   * @param pWindowName
-   *          window name
-   * @param pWindowWidth
-   *          window width
-   * @param pWindowHeight
-   *          window height
-   * @param pFlipX
-   *          flip image horizontally
-   * @param pUpdaterQueueLength
-   *          updater queue length
+   *
+   * @param pWindowName         window name
+   * @param pWindowWidth        window width
+   * @param pWindowHeight       window height
+   * @param pFlipX              flip image horizontally
+   * @param pUpdaterQueueLength updater queue length
    */
-  public Stack2DDisplay(final String pWindowName,
-                        final int pWindowWidth,
-                        final int pWindowHeight,
-                        final boolean pFlipX,
-                        final int pUpdaterQueueLength)
+  public Stack2DDisplay(final String pWindowName, final int pWindowWidth, final int pWindowHeight, final boolean pFlipX, final int pUpdaterQueueLength)
   {
     super(pWindowName);
 
-    mVideoWindow =
-                 new VideoWindow(pWindowName,
-                                 NativeTypeEnum.UnsignedShort,
-                                 pWindowWidth,
-                                 pWindowHeight,
-                                 pFlipX);
+    mVideoWindow = new VideoWindow(pWindowName, NativeTypeEnum.UnsignedShort, pWindowWidth, pWindowHeight, pFlipX);
     mFlipX = pFlipX;
 
     // mVideoWindow.setVisible(true);
@@ -134,8 +103,7 @@ public class Stack2DDisplay extends VirtualDevice implements
       {
         if (pMouseEvent.isAltDown() && pMouseEvent.isButtonDown(1))
         {
-          final double nx = ((double) pMouseEvent.getX())
-                            / mVideoWindow.getWindowWidth();
+          final double nx = ((double) pMouseEvent.getX()) / mVideoWindow.getWindowWidth();
           mStackSliceNormalizedIndex.set(nx);
           displayStack(mReceivedStackCopy, true);
         }
@@ -153,22 +121,21 @@ public class Stack2DDisplay extends VirtualDevice implements
       {
         switch (pE.getKeyCode())
         {
-        case KeyEvent.VK_I:
-          try
-          {
-            mDisplayLock.lock();
-            ImageJStackDisplay.show(mReceivedStackCopy);
-            mDisplayLock.unlock();
-          }
-          catch (Throwable e)
-          {
-            e.printStackTrace();
-          }
+          case KeyEvent.VK_I:
+            try
+            {
+              mDisplayLock.lock();
+              ImageJStackDisplay.show(mReceivedStackCopy);
+              mDisplayLock.unlock();
+            } catch (Throwable e)
+            {
+              e.printStackTrace();
+            }
 
-          break;
-        case KeyEvent.VK_V:
-          openVisualisationOptionsDialog();
-          break;
+            break;
+          case KeyEvent.VK_V:
+            openVisualisationOptionsDialog();
+            break;
         }
 
       }
@@ -176,56 +143,46 @@ public class Stack2DDisplay extends VirtualDevice implements
 
     mVideoWindow.getGLWindow().addKeyListener(lKeyAdapter);
 
-    mAsynchronousDisplayUpdater =
-                                new AsynchronousProcessorBase<StackInterface, Object>("AsynchronousDisplayUpdater",
-                                                                                      pUpdaterQueueLength)
-                                {
+    mAsynchronousDisplayUpdater = new AsynchronousProcessorBase<StackInterface, Object>("AsynchronousDisplayUpdater", pUpdaterQueueLength)
+    {
 
-                                  /**
-                                   * Interface method implementation
-                                   * 
-                                   * @see clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorBase#process(java.lang.Object)
-                                   */
-                                  @Override
-                                  public Object process(final StackInterface pStack)
-                                  {
-                                    if (pStack instanceof EmptyStack)
-                                      return null;
+      /**
+       * Interface method implementation
+       *
+       * @see clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorBase#process(java.lang.Object)
+       */
+      @Override
+      public Object process(final StackInterface pStack)
+      {
+        if (pStack instanceof EmptyStack) return null;
 
-                                    try
-                                    {
-                                      if (mVideoWindow.isVisible())
-                                      {
-                                        makeCopyOfReceivedStack(pStack);
-                                        displayStack(mReceivedStackCopy,
-                                                     false);
-                                      }
-                                      forwardStack(pStack);
-                                    }
-                                    catch (FreedException e)
-                                    {
-                                      System.err.println(this.getClass()
-                                                             .getSimpleName()
-                                                         + ": Underlying ressource has been freed while processing last stack");
-                                    }
+        try
+        {
+          if (mVideoWindow.isVisible())
+          {
+            makeCopyOfReceivedStack(pStack);
+            displayStack(mReceivedStackCopy, false);
+          }
+          forwardStack(pStack);
+        } catch (FreedException e)
+        {
+          System.err.println(this.getClass().getSimpleName() + ": Underlying ressource has been freed while processing last stack");
+        }
 
-                                    return null;
-                                  }
+        return null;
+      }
 
-                                };
+    };
 
     mAsynchronousDisplayUpdater.start();
 
-    mInputStackVariable = new Variable<StackInterface>(pWindowName
-                                                       + "StackInput")
+    mInputStackVariable = new Variable<StackInterface>(pWindowName + "StackInput")
     {
 
       @Override
-      public StackInterface setEventHook(final StackInterface pOldStack,
-                                         final StackInterface pNewStack)
+      public StackInterface setEventHook(final StackInterface pOldStack, final StackInterface pNewStack)
       {
-        if (!mAsynchronousDisplayUpdater.passOrFail(pNewStack))
-          forwardStack(pNewStack);
+        if (!mAsynchronousDisplayUpdater.passOrFail(pNewStack)) forwardStack(pNewStack);
         return super.setEventHook(pOldStack, pNewStack);
       }
 
@@ -234,8 +191,7 @@ public class Stack2DDisplay extends VirtualDevice implements
     mDisplayOn = new Variable<Boolean>("DisplayOn", false)
     {
       @Override
-      public Boolean setEventHook(final Boolean pOldValue,
-                                  final Boolean pNewValue)
+      public Boolean setEventHook(final Boolean pOldValue, final Boolean pNewValue)
       {
         final boolean lDisplayOn = pNewValue;
         mVideoWindow.setDisplayOn(lDisplayOn);
@@ -243,27 +199,21 @@ public class Stack2DDisplay extends VirtualDevice implements
       }
     };
 
-    mManualMinMaxIntensity =
-                           new Variable<Boolean>("ManualMinMaxIntensity",
-                                                 false)
-                           {
-                             @Override
-                             public Boolean setEventHook(final Boolean pOldValue,
-                                                         final Boolean pNewValue)
-                             {
-                               final boolean lManualMinMax =
-                                                           pNewValue;
-                               mVideoWindow.setManualMinMax(lManualMinMax);
-                               return super.setEventHook(pOldValue,
-                                                         pNewValue);
-                             }
-                           };
+    mManualMinMaxIntensity = new Variable<Boolean>("ManualMinMaxIntensity", false)
+    {
+      @Override
+      public Boolean setEventHook(final Boolean pOldValue, final Boolean pNewValue)
+      {
+        final boolean lManualMinMax = pNewValue;
+        mVideoWindow.setManualMinMax(lManualMinMax);
+        return super.setEventHook(pOldValue, pNewValue);
+      }
+    };
 
     mMinimumIntensity = new Variable<Double>("MinimumIntensity", 0.0)
     {
       @Override
-      public Double setEventHook(final Double pOldValue,
-                                 final Double pNewMinIntensity)
+      public Double setEventHook(final Double pOldValue, final Double pNewMinIntensity)
       {
         final double lMinIntensity = Math.pow(pNewMinIntensity, 6);
         mVideoWindow.setMinIntensity(lMinIntensity);
@@ -274,8 +224,7 @@ public class Stack2DDisplay extends VirtualDevice implements
     mMaximumIntensity = new Variable<Double>("MaximumIntensity", 1.0)
     {
       @Override
-      public Double setEventHook(final Double pOldValue,
-                                 final Double pNewMaxIntensity)
+      public Double setEventHook(final Double pOldValue, final Double pNewMaxIntensity)
       {
         final double lMaxIntensity = Math.pow(pNewMaxIntensity, 6);
         mVideoWindow.setMaxIntensity(lMaxIntensity);
@@ -283,42 +232,33 @@ public class Stack2DDisplay extends VirtualDevice implements
       }
     };
 
-    mStackSliceNormalizedIndex =
-                               new Variable<Double>("StackSliceNormalizedIndex",
-                                                    Double.NaN);
+    mStackSliceNormalizedIndex = new Variable<Double>("StackSliceNormalizedIndex", Double.NaN);
 
-    Runnable lAutoRescaleRunnable = () -> {
+    Runnable lAutoRescaleRunnable = () ->
+    {
       boolean lTryLock = false;
       try
       {
         lTryLock = mDisplayLock.tryLock(1, TimeUnit.MILLISECONDS);
         if (lTryLock && mReceivedStackCopy != null)
         {
-          int lStackZIndex =
-                           getCurrentStackPlaneIndex(mReceivedStackCopy);
-          ContiguousMemoryInterface lContiguousMemory =
-                                                      mReceivedStackCopy.getContiguousMemory(lStackZIndex);
+          int lStackZIndex = getCurrentStackPlaneIndex(mReceivedStackCopy);
+          ContiguousMemoryInterface lContiguousMemory = mReceivedStackCopy.getContiguousMemory(lStackZIndex);
 
-          if (mVideoWindow != null)
-            mVideoWindow.fastMinMaxSampling(lContiguousMemory);
+          if (mVideoWindow != null) mVideoWindow.fastMinMaxSampling(lContiguousMemory);
 
         }
-      }
-      catch (Throwable e)
+      } catch (Throwable e)
       {
         e.printStackTrace();
-      }
-      finally
+      } finally
       {
-        if (lTryLock)
-          mDisplayLock.unlock();
+        if (lTryLock) mDisplayLock.unlock();
       }
 
     };
 
-    scheduleAtFixedRate(lAutoRescaleRunnable,
-                        10,
-                        TimeUnit.MILLISECONDS);
+    scheduleAtFixedRate(lAutoRescaleRunnable, 10, TimeUnit.MILLISECONDS);
     /**/
 
   }
@@ -332,11 +272,7 @@ public class Stack2DDisplay extends VirtualDevice implements
 
   private void makeCopyOfReceivedStack(final StackInterface pStack)
   {
-    if (mReceivedStackCopy == null
-        || mReceivedStackCopy.getWidth() != pStack.getWidth()
-        || mReceivedStackCopy.getHeight() != pStack.getHeight()
-        || mReceivedStackCopy.getDepth() != pStack.getDepth()
-        || mReceivedStackCopy.getSizeInBytes() != pStack.getSizeInBytes())
+    if (mReceivedStackCopy == null || mReceivedStackCopy.getWidth() != pStack.getWidth() || mReceivedStackCopy.getHeight() != pStack.getHeight() || mReceivedStackCopy.getDepth() != pStack.getDepth() || mReceivedStackCopy.getSizeInBytes() != pStack.getSizeInBytes())
     {
       if (mReceivedStackCopy != null)
       {
@@ -346,33 +282,27 @@ public class Stack2DDisplay extends VirtualDevice implements
         lStackToFree.free();
         mDisplayLock.unlock();
 
-      }
-      else
-        mReceivedStackCopy = pStack.allocateSameSize();
+      } else mReceivedStackCopy = pStack.allocateSameSize();
     }
 
     if (!mReceivedStackCopy.isFree())
     {
       mDisplayLock.lock();
-      mReceivedStackCopy.getContiguousMemory()
-                        .copyFrom(pStack.getContiguousMemory());
+      mReceivedStackCopy.getContiguousMemory().copyFrom(pStack.getContiguousMemory());
       mDisplayLock.unlock();
 
     }
   }
 
-  private void displayStack(final StackInterface pStack,
-                            boolean pNonBlockingLock)
+  private void displayStack(final StackInterface pStack, boolean pNonBlockingLock)
   {
     boolean lTryLock = false;
-    if (pNonBlockingLock)
-      try
-      {
-        lTryLock = mDisplayLock.tryLock(0, TimeUnit.MILLISECONDS);
-      }
-      catch (InterruptedException e)
-      {
-      }
+    if (pNonBlockingLock) try
+    {
+      lTryLock = mDisplayLock.tryLock(0, TimeUnit.MILLISECONDS);
+    } catch (InterruptedException e)
+    {
+    }
     else
     {
       mDisplayLock.lock();
@@ -392,20 +322,13 @@ public class Stack2DDisplay extends VirtualDevice implements
 
           int lStackZIndex = getCurrentStackPlaneIndex(pStack);
 
-          final ContiguousMemoryInterface lContiguousMemory =
-                                                            pStack.getContiguousMemory(lStackZIndex);
-          mVideoWindow.sendBuffer(lContiguousMemory,
-                                  lStackWidth,
-                                  lStackHeight);
+          final ContiguousMemoryInterface lContiguousMemory = pStack.getContiguousMemory(lStackZIndex);
+          mVideoWindow.sendBuffer(lContiguousMemory, lStackWidth, lStackHeight);
           mVideoWindow.waitForBufferCopy(1, TimeUnit.SECONDS);
-        }
-        else
+        } else
         {
-          final ContiguousMemoryInterface lContiguousMemory =
-                                                            pStack.getContiguousMemory(0);
-          mVideoWindow.sendBuffer(lContiguousMemory,
-                                  lStackWidth,
-                                  lStackHeight);
+          final ContiguousMemoryInterface lContiguousMemory = pStack.getContiguousMemory(0);
+          mVideoWindow.sendBuffer(lContiguousMemory, lStackWidth, lStackHeight);
           mVideoWindow.waitForBufferCopy(1, TimeUnit.SECONDS);
         }
         mVideoWindow.setWidth(lStackWidth);
@@ -421,14 +344,10 @@ public class Stack2DDisplay extends VirtualDevice implements
   {
     long lStackDepth = pStack.getDepth();
 
-    int lStackZIndex = (int) (mStackSliceNormalizedIndex.get()
-                              * lStackDepth);
-    if (lStackZIndex < 0)
-      lStackZIndex = 0;
-    else if (lStackZIndex >= lStackDepth)
-      lStackZIndex = (int) (lStackDepth - 1);
-    else if (Double.isNaN(lStackZIndex))
-      lStackZIndex = (int) Math.round(lStackDepth / 2.0);
+    int lStackZIndex = (int) (mStackSliceNormalizedIndex.get() * lStackDepth);
+    if (lStackZIndex < 0) lStackZIndex = 0;
+    else if (lStackZIndex >= lStackDepth) lStackZIndex = (int) (lStackDepth - 1);
+    else if (Double.isNaN(lStackZIndex)) lStackZIndex = (int) Math.round(lStackDepth / 2.0);
     return lStackZIndex;
   }
 
@@ -524,8 +443,7 @@ public class Stack2DDisplay extends VirtualDevice implements
       mVideoWindow.close();
 
       return true;
-    }
-    catch (final IOException e)
+    } catch (final IOException e)
     {
       e.printStackTrace();
       return false;
@@ -539,7 +457,7 @@ public class Stack2DDisplay extends VirtualDevice implements
 
   /**
    * Gets GL window for handling size and position.
-   * 
+   *
    * @return the GL window
    */
   public ClearGLWindow getGLWindow()

@@ -8,52 +8,35 @@ import clearcontrol.devices.cameras.StackCameraQueue;
  *
  * @author royer
  */
-public class HamStackCameraQueue extends
-                                 StackCameraQueue<HamStackCameraQueue>
+public class HamStackCameraQueue extends StackCameraQueue<HamStackCameraQueue>
 
 {
   /**
    * Instantiates a queue given a stack camera simulator
-   * 
-   * 
    */
   public HamStackCameraQueue()
   {
     super();
 
-    mStackWidthVariable = new BoundedVariable<Long>("FrameWidth",
-                                                    2048L,
-                                                    0L,
-                                                    2048L)
+    mStackWidthVariable = new BoundedVariable<Long>("FrameWidth", 2048L, 0L, 2048L)
     {
       @Override
-      public Long setEventHook(final Long pOldValue,
-                               final Long pNewValue)
+      public Long setEventHook(final Long pOldValue, final Long pNewValue)
       {
 
-        long lAdjustedValue =
-                            ((HamStackCamera) getStackCamera()).getDcamDevice()
-                                                               .adjustWidthHeight(pNewValue,
-                                                                                  4);
+        long lAdjustedValue = ((HamStackCamera) getStackCamera()).getDcamDevice().adjustWidthHeight(pNewValue, 4);
 
         return super.setEventHook(pOldValue, lAdjustedValue);
       }
 
     };
 
-    mStackHeightVariable = new BoundedVariable<Long>("FrameHeight",
-                                                     2048L,
-                                                     0L,
-                                                     2048L)
+    mStackHeightVariable = new BoundedVariable<Long>("FrameHeight", 2048L, 0L, 2048L)
     {
       @Override
-      public Long setEventHook(final Long pOldValue,
-                               final Long pNewValue)
+      public Long setEventHook(final Long pOldValue, final Long pNewValue)
       {
-        long lAdjustedValue =
-                            ((HamStackCamera) getStackCamera()).getDcamDevice()
-                                                               .adjustWidthHeight(pNewValue,
-                                                                                  4);
+        long lAdjustedValue = ((HamStackCamera) getStackCamera()).getDcamDevice().adjustWidthHeight(pNewValue, 4);
 
         return super.setEventHook(pOldValue, lAdjustedValue);
       }
@@ -62,10 +45,8 @@ public class HamStackCameraQueue extends
 
   /**
    * Instantiates a queue given a template queue's current state
-   * 
-   * @param pHamStackCameraQueue
-   *          template queue
-   * 
+   *
+   * @param pHamStackCameraQueue template queue
    */
   public HamStackCameraQueue(HamStackCameraQueue pHamStackCameraQueue)
   {

@@ -1,20 +1,17 @@
 package clearcontrol.core.concurrent.asyncprocs.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorBase;
 import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorInterface;
 import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorPool;
 import clearcontrol.core.concurrent.asyncprocs.ProcessorInterface;
 import clearcontrol.core.concurrent.thread.ThreadSleep;
-
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.*;
 
 /**
  * Asynchronous processor tests
@@ -26,46 +23,39 @@ public class AsynchronousProcessorTests
 
   /**
    * test simple 2 processor pipeline
-   * 
-   * @throws IOException
-   *           N/A
+   *
+   * @throws IOException N/A
    */
   @Test
   public void testSimple2ProcessorPipeline() throws IOException
   {
-    final AsynchronousProcessorInterface<String, String> lProcessorA =
-                                                                     new AsynchronousProcessorBase<String, String>("A",
-                                                                                                                   10)
-                                                                     {
-                                                                       @Override
-                                                                       public String process(final String pInput)
-                                                                       {
-                                                                         // System.out.println("Processor
-                                                                         // A
-                                                                         // received:"
-                                                                         // +
-                                                                         // pInput);
-                                                                         return "A"
-                                                                                + pInput;
-                                                                       }
-                                                                     };
+    final AsynchronousProcessorInterface<String, String> lProcessorA = new AsynchronousProcessorBase<String, String>("A", 10)
+    {
+      @Override
+      public String process(final String pInput)
+      {
+        // System.out.println("Processor
+        // A
+        // received:"
+        // +
+        // pInput);
+        return "A" + pInput;
+      }
+    };
 
-    final AsynchronousProcessorInterface<String, String> lProcessorB =
-                                                                     new AsynchronousProcessorBase<String, String>("B",
-                                                                                                                   10)
-                                                                     {
-                                                                       @Override
-                                                                       public String process(final String pInput)
-                                                                       {
-                                                                         // System.out.println("Processor
-                                                                         // B
-                                                                         // received:"
-                                                                         // +
-                                                                         // pInput);
-                                                                         return "B"
-                                                                                + pInput;
-                                                                       }
-                                                                     };
+    final AsynchronousProcessorInterface<String, String> lProcessorB = new AsynchronousProcessorBase<String, String>("B", 10)
+    {
+      @Override
+      public String process(final String pInput)
+      {
+        // System.out.println("Processor
+        // B
+        // received:"
+        // +
+        // pInput);
+        return "B" + pInput;
+      }
+    };
 
     lProcessorA.connectToReceiver(lProcessorB);
     assertTrue(lProcessorA.start());
@@ -121,40 +111,31 @@ public class AsynchronousProcessorTests
 
   /**
    * tests Long queue
-   * 
-   * @throws IOException
-   *           exception
+   *
+   * @throws IOException exception
    */
   @Test
   public void testLongQueue() throws IOException
   {
-    final AsynchronousProcessorInterface<String, String> lProcessorA =
-                                                                     new AsynchronousProcessorBase<String, String>("A",
-                                                                                                                   1000)
-                                                                     {
-                                                                       @Override
-                                                                       public String process(final String pInput)
-                                                                       {
-                                                                         ThreadSleep.sleep(1,
-                                                                                           TimeUnit.MILLISECONDS);
-                                                                         return "A"
-                                                                                + pInput;
-                                                                       }
-                                                                     };
+    final AsynchronousProcessorInterface<String, String> lProcessorA = new AsynchronousProcessorBase<String, String>("A", 1000)
+    {
+      @Override
+      public String process(final String pInput)
+      {
+        ThreadSleep.sleep(1, TimeUnit.MILLISECONDS);
+        return "A" + pInput;
+      }
+    };
 
-    final AsynchronousProcessorInterface<String, String> lProcessorB =
-                                                                     new AsynchronousProcessorBase<String, String>("B",
-                                                                                                                   1000)
-                                                                     {
-                                                                       @Override
-                                                                       public String process(final String pInput)
-                                                                       {
-                                                                         ThreadSleep.sleep(1,
-                                                                                           TimeUnit.MILLISECONDS);
-                                                                         return "B"
-                                                                                + pInput;
-                                                                       }
-                                                                     };
+    final AsynchronousProcessorInterface<String, String> lProcessorB = new AsynchronousProcessorBase<String, String>("B", 1000)
+    {
+      @Override
+      public String process(final String pInput)
+      {
+        ThreadSleep.sleep(1, TimeUnit.MILLISECONDS);
+        return "B" + pInput;
+      }
+    };
 
     lProcessorA.connectToReceiver(lProcessorB);
     assertTrue(lProcessorA.start());
@@ -178,63 +159,44 @@ public class AsynchronousProcessorTests
 
   /**
    * Tests simple 2 processor pipeline with pooled processor
-   * 
-   * @throws InterruptedException
-   *           N/A
-   * @throws IOException
-   *           N/A
+   *
+   * @throws InterruptedException N/A
+   * @throws IOException          N/A
    */
   @Test
-  public void testSimple2ProcessorPipelineWithPooledProcessor() throws InterruptedException,
-                                                                IOException
+  public void testSimple2ProcessorPipelineWithPooledProcessor() throws InterruptedException, IOException
   {
-    final AsynchronousProcessorInterface<Integer, Integer> lProcessorA =
-                                                                       new AsynchronousProcessorBase<Integer, Integer>("A",
-                                                                                                                       10)
-                                                                       {
-                                                                         @Override
-                                                                         public Integer process(final Integer pInput)
-                                                                         {
-                                                                           ThreadSleep.sleep((long) (Math.random()
-                                                                                                     * 1000000),
-                                                                                             TimeUnit.NANOSECONDS);
-                                                                           return pInput;
-                                                                         }
-                                                                       };
+    final AsynchronousProcessorInterface<Integer, Integer> lProcessorA = new AsynchronousProcessorBase<Integer, Integer>("A", 10)
+    {
+      @Override
+      public Integer process(final Integer pInput)
+      {
+        ThreadSleep.sleep((long) (Math.random() * 1000000), TimeUnit.NANOSECONDS);
+        return pInput;
+      }
+    };
 
-    final ProcessorInterface<Integer, Integer> lProcessor =
-                                                          (input) -> {
+    final ProcessorInterface<Integer, Integer> lProcessor = (input) ->
+    {
 
-                                                            ThreadSleep.sleep((long) (Math.random()
-                                                                                      * 1000000),
-                                                                              TimeUnit.NANOSECONDS);
-                                                            return input;
-                                                          };
+      ThreadSleep.sleep((long) (Math.random() * 1000000), TimeUnit.NANOSECONDS);
+      return input;
+    };
 
-    final AsynchronousProcessorPool<Integer, Integer> lProcessorB =
-                                                                  new AsynchronousProcessorPool<>("B",
-                                                                                                  10,
-                                                                                                  2,
-                                                                                                  lProcessor);
+    final AsynchronousProcessorPool<Integer, Integer> lProcessorB = new AsynchronousProcessorPool<>("B", 10, 2, lProcessor);
 
-    final ConcurrentLinkedQueue<Integer> lIntList =
-                                                  new ConcurrentLinkedQueue<>();
+    final ConcurrentLinkedQueue<Integer> lIntList = new ConcurrentLinkedQueue<>();
 
-    final AsynchronousProcessorInterface<Integer, Integer> lProcessorC =
-                                                                       new AsynchronousProcessorBase<Integer, Integer>("C",
-                                                                                                                       10)
-                                                                       {
-                                                                         @Override
-                                                                         public Integer process(final Integer pInput)
-                                                                         {
-                                                                           ThreadSleep.sleep((long) (Math.random()
-                                                                                                     * 1000000),
-                                                                                             TimeUnit.NANOSECONDS);
-                                                                           if (pInput > 0)
-                                                                             lIntList.add(pInput);
-                                                                           return pInput;
-                                                                         }
-                                                                       };
+    final AsynchronousProcessorInterface<Integer, Integer> lProcessorC = new AsynchronousProcessorBase<Integer, Integer>("C", 10)
+    {
+      @Override
+      public Integer process(final Integer pInput)
+      {
+        ThreadSleep.sleep((long) (Math.random() * 1000000), TimeUnit.NANOSECONDS);
+        if (pInput > 0) lIntList.add(pInput);
+        return pInput;
+      }
+    };
 
     // lProcessorA.connectToReceiver(lProcessorC);
     lProcessorA.connectToReceiver(lProcessorB);
@@ -251,8 +213,7 @@ public class AsynchronousProcessorTests
 
     // This really makes sure that all the 'jobs' have gone through the entire
     // pipeline. There is no other way to do this.
-    while (lIntList.size() < 1000)
-      ThreadSleep.sleep(1, TimeUnit.MILLISECONDS);
+    while (lIntList.size() < 1000) ThreadSleep.sleep(1, TimeUnit.MILLISECONDS);
 
     // We wait for the process to finish the jobs they have _received_ that's
     // why we need the line above...

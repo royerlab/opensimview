@@ -9,9 +9,7 @@ import clearcontrol.core.variable.VariableEdgeListener;
  *
  * @author royer
  */
-public abstract class SignalStartStopDevice extends VirtualDevice
-                                            implements
-                                            StartStopSignalVariablesInterface
+public abstract class SignalStartStopDevice extends VirtualDevice implements StartStopSignalVariablesInterface
 {
 
   protected final Variable<Boolean> mStartSignal;
@@ -21,16 +19,14 @@ public abstract class SignalStartStopDevice extends VirtualDevice
 
   /**
    * Instanciates a signal startable and stoppable device
-   * 
-   * @param pDeviceName
-   *          device name
+   *
+   * @param pDeviceName device name
    */
   public SignalStartStopDevice(final String pDeviceName)
   {
     super(pDeviceName);
 
-    mStartSignal =
-                 new Variable<Boolean>(pDeviceName + "Start", false);
+    mStartSignal = new Variable<Boolean>(pDeviceName + "Start", false);
 
     mStopSignal = new Variable<Boolean>(pDeviceName + "Stop", false);
 
@@ -39,8 +35,7 @@ public abstract class SignalStartStopDevice extends VirtualDevice
       @Override
       public void fire(final Boolean pCurrentBooleanValue)
       {
-        if (mStartRunnable != null && pCurrentBooleanValue)
-          mStartRunnable.run();
+        if (mStartRunnable != null && pCurrentBooleanValue) mStartRunnable.run();
       }
     });
 
@@ -49,8 +44,7 @@ public abstract class SignalStartStopDevice extends VirtualDevice
       @Override
       public void fire(final Boolean pCurrentBooleanValue)
       {
-        if (mStopRunnable != null && pCurrentBooleanValue)
-          mStopRunnable.run();
+        if (mStopRunnable != null && pCurrentBooleanValue) mStopRunnable.run();
       }
     });
 
@@ -70,9 +64,8 @@ public abstract class SignalStartStopDevice extends VirtualDevice
 
   /**
    * Sets the runnable to execute on start
-   * 
-   * @param pStartRunnable
-   *          start runnable
+   *
+   * @param pStartRunnable start runnable
    */
   public void setTaskOnStart(Runnable pStartRunnable)
   {
@@ -81,9 +74,8 @@ public abstract class SignalStartStopDevice extends VirtualDevice
 
   /**
    * Sets the runnable to execute on stop
-   * 
-   * @param pStopRunnable
-   *          start runnable
+   *
+   * @param pStopRunnable start runnable
    */
   public void setTaskOnStop(Runnable pStopRunnable)
   {

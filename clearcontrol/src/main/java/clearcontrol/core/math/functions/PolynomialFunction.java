@@ -5,8 +5,7 @@ package clearcontrol.core.math.functions;
  *
  * @author royer
  */
-public class PolynomialFunction extends
-                                org.apache.commons.math3.analysis.polynomials.PolynomialFunction
+public class PolynomialFunction extends org.apache.commons.math3.analysis.polynomials.PolynomialFunction
 {
 
   private static final long serialVersionUID = 1L;
@@ -18,15 +17,13 @@ public class PolynomialFunction extends
    */
   public PolynomialFunction()
   {
-    super(new double[]
-    { 1, 0 });
+    super(new double[]{1, 0});
   }
 
   /**
    * Instanciates a polynomial function given polynomial coefficients.
-   * 
-   * @param pPolynomialCoefficients
-   *          polynomial coefficients
+   *
+   * @param pPolynomialCoefficients polynomial coefficients
    */
   public PolynomialFunction(double... pPolynomialCoefficients)
   {

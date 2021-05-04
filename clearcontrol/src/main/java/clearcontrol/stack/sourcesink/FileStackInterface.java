@@ -12,12 +12,10 @@ public interface FileStackInterface extends AutoCloseable
 
   /**
    * Sets the location to read/write from
-   * 
-   * @param pRootFolder
-   *          root folder
-   * @param pDataSetName
-   *          dataset name (which will correspond to a sub-folder of the root
-   *          folder)
+   *
+   * @param pRootFolder  root folder
+   * @param pDataSetName dataset name (which will correspond to a sub-folder of the root
+   *                     folder)
    */
   void setLocation(File pRootFolder, String pDataSetName);
 

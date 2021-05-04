@@ -1,13 +1,13 @@
 package clearcontrol.gui.jfx.var.datetime.demo;
 
-import java.time.LocalDateTime;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.var.datetime.DateTimePickerVariable;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.var.datetime.DateTimePickerVariable;
+import java.time.LocalDateTime;
 
 /**
  * Enum combo box demo
@@ -26,15 +26,13 @@ public class DateTimePickerVariableDemo extends Application
     stage.setTitle(this.getClass().getSimpleName());
     // scene.setFill(Color.BLACK);
 
-    Variable<LocalDateTime> lVariable =
-                                      new Variable<>("time",
-                                                     LocalDateTime.now());
-    lVariable.addSetListener((o, n) -> {
+    Variable<LocalDateTime> lVariable = new Variable<>("time", LocalDateTime.now());
+    lVariable.addSetListener((o, n) ->
+    {
       System.out.println(n);
     });
 
-    DateTimePickerVariable lDateTimePicker =
-                                           new DateTimePickerVariable(lVariable);
+    DateTimePickerVariable lDateTimePicker = new DateTimePickerVariable(lVariable);
 
     root.add(lDateTimePicker, 0, 2);
 
@@ -43,9 +41,8 @@ public class DateTimePickerVariableDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

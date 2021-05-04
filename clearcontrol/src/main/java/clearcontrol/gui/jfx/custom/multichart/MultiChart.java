@@ -8,25 +8,20 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ScatterChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.shape.Path;
-
 import org.controlsfx.control.CheckListView;
 
 /**
  * MultiChart allows the display of multiple series in a single chart and the
  * possibility to turn on and off display of individual series. It can use line,
  * Area and Scatter Charts.
- * 
+ *
  * @author royer
  */
 public class MultiChart extends HBox
@@ -40,10 +35,9 @@ public class MultiChart extends HBox
 
   /**
    * Creates a MultiChart of a given type.
-   * 
-   * @param pChartClass
-   *          class of chart: can be LineChart.class, AreaChart.class or
-   *          ScatterChart.class
+   *
+   * @param pChartClass class of chart: can be LineChart.class, AreaChart.class or
+   *                    ScatterChart.class
    */
   public MultiChart(Class<?> pChartClass)
   {
@@ -54,70 +48,56 @@ public class MultiChart extends HBox
     mMultiChartItemList = FXCollections.observableArrayList();
     mCheckListView = new CheckListView<>(mMultiChartItemList);
 
-    mCheckListView.setOnMouseClicked((e) -> {
+    mCheckListView.setOnMouseClicked((e) ->
+    {
       if (e.getClickCount() == 2)
       {
-        MultiChartListItem lCurrentItemSelected =
-                                                mCheckListView.getSelectionModel()
-                                                              .getSelectedItem();
+        MultiChartListItem lCurrentItemSelected = mCheckListView.getSelectionModel().getSelectedItem();
         mCheckListView.getCheckModel().clearChecks();
         mCheckListView.getCheckModel().check(lCurrentItemSelected);
       }
     });
 
-    mCheckListView.getSelectionModel()
-                  .getSelectedItems()
-                  .addListener(new ListChangeListener<MultiChartListItem>()
-                  {
-                    @Override
-                    public void onChanged(ListChangeListener.Change<? extends MultiChartListItem> pChange)
-                    {
-                      int lNumberOfItems = mMultiChartItemList.size();
-                      for (int i = 0; i < lNumberOfItems; i++)
-                      {
+    mCheckListView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<MultiChartListItem>()
+    {
+      @Override
+      public void onChanged(ListChangeListener.Change<? extends MultiChartListItem> pChange)
+      {
+        int lNumberOfItems = mMultiChartItemList.size();
+        for (int i = 0; i < lNumberOfItems; i++)
+        {
 
-                        boolean lSelected =
-                                          mCheckListView.getSelectionModel()
-                                                        .isSelected(i);
+          boolean lSelected = mCheckListView.getSelectionModel().isSelected(i);
 
-                        setGlow(mXYChart, i, lSelected);
+          setGlow(mXYChart, i, lSelected);
 
-                      }
-                    }
-                  });
+        }
+      }
+    });
 
-    mCheckListView.getCheckModel()
-                  .getCheckedItems()
-                  .addListener(new ListChangeListener<MultiChartListItem>()
-                  {
-                    @Override
-                    public void onChanged(ListChangeListener.Change<? extends MultiChartListItem> pChange)
-                    {
-                      clearMinMax();
-                      for (MultiChartListItem lItem : mMultiChartItemList)
-                      {
-                        boolean lChecked =
-                                         mCheckListView.getCheckModel()
-                                                       .isChecked(lItem);
+    mCheckListView.getCheckModel().getCheckedItems().addListener(new ListChangeListener<MultiChartListItem>()
+    {
+      @Override
+      public void onChanged(ListChangeListener.Change<? extends MultiChartListItem> pChange)
+      {
+        clearMinMax();
+        for (MultiChartListItem lItem : mMultiChartItemList)
+        {
+          boolean lChecked = mCheckListView.getCheckModel().isChecked(lItem);
 
-                        Node lNode = lItem.getSeries().getNode();
-                        if (lNode != null)
-                          lNode.setVisible(lChecked);
+          Node lNode = lItem.getSeries().getNode();
+          if (lNode != null) lNode.setVisible(lChecked);
 
-                        for (Data<Number, Number> lData : lItem.getSeries()
-                                                               .getData())
-                          if (lData.getNode() != null)
-                            lData.getNode().setVisible(lChecked);
+          for (Data<Number, Number> lData : lItem.getSeries().getData())
+            if (lData.getNode() != null) lData.getNode().setVisible(lChecked);
 
-                        if (lChecked)
-                          adjustMinMax(lItem);
-                      }
-                      applyMinMax();
-                    }
-                  });
+          if (lChecked) adjustMinMax(lItem);
+        }
+        applyMinMax();
+      }
+    });
 
-    Platform.runLater(() -> mCheckListView.getCheckModel()
-                                          .checkAll());
+    Platform.runLater(() -> mCheckListView.getCheckModel().checkAll());
 
     mXAxis = new NumberAxis();
     mYAxis = new NumberAxis();
@@ -128,22 +108,18 @@ public class MultiChart extends HBox
     mXAxis.setAutoRanging(false);
     mYAxis.setAutoRanging(false);
 
-    if (pChartClass == LineChart.class)
-      mXYChart = new LineChart<Number, Number>(mXAxis, mYAxis);
-    else if (pChartClass == AreaChart.class)
-      mXYChart = new AreaChart<Number, Number>(mXAxis, mYAxis);
-    else if (pChartClass == ScatterChart.class)
-      mXYChart = new ScatterChart<Number, Number>(mXAxis, mYAxis);
-    else
-      throw new UnsupportedOperationException("Can't create chart for: "
-                                              + pChartClass);
+    if (pChartClass == LineChart.class) mXYChart = new LineChart<Number, Number>(mXAxis, mYAxis);
+    else if (pChartClass == AreaChart.class) mXYChart = new AreaChart<Number, Number>(mXAxis, mYAxis);
+    else if (pChartClass == ScatterChart.class) mXYChart = new ScatterChart<Number, Number>(mXAxis, mYAxis);
+    else throw new UnsupportedOperationException("Can't create chart for: " + pChartClass);
 
     mXYChart.setAnimated(false);
     mXYChart.setLegendVisible(true);
     mXYChart.setCursor(Cursor.CROSSHAIR);
     setDisplayMarkers(false);
 
-    mXYChart.setOnMouseClicked((e) -> {
+    mXYChart.setOnMouseClicked((e) ->
+    {
       if (e.getClickCount() == 2)
       {
         double lX = mXAxis.getValueForDisplay(e.getX()).doubleValue();
@@ -152,14 +128,11 @@ public class MultiChart extends HBox
         String lText = String.format("(%g,%g)", lX, lY);
 
         Bounds lChartBoundsInLocal = mXYChart.getBoundsInLocal();
-        Bounds lChartBoundsInScreen =
-                                    mXYChart.localToScreen(lChartBoundsInLocal);
+        Bounds lChartBoundsInScreen = mXYChart.localToScreen(lChartBoundsInLocal);
 
         Tooltip lToolTip = new Tooltip(lText);
         lToolTip.setAutoHide(true);
-        lToolTip.show(mXYChart,
-                      lChartBoundsInScreen.getMinX() + e.getX(),
-                      lChartBoundsInScreen.getMinY() + e.getY());
+        lToolTip.show(mXYChart, lChartBoundsInScreen.getMinX() + e.getX(), lChartBoundsInScreen.getMinY() + e.getY());
       }
     });
 
@@ -177,7 +150,7 @@ public class MultiChart extends HBox
 
   /**
    * Returns the check list view (list of chart series)
-   * 
+   *
    * @return check list view
    */
   public CheckListView<MultiChartListItem> getCheckListView()
@@ -187,7 +160,7 @@ public class MultiChart extends HBox
 
   /**
    * Returns the XY chart
-   * 
+   *
    * @return XY chart
    */
   public XYChart<Number, Number> getXYChart()
@@ -197,9 +170,8 @@ public class MultiChart extends HBox
 
   /**
    * Sets the chart title.
-   * 
-   * @param pChartTitle
-   *          chart title string
+   *
+   * @param pChartTitle chart title string
    */
   public void setChartTitle(String pChartTitle)
   {
@@ -208,21 +180,18 @@ public class MultiChart extends HBox
 
   /**
    * Sets whether markers should be set for already added series.
-   * 
-   * @param pDisplayMarkers
-   *          true to add markers, false otherwise
+   *
+   * @param pDisplayMarkers true to add markers, false otherwise
    */
   public void setDisplayMarkers(boolean pDisplayMarkers)
   {
-    if (mXYChart instanceof LineChart<?, ?>)
-      ((LineChart<?, ?>) mXYChart).setCreateSymbols(pDisplayMarkers);
+    if (mXYChart instanceof LineChart<?, ?>) ((LineChart<?, ?>) mXYChart).setCreateSymbols(pDisplayMarkers);
   }
 
   /**
    * Sets X axis label.
-   * 
-   * @param pLabelString
-   *          X axis label
+   *
+   * @param pLabelString X axis label
    */
   public void setXAxisLabel(String pLabelString)
   {
@@ -231,9 +200,8 @@ public class MultiChart extends HBox
 
   /**
    * Sets Y axis label.
-   * 
-   * @param pLabelString
-   *          Y axis label
+   *
+   * @param pLabelString Y axis label
    */
   public void setYAxisLabel(String pLabelString)
   {
@@ -242,9 +210,8 @@ public class MultiChart extends HBox
 
   /**
    * Sets X axis display side
-   * 
-   * @param pAxisSide
-   *          side
+   *
+   * @param pAxisSide side
    */
   public void setXAxisSide(Side pAxisSide)
   {
@@ -253,9 +220,8 @@ public class MultiChart extends HBox
 
   /**
    * Sets y axis display side.
-   * 
-   * @param pAxisSide
-   *          on which side to display Y axis
+   *
+   * @param pAxisSide on which side to display Y axis
    */
   public void setYAxisSide(Side pAxisSide)
   {
@@ -264,46 +230,37 @@ public class MultiChart extends HBox
 
   /**
    * Set line width for a given series.
-   * 
-   * @param pIndex
-   *          series index (adding order)
-   * @param pWidth
-   *          line width
+   *
+   * @param pIndex series index (adding order)
+   * @param pWidth line width
    */
   public void setLineWidth(int pIndex, double pWidth)
   {
     MultiChartListItem lItem = mMultiChartItemList.get(pIndex);
     {
       Node lNode = lItem.getSeries().getNode();
-      if (lNode != null)
-        lNode.setStyle(String.format("-fx-stroke-width: %gpx;",
-                                     pWidth));
+      if (lNode != null) lNode.setStyle(String.format("-fx-stroke-width: %gpx;", pWidth));
     }
   }
 
   /**
    * Sets the marker radius for a given series. TODO: currently not working
-   * 
-   * @param pIndex
-   *          series index
-   * @param pRadius
-   *          radius
+   *
+   * @param pIndex  series index
+   * @param pRadius radius
    */
   public void setMarkerRadius(int pIndex, double pRadius)
   {
     MultiChartListItem lItem = mMultiChartItemList.get(pIndex);
     for (Data<Number, Number> lData : lItem.getSeries().getData())
       if (lData.getNode() != null)
-        lData.getNode()
-             .setStyle(String.format(".chart-line-symbol {-fx-background-radius: %g;}",
-                                     pRadius));
+        lData.getNode().setStyle(String.format(".chart-line-symbol {-fx-background-radius: %g;}", pRadius));
   }
 
   /**
    * Sets teh visibility flag of the legend.
-   * 
-   * @param pDisplaylegend
-   *          true for visible legend, false otherwise
+   *
+   * @param pDisplaylegend true for visible legend, false otherwise
    */
   public void setLegendVisible(boolean pDisplaylegend)
   {
@@ -322,9 +279,8 @@ public class MultiChart extends HBox
 
   /**
    * Adds series to chart
-   * 
-   * @param pSeriesLabel
-   *          series label
+   *
+   * @param pSeriesLabel series label
    * @return observable list to which data points should be added.
    */
   public ObservableList<Data<Number, Number>> addSeries(String pSeriesLabel)
@@ -332,31 +288,28 @@ public class MultiChart extends HBox
     XYChart.Series<Number, Number> lSeries = new XYChart.Series<>();
     lSeries.setName(pSeriesLabel);
 
-    MultiChartListItem lMultiChartListItem =
-                                           new MultiChartListItem(pSeriesLabel,
-                                                                  lSeries);
+    MultiChartListItem lMultiChartListItem = new MultiChartListItem(pSeriesLabel, lSeries);
 
     mMultiChartItemList.add(lMultiChartListItem);
     mXYChart.getData().add(lSeries);
 
-    Runnable lUpdateMinMax = () -> {
+    Runnable lUpdateMinMax = () ->
+    {
       adjustMinMax(lMultiChartListItem);
       applyMinMax();
     };
 
     Platform.runLater(lUpdateMinMax);
 
-    lSeries.getData()
-           .addListener((ListChangeListener<? super Data<Number, Number>>) (c) -> lUpdateMinMax.run());
+    lSeries.getData().addListener((ListChangeListener<? super Data<Number, Number>>) (c) -> lUpdateMinMax.run());
 
     return lSeries.getData();
   }
 
   /**
    * Returns the list that holds the data for a given chart.
-   * 
-   * @param pChartIndex
-   *          Chart's index
+   *
+   * @param pChartIndex Chart's index
    * @return data
    */
   public ObservableList<Data<Number, Number>> getDataFor(int pChartIndex)
@@ -366,17 +319,12 @@ public class MultiChart extends HBox
 
   /**
    * Convenience method that adds data points to observable list.
-   * 
-   * @param pList
-   *          observable list
-   * @param pX
-   *          x value
-   * @param pY
-   *          y value
+   *
+   * @param pList observable list
+   * @param pX    x value
+   * @param pY    y value
    */
-  public static void addData(ObservableList<Data<Number, Number>> pList,
-                             Number pX,
-                             Number pY)
+  public static void addData(ObservableList<Data<Number, Number>> pList, Number pX, Number pY)
   {
     pList.add(new Data<Number, Number>(pX, pY));
   }
@@ -395,13 +343,10 @@ public class MultiChart extends HBox
     applyMinMax();
   }
 
-  private void setGlow(XYChart<Number, Number> lineChart,
-                       int pIndex,
-                       boolean pGlow)
+  private void setGlow(XYChart<Number, Number> lineChart, int pIndex, boolean pGlow)
   {
     // make the first series in the chart glow when you mouse near it.
-    Node lNode =
-               lineChart.lookup(".chart-series-line.series" + pIndex);
+    Node lNode = lineChart.lookup(".chart-series-line.series" + pIndex);
     if (lNode != null && lNode instanceof Path)
     {
       /*System.out.println("series " + pIndex
@@ -423,8 +368,7 @@ public class MultiChart extends HBox
 
   private void adjustMinMax(MultiChartListItem pItem)
   {
-    ObservableList<Data<Number, Number>> lDatas = pItem.getSeries()
-                                                       .getData();
+    ObservableList<Data<Number, Number>> lDatas = pItem.getSeries().getData();
 
     for (Data<Number, Number> lDataPoint : lDatas)
     {
@@ -439,9 +383,7 @@ public class MultiChart extends HBox
   private void applyMinMax()
   {
 
-    if (Double.isFinite(mXMin) && Double.isFinite(mXMax)
-        && Double.isFinite(mYMin)
-        && Double.isFinite(mYMax))
+    if (Double.isFinite(mXMin) && Double.isFinite(mXMax) && Double.isFinite(mYMin) && Double.isFinite(mYMax))
     {
 
       mXAxis.setLowerBound(mXMin);

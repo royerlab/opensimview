@@ -4,7 +4,7 @@ import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
 
 /**
  * Center-Of-Mass argmax finder.
- * 
+ * <p>
  * Considers the input data (X,Y) as a distribution.
  *
  * @author royer
@@ -15,8 +15,7 @@ public class COMArgMaxFinder implements ArgMaxFinder1DInterface
   @Override
   public Double argmax(double[] pX, double[] pY)
   {
-    if (pX.length == 0)
-      return null;
+    if (pX.length == 0) return null;
 
     double lWeightedSum = 0;
     double lWeightsSum = 0;

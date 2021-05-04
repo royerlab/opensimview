@@ -1,22 +1,16 @@
 package clearcontrol.gui.plots;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 public class MultiPlot
 {
   public static ImageIcon sIcon;
 
-  static HashMap<String, MultiPlot> sNameToMultiPlotMap =
-                                                        new HashMap<String, MultiPlot>();
+  static HashMap<String, MultiPlot> sNameToMultiPlotMap = new HashMap<String, MultiPlot>();
 
   public static MultiPlot getMultiPlot(final String pName)
   {
@@ -34,8 +28,7 @@ public class MultiPlot
   private final String mName;
   private final JFrame mFrame;
   private final JTabbedPane mTabbedPane;
-  private final HashMap<String, PlotTab> mNameToPlotMap =
-                                                        new HashMap<String, PlotTab>();
+  private final HashMap<String, PlotTab> mNameToPlotMap = new HashMap<String, PlotTab>();
 
   public MultiPlot(final String pName)
   {
@@ -65,14 +58,14 @@ public class MultiPlot
       final PlotTab lFinalPlotTab = lPlotTab;
       try
       {
-        SwingUtilities.invokeAndWait(() -> {
+        SwingUtilities.invokeAndWait(() ->
+        {
 
           mTabbedPane.addTab(pName, lFinalPlotTab.getPlot());
 
           mTabbedPane.setSelectedIndex(mTabbedPane.getTabCount() - 1);
         });
-      }
-      catch (InvocationTargetException | InterruptedException e)
+      } catch (InvocationTargetException | InterruptedException e)
       {
         e.printStackTrace();
       }
@@ -85,7 +78,8 @@ public class MultiPlot
   {
     try
     {
-      SwingUtilities.invokeAndWait(() -> {
+      SwingUtilities.invokeAndWait(() ->
+      {
         mTabbedPane.removeAll();
         for (Map.Entry<String, PlotTab> lEntry : mNameToPlotMap.entrySet())
         {
@@ -94,8 +88,7 @@ public class MultiPlot
         }
         mNameToPlotMap.clear();
       });
-    }
-    catch (InvocationTargetException | InterruptedException e)
+    } catch (InvocationTargetException | InterruptedException e)
     {
       e.printStackTrace();
     }
@@ -103,7 +96,8 @@ public class MultiPlot
 
   public void setVisible(final boolean pIsVisible)
   {
-    SwingUtilities.invokeLater(() -> {
+    SwingUtilities.invokeLater(() ->
+    {
       mFrame.setVisible(pIsVisible);
     });
   }

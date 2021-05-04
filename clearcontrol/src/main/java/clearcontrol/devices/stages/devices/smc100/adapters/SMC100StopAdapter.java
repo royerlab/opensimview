@@ -3,10 +3,7 @@ package clearcontrol.devices.stages.devices.smc100.adapters;
 import clearcontrol.com.serial.adapters.SerialDeviceAdapterAdapter;
 import clearcontrol.com.serial.adapters.SerialTextDeviceAdapter;
 
-public class SMC100StopAdapter extends
-                               SerialDeviceAdapterAdapter<Boolean>
-                               implements
-                               SerialTextDeviceAdapter<Boolean>
+public class SMC100StopAdapter extends SerialDeviceAdapterAdapter<Boolean> implements SerialTextDeviceAdapter<Boolean>
 {
 
   @Override
@@ -28,16 +25,13 @@ public class SMC100StopAdapter extends
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(Boolean pOldValue,
-                                          Boolean pNewValue)
+  public byte[] getSetValueCommandMessage(Boolean pOldValue, Boolean pNewValue)
   {
     if (pOldValue == false && pNewValue == true)
     {
       // System.out.println("Stopping!");
       return SMC100Protocol.cStopCommand.getBytes();
-    }
-    else
-      return null;
+    } else return null;
   }
 
   @Override

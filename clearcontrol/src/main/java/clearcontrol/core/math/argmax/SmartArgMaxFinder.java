@@ -1,31 +1,14 @@
 package clearcontrol.core.math.argmax;
 
 import clearcontrol.core.math.argmax.fitprob.GaussianFitQualityEstimator;
-import clearcontrol.core.math.argmax.methods.COMArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.ClampingArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.DenoisingArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.EnsembleArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.GaussianFitArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.LoessFitArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.MedianArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.ModeArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.NormalizingArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.ParabolaFitArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.QuarticFitArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.RandomSplineFitArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.SplineFitArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.SymetricParabolaFitArgMaxFinder;
-import clearcontrol.core.math.argmax.methods.Top5ArgMaxFinder;
+import clearcontrol.core.math.argmax.methods.*;
 
 /**
  * Smart argmax finder
  *
  * @author royer
  */
-public class SmartArgMaxFinder implements
-                               ArgMaxFinder1DInterface,
-                               Fitting1DInterface,
-                               FitProbabilityInterface
+public class SmartArgMaxFinder implements ArgMaxFinder1DInterface, Fitting1DInterface, FitProbabilityInterface
 {
 
   private GaussianFitQualityEstimator mFitQualityEstimator;
@@ -55,21 +38,18 @@ public class SmartArgMaxFinder implements
   {
     super();
 
-    mSymetricParabolaFitArgMaxFinder =
-                                     new SymetricParabolaFitArgMaxFinder();
+    mSymetricParabolaFitArgMaxFinder = new SymetricParabolaFitArgMaxFinder();
     mParabolaFitArgMaxFinder = new ParabolaFitArgMaxFinder();
     mGaussianFitArgMaxFinder = new GaussianFitArgMaxFinder(128);
     mQuarticFitArgMaxFinder = new QuarticFitArgMaxFinder();
     mSplineFitArgMaxFinder = new SplineFitArgMaxFinder();
     mRandomSplineFitArgMaxFinder = new RandomSplineFitArgMaxFinder();
     mLoessFitArgMaxFinder = new LoessFitArgMaxFinder();
-    mTop5ParabolaArgMaxFinder =
-                              new Top5ArgMaxFinder(new ParabolaFitArgMaxFinder());
+    mTop5ParabolaArgMaxFinder = new Top5ArgMaxFinder(new ParabolaFitArgMaxFinder());
     mCOMArgMaxFinder = new COMArgMaxFinder();
     mModeArgMaxFinder = new ModeArgMaxFinder();
     mMedianArgMaxFinder = new MedianArgMaxFinder();
-    mDenoisingArgMaxFinder =
-                           new DenoisingArgMaxFinder(new ModeArgMaxFinder());
+    mDenoisingArgMaxFinder = new DenoisingArgMaxFinder(new ModeArgMaxFinder());
 
   }
 
@@ -84,38 +64,26 @@ public class SmartArgMaxFinder implements
     mFitProbability = mFitQualityEstimator.probability(pX, pY);
     mRMSD = mFitQualityEstimator.getRMSD();
 
-    if (mFitProbability == null)
-      return null;
+    if (mFitProbability == null) return null;
 
     // System.out.println("lFitProbability=" + lFitProbability);
 
     // if (mFitProbability < mFitProbabilityThreshold)
     // return null;
 
-    final EnsembleArgMaxFinder lEnsembleArgMaxFinder =
-                                                     new EnsembleArgMaxFinder();
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mParabolaFitArgMaxFinder));
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mSymetricParabolaFitArgMaxFinder));
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mGaussianFitArgMaxFinder));
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mQuarticFitArgMaxFinder));
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mSplineFitArgMaxFinder));
+    final EnsembleArgMaxFinder lEnsembleArgMaxFinder = new EnsembleArgMaxFinder();
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mParabolaFitArgMaxFinder));
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mSymetricParabolaFitArgMaxFinder));
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mGaussianFitArgMaxFinder));
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mQuarticFitArgMaxFinder));
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mSplineFitArgMaxFinder));
     /*lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
     																				mRandomSplineFitArgMaxFinder));/**/
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mLoessFitArgMaxFinder));
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mTop5ParabolaArgMaxFinder));
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mCOMArgMaxFinder));
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mModeArgMaxFinder));
-    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore,
-                                            mMedianArgMaxFinder));
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mLoessFitArgMaxFinder));
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mTop5ParabolaArgMaxFinder));
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mCOMArgMaxFinder));
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mModeArgMaxFinder));
+    lEnsembleArgMaxFinder.add(denoiseBefore(lDenoiseBefore, mMedianArgMaxFinder));
     lEnsembleArgMaxFinder.add(mDenoisingArgMaxFinder);
 
     return lEnsembleArgMaxFinder.argmax(pX, pY);
@@ -124,12 +92,9 @@ public class SmartArgMaxFinder implements
   @Override
   public double[] fit(double[] pX, double[] pY)
   {
-    if (mFitQualityEstimator == null)
-      if (argmax(pX, pY) == null)
-        return null;
+    if (mFitQualityEstimator == null) if (argmax(pX, pY) == null) return null;
 
-    final GaussianFitQualityEstimator lFitQualityEstimator =
-                                                           mFitQualityEstimator;
+    final GaussianFitQualityEstimator lFitQualityEstimator = mFitQualityEstimator;
     mFitQualityEstimator = null;
     return lFitQualityEstimator.getFit(pX, pY);
   }
@@ -146,13 +111,11 @@ public class SmartArgMaxFinder implements
     return mRMSD;
   }
 
-  private ArgMaxFinder1DInterface denoiseBefore(boolean pDenoiseBefore,
-                                                ArgMaxFinder1DInterface pArgMaxFinder1DInterface)
+  private ArgMaxFinder1DInterface denoiseBefore(boolean pDenoiseBefore, ArgMaxFinder1DInterface pArgMaxFinder1DInterface)
   {
     if (pDenoiseBefore && mDenoisingActive)
       return new DenoisingArgMaxFinder(normalize(clamp(pArgMaxFinder1DInterface)));
-    else
-      return normalize(clamp(pArgMaxFinder1DInterface));
+    else return normalize(clamp(pArgMaxFinder1DInterface));
   }
 
   private ArgMaxFinder1DInterface normalize(ArgMaxFinder1DInterface pArgMaxFinder1DInterface)
@@ -172,10 +135,8 @@ public class SmartArgMaxFinder implements
 
     if (lLength >= 2)
     {
-      if (pY[0] > pY[1])
-        lCount++;
-      if (pY[pY.length - 1] > pY[pY.length - 2])
-        lCount++;
+      if (pY[0] > pY[1]) lCount++;
+      if (pY[pY.length - 1] > pY[pY.length - 2]) lCount++;
     }
 
     for (int i = 1; i < lLength - 1; i++)
@@ -183,8 +144,7 @@ public class SmartArgMaxFinder implements
       final double lY = pY[i];
       final double lYbefore = pY[i - 1];
       final double lYafter = pY[i + 1];
-      if (lY > lYbefore && lY > lYafter)
-        lCount++;
+      if (lY > lYbefore && lY > lYafter) lCount++;
     }
 
     return lCount;
@@ -193,24 +153,12 @@ public class SmartArgMaxFinder implements
   @Override
   public String toString()
   {
-    return String.format("SmartArgMaxFinder [mParabolaFitArgMaxFinder=%s, mSymetricParabolaFitArgMaxFinder=%s, mGaussianFitArgMaxFinder=%s, mQuarticFitArgMaxFinder=%s, mSplineFitArgMaxFinder=%s, mRandomSplineFitArgMaxFinder=%s, mLoessFitArgMaxFinder=%s, mTop5ParabolaArgMaxFinder=%s, mCOMArgMaxFinder=%s, mModeArgMaxFinder=%s, mMedianArgMaxFinder=%s, mDenoisingArgMaxFinder=%s]",
-                         mParabolaFitArgMaxFinder,
-                         mSymetricParabolaFitArgMaxFinder,
-                         mGaussianFitArgMaxFinder,
-                         mQuarticFitArgMaxFinder,
-                         mSplineFitArgMaxFinder,
-                         mRandomSplineFitArgMaxFinder,
-                         mLoessFitArgMaxFinder,
-                         mTop5ParabolaArgMaxFinder,
-                         mCOMArgMaxFinder,
-                         mModeArgMaxFinder,
-                         mMedianArgMaxFinder,
-                         mDenoisingArgMaxFinder);
+    return String.format("SmartArgMaxFinder [mParabolaFitArgMaxFinder=%s, mSymetricParabolaFitArgMaxFinder=%s, mGaussianFitArgMaxFinder=%s, mQuarticFitArgMaxFinder=%s, mSplineFitArgMaxFinder=%s, mRandomSplineFitArgMaxFinder=%s, mLoessFitArgMaxFinder=%s, mTop5ParabolaArgMaxFinder=%s, mCOMArgMaxFinder=%s, mModeArgMaxFinder=%s, mMedianArgMaxFinder=%s, mDenoisingArgMaxFinder=%s]", mParabolaFitArgMaxFinder, mSymetricParabolaFitArgMaxFinder, mGaussianFitArgMaxFinder, mQuarticFitArgMaxFinder, mSplineFitArgMaxFinder, mRandomSplineFitArgMaxFinder, mLoessFitArgMaxFinder, mTop5ParabolaArgMaxFinder, mCOMArgMaxFinder, mModeArgMaxFinder, mMedianArgMaxFinder, mDenoisingArgMaxFinder);
   }
 
   /**
    * Return the status of the is-denoising-active flag
-   * 
+   *
    * @return is-denoising-active flag
    */
   public boolean isDenoisingActive()
@@ -220,9 +168,8 @@ public class SmartArgMaxFinder implements
 
   /**
    * Sets denoising active flag
-   * 
-   * @param pDenoisingActive
-   *          denoising-active flag
+   *
+   * @param pDenoisingActive denoising-active flag
    */
   public void setDenoisingActive(boolean pDenoisingActive)
   {

@@ -4,23 +4,14 @@ import clearcontrol.com.serial.adapters.SerialBinaryDeviceAdapter;
 import clearcontrol.com.serial.adapters.SerialDeviceAdapterAdapter;
 import clearcontrol.devices.optomech.filterwheels.devices.fli.FLIFilterWheelDevice;
 
-public abstract class FilterWheelDeviceAdapter extends
-                                               SerialDeviceAdapterAdapter<Integer>
-                                               implements
-                                               SerialBinaryDeviceAdapter<Integer>
+public abstract class FilterWheelDeviceAdapter extends SerialDeviceAdapterAdapter<Integer> implements SerialBinaryDeviceAdapter<Integer>
 {
-  static final byte cRequestFilterWheelStatusCode =
-                                                  (byte) Integer.parseInt("cc",
-                                                                          16);
-  static final byte[] cRequestFilterWheelStatusMessage = new byte[]
-  { cRequestFilterWheelStatusCode };
+  static final byte cRequestFilterWheelStatusCode = (byte) Integer.parseInt("cc", 16);
+  static final byte[] cRequestFilterWheelStatusMessage = new byte[]{cRequestFilterWheelStatusCode};
 
-  final byte[] mSetFilterWheelPositionMessage = new byte[]
-  { 0 };
+  final byte[] mSetFilterWheelPositionMessage = new byte[]{0};
 
-  static final byte cAcknowledgementCode =
-                                         (byte) Integer.parseInt("0D",
-                                                                 16);
+  static final byte cAcknowledgementCode = (byte) Integer.parseInt("0D", 16);
 
   protected final FLIFilterWheelDevice mFLIFilterWheelDevice;
 
@@ -48,8 +39,7 @@ public abstract class FilterWheelDeviceAdapter extends
     return 0;
   }
 
-  public Integer parsePositionOrSpeedValue(final byte[] pMessage,
-                                           final boolean pReturnPosition)
+  public Integer parsePositionOrSpeedValue(final byte[] pMessage, final boolean pReturnPosition)
   {
     if (pMessage == null)
     {
@@ -63,8 +53,7 @@ public abstract class FilterWheelDeviceAdapter extends
     // final int lSpeed = lFirstFilterWheel & (1 + 2 + 4 + 8);
     // return (double) (pReturnPosition ? lPosition : lSpeed);
 
-    return (pReturnPosition ? mFLIFilterWheelDevice.getCachedPosition()
-                            : mFLIFilterWheelDevice.getCachedSpeed());
+    return (pReturnPosition ? mFLIFilterWheelDevice.getCachedPosition() : mFLIFilterWheelDevice.getCachedSpeed());
   }
 
   public static String binarify(byte pByte)
@@ -76,14 +65,12 @@ public abstract class FilterWheelDeviceAdapter extends
     return lFullBitString;
   }
 
-  public byte[] getSetPositionAndSpeedCommandMessage(final int pPosition,
-                                                     final int pSpeed)
+  public byte[] getSetPositionAndSpeedCommandMessage(final int pPosition, final int pSpeed)
   {
     final int lPositionByte = (pPosition % 10) & (1 + 2 + 4 + 8);
     final int lSpeedByte = (pSpeed % 8) << 5 & (16 + 32 + 64);
 
-    mSetFilterWheelPositionMessage[0] = (byte) (lPositionByte
-                                                | lSpeedByte);
+    mSetFilterWheelPositionMessage[0] = (byte) (lPositionByte | lSpeedByte);
     return mSetFilterWheelPositionMessage;
   }
 
@@ -105,8 +92,7 @@ public abstract class FilterWheelDeviceAdapter extends
     {
       return false;
     }
-    return pMessage.length == 2
-           && pMessage[1] == cAcknowledgementCode;
+    return pMessage.length == 2 && pMessage[1] == cAcknowledgementCode;
   }
 
   @Override

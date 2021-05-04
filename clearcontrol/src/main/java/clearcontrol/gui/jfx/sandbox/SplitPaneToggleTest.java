@@ -22,12 +22,9 @@ public class SplitPaneToggleTest extends Application
 
     SplitPane splitPane = new SplitPane();
 
-    TitledPane titledPane1 = new TitledPane("Options",
-                                            new Label("An option"));
+    TitledPane titledPane1 = new TitledPane("Options", new Label("An option"));
 
-    TitledPane titledPane2 =
-                           new TitledPane("Options",
-                                          new Label("Another option "));
+    TitledPane titledPane2 = new TitledPane("Options", new Label("Another option "));
 
     titledPane1.setAnimated(false);
     titledPane2.setAnimated(false);
@@ -35,38 +32,27 @@ public class SplitPaneToggleTest extends Application
     VBox settingsPane = new VBox(titledPane1, titledPane2);
 
     settingsPane.setMinWidth(0);
-    splitPane.getItems().addAll(
-                                new BorderPane(new Label("Main content")),
-                                settingsPane);
+    splitPane.getItems().addAll(new BorderPane(new Label("Main content")), settingsPane);
 
-    DoubleProperty splitPaneDividerPosition =
-                                            splitPane.getDividers()
-                                                     .get(0)
-                                                     .positionProperty();
+    DoubleProperty splitPaneDividerPosition = splitPane.getDividers().get(0).positionProperty();
 
     // update toggle button status if user moves divider:
-    splitPaneDividerPosition.addListener((obs,
-                                          oldPos,
-                                          newPos) -> settings.setSelected(newPos.doubleValue() < 0.95));
+    splitPaneDividerPosition.addListener((obs, oldPos, newPos) -> settings.setSelected(newPos.doubleValue() < 0.95));
 
     splitPaneDividerPosition.set(0.8);
 
-    settings.setOnAction(event -> {
+    settings.setOnAction(event ->
+    {
       if (settings.isSelected())
       {
         splitPane.setDividerPositions(0.8);
-      }
-      else
+      } else
       {
         splitPane.setDividerPositions(1.0);
       }
     });
 
-    BorderPane root = new BorderPane(splitPane,
-                                     new HBox(settings),
-                                     null,
-                                     null,
-                                     null);
+    BorderPane root = new BorderPane(splitPane, new HBox(settings), null, null, null);
     Scene scene = new Scene(root, 800, 600);
     primaryStage.setScene(scene);
     primaryStage.show();

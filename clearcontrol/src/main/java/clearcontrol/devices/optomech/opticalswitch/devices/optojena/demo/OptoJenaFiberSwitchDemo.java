@@ -1,11 +1,10 @@
 package clearcontrol.devices.optomech.opticalswitch.devices.optojena.demo;
 
-import static org.junit.Assert.assertTrue;
-
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.optomech.opticalswitch.devices.optojena.OptoJenaFiberSwitchDevice;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * OptoJena fiber switch demo
@@ -17,20 +16,17 @@ public class OptoJenaFiberSwitchDemo
 
   /**
    * Demo
-   * 
-   * @throws InterruptedException
-   *           NA
+   *
+   * @throws InterruptedException NA
    */
   @Test
   public void test() throws InterruptedException
   {
-    final OptoJenaFiberSwitchDevice lOptoJenaFiberSwitchDevice =
-                                                               new OptoJenaFiberSwitchDevice("COM10");
+    final OptoJenaFiberSwitchDevice lOptoJenaFiberSwitchDevice = new OptoJenaFiberSwitchDevice("COM10");
 
     assertTrue(lOptoJenaFiberSwitchDevice.open());
 
-    final Variable<Integer> lPositionVariable =
-                                              lOptoJenaFiberSwitchDevice.getPositionVariable();
+    final Variable<Integer> lPositionVariable = lOptoJenaFiberSwitchDevice.getPositionVariable();
 
     for (int i = 0; i < 500; i++)
     {

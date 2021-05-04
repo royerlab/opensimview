@@ -9,27 +9,7 @@ package clearcontrol.core.units;
 public enum OrderOfMagnitude
 {
 
- Yotta(1e+24),
- Zetta(1e+24),
- Exa(1e+18),
- Peta(1e+15),
- Tera(1e+12),
- Giga(1e+9),
- Mega(1e+6),
- Kilo(1e+3),
- Hecto(1e+2),
- Deca(1e+1),
- Unit(1),
- Deci(1e-1),
- Centi(1e-2),
- Milli(1e-3),
- Micro(1e-6),
- Nano(1e-9),
- Pico(1e-12),
- Femto(1e-15),
- Atto(1e-18),
- Zepto(1e-21),
- Yocto(1e-24);
+  Yotta(1e+24), Zetta(1e+24), Exa(1e+18), Peta(1e+15), Tera(1e+12), Giga(1e+9), Mega(1e+6), Kilo(1e+3), Hecto(1e+2), Deca(1e+1), Unit(1), Deci(1e-1), Centi(1e-2), Milli(1e-3), Micro(1e-6), Nano(1e-9), Pico(1e-12), Femto(1e-15), Atto(1e-18), Zepto(1e-21), Yocto(1e-24);
 
   private final double mMagnitude;
 
@@ -40,7 +20,7 @@ public enum OrderOfMagnitude
 
   /**
    * Returns the order-of-magnitude as a double
-   * 
+   *
    * @return order-of-magnitude as double
    */
   public double getMagnitude()
@@ -51,18 +31,14 @@ public enum OrderOfMagnitude
   /**
    * Converts a value in a given order-of-magnitude to another
    * order-of-magnitude
-   * 
-   * @param pValue
-   *          value
-   * @param pMagnitude
-   *          magnitude
+   *
+   * @param pValue     value
+   * @param pMagnitude magnitude
    * @return converted value
    */
-  public double convertFrom(double pValue,
-                            OrderOfMagnitude pMagnitude)
+  public double convertFrom(double pValue, OrderOfMagnitude pMagnitude)
   {
-    final double lConvertedValue = pValue * (pMagnitude.getMagnitude()
-                                             / getMagnitude());
+    final double lConvertedValue = pValue * (pMagnitude.getMagnitude() / getMagnitude());
     return lConvertedValue;
   }
 

@@ -1,12 +1,11 @@
 package clearcontrol.gui.swing;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-
 import clearcontrol.core.variable.VariableGetInterface;
 import clearcontrol.core.variable.VariableSetInterface;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CopyDoubleButton<O> extends JButton
 {
@@ -21,9 +20,7 @@ public class CopyDoubleButton<O> extends JButton
     this(pLabel, null, null);
   }
 
-  public CopyDoubleButton(final String pLabel,
-                          final VariableGetInterface<O> pSource,
-                          final VariableSetInterface<O> pDestination)
+  public CopyDoubleButton(final String pLabel, final VariableGetInterface<O> pSource, final VariableSetInterface<O> pDestination)
   {
     mSource = pSource;
     mDestination = pDestination;

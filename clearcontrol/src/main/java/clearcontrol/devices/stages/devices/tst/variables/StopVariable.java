@@ -13,11 +13,9 @@ public class StopVariable extends TSTBooleanVariableBase
 
   /**
    * Instantiates a stop variable
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pAPTJDevice
-   *          APTJ device
+   *
+   * @param pVariableName variable name
+   * @param pAPTJDevice   APTJ device
    */
   public StopVariable(String pVariableName, APTJDevice pAPTJDevice)
   {
@@ -30,10 +28,8 @@ public class StopVariable extends TSTBooleanVariableBase
     final Boolean lValue = super.setEventHook(pOldValue, pNewValue);
     try
     {
-      if (lValue && !pOldValue)
-        mAPTJDevice.stop();
-    }
-    catch (APTJExeption e)
+      if (lValue && !pOldValue) mAPTJDevice.stop();
+    } catch (APTJExeption e)
     {
       severe("Error while stopping device: %s", mAPTJDevice);
       e.printStackTrace();

@@ -1,35 +1,28 @@
 package clearcontrol.devices.signalamp.devices.srs;
 
-import java.util.ArrayList;
-
 import clearcontrol.com.serial.SerialDevice;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.devices.signalamp.devices.srs.adapters.protocol.ProtocolSIM;
 
+import java.util.ArrayList;
+
 public class SIM900MainframeDevice extends VirtualDevice
 {
   private final SerialDevice mSerialDevice;
 
-  private final ArrayList<SIMModuleInterface> mSIMModuleList =
-                                                             new ArrayList<>();
+  private final ArrayList<SIMModuleInterface> mSIMModuleList = new ArrayList<>();
 
   public SIM900MainframeDevice(final int pDeviceIndex)
   {
-    this(MachineConfiguration.get().getSerialDevicePort(
-                                                        "stanford.SIM900",
-                                                        pDeviceIndex,
-                                                        "NULL"));
+    this(MachineConfiguration.get().getSerialDevicePort("stanford.SIM900", pDeviceIndex, "NULL"));
   }
 
   public SIM900MainframeDevice(final String pPortName)
   {
     super("SIM900MainframeDevice" + pPortName);
 
-    mSerialDevice =
-                  new SerialDevice("SIM900MainframeDevice",
-                                   pPortName,
-                                   ProtocolSIM.cBaudRate);
+    mSerialDevice = new SerialDevice("SIM900MainframeDevice", pPortName, ProtocolSIM.cBaudRate);
   }
 
   public SerialDevice getSerialDevice()
@@ -52,8 +45,7 @@ public class SIM900MainframeDevice extends VirtualDevice
       mSerialDevice.getSerial().write("TERM D,LF\n");
 
       return lOpen;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -67,8 +59,7 @@ public class SIM900MainframeDevice extends VirtualDevice
     {
       mSerialDevice.close();
       return super.close();
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -78,9 +69,7 @@ public class SIM900MainframeDevice extends VirtualDevice
   public String wrapCommand(int pPort, String pCommandString)
   {
     pCommandString = pCommandString.replace("\n", "");
-    return String.format(ProtocolSIM.cSIM900ForwardCommand,
-                         pPort,
-                         pCommandString);
+    return String.format(ProtocolSIM.cSIM900ForwardCommand, pPort, pCommandString);
   }
 
 }

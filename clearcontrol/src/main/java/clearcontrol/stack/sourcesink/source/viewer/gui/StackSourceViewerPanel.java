@@ -1,7 +1,9 @@
 package clearcontrol.stack.sourcesink.source.viewer.gui;
 
-import static java.lang.Math.round;
-
+import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
+import clearcontrol.gui.jfx.var.textfield.NumberVariableTextField;
+import clearcontrol.stack.sourcesink.source.StackSourceInterface;
+import clearcontrol.stack.sourcesink.source.viewer.StackSourceViewer;
 import javafx.application.Platform;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -9,10 +11,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
-import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
-import clearcontrol.gui.jfx.var.textfield.NumberVariableTextField;
-import clearcontrol.stack.sourcesink.source.StackSourceInterface;
-import clearcontrol.stack.sourcesink.source.viewer.StackSourceViewer;
+import static java.lang.Math.round;
 
 /**
  * Laser device GUI panel
@@ -30,9 +29,8 @@ public class StackSourceViewerPanel extends CustomGridPane
 
   /**
    * Instantiates a stack source viewer panel
-   * 
-   * @param pStackSourceViewer
-   *          stack source viewer
+   *
+   * @param pStackSourceViewer stack source viewer
    */
   public StackSourceViewerPanel(StackSourceViewer pStackSourceViewer)
   {
@@ -58,11 +56,7 @@ public class StackSourceViewerPanel extends CustomGridPane
   {
     mStackSourceViewer = pStackSourceViewer;
 
-    mIndexTextField = new NumberVariableTextField<>("StackIndex",
-                                                    pStackSourceViewer.getStackIndexVariable(),
-                                                    0L,
-                                                    1L,
-                                                    1L);
+    mIndexTextField = new NumberVariableTextField<>("StackIndex", pStackSourceViewer.getStackIndexVariable(), 0L, 1L, 1L);
 
     mIndexTextField.setNumberFormatPrecision(0);
 
@@ -78,85 +72,75 @@ public class StackSourceViewerPanel extends CustomGridPane
 
   protected void setupListeners(StackSourceViewer pStackSourceViewer)
   {
-    mIndexSlider.valueChangingProperty().addListener((e, o, now) -> {
+    mIndexSlider.valueChangingProperty().addListener((e, o, now) ->
+    {
       if (!now)
       {
-        long lStackIndex = (long) round(mIndexSlider.valueProperty()
-                                                    .get());
+        long lStackIndex = (long) round(mIndexSlider.valueProperty().get());
         mStackSourceViewer.getStackIndexVariable().set(lStackIndex);
       }
     });
 
-    mIndexSlider.setOnMouseClicked((e) -> {
-      long lStackIndex = (long) round(mIndexSlider.valueProperty()
-                                                  .get());
+    mIndexSlider.setOnMouseClicked((e) ->
+    {
+      long lStackIndex = (long) round(mIndexSlider.valueProperty().get());
       mStackSourceViewer.getStackIndexVariable().set(lStackIndex);
 
     });
 
-    mIndexSlider.setOnKeyPressed((e) -> {
-      long lStackIndex = (long) round(mIndexSlider.valueProperty()
-                                                  .get());
+    mIndexSlider.setOnKeyPressed((e) ->
+    {
+      long lStackIndex = (long) round(mIndexSlider.valueProperty().get());
       mStackSourceViewer.getStackIndexVariable().set(lStackIndex);
 
     });
 
-    mChannelComboBox.showingProperty().addListener((e) -> {
-      if (mChannelComboBox.isShowing())
-        updateComboBoxValues(pStackSourceViewer, true);
-      else
-        pStackSourceViewer.getStackChannelVariable()
-                          .set(mChannelComboBox.valueProperty()
-                                               .get());
+    mChannelComboBox.showingProperty().addListener((e) ->
+    {
+      if (mChannelComboBox.isShowing()) updateComboBoxValues(pStackSourceViewer, true);
+      else pStackSourceViewer.getStackChannelVariable().set(mChannelComboBox.valueProperty().get());
     });
 
-    StackSourceInterface lStackSourceLocal =
-                                           pStackSourceViewer.getStackSourceVariable()
-                                                             .get();
+    StackSourceInterface lStackSourceLocal = pStackSourceViewer.getStackSourceVariable().get();
 
     if (!lStackSourceLocal.getChannelList().isEmpty())
     {
-      Platform.runLater(() -> {
-        mChannelComboBox.valueProperty()
-                        .set(lStackSourceLocal.getChannelList()
-                                              .get(0));
+      Platform.runLater(() ->
+      {
+        mChannelComboBox.valueProperty().set(lStackSourceLocal.getChannelList().get(0));
       });
     }
 
-    pStackSourceViewer.getStackSourceVariable()
-                      .addSetListener((o, n) -> {
-                        updateSlider(pStackSourceViewer, true);
-                        updateTextField(pStackSourceViewer, true);
-                        updateComboBoxValues(pStackSourceViewer,
-                                             true);
-                      });
+    pStackSourceViewer.getStackSourceVariable().addSetListener((o, n) ->
+    {
+      updateSlider(pStackSourceViewer, true);
+      updateTextField(pStackSourceViewer, true);
+      updateComboBoxValues(pStackSourceViewer, true);
+    });
 
-    pStackSourceViewer.getStackChannelVariable()
-                      .addSetListener((o, n) -> {
-                        updateSlider(pStackSourceViewer, true);
-                        updateTextField(pStackSourceViewer, true);
-                        mChannelComboBox.valueProperty().set(n);
-                      });
+    pStackSourceViewer.getStackChannelVariable().addSetListener((o, n) ->
+    {
+      updateSlider(pStackSourceViewer, true);
+      updateTextField(pStackSourceViewer, true);
+      mChannelComboBox.valueProperty().set(n);
+    });
 
-    pStackSourceViewer.getStackIndexVariable()
-                      .addSetListener((o, n) -> {
-                        updateSlider(pStackSourceViewer, true);
-                        updateTextField(pStackSourceViewer, true);
-                        mIndexSlider.setValue(n);
-                      });
+    pStackSourceViewer.getStackIndexVariable().addSetListener((o, n) ->
+    {
+      updateSlider(pStackSourceViewer, true);
+      updateTextField(pStackSourceViewer, true);
+      mIndexSlider.setValue(n);
+    });
   }
 
-  protected void updateComboBoxValues(StackSourceViewer pStackSourceViewer,
-                                      boolean pRunLater)
+  protected void updateComboBoxValues(StackSourceViewer pStackSourceViewer, boolean pRunLater)
   {
-    Runnable lRunnable = () -> {
-      StackSourceInterface lStackSourceLocal =
-                                             pStackSourceViewer.getStackSourceVariable()
-                                                               .get();
+    Runnable lRunnable = () ->
+    {
+      StackSourceInterface lStackSourceLocal = pStackSourceViewer.getStackSourceVariable().get();
       if (lStackSourceLocal != null)
       {
-        mChannelComboBox.getItems()
-                        .retainAll(lStackSourceLocal.getChannelList());
+        mChannelComboBox.getItems().retainAll(lStackSourceLocal.getChannelList());
         for (String lChannel : lStackSourceLocal.getChannelList())
         {
           if (!mChannelComboBox.getItems().contains(lChannel))
@@ -167,26 +151,20 @@ public class StackSourceViewerPanel extends CustomGridPane
       }
     };
 
-    if (pRunLater)
-      Platform.runLater(lRunnable);
-    else
-      lRunnable.run();
+    if (pRunLater) Platform.runLater(lRunnable);
+    else lRunnable.run();
   }
 
-  protected void updateSlider(StackSourceViewer pStackSourceViewer,
-                              boolean pRunLater)
+  protected void updateSlider(StackSourceViewer pStackSourceViewer, boolean pRunLater)
   {
-    Runnable lRunnable = () -> {
+    Runnable lRunnable = () ->
+    {
 
-      StackSourceInterface lStackSource =
-                                        pStackSourceViewer.getStackSourceVariable()
-                                                          .get();
+      StackSourceInterface lStackSource = pStackSourceViewer.getStackSourceVariable().get();
 
       if (lStackSource != null)
       {
-        long lNumberOfStacks =
-                             lStackSource.getNumberOfStacks(pStackSourceViewer.getStackChannelVariable()
-                                                                              .get());
+        long lNumberOfStacks = lStackSource.getNumberOfStacks(pStackSourceViewer.getStackChannelVariable().get());
 
         mIndexSlider.setMax(lNumberOfStacks);
 
@@ -196,8 +174,7 @@ public class StackSourceViewerPanel extends CustomGridPane
           mIndexSlider.setMajorTickUnit(1);
           mIndexSlider.setMinorTickCount(0);
           mIndexSlider.snapToTicksProperty().set(true);
-        }
-        else if (lNumberOfStacks > 100)
+        } else if (lNumberOfStacks > 100)
         {
           mIndexSlider.setShowTickMarks(false);
           mIndexSlider.setMajorTickUnit(10);
@@ -207,36 +184,28 @@ public class StackSourceViewerPanel extends CustomGridPane
       }
     };
 
-    if (pRunLater)
-      Platform.runLater(lRunnable);
-    else
-      lRunnable.run();
+    if (pRunLater) Platform.runLater(lRunnable);
+    else lRunnable.run();
 
   }
 
-  protected void updateTextField(StackSourceViewer pStackSourceViewer,
-                                 boolean pRunLater)
+  protected void updateTextField(StackSourceViewer pStackSourceViewer, boolean pRunLater)
   {
-    Runnable lRunnable = () -> {
+    Runnable lRunnable = () ->
+    {
 
-      StackSourceInterface lStackSource =
-                                        pStackSourceViewer.getStackSourceVariable()
-                                                          .get();
+      StackSourceInterface lStackSource = pStackSourceViewer.getStackSourceVariable().get();
 
       if (lStackSource != null)
       {
-        long lNumberOfStacks =
-                             lStackSource.getNumberOfStacks(pStackSourceViewer.getStackChannelVariable()
-                                                                              .get());
+        long lNumberOfStacks = lStackSource.getNumberOfStacks(pStackSourceViewer.getStackChannelVariable().get());
 
         mIndexTextField.getMaxVariable().set(lNumberOfStacks - 1);
       }
     };
 
-    if (pRunLater)
-      Platform.runLater(lRunnable);
-    else
-      lRunnable.run();
+    if (pRunLater) Platform.runLater(lRunnable);
+    else lRunnable.run();
 
   }
 

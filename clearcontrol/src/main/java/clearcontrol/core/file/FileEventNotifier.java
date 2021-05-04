@@ -1,36 +1,29 @@
 package clearcontrol.core.file;
 
+import clearcontrol.core.log.LoggingFeature;
+import org.apache.commons.io.monitor.FileAlterationListener;
+import org.apache.commons.io.monitor.FileAlterationMonitor;
+import org.apache.commons.io.monitor.FileAlterationObserver;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.core.log.LoggingFeature;
-
-import org.apache.commons.io.monitor.FileAlterationListener;
-import org.apache.commons.io.monitor.FileAlterationMonitor;
-import org.apache.commons.io.monitor.FileAlterationObserver;
-
 /**
  * File event notifier.
- * 
- * 
  *
  * @author royer
  */
-public class FileEventNotifier implements
-                               AutoCloseable,
-                               LoggingFeature
+public class FileEventNotifier implements AutoCloseable, LoggingFeature
 {
 
-  private static final long cDefaultMonitoringPeriodInMilliseconds =
-                                                                   300;
+  private static final long cDefaultMonitoringPeriodInMilliseconds = 300;
   private final File mFileToMonitor;
   private final File mParentFolder;
   private final FileAlterationObserver mFileAlterationObserver;
 
-  private final CopyOnWriteArrayList<FileEventNotifierListener> mListenerList =
-                                                                              new CopyOnWriteArrayList<FileEventNotifierListener>();
+  private final CopyOnWriteArrayList<FileEventNotifierListener> mListenerList = new CopyOnWriteArrayList<FileEventNotifierListener>();
   private final FileAlterationMonitor mFileAlterationMonitor;
   private volatile boolean mIgnore = false;
 
@@ -41,46 +34,38 @@ public class FileEventNotifier implements
    */
   public static enum FileEventKind
   {
-   /**
-    * Event triggered when a file is created
-    */
-   Created,
-   /**
-    * Event triggered when a file is modified
-    */
-   Modified,
-   /**
-    * Event triggered when a file is deleted
-    */
-   Deleted
+    /**
+     * Event triggered when a file is created
+     */
+    Created,
+    /**
+     * Event triggered when a file is modified
+     */
+    Modified,
+    /**
+     * Event triggered when a file is deleted
+     */
+    Deleted
   }
 
   /**
    * Instantiates a file event notifier for a given file
-   * 
-   * @param pFileToMonitor
-   *          file to monitor
+   *
+   * @param pFileToMonitor file to monitor
    */
   public FileEventNotifier(final File pFileToMonitor)
   {
-    this(pFileToMonitor,
-         cDefaultMonitoringPeriodInMilliseconds,
-         TimeUnit.MILLISECONDS);
+    this(pFileToMonitor, cDefaultMonitoringPeriodInMilliseconds, TimeUnit.MILLISECONDS);
   }
 
   /**
    * Instantiates a file event notifier for a given file
-   * 
-   * @param pFileToMonitor
-   *          file to monitor
-   * @param pMonitoringPeriod
-   *          monitoring period
-   * @param pTimeUnit
-   *          monitoring period time unit
+   *
+   * @param pFileToMonitor    file to monitor
+   * @param pMonitoringPeriod monitoring period
+   * @param pTimeUnit         monitoring period time unit
    */
-  public FileEventNotifier(final File pFileToMonitor,
-                           final long pMonitoringPeriod,
-                           final TimeUnit pTimeUnit)
+  public FileEventNotifier(final File pFileToMonitor, final long pMonitoringPeriod, final TimeUnit pTimeUnit)
   {
     super();
     mFileToMonitor = pFileToMonitor;
@@ -88,8 +73,7 @@ public class FileEventNotifier implements
 
     final FileEventNotifier lThis = this;
 
-    mFileAlterationObserver =
-                            new FileAlterationObserver(mParentFolder);
+    mFileAlterationObserver = new FileAlterationObserver(mParentFolder);
     mFileAlterationObserver.addListener(new FileAlterationListener()
     {
 
@@ -138,17 +122,14 @@ public class FileEventNotifier implements
       }
     });
 
-    mFileAlterationMonitor =
-                           new FileAlterationMonitor(TimeUnit.MILLISECONDS.convert(pMonitoringPeriod,
-                                                                                   pTimeUnit));
+    mFileAlterationMonitor = new FileAlterationMonitor(TimeUnit.MILLISECONDS.convert(pMonitoringPeriod, pTimeUnit));
     mFileAlterationMonitor.addObserver(mFileAlterationObserver);
   }
 
   /**
    * Adds a given file change event listener.
-   * 
-   * @param pFileChangeNotifierListener
-   *          file change event listener
+   *
+   * @param pFileChangeNotifierListener file change event listener
    */
   public void addFileEventListener(final FileEventNotifierListener pFileChangeNotifierListener)
   {
@@ -157,9 +138,8 @@ public class FileEventNotifier implements
 
   /**
    * Removes a given file change event listener
-   * 
-   * @param pFileChangeNotifierListener
-   *          file change event listener
+   *
+   * @param pFileChangeNotifierListener file change event listener
    */
   public void removeFileEventListener(final FileEventNotifierListener pFileChangeNotifierListener)
   {
@@ -168,38 +148,31 @@ public class FileEventNotifier implements
 
   /**
    * Removes all file change event listener
-   * 
-   * @param pFileChangeNotifierListener
-   *          file change event listener
+   *
+   * @param pFileChangeNotifierListener file change event listener
    */
   public void removeAllFileEventListener(final FileEventNotifierListener pFileChangeNotifierListener)
   {
     mListenerList.clear();
   }
 
-  protected void notifyFileEvent(final FileEventNotifier pThis,
-                                 final File pFile,
-                                 final FileEventKind pEventKind)
+  protected void notifyFileEvent(final FileEventNotifier pThis, final File pFile, final FileEventKind pEventKind)
   {
-    if (mIgnore)
-      return;
+    if (mIgnore) return;
     info("Event: %s \t\t %s", pFile, pEventKind);
     if (pFile.getName().equals(mFileToMonitor.getName()))
     {
       for (final FileEventNotifierListener lFileEventNotifierListener : mListenerList)
       {
-        lFileEventNotifierListener.fileEvent(pThis,
-                                             pFile,
-                                             pEventKind);
+        lFileEventNotifierListener.fileEvent(pThis, pFile, pEventKind);
       }
     }
   }
 
   /**
    * Starts monitoring for file changes.
-   * 
+   *
    * @return true if started successfully.
-   * 
    */
   public boolean startMonitoring()
   {
@@ -207,8 +180,7 @@ public class FileEventNotifier implements
     {
       mFileAlterationMonitor.start();
       return true;
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -217,9 +189,8 @@ public class FileEventNotifier implements
 
   /**
    * Starts monitoring for file changes.
-   * 
+   *
    * @return true if stopped successfully.
-   * 
    */
   public boolean stopMonitoring()
   {
@@ -227,8 +198,7 @@ public class FileEventNotifier implements
     {
       mFileAlterationMonitor.stop();
       return true;
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -242,17 +212,15 @@ public class FileEventNotifier implements
     {
       mFileAlterationObserver.destroy();
       mFileAlterationMonitor.stop();
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
     }
   }
 
   /**
    * Sets ignore flag.
-   * 
-   * @param pIgnore
-   *          new flag value
+   *
+   * @param pIgnore new flag value
    */
   public void setIgnore(boolean pIgnore)
   {

@@ -18,22 +18,20 @@ public interface UpdatableInterface
   /**
    * Returns true if the device is up-to-date i.e. there has been no changes
    * that would require an update.
-   * 
+   *
    * @return true if up-to-date, false otherwise
    */
   public boolean isUpToDate();
 
   /**
    * Sets the up-to-date flag
-   * 
-   * @param pIsUpToDate
-   *          new up-to-date flag value
+   *
+   * @param pIsUpToDate new up-to-date flag value
    */
   public void setUpToDate(boolean pIsUpToDate);
 
   /**
    * Requests update (sets the up-to-date flag to false).
-   * 
    */
   public void requestUpdate();
 

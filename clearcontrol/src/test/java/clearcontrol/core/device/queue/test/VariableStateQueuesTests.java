@@ -1,13 +1,12 @@
 package clearcontrol.core.device.queue.test;
 
-import static org.junit.Assert.assertEquals;
+import clearcontrol.core.device.queue.VariableQueueBase;
+import clearcontrol.core.variable.Variable;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
-import clearcontrol.core.device.queue.VariableQueueBase;
-import clearcontrol.core.variable.Variable;
-
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Variable state queue tests
@@ -25,8 +24,7 @@ public class VariableStateQueuesTests
   {
     VariableQueueBase lVariableStateQueues = new VariableQueueBase();
 
-    Variable<Double> lOneVariable =
-                                  new Variable<Double>("OneVariable");
+    Variable<Double> lOneVariable = new Variable<Double>("OneVariable");
 
     lVariableStateQueues.registerVariable(lOneVariable);
 
@@ -38,8 +36,7 @@ public class VariableStateQueuesTests
     }
     lVariableStateQueues.finalizeQueue();
 
-    ArrayList<Double> lVariableQueue =
-                                     lVariableStateQueues.getVariableQueue(lOneVariable);
+    ArrayList<Double> lVariableQueue = lVariableStateQueues.getVariableQueue(lOneVariable);
     for (int i = 0; i < 100; i++)
     {
       assertEquals(i * 1.23, lVariableQueue.get(i), 0.001);

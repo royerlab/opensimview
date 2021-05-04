@@ -1,19 +1,18 @@
 package clearcontrol.microscope.timelapse.gui.demo;
 
-import java.util.concurrent.TimeUnit;
-
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.microscope.timelapse.TimelapseBase;
+import clearcontrol.microscope.timelapse.TimelapseInterface;
+import clearcontrol.microscope.timelapse.gui.TimelapseToolbar;
 import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
+import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.microscope.timelapse.TimelapseBase;
-import clearcontrol.microscope.timelapse.TimelapseInterface;
-import clearcontrol.microscope.timelapse.gui.TimelapseToolbar;
-import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Timelapse toolbar demo
@@ -39,8 +38,7 @@ public class TimeLapseToolBarDemo extends Application
       @Override
       public boolean programStep()
       {
-        System.out.println("programStep time point: "
-                           + getTimePointCounterVariable().get());
+        System.out.println("programStep time point: " + getTimePointCounterVariable().get());
         ThreadSleep.sleep(10, TimeUnit.MILLISECONDS);
         return true;
       }
@@ -50,8 +48,7 @@ public class TimeLapseToolBarDemo extends Application
     lTimelapse.addFileStackSinkType(RawFileStackSink.class);
     lTimelapse.addFileStackSinkType(CompressedStackSink.class);
 
-    TimelapseToolbar lTimelapseToolbar =
-                                       new TimelapseToolbar(lTimelapse);
+    TimelapseToolbar lTimelapseToolbar = new TimelapseToolbar(lTimelapse);
 
     root.getChildren().add(lTimelapseToolbar);
 
@@ -60,9 +57,8 @@ public class TimeLapseToolBarDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

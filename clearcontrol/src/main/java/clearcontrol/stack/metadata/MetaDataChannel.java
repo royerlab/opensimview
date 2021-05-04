@@ -9,7 +9,7 @@ package clearcontrol.stack.metadata;
 public enum MetaDataChannel implements MetaDataEntryInterface<String>
 
 {
- Channel;
+  Channel;
 
   @Override
   public Class<String> getMetaDataClass()

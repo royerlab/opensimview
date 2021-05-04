@@ -8,9 +8,7 @@ import clearcontrol.devices.lasers.devices.omicron.adapters.protocol.ProtocolOmi
  *
  * @author royer
  */
-public class SetLaserOnOffAdapter extends OmicronAdapter<Boolean>
-                                  implements
-                                  SerialTextDeviceAdapter<Boolean>
+public class SetLaserOnOffAdapter extends OmicronAdapter<Boolean> implements SerialTextDeviceAdapter<Boolean>
 {
 
   @Override
@@ -26,11 +24,9 @@ public class SetLaserOnOffAdapter extends OmicronAdapter<Boolean>
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(final Boolean pOldValue,
-                                          final Boolean pNewValue)
+  public byte[] getSetValueCommandMessage(final Boolean pOldValue, final Boolean pNewValue)
   {
-    return pNewValue ? ProtocolOmicron.cSetLaserOnCommand.getBytes()
-                     : ProtocolOmicron.cSetLaserOffCommand.getBytes();
+    return pNewValue ? ProtocolOmicron.cSetLaserOnCommand.getBytes() : ProtocolOmicron.cSetLaserOffCommand.getBytes();
   }
 
   @Override

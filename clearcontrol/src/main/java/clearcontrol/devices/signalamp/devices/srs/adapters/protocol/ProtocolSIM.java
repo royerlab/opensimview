@@ -8,8 +8,7 @@ public class ProtocolSIM
 
   public static long cWaitTimeInMilliSeconds = 1;
 
-  public static final String cSIM900ForwardCommand =
-                                                   "SNDT %d,\"%s\"\n";
+  public static final String cSIM900ForwardCommand = "SNDT %d,\"%s\"\n";
 
   public static final String cOffset = "OFST";
 

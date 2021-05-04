@@ -1,28 +1,11 @@
 package clearcontrol.scripting.gui.demo.other;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Frame;
-import java.awt.Label;
-import java.awt.Panel;
-import java.awt.TextArea;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragGestureEvent;
-import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragSource;
-import java.awt.dnd.DragSourceDragEvent;
-import java.awt.dnd.DragSourceDropEvent;
-import java.awt.dnd.DragSourceEvent;
-import java.awt.dnd.DragSourceListener;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
+import java.awt.dnd.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -37,16 +20,16 @@ public class DragDemo
     final Frame frame = new Frame("Example Frame");
 
     /*
-    
-    * Create a container with a flow layout, which arranges its children
-    
-    * horizontally and center aligned. A container can also be created with
-    
-    * a specific layout using Panel(LayoutManager) constructor, e.g.
-    
-    * Panel(new FlowLayout(FlowLayout.RIGHT)) for right alignment
-    
-    */
+
+     * Create a container with a flow layout, which arranges its children
+
+     * horizontally and center aligned. A container can also be created with
+
+     * a specific layout using Panel(LayoutManager) constructor, e.g.
+
+     * Panel(new FlowLayout(FlowLayout.RIGHT)) for right alignment
+
+     */
     final Panel panel = new Panel();
 
     // Add a drop target text area in the center of the frame
@@ -73,9 +56,7 @@ public class DragDemo
 
   // Make a Label draggable; You can use the example to make any component
   // draggable
-  public static class DraggableLabel extends Label implements
-                                     DragGestureListener,
-                                     DragSourceListener
+  public static class DraggableLabel extends Label implements DragGestureListener, DragSourceListener
   {
     DragSource dragSource;
 
@@ -86,22 +67,16 @@ public class DragDemo
 
       dragSource = new DragSource();
 
-      dragSource.createDefaultDragGestureRecognizer(this,
-                                                    DnDConstants.ACTION_COPY_OR_MOVE,
-                                                    this);
+      dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
     }
 
     @Override
     public void dragGestureRecognized(DragGestureEvent evt)
     {
 
-      final Transferable transferable =
-                                      new StringSelection(getText());
+      final Transferable transferable = new StringSelection(getText());
 
-      dragSource.startDrag(evt,
-                           DragSource.DefaultCopyDrop,
-                           transferable,
-                           this);
+      dragSource.startDrag(evt, DragSource.DefaultCopyDrop, transferable, this);
     }
 
     @Override
@@ -159,8 +134,7 @@ public class DragDemo
 
   // Make a TextArea a drop target; You can use the example to make any
   // component a drop target
-  public static class DropTargetTextArea extends TextArea
-                                         implements DropTargetListener
+  public static class DropTargetTextArea extends TextArea implements DropTargetListener
   {
 
     public DropTargetTextArea()
@@ -221,29 +195,25 @@ public class DragDemo
 
           evt.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
 
-          final List<File> lFileList =
-                                     (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+          final List<File> lFileList = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
 
           evt.getDropTargetContext().dropComplete(true);
 
           System.out.println(lFileList);
 
-        }
-        else
+        } else
         {
 
           evt.rejectDrop();
 
         }
 
-      }
-      catch (final IOException e)
+      } catch (final IOException e)
       {
 
         evt.rejectDrop();
 
-      }
-      catch (final UnsupportedFlavorException e)
+      } catch (final UnsupportedFlavorException e)
       {
 
         evt.rejectDrop();

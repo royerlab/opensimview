@@ -1,13 +1,12 @@
 package clearcontrol.util.test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import clearcontrol.util.NDIterator;
+import org.junit.Test;
 
 import java.util.Arrays;
 
-import clearcontrol.util.NDIterator;
-
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * n-dimensionsl iterator tests
@@ -31,28 +30,15 @@ public class NDIteratorTests
     int[] lNext = null;
     while (lNDIterator.hasNext())
     {
-      int lRemainingNumberOfIterations =
-                                       lNDIterator.getRemainingNumberOfIterations();
+      int lRemainingNumberOfIterations = lNDIterator.getRemainingNumberOfIterations();
       lNext = lNDIterator.next();
 
-      System.out.format("i=%d  -> %s (remaining: %d of %d) \n",
-                        i,
-                        Arrays.toString(lNext),
-                        lRemainingNumberOfIterations,
-                        lNumberOfIterations);
+      System.out.format("i=%d  -> %s (remaining: %d of %d) \n", i, Arrays.toString(lNext), lRemainingNumberOfIterations, lNumberOfIterations);
 
-      if (i == 0)
-        assertArrayEquals(lNext, new int[]
-        { 0, 0, 0 });
-      if (i == 10)
-        assertArrayEquals(lNext, new int[]
-        { 0, 2, 1 });
-      if (i == 20)
-        assertArrayEquals(lNext, new int[]
-        { 0, 1, 3 });
-      if (i == 29)
-        assertArrayEquals(lNext, new int[]
-        { 1, 2, 4 });
+      if (i == 0) assertArrayEquals(lNext, new int[]{0, 0, 0});
+      if (i == 10) assertArrayEquals(lNext, new int[]{0, 2, 1});
+      if (i == 20) assertArrayEquals(lNext, new int[]{0, 1, 3});
+      if (i == 29) assertArrayEquals(lNext, new int[]{1, 2, 4});
 
       i++;
     }

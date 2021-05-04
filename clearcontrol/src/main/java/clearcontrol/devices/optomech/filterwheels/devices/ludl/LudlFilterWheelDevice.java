@@ -7,13 +7,11 @@ import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableSetListener;
 import clearcontrol.devices.optomech.filterwheels.FilterWheelDeviceInterface;
 import clearcontrol.devices.optomech.filterwheels.devices.ludl.adapters.FilterWheelPositionDeviceAdapter;
-import ij.util.ThreadUtil;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-public class LudlFilterWheelDevice extends SerialDevice implements
-                                  FilterWheelDeviceInterface
+public class LudlFilterWheelDevice extends SerialDevice implements FilterWheelDeviceInterface
 {
 
   private final Variable<Integer> mFilterPositionVariable, mFilterSpeedVariable;
@@ -22,30 +20,17 @@ public class LudlFilterWheelDevice extends SerialDevice implements
 
   public LudlFilterWheelDevice(final int pDeviceIndex)
   {
-    this(MachineConfiguration.get().getSerialDevicePort(
-                                                        "filterwheel.ludl",
-                                                        pDeviceIndex,
-                                                        "NULL"));
+    this(MachineConfiguration.get().getSerialDevicePort("filterwheel.ludl", pDeviceIndex, "NULL"));
 
-    setName("LudlFilterWheel"+pDeviceIndex);
+    setName("LudlFilterWheel" + pDeviceIndex);
 
     for (int i : getValidPositions())
     {
 
-      String lFilterPositionName = MachineConfiguration.get()
-              .getStringProperty("filterwheel.ludl."
-                              + pDeviceIndex
-                              + ".filter"
-                              + i,
-                      "filter "
-                              + i);
+      String lFilterPositionName = MachineConfiguration.get().getStringProperty("filterwheel.ludl." + pDeviceIndex + ".filter" + i, "filter " + i);
 
-      if(lFilterPositionName!=null)
-        setPositionName(i,
-                        lFilterPositionName);
-      else
-        setPositionName(i,
-                "Position"+i);
+      if (lFilterPositionName != null) setPositionName(i, lFilterPositionName);
+      else setPositionName(i, "Position" + i);
     }
   }
 
@@ -55,29 +40,24 @@ public class LudlFilterWheelDevice extends SerialDevice implements
 
     mFilterPositionToNameMap = new ConcurrentHashMap<>();
 
-    final FilterWheelPositionDeviceAdapter lFilterWheelPosition =
-                                                                new FilterWheelPositionDeviceAdapter(this);
-    mFilterPositionVariable = addSerialVariable("FilterWheelPosition",
-                                                lFilterWheelPosition);
+    final FilterWheelPositionDeviceAdapter lFilterWheelPosition = new FilterWheelPositionDeviceAdapter(this);
+    mFilterPositionVariable = addSerialVariable("FilterWheelPosition", lFilterWheelPosition);
 
     mFilterPositionVariable.addSetListener(new VariableSetListener<Integer>()
     {
       @Override
-      public void setEvent(final Integer pCurrentValue,
-                           final Integer pNewValue)
+      public void setEvent(final Integer pCurrentValue, final Integer pNewValue)
       {
         updateCache(pNewValue);
       }
 
       private void updateCache(final Integer pNewValue)
       {
-        mCachedPosition =
-                        (int) (pNewValue == null ? 0
-                                                 : pNewValue.doubleValue());
+        mCachedPosition = (int) (pNewValue == null ? 0 : pNewValue.doubleValue());
       }
     });
 
-    mFilterSpeedVariable = new Variable<Integer>("FilterWheelSpeed",1);
+    mFilterSpeedVariable = new Variable<Integer>("FilterWheelSpeed", 1);
 
   }
 
@@ -141,13 +121,11 @@ public class LudlFilterWheelDevice extends SerialDevice implements
   @Override
   public int[] getValidPositions()
   {
-    return new int[]
-    { 0, 1, 2, 3, 4, 5 };
+    return new int[]{0, 1, 2, 3, 4, 5};
   }
 
   @Override
-  public void setPositionName(int pPositionIndex,
-                              String pPositionName)
+  public void setPositionName(int pPositionIndex, String pPositionName)
   {
     mFilterPositionToNameMap.put(pPositionIndex, pPositionName);
 

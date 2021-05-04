@@ -1,11 +1,10 @@
 package clearcontrol.core.variable.bounded.test;
 
+import clearcontrol.core.variable.bounded.BoundedVariable;
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import clearcontrol.core.variable.bounded.BoundedVariable;
-
-import org.junit.Test;
 
 /**
  * Bounded variable tests
@@ -21,11 +20,7 @@ public class BoundedVariableTests
   @Test
   public void testBounds()
   {
-    BoundedVariable<Double> lBoundedNumber =
-                                           new BoundedVariable<Double>("doublevar",
-                                                                       0.0,
-                                                                       -1.0,
-                                                                       +2.0);
+    BoundedVariable<Double> lBoundedNumber = new BoundedVariable<Double>("doublevar", 0.0, -1.0, +2.0);
 
     assertTrue(lBoundedNumber.get() == 0.0);
 
@@ -44,11 +39,7 @@ public class BoundedVariableTests
   @Test
   public void testCrossType()
   {
-    BoundedVariable<Long> lBoundedNumber =
-                                         new BoundedVariable<Long>("longvar",
-                                                                   0L,
-                                                                   -1L,
-                                                                   +2L);
+    BoundedVariable<Long> lBoundedNumber = new BoundedVariable<Long>("longvar", 0L, -1L, +2L);
 
     assertTrue(lBoundedNumber.get() == 0);
 
@@ -67,12 +58,7 @@ public class BoundedVariableTests
   @Test
   public void testGranularity()
   {
-    BoundedVariable<Double> lBoundedNumber =
-                                           new BoundedVariable<Double>("doublevar",
-                                                                       0.0,
-                                                                       -2.0,
-                                                                       +2.0,
-                                                                       0.1);
+    BoundedVariable<Double> lBoundedNumber = new BoundedVariable<Double>("doublevar", 0.0, -2.0, +2.0, 0.1);
 
     assertEquals(0, lBoundedNumber.get(), 0.01);
 

@@ -1,14 +1,5 @@
 package clearcontrol.gui.video.video2d.demo;
 
-import java.awt.BorderLayout;
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.TimeUnit;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
-
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.gui.swing.JButtonBoolean;
@@ -18,8 +9,13 @@ import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
 import coremem.ContiguousMemoryInterface;
 import coremem.buffers.ContiguousBuffer;
-
 import org.junit.Test;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
 
 public class VideoFrame2DDisplayDemo
 {
@@ -28,38 +24,27 @@ public class VideoFrame2DDisplayDemo
 
   private volatile long rnd;
 
-  private void generateNoiseBuffer(double pIntensity,
-                                   final ContiguousMemoryInterface pContiguousMemory,
-                                   final int pWidth,
-                                   final int pHeight)
+  private void generateNoiseBuffer(double pIntensity, final ContiguousMemoryInterface pContiguousMemory, final int pWidth, final int pHeight)
   {
     // System.out.println(rnd);
 
-    final ContiguousBuffer lContiguousBuffer =
-                                             new ContiguousBuffer(pContiguousMemory);
+    final ContiguousBuffer lContiguousBuffer = new ContiguousBuffer(pContiguousMemory);
 
     for (int y = 0; y < pHeight; y++)
       for (int x = 0; x < pWidth; x++)
       {
         rnd = ((rnd % 257)) + 1 + (rnd << 7);
-        final char lValue = (char) (((rnd & 0xFFFF) * pIntensity
-                                     * x
-                                     * sValue)
-                                    / pWidth); // Math.random()
+        final char lValue = (char) (((rnd & 0xFFFF) * pIntensity * x * sValue) / pWidth); // Math.random()
         lContiguousBuffer.writeChar(lValue);
       }
   }
 
   @Test
-  public void demo() throws InvocationTargetException,
-                     InterruptedException
+  public void demo() throws InvocationTargetException, InterruptedException
   {
-    final Stack2DDisplay lVideoDisplayDevice =
-                                             new Stack2DDisplay(512,
-                                                                512);
+    final Stack2DDisplay lVideoDisplayDevice = new Stack2DDisplay(512, 512);
 
-    lVideoDisplayDevice.getManualMinMaxIntensityOnVariable()
-                       .set(true);
+    lVideoDisplayDevice.getManualMinMaxIntensityOnVariable().set(true);
     lVideoDisplayDevice.open();
     lVideoDisplayDevice.setVisible(true);
 
@@ -67,27 +52,20 @@ public class VideoFrame2DDisplayDemo
     final int lSizeY = lSizeX;
     final int lSizeZ = 16;
 
-    @SuppressWarnings("unchecked")
-    final OffHeapPlanarStack lStack =
-                                    OffHeapPlanarStack.createStack(lSizeX,
-                                                                   lSizeY,
-                                                                   lSizeZ);
+    @SuppressWarnings("unchecked") final OffHeapPlanarStack lStack = OffHeapPlanarStack.createStack(lSizeX, lSizeY, lSizeZ);
 
     System.out.println(lStack.getSizeInBytes());
 
-    final Variable<StackInterface> lStackVariable =
-                                                  lVideoDisplayDevice.getInputStackVariable();
+    final Variable<StackInterface> lStackVariable = lVideoDisplayDevice.getInputStackVariable();
 
-    final Runnable lRunnable = () -> {
+    final Runnable lRunnable = () ->
+    {
       while (true)
       {
         if (sDisplay)
         {
           for (int i = 0; i < lStack.getDepth(); i++)
-            generateNoiseBuffer(0.5 + (1.0 + i) / (2 * lSizeZ),
-                                lStack.getContiguousMemory(i),
-                                lSizeX,
-                                lSizeY);
+            generateNoiseBuffer(0.5 + (1.0 + i) / (2 * lSizeZ), lStack.getContiguousMemory(i), lSizeX, lSizeY);
 
           lStackVariable.set(lStack);
           // System.out.println(lStack);
@@ -103,8 +81,7 @@ public class VideoFrame2DDisplayDemo
 
     final JFrame lJFrame = runDemo(lVideoDisplayDevice);
 
-    while (lVideoDisplayDevice.getDisplayOnVariable().get()
-           && lJFrame.isVisible())
+    while (lVideoDisplayDevice.getDisplayOnVariable().get() && lJFrame.isVisible())
     {
       Thread.sleep(100);
     }
@@ -112,8 +89,7 @@ public class VideoFrame2DDisplayDemo
     lVideoDisplayDevice.close();
   }
 
-  public JFrame runDemo(Stack2DDisplay pVideoDisplayDevice) throws InterruptedException,
-                                                            InvocationTargetException
+  public JFrame runDemo(Stack2DDisplay pVideoDisplayDevice) throws InterruptedException, InvocationTargetException
   {
 
     final JFrame lJFrame = new JFrame("TextFieldDoubleDemo");
@@ -133,35 +109,27 @@ public class VideoFrame2DDisplayDemo
           lJFrame.setContentPane(mcontentPane);
           lJFrame.setVisible(true);
 
-          final JSliderDouble lJSliderDouble =
-                                             new JSliderDouble("gray value");
+          final JSliderDouble lJSliderDouble = new JSliderDouble("gray value");
           mcontentPane.add(lJSliderDouble, BorderLayout.SOUTH);
 
-          final JButtonBoolean lJButtonBoolean =
-                                               new JButtonBoolean(false,
-                                                                  "Display",
-                                                                  "No Display");
+          final JButtonBoolean lJButtonBoolean = new JButtonBoolean(false, "Display", "No Display");
           mcontentPane.add(lJButtonBoolean, BorderLayout.NORTH);
 
-          final Variable<Boolean> lStartStopVariable =
-                                                     lJButtonBoolean.getBooleanVariable();
+          final Variable<Boolean> lStartStopVariable = lJButtonBoolean.getBooleanVariable();
           lStartStopVariable.set(true);
 
-          lStartStopVariable.addSetListener((o, n) -> {
-            if (!n.equals(o))
-              sDisplay = n;
+          lStartStopVariable.addSetListener((o, n) ->
+          {
+            if (!n.equals(o)) sDisplay = n;
           });
 
-          final Variable<Double> lDoubleVariable =
-                                                 lJSliderDouble.getDoubleVariable();
+          final Variable<Double> lDoubleVariable = lJSliderDouble.getDoubleVariable();
 
-          lDoubleVariable.sendUpdatesTo(new Variable<Double>("SliderDoubleEventHook",
-                                                             0.0)
+          lDoubleVariable.sendUpdatesTo(new Variable<Double>("SliderDoubleEventHook", 0.0)
           {
 
             @Override
-            public Double setEventHook(final Double pOldValue,
-                                       final Double pNewValue)
+            public Double setEventHook(final Double pOldValue, final Double pNewValue)
             {
               sValue = pNewValue;
               System.out.println(pNewValue);
@@ -170,8 +138,7 @@ public class VideoFrame2DDisplayDemo
             }
           });
 
-        }
-        catch (final Exception e)
+        } catch (final Exception e)
         {
           e.printStackTrace();
         }

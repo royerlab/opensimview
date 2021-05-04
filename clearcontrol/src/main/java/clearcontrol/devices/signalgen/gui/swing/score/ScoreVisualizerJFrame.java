@@ -1,14 +1,12 @@
 package clearcontrol.devices.signalgen.gui.swing.score;
 
-import java.awt.HeadlessException;
-import java.lang.reflect.InvocationTargetException;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
-import net.miginfocom.swing.MigLayout;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.signalgen.score.ScoreInterface;
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.*;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class ScoreVisualizerJFrame extends JFrame
 {
@@ -20,9 +18,7 @@ public class ScoreVisualizerJFrame extends JFrame
   {
     super(pTitle);
     setSize(768, 768);
-    setLayout(new MigLayout("insets 0",
-                            "[grow,fill]",
-                            "[grow,fill]"));
+    setLayout(new MigLayout("insets 0", "[grow,fill]", "[grow,fill]"));
     mScoreVisualizer = new ScoreVisualizer();
     add(mScoreVisualizer, "cell 0 0 ");
     validate();
@@ -33,19 +29,16 @@ public class ScoreVisualizerJFrame extends JFrame
     return mScoreVisualizer.getScoreVariable();
   }
 
-  public static ScoreVisualizerJFrame visualizeAndWait(String pString,
-                                                       ScoreInterface pScore)
+  public static ScoreVisualizerJFrame visualizeAndWait(String pString, ScoreInterface pScore)
   {
-    final ScoreVisualizerJFrame lVisualize =
-                                           visualize(pString, pScore);
+    final ScoreVisualizerJFrame lVisualize = visualize(pString, pScore);
 
     while (lVisualize.isVisible())
     {
       try
       {
         Thread.sleep(100);
-      }
-      catch (final InterruptedException e)
+      } catch (final InterruptedException e)
       {
       }
     }
@@ -53,26 +46,22 @@ public class ScoreVisualizerJFrame extends JFrame
     return lVisualize;
   }
 
-  public static ScoreVisualizerJFrame visualize(String pWindowTitle,
-                                                ScoreInterface pScoreInterface)
+  public static ScoreVisualizerJFrame visualize(String pWindowTitle, ScoreInterface pScoreInterface)
   {
-    final ScoreVisualizerJFrame lScoreVisualizerJFrame =
-                                                       new ScoreVisualizerJFrame(pWindowTitle);
+    final ScoreVisualizerJFrame lScoreVisualizerJFrame = new ScoreVisualizerJFrame(pWindowTitle);
     try
     {
-      SwingUtilities.invokeAndWait(() -> {
+      SwingUtilities.invokeAndWait(() ->
+      {
 
-        lScoreVisualizerJFrame.getScoreVariable()
-                              .set(pScoreInterface);
+        lScoreVisualizerJFrame.getScoreVariable().set(pScoreInterface);
         lScoreVisualizerJFrame.setVisible(true);
       });
-    }
-    catch (final InvocationTargetException e)
+    } catch (final InvocationTargetException e)
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    }
-    catch (final InterruptedException e)
+    } catch (final InterruptedException e)
     {
       // TODO Auto-generated catch block
       e.printStackTrace();

@@ -23,16 +23,14 @@ public class ProtocolCobolt
 
   /**
    * Parses message containg a float
-   * 
-   * @param pMessage
-   *          message
+   *
+   * @param pMessage message
    * @return parsed float
    */
   public static double parseFloat(final byte[] pMessage)
   {
     final String lResponseString = new String(pMessage);
-    final double lDoubleValue =
-                              Double.parseDouble(lResponseString.trim());
+    final double lDoubleValue = Double.parseDouble(lResponseString.trim());
     return lDoubleValue;
   }
 

@@ -6,56 +6,61 @@ import java.util.ArrayDeque;
 
 public class GS16AO64cCompiledScore
 {
-    private volatile long mNumberOfMeasures;
-    private ArrayDeque<GSBuffer> mArrayData;
+  private volatile long mNumberOfMeasures;
+  private ArrayDeque<GSBuffer> mArrayData;
 
 
-    public GS16AO64cCompiledScore()
+  public GS16AO64cCompiledScore()
+  {
+    if (mArrayData == null)
     {
-        if (mArrayData == null)
-        {
-            mArrayData = new ArrayDeque<GSBuffer>();
-            addNewBufferToArrayData();
-        }
+      mArrayData = new ArrayDeque<GSBuffer>();
+      addNewBufferToArrayData();
     }
+  }
 
-    // Getters, Setters and Attr Helpers
+  // Getters, Setters and Attr Helpers
 
-    public void setNumberOfMeasures(long pNumberOfMeasures)
+  public void setNumberOfMeasures(long pNumberOfMeasures)
+  {
+    mNumberOfMeasures = pNumberOfMeasures;
+  }
+
+  public long getNumberOfMeasures()
+  {
+    return mNumberOfMeasures;
+  }
+
+  public ArrayDeque<GSBuffer> getArrayData()
+  {
+    return mArrayData;
+  }
+
+  public void addNewBufferToArrayData()
+  {
+    try
     {
-        mNumberOfMeasures = pNumberOfMeasures;
-    }
-
-    public long getNumberOfMeasures()
+      GSBuffer newBuffer = new GSBuffer(2999);
+      mArrayData.addLast(newBuffer);
+    } catch (Exception e)
     {
-        return mNumberOfMeasures;
+      e.printStackTrace();
     }
+  }
 
-    public ArrayDeque<GSBuffer> getArrayData()
+  public void addValueToArrayData(double pValue, int pChannelIndex)
+  {
+    try
     {
-        return mArrayData;
-    }
-
-    public void addNewBufferToArrayData()
+      mArrayData.peekLast().appendValue(pValue, pChannelIndex);
+    } catch (Exception e)
     {
-        try {
-            GSBuffer newBuffer = new GSBuffer(2999);
-            mArrayData.addLast(newBuffer);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+      e.printStackTrace();
     }
-
-    public void addValueToArrayData(double pValue, int pChannelIndex)
+    if (mArrayData.peekLast().getNumTP() == 2048)
     {
-        try {
-            mArrayData.peekLast().appendValue(pValue,pChannelIndex);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (mArrayData.peekLast().getNumTP() == 2048) {
-            this.addNewBufferToArrayData();
-        }
+      this.addNewBufferToArrayData();
     }
+  }
 
 }

@@ -1,29 +1,25 @@
 package clearcontrol.microscope.adaptive.test;
 
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.device.NameableWithChangeListener;
 import clearcontrol.core.device.queue.QueueInterface;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.microscope.MicroscopeInterface;
 import clearcontrol.microscope.state.AcquisitionStateInterface;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Acquisition state for testing purposes
  *
  * @author royer
  */
-public class TestState extends
-                       NameableWithChangeListener<AcquisitionStateInterface<MicroscopeInterface<QueueInterface>, QueueInterface>>
-                       implements
-                       AcquisitionStateInterface<MicroscopeInterface<QueueInterface>, QueueInterface>
+public class TestState extends NameableWithChangeListener<AcquisitionStateInterface<MicroscopeInterface<QueueInterface>, QueueInterface>> implements AcquisitionStateInterface<MicroscopeInterface<QueueInterface>, QueueInterface>
 {
 
   /**
    * Instanciates a test acquisition state
-   * 
-   * @param pName
-   *          state name
+   *
+   * @param pName state name
    */
   public TestState(String pName)
   {

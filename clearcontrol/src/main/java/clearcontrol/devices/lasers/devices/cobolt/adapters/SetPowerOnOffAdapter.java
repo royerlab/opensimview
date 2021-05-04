@@ -8,9 +8,7 @@ import clearcontrol.devices.lasers.devices.cobolt.adapters.protocol.ProtocolCobo
  *
  * @author royer
  */
-public class SetPowerOnOffAdapter extends CoboltAdapter<Boolean>
-                                  implements
-                                  SerialTextDeviceAdapter<Boolean>
+public class SetPowerOnOffAdapter extends CoboltAdapter<Boolean> implements SerialTextDeviceAdapter<Boolean>
 {
 
   @Override
@@ -26,11 +24,9 @@ public class SetPowerOnOffAdapter extends CoboltAdapter<Boolean>
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(final Boolean pOldValue,
-                                          final Boolean pNewValue)
+  public byte[] getSetValueCommandMessage(final Boolean pOldValue, final Boolean pNewValue)
   {
-    return pNewValue ? ProtocolCobolt.cSetLaserOnCommand.getBytes()
-                     : ProtocolCobolt.cSetLaserOffCommand.getBytes();
+    return pNewValue ? ProtocolCobolt.cSetLaserOnCommand.getBytes() : ProtocolCobolt.cSetLaserOffCommand.getBytes();
   }
 
 }

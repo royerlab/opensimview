@@ -5,8 +5,7 @@ import clearcontrol.core.device.name.NameableInterface;
 
 public class SingleCheckCellManager<T extends NameableInterface>
 {
-  private WeakArrayList<SingleCheckCell<T>> mCellList =
-                                                      new WeakArrayList<>();
+  private WeakArrayList<SingleCheckCell<T>> mCellList = new WeakArrayList<>();
 
   private volatile T mCheckedItem;
 
@@ -17,8 +16,7 @@ public class SingleCheckCellManager<T extends NameableInterface>
 
   public void checkOnlyCell(SingleCheckCell<T> pCheckedCell)
   {
-    if (!mCellList.contains(pCheckedCell))
-      mCellList.add(pCheckedCell);
+    if (!mCellList.contains(pCheckedCell)) mCellList.add(pCheckedCell);
     mCheckedItem = pCheckedCell.getItem();
     updateChecked();
   }
@@ -30,13 +28,10 @@ public class SingleCheckCellManager<T extends NameableInterface>
       if (lCell.getItem() != null && lCell.getItem() == mCheckedItem)
       {
         lCell.setChecked(true);
-      }
-      else if (lCell.getItem() != null
-               && lCell.getItem() != mCheckedItem)
+      } else if (lCell.getItem() != null && lCell.getItem() != mCheckedItem)
       {
         lCell.setChecked(false);
-      }
-      else
+      } else
       {
         continue;
       }
@@ -51,16 +46,13 @@ public class SingleCheckCellManager<T extends NameableInterface>
       {
         lCell.setChecked(false);
         continue;
-      }
-      else if (lCell.getItem() == null)
+      } else if (lCell.getItem() == null)
       {
         continue;
-      }
-      else if (lCell.getItem() == mCheckedItem)
+      } else if (lCell.getItem() == mCheckedItem)
       {
         lCell.setChecked(true);
-      }
-      else
+      } else
       {
         lCell.setChecked(false);
       }

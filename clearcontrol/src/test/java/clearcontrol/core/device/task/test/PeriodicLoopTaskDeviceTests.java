@@ -1,14 +1,13 @@
 package clearcontrol.core.device.task.test;
 
-import static org.junit.Assert.assertTrue;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.core.device.task.PeriodicLoopTaskDevice;
+import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.core.device.task.PeriodicLoopTaskDevice;
-
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Periodic loop task device tests
@@ -39,9 +38,8 @@ public class PeriodicLoopTaskDeviceTests
 
   /**
    * Basic test
-   * 
-   * @throws ExecutionException
-   *           NA
+   *
+   * @throws ExecutionException NA
    */
   @Test
   public void test() throws ExecutionException
@@ -51,13 +49,11 @@ public class PeriodicLoopTaskDeviceTests
     mCounter = 0;
     lTestLoopTaskDevice.getStartSignalVariable().set(true);
     System.out.println("Waiting to start");
-    assertTrue(lTestLoopTaskDevice.waitForStarted(1,
-                                                  TimeUnit.SECONDS));
+    assertTrue(lTestLoopTaskDevice.waitForStarted(1, TimeUnit.SECONDS));
     ThreadSleep.sleep(1, TimeUnit.SECONDS);
     lTestLoopTaskDevice.getStopSignalVariable().set(true);
 
-    assertTrue(lTestLoopTaskDevice.waitForStopped(10,
-                                                  TimeUnit.SECONDS));
+    assertTrue(lTestLoopTaskDevice.waitForStopped(10, TimeUnit.SECONDS));
     long lCounter = mCounter;
     System.out.println("lCounter=" + mCounter);
 

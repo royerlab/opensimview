@@ -11,14 +11,11 @@ public class MinPositionVariable extends TSTDoubleVariableBase
 {
   /**
    * Instantiates a min position variable
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pAPTJDevice
-   *          APYJ device
+   *
+   * @param pVariableName variable name
+   * @param pAPTJDevice   APYJ device
    */
-  public MinPositionVariable(String pVariableName,
-                             APTJDevice pAPTJDevice)
+  public MinPositionVariable(String pVariableName, APTJDevice pAPTJDevice)
   {
     super(pVariableName, pAPTJDevice);
   }

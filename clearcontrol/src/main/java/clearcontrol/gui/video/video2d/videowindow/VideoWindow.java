@@ -1,9 +1,15 @@
 package clearcontrol.gui.video.video2d.videowindow;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-import static java.lang.Math.random;
-import static java.lang.Math.round;
+import clearcontrol.gui.video.util.WindowControl;
+import cleargl.ClearGLDefaultEventListener;
+import cleargl.ClearGLWindow;
+import com.jogamp.nativewindow.WindowClosingProtocol.WindowClosingMode;
+import com.jogamp.newt.event.WindowAdapter;
+import com.jogamp.opengl.GLException;
+import coremem.ContiguousMemoryInterface;
+import coremem.enums.NativeTypeEnum;
+import coremem.offheap.OffHeapMemory;
+import coremem.util.Size;
 
 import java.io.IOException;
 import java.nio.Buffer;
@@ -11,18 +17,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-import clearcontrol.gui.video.util.WindowControl;
-import cleargl.ClearGLDefaultEventListener;
-import cleargl.ClearGLWindow;
-
-import com.jogamp.nativewindow.WindowClosingProtocol.WindowClosingMode;
-import com.jogamp.newt.event.WindowAdapter;
-import com.jogamp.opengl.GLException;
-
-import coremem.ContiguousMemoryInterface;
-import coremem.enums.NativeTypeEnum;
-import coremem.offheap.OffHeapMemory;
-import coremem.util.Size;
+import static java.lang.Math.*;
 
 public class VideoWindow implements AutoCloseable
 {
@@ -79,11 +74,7 @@ public class VideoWindow implements AutoCloseable
 
   // private GLPixelBufferObject mPixelBufferObject;
 
-  public VideoWindow(final String pWindowName,
-                     final NativeTypeEnum pType,
-                     final int pWindowWidth,
-                     final int pWindowHeight,
-                     final boolean pFlipX) throws GLException
+  public VideoWindow(final String pWindowName, final NativeTypeEnum pType, final int pWindowWidth, final int pWindowHeight, final boolean pFlipX) throws GLException
   {
     mType = pType;
     mVideoWidth = pWindowWidth;
@@ -94,21 +85,15 @@ public class VideoWindow implements AutoCloseable
     mEffectiveWindowHeight = pWindowHeight;
     mFlipX = pFlipX;
 
-    mClearGLDebugEventListener =
-                               new ClearGLDebugEventListenerForVideoWindow(this,
-                                                                           mFlipX);
+    mClearGLDebugEventListener = new ClearGLDebugEventListenerForVideoWindow(this, mFlipX);
 
-    mClearGLWindow = new ClearGLWindow(pWindowName,
-                                       pWindowWidth,
-                                       pWindowHeight,
-                                       mClearGLDebugEventListener);
+    mClearGLWindow = new ClearGLWindow(pWindowName, pWindowWidth, pWindowHeight, mClearGLDebugEventListener);
     mClearGLDebugEventListener.setClearGLWindow(mClearGLWindow);
     mClearGLWindow.setFPS(30);
 
     final MouseControl lMouseControl = new MouseControl(this);
     mClearGLWindow.addMouseListener(lMouseControl);
-    final KeyboardControl lKeyboardControl =
-                                           new KeyboardControl(this);
+    final KeyboardControl lKeyboardControl = new KeyboardControl(this);
     mClearGLWindow.addKeyListener(lKeyboardControl);
 
     WindowAdapter lWindowControl = new WindowControl(getGLWindow());
@@ -143,9 +128,7 @@ public class VideoWindow implements AutoCloseable
     mVideoHeight = pVideoHeight;
   }
 
-  public void sendBuffer(ContiguousMemoryInterface pSourceDataObject,
-                         int pWidth,
-                         int pHeight)
+  public void sendBuffer(ContiguousMemoryInterface pSourceDataObject, int pWidth, int pHeight)
   {
     mSendBufferLock.lock();
     {
@@ -175,8 +158,7 @@ public class VideoWindow implements AutoCloseable
     try
     {
       return mNotifyBufferCopy.await(pTimeOut, pTimeUnit);
-    }
-    catch (final InterruptedException e)
+    } catch (final InterruptedException e)
     {
       e.printStackTrace();
       return waitForBufferCopy(pTimeOut, pTimeUnit);
@@ -338,72 +320,52 @@ public class VideoWindow implements AutoCloseable
 
   public void fastMinMaxSampling(final ContiguousMemoryInterface pMemory)
   {
-    if (pMemory.isFree())
-      return;
+    if (pMemory.isFree()) return;
 
-    final long lLength =
-                       min(this.mSourceBufferWidth
-                           * this.mSourceBufferHeight,
-                           pMemory.getSizeInBytes() / Size.of(mType));
-    final int lStep =
-                    1 + round(VideoWindow.cPercentageOfPixelsToSample
-                              * lLength);
+    final long lLength = min(this.mSourceBufferWidth * this.mSourceBufferHeight, pMemory.getSizeInBytes() / Size.of(mType));
+    final int lStep = 1 + round(VideoWindow.cPercentageOfPixelsToSample * lLength);
     final int lStartPixel = (int) round(random() * lStep);
 
     double lMin = Double.POSITIVE_INFINITY;
     double lMax = Double.NEGATIVE_INFINITY;
 
-    if (this.mType == NativeTypeEnum.UnsignedByte)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final double lValue =
-                            (0xFF & pMemory.getByteAligned(i)) / 255d;
-        lMin = min(lMin, lValue);
-        lMax = max(lMax, lValue);
-      }
-    else if (this.mType == NativeTypeEnum.UnsignedShort)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final double lValue = (0xFFFF & pMemory.getCharAligned(i))
-                              / 65535d;
-        lMin = min(lMin, lValue);
-        lMax = max(lMax, lValue);
-      }
-    else if (this.mType == NativeTypeEnum.UnsignedInt)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final double lValue = (0xFFFFFFFF & pMemory.getIntAligned(i))
-                              / 4294967296d;
-        lMin = min(lMin, lValue);
-        lMax = max(lMax, lValue);
-      }
-    else if (this.mType == NativeTypeEnum.Float)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final float lFloatAligned = pMemory.getFloatAligned(i);
-        lMin = min(lMin, lFloatAligned);
-        lMax = max(lMax, lFloatAligned);
-      }
-    else if (this.mType == NativeTypeEnum.Double)
-      for (int i = lStartPixel; i < lLength; i += lStep)
-      {
-        final double lDoubleAligned = pMemory.getDoubleAligned(i);
-        lMin = min(lMin, lDoubleAligned);
-        lMax = max(lMax, lDoubleAligned);
-      }
+    if (this.mType == NativeTypeEnum.UnsignedByte) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final double lValue = (0xFF & pMemory.getByteAligned(i)) / 255d;
+      lMin = min(lMin, lValue);
+      lMax = max(lMax, lValue);
+    }
+    else if (this.mType == NativeTypeEnum.UnsignedShort) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final double lValue = (0xFFFF & pMemory.getCharAligned(i)) / 65535d;
+      lMin = min(lMin, lValue);
+      lMax = max(lMax, lValue);
+    }
+    else if (this.mType == NativeTypeEnum.UnsignedInt) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final double lValue = (0xFFFFFFFF & pMemory.getIntAligned(i)) / 4294967296d;
+      lMin = min(lMin, lValue);
+      lMax = max(lMax, lValue);
+    }
+    else if (this.mType == NativeTypeEnum.Float) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final float lFloatAligned = pMemory.getFloatAligned(i);
+      lMin = min(lMin, lFloatAligned);
+      lMax = max(lMax, lFloatAligned);
+    }
+    else if (this.mType == NativeTypeEnum.Double) for (int i = lStartPixel; i < lLength; i += lStep)
+    {
+      final double lDoubleAligned = pMemory.getDoubleAligned(i);
+      lMin = min(lMin, lDoubleAligned);
+      lMax = max(lMax, lDoubleAligned);
+    }
 
-    if (!Double.isFinite(this.mSampledMinIntensity))
-      this.mSampledMinIntensity = 0;
+    if (!Double.isFinite(this.mSampledMinIntensity)) this.mSampledMinIntensity = 0;
 
-    if (!Double.isFinite(this.mSampledMaxIntensity))
-      this.mSampledMaxIntensity = 1;
+    if (!Double.isFinite(this.mSampledMaxIntensity)) this.mSampledMaxIntensity = 1;
 
-    this.mSampledMinIntensity = (1 - VideoWindow.cEpsilon)
-                                * this.mSampledMinIntensity
-                                + VideoWindow.cEpsilon * lMin;
-    this.mSampledMaxIntensity = (1 - VideoWindow.cEpsilon)
-                                * this.mSampledMaxIntensity
-                                + VideoWindow.cEpsilon * lMax;
+    this.mSampledMinIntensity = (1 - VideoWindow.cEpsilon) * this.mSampledMinIntensity + VideoWindow.cEpsilon * lMin;
+    this.mSampledMaxIntensity = (1 - VideoWindow.cEpsilon) * this.mSampledMaxIntensity + VideoWindow.cEpsilon * lMax;
 
     // System.out.println("mSampledMinIntensity=" +
     // mSampledMinIntensity);

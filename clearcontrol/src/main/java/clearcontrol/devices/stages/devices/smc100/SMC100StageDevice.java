@@ -1,93 +1,53 @@
 package clearcontrol.devices.stages.devices.smc100;
 
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.com.serial.SerialDevice;
 import clearcontrol.com.serial.adapters.SerialTextDeviceAdapter;
 import clearcontrol.core.concurrent.timing.WaitingInterface;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.stages.StageDeviceInterface;
 import clearcontrol.devices.stages.StageType;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100EnableAdapter;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100HomingAdapter;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100MaxPositionAdapter;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100MinPositionAdapter;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100PositionCurrentAdapter;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100PositionTargetAdapter;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100Protocol;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100ReadyAdapter;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100ResetAdapter;
-import clearcontrol.devices.stages.devices.smc100.adapters.SMC100StopAdapter;
+import clearcontrol.devices.stages.devices.smc100.adapters.*;
 
-public class SMC100StageDevice extends SerialDevice implements
-                               StageDeviceInterface,
-                               WaitingInterface
+import java.util.concurrent.TimeUnit;
+
+public class SMC100StageDevice extends SerialDevice implements StageDeviceInterface, WaitingInterface
 {
 
-  private final Variable<Boolean> mEnableVariable, mReadyVariable,
-      mHomingVariable, mStopVariable, mResetVariable;
-  private final Variable<Double> mTargetPositionVariable,
-      mCurrentPositionVariable, mMinPositionVariable,
-      mMaxPositionVariable, mGranularityPositionVariable;
+  private final Variable<Boolean> mEnableVariable, mReadyVariable, mHomingVariable, mStopVariable, mResetVariable;
+  private final Variable<Double> mTargetPositionVariable, mCurrentPositionVariable, mMinPositionVariable, mMaxPositionVariable, mGranularityPositionVariable;
 
   public SMC100StageDevice(String pDeviceName, String pPortName)
   {
     super(pDeviceName, pPortName, SMC100Protocol.cBaudRate);
 
-    final SerialTextDeviceAdapter<Boolean> lEnableAdapter =
-                                                          new SMC100EnableAdapter();
-    mEnableVariable = addSerialVariable(pDeviceName + "Enable",
-                                        lEnableAdapter);
+    final SerialTextDeviceAdapter<Boolean> lEnableAdapter = new SMC100EnableAdapter();
+    mEnableVariable = addSerialVariable(pDeviceName + "Enable", lEnableAdapter);
 
-    final SerialTextDeviceAdapter<Boolean> lReadyAdapter =
-                                                         new SMC100ReadyAdapter();
-    mReadyVariable = addSerialVariable(pDeviceName + "Ready",
-                                       lReadyAdapter);
+    final SerialTextDeviceAdapter<Boolean> lReadyAdapter = new SMC100ReadyAdapter();
+    mReadyVariable = addSerialVariable(pDeviceName + "Ready", lReadyAdapter);
 
-    final SerialTextDeviceAdapter<Boolean> lHomingAdapter =
-                                                          new SMC100HomingAdapter();
-    mHomingVariable = addSerialVariable(pDeviceName + "Homing",
-                                        lHomingAdapter);
+    final SerialTextDeviceAdapter<Boolean> lHomingAdapter = new SMC100HomingAdapter();
+    mHomingVariable = addSerialVariable(pDeviceName + "Homing", lHomingAdapter);
 
-    final SerialTextDeviceAdapter<Double> lMinPositionAdapter =
-                                                              new SMC100MinPositionAdapter();
-    mMinPositionVariable = addSerialVariable(pDeviceName
-                                             + "MinPosition",
-                                             lMinPositionAdapter);
+    final SerialTextDeviceAdapter<Double> lMinPositionAdapter = new SMC100MinPositionAdapter();
+    mMinPositionVariable = addSerialVariable(pDeviceName + "MinPosition", lMinPositionAdapter);
 
-    final SerialTextDeviceAdapter<Double> lMaxPositionAdapter =
-                                                              new SMC100MaxPositionAdapter();
-    mMaxPositionVariable = addSerialVariable(pDeviceName
-                                             + "MaxPosition",
-                                             lMaxPositionAdapter);
+    final SerialTextDeviceAdapter<Double> lMaxPositionAdapter = new SMC100MaxPositionAdapter();
+    mMaxPositionVariable = addSerialVariable(pDeviceName + "MaxPosition", lMaxPositionAdapter);
 
-    mGranularityPositionVariable = new Variable<Double>(pDeviceName
-                                                        + "GranularityPosition",
-                                                        0d);
+    mGranularityPositionVariable = new Variable<Double>(pDeviceName + "GranularityPosition", 0d);
 
-    final SerialTextDeviceAdapter<Boolean> lStopAdapter =
-                                                        new SMC100StopAdapter();
-    mStopVariable = addSerialVariable(pDeviceName + "Stop",
-                                      lStopAdapter);
+    final SerialTextDeviceAdapter<Boolean> lStopAdapter = new SMC100StopAdapter();
+    mStopVariable = addSerialVariable(pDeviceName + "Stop", lStopAdapter);
 
-    final SerialTextDeviceAdapter<Double> lTargetPositionAdapter =
-                                                                 new SMC100PositionTargetAdapter(this);
-    mTargetPositionVariable =
-                            addSerialVariable(pDeviceName
-                                              + "TargetPosition",
-                                              lTargetPositionAdapter);
+    final SerialTextDeviceAdapter<Double> lTargetPositionAdapter = new SMC100PositionTargetAdapter(this);
+    mTargetPositionVariable = addSerialVariable(pDeviceName + "TargetPosition", lTargetPositionAdapter);
 
-    final SerialTextDeviceAdapter<Double> lCurrentPositionAdapter =
-                                                                  new SMC100PositionCurrentAdapter(this);
-    mCurrentPositionVariable =
-                             addSerialVariable(pDeviceName
-                                               + "CurrentPosition",
-                                               lCurrentPositionAdapter);
+    final SerialTextDeviceAdapter<Double> lCurrentPositionAdapter = new SMC100PositionCurrentAdapter(this);
+    mCurrentPositionVariable = addSerialVariable(pDeviceName + "CurrentPosition", lCurrentPositionAdapter);
 
-    final SerialTextDeviceAdapter<Boolean> lResetAdapter =
-                                                         new SMC100ResetAdapter();
-    mResetVariable = addSerialVariable(pDeviceName + "Reset",
-                                       lResetAdapter);
+    final SerialTextDeviceAdapter<Boolean> lResetAdapter = new SMC100ResetAdapter();
+    mResetVariable = addSerialVariable(pDeviceName + "Reset", lResetAdapter);
 
   }
 
@@ -240,9 +200,7 @@ public class SMC100StageDevice extends SerialDevice implements
   }
 
   @Override
-  public Boolean waitToBeReady(int pIndex,
-                               long pTimeOut,
-                               TimeUnit pTimeUnit)
+  public Boolean waitToBeReady(int pIndex, long pTimeOut, TimeUnit pTimeUnit)
   {
     return waitFor(pTimeOut, pTimeUnit, () -> mReadyVariable.get());
   }
@@ -256,12 +214,7 @@ public class SMC100StageDevice extends SerialDevice implements
   @Override
   public String toString()
   {
-    return "SMC100StageDevice [mSerial=" + getSerial()
-           + ", getNumberOfDOFs()="
-           + getNumberOfDOFs()
-           + ", getDeviceName()="
-           + getName()
-           + "]";
+    return "SMC100StageDevice [mSerial=" + getSerial() + ", getNumberOfDOFs()=" + getNumberOfDOFs() + ", getDeviceName()=" + getName() + "]";
   }
 
 }

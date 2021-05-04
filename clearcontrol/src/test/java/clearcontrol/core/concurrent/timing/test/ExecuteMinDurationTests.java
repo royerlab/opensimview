@@ -1,14 +1,13 @@
 package clearcontrol.core.concurrent.timing.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.core.concurrent.timing.ElapsedTime;
 import clearcontrol.core.concurrent.timing.ExecuteMinDuration;
-
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Execute min druation tests
@@ -30,12 +29,7 @@ public class ExecuteMinDurationTests
 
       for (int i = 0; i < 10; i++)
       {
-        lElapsedTimeInMilliseconds =
-                                   ElapsedTime.measure("test",
-                                                       () -> ExecuteMinDuration.execute(50,
-                                                                                        TimeUnit.MILLISECONDS,
-                                                                                        () -> ThreadSleep.sleep(5,
-                                                                                                                TimeUnit.MILLISECONDS)));
+        lElapsedTimeInMilliseconds = ElapsedTime.measure("test", () -> ExecuteMinDuration.execute(50, TimeUnit.MILLISECONDS, () -> ThreadSleep.sleep(5, TimeUnit.MILLISECONDS)));
       }
 
       assertEquals(50, lElapsedTimeInMilliseconds, 10);
@@ -46,12 +40,7 @@ public class ExecuteMinDurationTests
 
       for (int i = 0; i < 10; i++)
       {
-        lElapsedTimeInMilliseconds =
-                                   ElapsedTime.measure("test",
-                                                       () -> ExecuteMinDuration.execute(10,
-                                                                                        TimeUnit.MILLISECONDS,
-                                                                                        () -> ThreadSleep.sleep(20,
-                                                                                                                TimeUnit.MILLISECONDS)));
+        lElapsedTimeInMilliseconds = ElapsedTime.measure("test", () -> ExecuteMinDuration.execute(10, TimeUnit.MILLISECONDS, () -> ThreadSleep.sleep(20, TimeUnit.MILLISECONDS)));
       }
 
       assertEquals(20, lElapsedTimeInMilliseconds, 10);

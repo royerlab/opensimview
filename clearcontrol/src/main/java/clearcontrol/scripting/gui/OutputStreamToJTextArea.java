@@ -1,9 +1,8 @@
 package clearcontrol.scripting.gui;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import javax.swing.JTextArea;
 
 public class OutputStreamToJTextArea extends OutputStream
 {

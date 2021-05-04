@@ -8,16 +8,13 @@ import clearcontrol.core.log.LoggingFeature;
  *
  * @author royer
  */
-public abstract class LoopTaskDevice extends TaskDevice implements
-                                     LoggingFeature,
-                                     WaitingInterface
+public abstract class LoopTaskDevice extends TaskDevice implements LoggingFeature, WaitingInterface
 {
 
   /**
    * Instanciates a loop task device
-   * 
-   * @param pDeviceName
-   *          device name
+   *
+   * @param pDeviceName device name
    */
   public LoopTaskDevice(final String pDeviceName)
   {
@@ -31,14 +28,15 @@ public abstract class LoopTaskDevice extends TaskDevice implements
     {
       boolean lResult = loop();
 
-      if (!lResult)
-        stopTask();
+      if (!lResult) stopTask();
     }
-  };
+  }
+
+  ;
 
   /**
    * loop to execute
-   * 
+   *
    * @return true -> continue looping, false -> stop loop
    */
   public abstract boolean loop();

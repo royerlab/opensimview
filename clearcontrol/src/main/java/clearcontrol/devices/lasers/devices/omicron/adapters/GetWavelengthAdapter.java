@@ -8,9 +8,7 @@ import clearcontrol.devices.lasers.devices.omicron.adapters.protocol.ProtocolOmi
  *
  * @author royer
  */
-public class GetWavelengthAdapter extends OmicronAdapter<Integer>
-                                  implements
-                                  SerialTextDeviceAdapter<Integer>
+public class GetWavelengthAdapter extends OmicronAdapter<Integer> implements SerialTextDeviceAdapter<Integer>
 {
 
   @Override
@@ -22,12 +20,9 @@ public class GetWavelengthAdapter extends OmicronAdapter<Integer>
   @Override
   public Integer parseValue(final byte[] pMessage)
   {
-    final String[] lSplittedMessage =
-                                    ProtocolOmicron.splitMessage(ProtocolOmicron.cGetSpecInfoReplyPrefix,
-                                                                 pMessage);
+    final String[] lSplittedMessage = ProtocolOmicron.splitMessage(ProtocolOmicron.cGetSpecInfoReplyPrefix, pMessage);
     final String lWavelengthString = lSplittedMessage[0];
-    final int lWavelengthInNanometer =
-                                     Integer.parseInt(lWavelengthString);
+    final int lWavelengthInNanometer = Integer.parseInt(lWavelengthString);
     return lWavelengthInNanometer;
   }
 

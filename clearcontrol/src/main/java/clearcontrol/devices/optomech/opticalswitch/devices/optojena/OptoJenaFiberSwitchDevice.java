@@ -1,7 +1,5 @@
 package clearcontrol.devices.optomech.opticalswitch.devices.optojena;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import clearcontrol.com.serial.SerialDevice;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.position.PositionDeviceInterface;
@@ -9,14 +7,14 @@ import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.optomech.OptoMechDeviceInterface;
 import clearcontrol.devices.optomech.opticalswitch.devices.optojena.adapters.FiberSwitchPositionAdapter;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * OptoJena fiber switch device
  *
  * @author royer
  */
-public class OptoJenaFiberSwitchDevice extends SerialDevice implements
-                                       PositionDeviceInterface,
-                                       OptoMechDeviceInterface
+public class OptoJenaFiberSwitchDevice extends SerialDevice implements PositionDeviceInterface, OptoMechDeviceInterface
 {
 
   private Variable<Integer> mPositionVariable;
@@ -24,35 +22,28 @@ public class OptoJenaFiberSwitchDevice extends SerialDevice implements
 
   /**
    * OptoJena switch device
-   * 
-   * @param pDeviceIndex
-   *          device index
+   *
+   * @param pDeviceIndex device index
    */
   public OptoJenaFiberSwitchDevice(final int pDeviceIndex)
   {
-    this(MachineConfiguration.get().getSerialDevicePort(
-                                                        "fiberswitch.optojena",
-                                                        pDeviceIndex,
-                                                        "NULL"));
+    this(MachineConfiguration.get().getSerialDevicePort("fiberswitch.optojena", pDeviceIndex, "NULL"));
 
     mPositionVariable = new Variable<Integer>("SwitchPosition", 0);
   }
 
   /**
    * OptoJena fiber switch device
-   * 
-   * @param pPortName
-   *          port name
+   *
+   * @param pPortName port name
    */
   public OptoJenaFiberSwitchDevice(final String pPortName)
   {
     super("OptoJenaFiberSwitch", pPortName, 76800);
 
-    final FiberSwitchPositionAdapter lFiberSwitchPosition =
-                                                          new FiberSwitchPositionAdapter(this);
+    final FiberSwitchPositionAdapter lFiberSwitchPosition = new FiberSwitchPositionAdapter(this);
 
-    mPositionVariable = addSerialVariable("OpticalSwitchPosition",
-                                          lFiberSwitchPosition);
+    mPositionVariable = addSerialVariable("OpticalSwitchPosition", lFiberSwitchPosition);
 
   }
 
@@ -86,13 +77,11 @@ public class OptoJenaFiberSwitchDevice extends SerialDevice implements
   @Override
   public int[] getValidPositions()
   {
-    return new int[]
-    { 1, 2, 3, 4, 5, 6 };
+    return new int[]{1, 2, 3, 4, 5, 6};
   }
 
   @Override
-  public void setPositionName(int pPositionIndex,
-                              String pPositionName)
+  public void setPositionName(int pPositionIndex, String pPositionName)
   {
     mFilterPositionToNameMap.put(pPositionIndex, pPositionName);
   }

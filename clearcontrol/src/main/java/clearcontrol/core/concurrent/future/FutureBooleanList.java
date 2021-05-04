@@ -1,25 +1,22 @@
 package clearcontrol.core.concurrent.future;
 
+import clearcontrol.core.log.LoggingFeature;
+
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import clearcontrol.core.log.LoggingFeature;
-
 /**
  * Set of Futures that return booleans.
  *
  * @author royer
  */
-public class FutureBooleanList implements
-                               Future<Boolean>,
-                               LoggingFeature
+public class FutureBooleanList implements Future<Boolean>, LoggingFeature
 {
 
-  LinkedHashMap<Future<Boolean>, String> mFutureMap =
-                                                    new LinkedHashMap<Future<Boolean>, String>();
+  LinkedHashMap<Future<Boolean>, String> mFutureMap = new LinkedHashMap<Future<Boolean>, String>();
 
   /**
    * Instanciates a future boolean list
@@ -31,11 +28,9 @@ public class FutureBooleanList implements
 
   /**
    * Adds a future with a given string id
-   * 
-   * @param pString
-   *          string id
-   * @param pFuture
-   *          future
+   *
+   * @param pString string id
+   * @param pFuture future
    */
   public void addFuture(String pString, Future<Boolean> pFuture)
   {
@@ -46,8 +41,7 @@ public class FutureBooleanList implements
   public boolean cancel(boolean pMayInterruptIfRunning)
   {
     for (final Future<Boolean> lFuture : mFutureMap.keySet())
-      if (!lFuture.cancel(pMayInterruptIfRunning))
-        return false;
+      if (!lFuture.cancel(pMayInterruptIfRunning)) return false;
     return true;
   }
 
@@ -56,8 +50,7 @@ public class FutureBooleanList implements
   {
     for (final Future<Boolean> lFuture : mFutureMap.keySet())
     {
-      if (!lFuture.isCancelled())
-        return false;
+      if (!lFuture.isCancelled()) return false;
     }
     return true;
   }
@@ -67,8 +60,7 @@ public class FutureBooleanList implements
   {
     for (final Future<Boolean> lFuture : mFutureMap.keySet())
     {
-      if (!lFuture.isDone())
-        return false;
+      if (!lFuture.isDone()) return false;
     }
     return true;
   }
@@ -79,17 +71,13 @@ public class FutureBooleanList implements
     for (final Future<Boolean> lFuture : mFutureMap.keySet())
     {
       final Boolean lBoolean = lFuture.get();
-      if (lBoolean == null || !lBoolean)
-        return Boolean.FALSE;
+      if (lBoolean == null || !lBoolean) return Boolean.FALSE;
     }
     return Boolean.TRUE;
   }
 
   @Override
-  public Boolean get(long pTimeout, TimeUnit pUnit)
-                                                    throws InterruptedException,
-                                                    ExecutionException,
-                                                    TimeoutException
+  public Boolean get(long pTimeout, TimeUnit pUnit) throws InterruptedException, ExecutionException, TimeoutException
   {
     for (final Future<Boolean> lFuture : mFutureMap.keySet())
       if (lFuture != null)
@@ -97,14 +85,11 @@ public class FutureBooleanList implements
         try
         {
           //info("Waiting for %s ...",mFutureMap.get(lFuture).trim());
-          if (!lFuture.get(pTimeout, pUnit))
-            return Boolean.FALSE;
+          if (!lFuture.get(pTimeout, pUnit)) return Boolean.FALSE;
           //info("Done waiting for %s.",mFutureMap.get(lFuture).trim());
-        }
-        catch (TimeoutException e)
+        } catch (TimeoutException e)
         {
-          warning("Timeout caused by: %s \n",
-                  mFutureMap.get(lFuture).trim());
+          warning("Timeout caused by: %s \n", mFutureMap.get(lFuture).trim());
 
           throw e;
         }

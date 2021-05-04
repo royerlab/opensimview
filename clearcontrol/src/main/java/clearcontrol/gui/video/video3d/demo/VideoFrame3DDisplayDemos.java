@@ -1,7 +1,5 @@
 package clearcontrol.gui.video.video3d.demo;
 
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.variable.Variable;
 import clearcontrol.gui.video.video3d.Stack3DDisplay;
 import clearcontrol.stack.ContiguousOffHeapPlanarStackFactory;
@@ -13,8 +11,9 @@ import coremem.buffers.ContiguousBuffer;
 import coremem.offheap.OffHeapMemory;
 import coremem.recycling.BasicRecycler;
 import coremem.recycling.RecyclerInterface;
-
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 public class VideoFrame3DDisplayDemos
 {
@@ -28,26 +27,15 @@ public class VideoFrame3DDisplayDemos
     final long lResolutionY = lResolutionX + 1;
     final long lResolutionZ = lResolutionX / 2;
 
-    final ContiguousMemoryInterface lContiguousMemory =
-                                                      OffHeapMemory.allocateShorts(lResolutionX
-                                                                                   * lResolutionY
-                                                                                   * lResolutionZ);
+    final ContiguousMemoryInterface lContiguousMemory = OffHeapMemory.allocateShorts(lResolutionX * lResolutionY * lResolutionZ);
 
-    final ContiguousBuffer lContiguousBuffer =
-                                             new ContiguousBuffer(lContiguousMemory);
+    final ContiguousBuffer lContiguousBuffer = new ContiguousBuffer(lContiguousMemory);
 
-    @SuppressWarnings("unchecked")
-    final OffHeapPlanarStack lStack =
-                                    OffHeapPlanarStack.createStack(lContiguousMemory,
-                                                                   lResolutionX,
-                                                                   lResolutionY,
-                                                                   lResolutionZ);
+    @SuppressWarnings("unchecked") final OffHeapPlanarStack lStack = OffHeapPlanarStack.createStack(lContiguousMemory, lResolutionX, lResolutionY, lResolutionZ);
 
-    final Stack3DDisplay lVideoFrame3DDisplay =
-                                              new Stack3DDisplay("Test");
+    final Stack3DDisplay lVideoFrame3DDisplay = new Stack3DDisplay("Test");
 
-    final Variable<StackInterface> lFrameReferenceVariable =
-                                                           lVideoFrame3DDisplay.getInputStackVariable();
+    final Variable<StackInterface> lFrameReferenceVariable = lVideoFrame3DDisplay.getInputStackVariable();
 
     lVideoFrame3DDisplay.open();
     lVideoFrame3DDisplay.setVisible(true);
@@ -97,18 +85,13 @@ public class VideoFrame3DDisplayDemos
       final long lResolutionY = lResolutionX + 1;
       final long lResolutionZ = lResolutionX / 2;
 
-      final ContiguousOffHeapPlanarStackFactory lOffHeapPlanarStackFactory =
-                                                                           new ContiguousOffHeapPlanarStackFactory();
+      final ContiguousOffHeapPlanarStackFactory lOffHeapPlanarStackFactory = new ContiguousOffHeapPlanarStackFactory();
 
-      final RecyclerInterface<StackInterface, StackRequest> lRecycler =
-                                                                      new BasicRecycler<StackInterface, StackRequest>(lOffHeapPlanarStackFactory,
-                                                                                                                      cMaximumNumberOfObjects);
+      final RecyclerInterface<StackInterface, StackRequest> lRecycler = new BasicRecycler<StackInterface, StackRequest>(lOffHeapPlanarStackFactory, cMaximumNumberOfObjects);
 
-      final Stack3DDisplay lVideoFrame3DDisplay =
-                                                new Stack3DDisplay("Test");
+      final Stack3DDisplay lVideoFrame3DDisplay = new Stack3DDisplay("Test");
 
-      final Variable<StackInterface> lFrameReferenceVariable =
-                                                             lVideoFrame3DDisplay.getInputStackVariable();
+      final Variable<StackInterface> lFrameReferenceVariable = lVideoFrame3DDisplay.getInputStackVariable();
 
       lVideoFrame3DDisplay.open();
       lVideoFrame3DDisplay.setVisible(true);
@@ -116,15 +99,8 @@ public class VideoFrame3DDisplayDemos
       for (int i = 0; i < 32000; i++)
       {
 
-        final StackInterface lStack =
-                                    OffHeapPlanarStack.getOrWaitWithRecycler(lRecycler,
-                                                                             10,
-                                                                             TimeUnit.MILLISECONDS,
-                                                                             lResolutionX,
-                                                                             lResolutionY,
-                                                                             lResolutionZ);
-        final ContiguousBuffer lContiguousBuffer =
-                                                 new ContiguousBuffer(lStack.getContiguousMemory());
+        final StackInterface lStack = OffHeapPlanarStack.getOrWaitWithRecycler(lRecycler, 10, TimeUnit.MILLISECONDS, lResolutionX, lResolutionY, lResolutionZ);
+        final ContiguousBuffer lContiguousBuffer = new ContiguousBuffer(lStack.getContiguousMemory());
         lContiguousBuffer.rewind();
         for (int z = 0; z < lResolutionZ; z++)
         {
@@ -143,14 +119,11 @@ public class VideoFrame3DDisplayDemos
 
         if (i % 100 == 0)
         {
-          System.out.println("lRecycler.getNumberOfAvailableObjects()="
-                             + lRecycler.getNumberOfAvailableObjects());
-          System.out.println("lRecycler.getNumberOfLiveObjects()="
-                             + lRecycler.getNumberOfLiveObjects());
+          System.out.println("lRecycler.getNumberOfAvailableObjects()=" + lRecycler.getNumberOfAvailableObjects());
+          System.out.println("lRecycler.getNumberOfLiveObjects()=" + lRecycler.getNumberOfLiveObjects());
         }
 
-        if (!lVideoFrame3DDisplay.isVisible())
-          break;
+        if (!lVideoFrame3DDisplay.isVisible()) break;
       }
 
       lVideoFrame3DDisplay.close();

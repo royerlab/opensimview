@@ -9,10 +9,7 @@ import clearcontrol.devices.optomech.OptoMechDeviceInterface;
  *
  * @author royer
  */
-public interface OpticalSwitchDeviceInterface extends
-                                              NameableInterface,
-                                              SwitchingDeviceInterface,
-                                              OptoMechDeviceInterface
+public interface OpticalSwitchDeviceInterface extends NameableInterface, SwitchingDeviceInterface, OptoMechDeviceInterface
 {
 
 }

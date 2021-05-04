@@ -1,30 +1,25 @@
 package clearcontrol.gui.jfx.other.recycler.demo;
 
-import java.util.Stack;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.gui.jfx.other.recycler.RecyclerPanel;
+import coremem.exceptions.FreedException;
+import coremem.recycling.*;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.gui.jfx.other.recycler.RecyclerPanel;
-import coremem.exceptions.FreedException;
-import coremem.recycling.BasicRecycler;
-import coremem.recycling.RecyclableFactoryInterface;
-import coremem.recycling.RecyclableInterface;
-import coremem.recycling.RecyclerInterface;
-import coremem.recycling.RecyclerRequestInterface;
+import java.util.Stack;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Recycler panel demo
  *
  * @author royer
  */
-public class RecyclerPaneDemo extends Application
-                              implements AsynchronousExecutorFeature
+public class RecyclerPaneDemo extends Application implements AsynchronousExecutorFeature
 {
 
   private class DemoRequest implements RecyclerRequestInterface
@@ -37,8 +32,7 @@ public class RecyclerPaneDemo extends Application
     }
   }
 
-  private class DemoFactory implements
-                            RecyclableFactoryInterface<DemoRecyclable, DemoRequest>
+  private class DemoFactory implements RecyclableFactoryInterface<DemoRecyclable, DemoRequest>
   {
     @Override
     public DemoRecyclable create(DemoRequest pParameters)
@@ -47,8 +41,7 @@ public class RecyclerPaneDemo extends Application
     }
   }
 
-  private class DemoRecyclable implements
-                               RecyclableInterface<DemoRecyclable, DemoRequest>
+  private class DemoRecyclable implements RecyclableInterface<DemoRecyclable, DemoRequest>
   {
     RecyclerInterface<DemoRecyclable, DemoRequest> mRecycler;
     String mString;
@@ -62,10 +55,7 @@ public class RecyclerPaneDemo extends Application
     @Override
     public long getSizeInBytes()
     {
-      return (mString == null
-              || mString.isEmpty()) ? 0
-                                    : mString.length()
-                                      * Character.BYTES;
+      return (mString == null || mString.isEmpty()) ? 0 : mString.length() * Character.BYTES;
     }
 
     @Override
@@ -128,25 +118,21 @@ public class RecyclerPaneDemo extends Application
   public void start(Stage stage)
   {
     Group root = new Group();
-    Scene scene = new Scene(root,
-                            RecyclerPanel.cPrefWidth,
-                            RecyclerPanel.cPrefHeight);
+    Scene scene = new Scene(root, RecyclerPanel.cPrefWidth, RecyclerPanel.cPrefHeight);
     stage.setScene(scene);
     stage.setTitle("RecyclerPane Demo");
     // scene.setFill(Color.BLACK);
 
     DemoFactory lFactory = new DemoFactory();
 
-    BasicRecycler<DemoRecyclable, DemoRequest> lRecycler =
-                                                         new BasicRecycler<>(lFactory,
-                                                                             250);
+    BasicRecycler<DemoRecyclable, DemoRequest> lRecycler = new BasicRecycler<>(lFactory, 250);
 
-    RecyclerPanel lInstrumentedRecyclerPane =
-                                            new RecyclerPanel(lRecycler);
+    RecyclerPanel lInstrumentedRecyclerPane = new RecyclerPanel(lRecycler);
 
     root.getChildren().add(lInstrumentedRecyclerPane);
 
-    executeAsynchronously(() -> {
+    executeAsynchronously(() ->
+    {
 
       try
       {
@@ -162,31 +148,24 @@ public class RecyclerPaneDemo extends Application
               DemoRecyclable lRecyclable = lStack.pop();
               lRecyclable.release();
             }
-          }
-          else
+          } else
           {
             // /System.out.println("REQUESTING!");
             DemoRequest lRequest = new DemoRequest("req" + i);
 
-            DemoRecyclable lRecyclable = lRecycler.get(true,
-                                                       1,
-                                                       TimeUnit.SECONDS,
-                                                       lRequest);
+            DemoRecyclable lRecyclable = lRecycler.get(true, 1, TimeUnit.SECONDS, lRequest);
 
             if (lRecyclable == null)
             {
               // System.out.println("!!NULL!!");
-            }
-            else
-              lStack.push(lRecyclable);
+            } else lStack.push(lRecyclable);
           }
 
           ThreadSleep.sleep(10, TimeUnit.MILLISECONDS);
         }
 
         System.out.println("Done!");
-      }
-      catch (Throwable e)
+      } catch (Throwable e)
       {
         e.printStackTrace();
       }
@@ -200,9 +179,8 @@ public class RecyclerPaneDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

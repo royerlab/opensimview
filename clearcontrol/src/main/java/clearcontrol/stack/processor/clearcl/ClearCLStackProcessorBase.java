@@ -9,24 +9,18 @@ import clearcontrol.stack.processor.StackProcessorInterface;
  *
  * @author royer
  */
-public abstract class ClearCLStackProcessorBase extends
-                                                StackProcessorBase
-                                                implements
-                                                StackProcessorInterface
+public abstract class ClearCLStackProcessorBase extends StackProcessorBase implements StackProcessorInterface
 {
 
   private final ClearCLContext mContext;
 
   /**
    * Instanciates a ClearCL powered stack processor
-   * 
-   * @param pContext
-   *          ClearCL context
-   * @param pProcessorName
-   *          processor name
+   *
+   * @param pContext       ClearCL context
+   * @param pProcessorName processor name
    */
-  public ClearCLStackProcessorBase(String pProcessorName,
-                                   ClearCLContext pContext)
+  public ClearCLStackProcessorBase(String pProcessorName, ClearCLContext pContext)
   {
     super(pProcessorName);
     mContext = pContext;
@@ -34,7 +28,7 @@ public abstract class ClearCLStackProcessorBase extends
 
   /**
    * Returns underlying ClearCL context
-   * 
+   *
    * @return context
    */
   public ClearCLContext getContext()

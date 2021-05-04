@@ -1,12 +1,11 @@
 package clearcontrol.gui.jfx.var.checkbox.demo;
 
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.var.checkbox.VariableCheckBox;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.var.checkbox.VariableCheckBox;
 
 /**
  * VariableCheckBox Demo
@@ -26,13 +25,12 @@ public class VariableCheckBoxDemo extends Application
     // scene.setFill(Color.BLACK);
 
     Variable<Boolean> lVariable = new Variable<>("var", true);
-    lVariable.addSetListener((o, n) -> {
+    lVariable.addSetListener((o, n) ->
+    {
       System.out.println(n);
     });
 
-    VariableCheckBox lVariableCheckBox =
-                                       new VariableCheckBox("democheckbox",
-                                                            lVariable);
+    VariableCheckBox lVariableCheckBox = new VariableCheckBox("democheckbox", lVariable);
 
     root.add(lVariableCheckBox, 0, 2);
 
@@ -41,9 +39,8 @@ public class VariableCheckBoxDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

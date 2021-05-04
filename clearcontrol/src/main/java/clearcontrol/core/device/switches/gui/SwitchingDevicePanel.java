@@ -14,9 +14,8 @@ public class SwitchingDevicePanel extends OnOffArrayPane
 
   /**
    * Instantiates a switching device panel for a given switching device.
-   * 
-   * @param pSwitchingDevice
-   *          switching device
+   *
+   * @param pSwitchingDevice switching device
    */
   public SwitchingDevicePanel(SwitchingDeviceInterface pSwitchingDevice)
   {
@@ -27,8 +26,7 @@ public class SwitchingDevicePanel extends OnOffArrayPane
     for (int i = 0; i < lNumberOfSwitches; i++)
     {
       String lName = pSwitchingDevice.getSwitchName(i);
-      Variable<Boolean> lSwitchVariable =
-                                        pSwitchingDevice.getSwitchVariable(i);
+      Variable<Boolean> lSwitchVariable = pSwitchingDevice.getSwitchVariable(i);
 
       addSwitch(lName, lSwitchVariable);
     }
@@ -37,14 +35,11 @@ public class SwitchingDevicePanel extends OnOffArrayPane
   /**
    * Instantiates a switching device panel for a given switching device. This
    * constructor offers the opportunity to override the switches' name.
-   * 
-   * @param pSwitchingDevice
-   *          switching device
-   * @param pSubstituteNames
-   *          switches names
+   *
+   * @param pSwitchingDevice switching device
+   * @param pSubstituteNames switches names
    */
-  public SwitchingDevicePanel(SwitchingDeviceInterface pSwitchingDevice,
-                              String... pSubstituteNames)
+  public SwitchingDevicePanel(SwitchingDeviceInterface pSwitchingDevice, String... pSubstituteNames)
   {
     super();
 
@@ -53,8 +48,7 @@ public class SwitchingDevicePanel extends OnOffArrayPane
     for (int i = 0; i < lNumberOfSwitches; i++)
     {
       String lName = pSubstituteNames[i];
-      Variable<Boolean> lSwitchVariable =
-                                        pSwitchingDevice.getSwitchVariable(i);
+      Variable<Boolean> lSwitchVariable = pSwitchingDevice.getSwitchVariable(i);
 
       addSwitch(lName, lSwitchVariable);
     }

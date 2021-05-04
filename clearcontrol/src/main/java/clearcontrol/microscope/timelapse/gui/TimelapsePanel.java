@@ -16,9 +16,8 @@ public class TimelapsePanel extends CustomGridPane
 
   /**
    * Instanciates a timelapse panel.
-   * 
-   * @param pTimelapseInterface
-   *          timelapse device
+   *
+   * @param pTimelapseInterface timelapse device
    */
   public TimelapsePanel(TimelapseInterface pTimelapseInterface)
   {

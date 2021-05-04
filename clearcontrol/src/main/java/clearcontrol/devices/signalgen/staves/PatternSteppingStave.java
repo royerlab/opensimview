@@ -2,8 +2,7 @@ package clearcontrol.devices.signalgen.staves;
 
 import static java.lang.Math.floor;
 
-public abstract class PatternSteppingStave extends StaveAbstract
-                                           implements StaveInterface
+public abstract class PatternSteppingStave extends StaveAbstract implements StaveInterface
 {
 
   private volatile float mSyncStart = 0;
@@ -15,10 +14,7 @@ public abstract class PatternSteppingStave extends StaveAbstract
     super(pName);
   }
 
-  public PatternSteppingStave(final String pName,
-                              float pSyncStart,
-                              float pSyncStop,
-                              int pNumberOfSteps)
+  public PatternSteppingStave(final String pName, float pSyncStart, float pSyncStop, int pNumberOfSteps)
   {
     super(pName);
     setNumberOfSteps(pNumberOfSteps);
@@ -32,21 +28,13 @@ public abstract class PatternSteppingStave extends StaveAbstract
   @Override
   public float getValue(float pNormalizedTime)
   {
-    if (!isEnabled())
-      return 1;
+    if (!isEnabled()) return 1;
 
-    if (pNormalizedTime < getSyncStart()
-        || pNormalizedTime > getSyncStop())
-      return 0;
+    if (pNormalizedTime < getSyncStart() || pNormalizedTime > getSyncStop()) return 0;
 
-    final float lNormalizedRampTime =
-                                    (pNormalizedTime - getSyncStart())
-                                      / (getSyncStop()
-                                         - getSyncStart());
+    final float lNormalizedRampTime = (pNormalizedTime - getSyncStart()) / (getSyncStop() - getSyncStart());
 
-    final int lNormalizedSteppingRampTime =
-                                          (int) floor(getNumberOfSteps()
-                                                      * lNormalizedRampTime);
+    final int lNormalizedSteppingRampTime = (int) floor(getNumberOfSteps() * lNormalizedRampTime);
 
     return function(lNormalizedSteppingRampTime);
   }

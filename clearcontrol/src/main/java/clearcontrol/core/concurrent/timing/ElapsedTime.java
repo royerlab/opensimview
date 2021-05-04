@@ -15,15 +15,12 @@ public class ElapsedTime
 
   /**
    * Measures the elapsed time of a Runnable.
-   * 
-   * @param pDescription
-   *          description of the runnable
-   * @param pRunnable
-   *          runnable
+   *
+   * @param pDescription description of the runnable
+   * @param pRunnable    runnable
    * @return elapsed time in milliseconds
    */
-  public static double measure(String pDescription,
-                               Runnable pRunnable)
+  public static double measure(String pDescription, Runnable pRunnable)
   {
     return measure(true, pDescription, pRunnable);
   }
@@ -31,18 +28,13 @@ public class ElapsedTime
   /**
    * Measures the elapsed time of a Runnable. An optional boolean flag can be
    * used to switch of the timing.
-   * 
-   * @param pActive
-   *          true -> measure, false -> execute without measuring
-   * @param pDescription
-   *          description of the code (runnable)
-   * @param pRunnable
-   *          runnable
+   *
+   * @param pActive      true -> measure, false -> execute without measuring
+   * @param pDescription description of the code (runnable)
+   * @param pRunnable    runnable
    * @return elapsed time in milliseconds
    */
-  public static double measure(boolean pActive,
-                               String pDescription,
-                               Runnable pRunnable)
+  public static double measure(boolean pActive, String pDescription, Runnable pRunnable)
   {
     if (!pActive)
     {
@@ -56,8 +48,7 @@ public class ElapsedTime
     try
     {
       pRunnable.run();
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       lThrowable = e;
     }
@@ -66,13 +57,9 @@ public class ElapsedTime
     long lElapsedNanos = lNanosStop - lNanosStart;
     double lElapsedTimeInMilliseconds = lElapsedNanos * 1e-6;
 
-    if (sStandardOutput)
-      System.out.format("%g ms for %s \n",
-                        lElapsedTimeInMilliseconds,
-                        pDescription);
+    if (sStandardOutput) System.out.format("%g ms for %s \n", lElapsedTimeInMilliseconds, pDescription);
 
-    if (lThrowable != null)
-      throw new RuntimeException(lThrowable);
+    if (lThrowable != null) throw new RuntimeException(lThrowable);
 
     return lElapsedTimeInMilliseconds;
 

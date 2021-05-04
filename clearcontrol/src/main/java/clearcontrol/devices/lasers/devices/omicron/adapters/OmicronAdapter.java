@@ -8,14 +8,10 @@ import clearcontrol.devices.lasers.devices.omicron.adapters.protocol.ProtocolOmi
  * Base class providing common fields and methods for all Omicron serial device
  * adapters.
  *
+ * @param <O> data type
  * @author royer
- * @param <O>
- *          data type
  */
-public abstract class OmicronAdapter<O> extends
-                                    SerialDeviceAdapterAdapter<O>
-                                    implements
-                                    SerialTextDeviceAdapter<O>
+public abstract class OmicronAdapter<O> extends SerialDeviceAdapterAdapter<O> implements SerialTextDeviceAdapter<O>
 {
 
   @Override

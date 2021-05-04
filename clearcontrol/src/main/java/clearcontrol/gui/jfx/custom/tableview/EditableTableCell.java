@@ -1,14 +1,9 @@
 package clearcontrol.gui.jfx.custom.tableview;
 
 import javafx.event.EventHandler;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -24,40 +19,34 @@ public class EditableTableCell extends TableCell<DoubleRow, Double>
 
   /**
    * Instantiates an editable table cell
-   * 
-   * @param pDoubleTableView
-   *          parent table view
-   * @param pColumnIndex
-   *          column index
-   * @param pMinColumnWidth
-   *          min column width
-   * @param pMenuItemSpecifications
-   *          vararg list of context menu item specifications
+   *
+   * @param pDoubleTableView        parent table view
+   * @param pColumnIndex            column index
+   * @param pMinColumnWidth         min column width
+   * @param pMenuItemSpecifications vararg list of context menu item specifications
    */
   @SafeVarargs
-  public EditableTableCell(DoubleTableView pDoubleTableView,
-                           int pColumnIndex,
-                           int pMinColumnWidth,
-                           Pair<String, EditableTableCellHandler>... pMenuItemSpecifications)
+  public EditableTableCell(DoubleTableView pDoubleTableView, int pColumnIndex, int pMinColumnWidth, Pair<String, EditableTableCellHandler>... pMenuItemSpecifications)
   {
     final ContextMenu lContextMenu = new ContextMenu();
 
     MenuItem lCopyCell = new MenuItem("Copy");
-    lCopyCell.setOnAction((e) -> {
+    lCopyCell.setOnAction((e) ->
+    {
       sClipBoard = getItem();
     });
 
     MenuItem lPasteCell = new MenuItem("Paste");
-    lPasteCell.setOnAction((e) -> {
+    lPasteCell.setOnAction((e) ->
+    {
       int lRowIndex = getTableRow().getIndex();
 
-      pDoubleTableView.getItems()
-                      .get(lRowIndex)
-                      .setValue(pColumnIndex, sClipBoard);
+      pDoubleTableView.getItems().get(lRowIndex).setValue(pColumnIndex, sClipBoard);
     });
 
     MenuItem lSetColumn = new MenuItem("Set Column");
-    lSetColumn.setOnAction((e) -> {
+    lSetColumn.setOnAction((e) ->
+    {
       for (DoubleRow lDoubleRow : pDoubleTableView.getItems())
         lDoubleRow.setValue(pColumnIndex, getItem());
     });
@@ -67,8 +56,7 @@ public class EditableTableCell extends TableCell<DoubleRow, Double>
     for (Pair<String, EditableTableCellHandler> lMenuItemSpecification : pMenuItemSpecifications)
     {
       String lMenuText = lMenuItemSpecification.getKey();
-      EditableTableCellHandler lHandler =
-                                        lMenuItemSpecification.getValue();
+      EditableTableCellHandler lHandler = lMenuItemSpecification.getValue();
 
       MenuItem lMenuItem = new MenuItem(lMenuText);
       lMenuItem.setOnAction((e) -> lHandler.handle(e, this));
@@ -115,8 +103,7 @@ public class EditableTableCell extends TableCell<DoubleRow, Double>
     {
       setText(null);
       setGraphic(null);
-    }
-    else
+    } else
     {
       if (isEditing())
       {
@@ -126,8 +113,7 @@ public class EditableTableCell extends TableCell<DoubleRow, Double>
         }
         setGraphic(mTextField);
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-      }
-      else
+      } else
       {
         setText(getString());
         setContentDisplay(ContentDisplay.TEXT_ONLY);
@@ -138,8 +124,7 @@ public class EditableTableCell extends TableCell<DoubleRow, Double>
   private void createTextField()
   {
     mTextField = new TextField(getString());
-    mTextField.setMinWidth(this.getWidth()
-                           - this.getGraphicTextGap() * 2);
+    mTextField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
     mTextField.setOnKeyPressed(new EventHandler<KeyEvent>()
     {
 
@@ -151,12 +136,10 @@ public class EditableTableCell extends TableCell<DoubleRow, Double>
           try
           {
             commitEdit(Double.parseDouble(mTextField.getText()));
-          }
-          catch (NumberFormatException e)
+          } catch (NumberFormatException e)
           {
           }
-        }
-        else if (t.getCode() == KeyCode.ESCAPE)
+        } else if (t.getCode() == KeyCode.ESCAPE)
         {
           cancelEdit();
         }

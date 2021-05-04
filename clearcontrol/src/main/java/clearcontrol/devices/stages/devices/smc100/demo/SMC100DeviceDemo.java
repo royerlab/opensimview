@@ -1,12 +1,11 @@
 package clearcontrol.devices.stages.devices.smc100.demo;
 
-import static org.junit.Assert.assertTrue;
+import clearcontrol.devices.stages.devices.smc100.SMC100StageDevice;
+import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.devices.stages.devices.smc100.SMC100StageDevice;
-
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 public class SMC100DeviceDemo
 {
@@ -14,9 +13,7 @@ public class SMC100DeviceDemo
   @Test
   public void demo() throws InterruptedException
   {
-    final SMC100StageDevice lSMC100Device =
-                                          new SMC100StageDevice("LightStage",
-                                                                "COM1");
+    final SMC100StageDevice lSMC100Device = new SMC100StageDevice("LightStage", "COM1");
 
     assertTrue(lSMC100Device.open());
 
@@ -25,8 +22,7 @@ public class SMC100DeviceDemo
     System.out.println("goToPosition(" + 0 + ")");
     lSMC100Device.setTargetPosition(0, 0);
 
-    final double lCurrentPosition =
-                                  lSMC100Device.getCurrentPosition(0);
+    final double lCurrentPosition = lSMC100Device.getCurrentPosition(0);
     System.out.println("lCurrentPosition=" + lCurrentPosition);
 
     lSMC100Device.setMinimumPosition(0);

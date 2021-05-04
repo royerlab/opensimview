@@ -1,7 +1,6 @@
 package clearcontrol.com.serial.adapters;
 
-public class SerialDeviceAdapterAdapter<O> implements
-                                       SerialDeviceAdapter<O>
+public class SerialDeviceAdapterAdapter<O> implements SerialDeviceAdapter<O>
 {
 
   @Override

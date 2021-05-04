@@ -1,12 +1,12 @@
 package clearcontrol.stack.sourcesink.test;
 
+import org.junit.Test;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-
-import org.junit.Test;
 
 /**
  * Raw NIO write speed tests
@@ -18,9 +18,8 @@ public class RawNIOWriteSpeedTests
 
   /**
    * Test NIO write speed
-   * 
-   * @throws IOException
-   *           NA
+   *
+   * @throws IOException NA
    */
   @Test
   public void test() throws IOException

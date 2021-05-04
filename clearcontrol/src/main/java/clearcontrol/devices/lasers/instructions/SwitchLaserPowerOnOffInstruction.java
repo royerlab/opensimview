@@ -10,36 +10,34 @@ import clearcontrol.instructions.InstructionInterface;
  * <p>
  * Author: @haesleinhuepf September 2018
  */
-public class SwitchLaserPowerOnOffInstruction extends InstructionBase implements
-                                                                      InstructionInterface,
-                                                                      LoggingFeature
+public class SwitchLaserPowerOnOffInstruction extends InstructionBase implements InstructionInterface, LoggingFeature
 {
   LaserDeviceInterface mLaserDevice;
   boolean mTurnOn;
 
-  public SwitchLaserPowerOnOffInstruction(LaserDeviceInterface pLaserDevice,
-                                          boolean pTurnOn)
+  public SwitchLaserPowerOnOffInstruction(LaserDeviceInterface pLaserDevice, boolean pTurnOn)
   {
-    super("Laser: Switch " + pLaserDevice.getName() + " power " + (pTurnOn ?
-                                                                   "ON" :
-                                                                   "OFF"));
+    super("Laser: Switch " + pLaserDevice.getName() + " power " + (pTurnOn ? "ON" : "OFF"));
     mLaserDevice = pLaserDevice;
     mTurnOn = pTurnOn;
   }
 
-  @Override public boolean initialize()
+  @Override
+  public boolean initialize()
   {
     return true;
   }
 
-  @Override public boolean enqueue(long pTimePoint)
+  @Override
+  public boolean enqueue(long pTimePoint)
   {
     mLaserDevice.setLaserPowerOn(mTurnOn);
     mLaserDevice.getPowerOnVariable().set(mTurnOn);
     return true;
   }
 
-  @Override public SwitchLaserPowerOnOffInstruction copy()
+  @Override
+  public SwitchLaserPowerOnOffInstruction copy()
   {
     return new SwitchLaserPowerOnOffInstruction(mLaserDevice, mTurnOn);
   }

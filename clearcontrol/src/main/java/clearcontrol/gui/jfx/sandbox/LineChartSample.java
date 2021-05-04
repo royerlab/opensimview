@@ -26,9 +26,7 @@ public class LineChartSample extends Application
     yAxis.setAnimated(false);
 
     // creating the chart
-    final LineChart<Number, Number> lLineChart =
-                                               new LineChart<Number, Number>(xAxis,
-                                                                             yAxis);
+    final LineChart<Number, Number> lLineChart = new LineChart<Number, Number>(xAxis, yAxis);
 
     lLineChart.setCreateSymbols(false);
 

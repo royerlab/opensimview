@@ -30,7 +30,7 @@ public class LStr extends StructObject
 
   /**
    * number of bytes that follow
-   * 
+   *
    * @return count
    */
   @Field(0)
@@ -41,9 +41,8 @@ public class LStr extends StructObject
 
   /**
    * number of bytes that follow
-   * 
-   * @param cnt
-   *          count
+   *
+   * @param cnt count
    * @return LStr
    */
   @Field(0)
@@ -56,11 +55,10 @@ public class LStr extends StructObject
   /**
    * cnt bytes<br>
    * C type : char[1]
-   * 
+   *
    * @return pointer
    */
-  @Array(
-  { 1 })
+  @Array({1})
   @Field(1)
   public Pointer<Byte> str()
   {

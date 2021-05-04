@@ -1,13 +1,12 @@
 package clearcontrol.gui.jfx.var.combo.demo;
 
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.var.combo.EnumComboBoxVariable;
+import clearcontrol.gui.jfx.var.combo.enums.TimeUnitEnum;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.var.combo.EnumComboBoxVariable;
-import clearcontrol.gui.jfx.var.combo.enums.TimeUnitEnum;
 
 /**
  * Enum combo box demo
@@ -26,16 +25,13 @@ public class EnumComboBoxDemo extends Application
     stage.setTitle(this.getClass().getSimpleName());
     // scene.setFill(Color.BLACK);
 
-    Variable<TimeUnitEnum> lVariable =
-                                     new Variable<>("var",
-                                                    TimeUnitEnum.Hours);
-    lVariable.addSetListener((o, n) -> {
+    Variable<TimeUnitEnum> lVariable = new Variable<>("var", TimeUnitEnum.Hours);
+    lVariable.addSetListener((o, n) ->
+    {
       System.out.println(n);
     });
 
-    EnumComboBoxVariable<TimeUnitEnum> lEnumComboBox =
-                                                     new EnumComboBoxVariable<>(lVariable,
-                                                                                TimeUnitEnum.values());
+    EnumComboBoxVariable<TimeUnitEnum> lEnumComboBox = new EnumComboBoxVariable<>(lVariable, TimeUnitEnum.values());
 
     root.add(lEnumComboBox, 0, 2);
 
@@ -44,9 +40,8 @@ public class EnumComboBoxDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

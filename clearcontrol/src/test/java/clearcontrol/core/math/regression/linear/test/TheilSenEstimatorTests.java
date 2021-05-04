@@ -1,14 +1,13 @@
 package clearcontrol.core.math.regression.linear.test;
 
-import static org.junit.Assert.assertTrue;
+import clearcontrol.core.math.functions.UnivariateAffineFunction;
+import clearcontrol.core.math.regression.linear.TheilSenEstimator;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Random;
 
-import clearcontrol.core.math.functions.UnivariateAffineFunction;
-import clearcontrol.core.math.regression.linear.TheilSenEstimator;
-
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 /**
  * TheilSen estimator test
@@ -20,15 +19,13 @@ public class TheilSenEstimatorTests
 
   /**
    * Basic test
-   * 
-   * @throws IOException
-   *           N/A
+   *
+   * @throws IOException N/A
    */
   @Test
   public void TheilSenEstimatorTest() throws IOException
   {
-    final TheilSenEstimator lTheilSenEstimator =
-                                               new TheilSenEstimator();
+    final TheilSenEstimator lTheilSenEstimator = new TheilSenEstimator();
 
     final Random rnd = new Random();
 
@@ -46,8 +43,7 @@ public class TheilSenEstimatorTests
       }
     }
 
-    final UnivariateAffineFunction lModel =
-                                          lTheilSenEstimator.getModel();
+    final UnivariateAffineFunction lModel = lTheilSenEstimator.getModel();
 
     final double stderror = lTheilSenEstimator.computeError(lModel);
 

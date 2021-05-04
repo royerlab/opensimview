@@ -1,28 +1,23 @@
 package clearcontrol.devices.cameras;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.cameras.devices.sim.StackCameraDeviceSimulator;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Base class providing common fields and methods for all camera devices.
  *
  * @author royer
  */
-public abstract class CameraDeviceBase extends VirtualDevice
-                                       implements
-                                       CameraDeviceInterface,
-                                       LoggingFeature
+public abstract class CameraDeviceBase extends VirtualDevice implements CameraDeviceInterface, LoggingFeature
 {
 
-  protected final Variable<Long> mMaxWidthVariable,
-      mMaxHeightVariable;
+  protected final Variable<Long> mMaxWidthVariable, mMaxHeightVariable;
 
-  protected final Variable<Double> mPixelSizeInMicrometersVariable,
-      mLineReadOutTimeInMicrosecondsVariable;
+  protected final Variable<Double> mPixelSizeInMicrometersVariable, mLineReadOutTimeInMicrosecondsVariable;
 
   protected final Variable<Long> mBytesPerPixelVariable;
 
@@ -30,21 +25,17 @@ public abstract class CameraDeviceBase extends VirtualDevice
 
   private final Variable<Boolean> mTriggerVariable;
 
-  private final AtomicBoolean mReOpenDeviceNeeded =
-                                                  new AtomicBoolean(false);
+  private final AtomicBoolean mReOpenDeviceNeeded = new AtomicBoolean(false);
 
   protected final Variable<Boolean> mIsAcquiring;
 
   /**
    * Instanciates a camera device with given name
-   * 
-   * @param pDeviceName
-   *          camera name
-   * @param pTriggerVariable
-   *          trigger variable
+   *
+   * @param pDeviceName      camera name
+   * @param pTriggerVariable trigger variable
    */
-  public CameraDeviceBase(final String pDeviceName,
-                          Variable<Boolean> pTriggerVariable)
+  public CameraDeviceBase(final String pDeviceName, Variable<Boolean> pTriggerVariable)
   {
     super(pDeviceName);
 
@@ -56,25 +47,17 @@ public abstract class CameraDeviceBase extends VirtualDevice
 
     mMaxHeightVariable = new Variable<Long>("FrameMaxHeight", 2048L);
 
-    mLineReadOutTimeInMicrosecondsVariable =
-                                           new Variable<Double>("LineReadOutTimeInMicroseconds",
-                                                                1.0);
+    mLineReadOutTimeInMicrosecondsVariable = new Variable<Double>("LineReadOutTimeInMicroseconds", 1.0);
 
-    mPixelSizeInMicrometersVariable =
-                                    new Variable<Double>("PixelSizeInMicrometers",
-                                                         1.0);
+    mPixelSizeInMicrometersVariable = new Variable<Double>("PixelSizeInMicrometers", 1.0);
 
-    mBytesPerPixelVariable = new Variable<Long>("FrameBytesPerPixel",
-                                                2L);
+    mBytesPerPixelVariable = new Variable<Long>("FrameBytesPerPixel", 2L);
 
     mIsAcquiring = new Variable<Boolean>("IsAquiring", false);
 
     if (pTriggerVariable == null)
     {
-      severe("cameras",
-             "Cannot instantiate properly: "
-                        + StackCameraDeviceSimulator.class.getSimpleName()
-                        + " because trigger variable is null!");
+      severe("cameras", "Cannot instantiate properly: " + StackCameraDeviceSimulator.class.getSimpleName() + " because trigger variable is null!");
       return;
     }
   }

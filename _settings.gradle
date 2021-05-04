@@ -1,0 +1,30 @@
+
+rootProject.name = 'dorado'
+
+includeBuild ('../clearcontrol')
+
+//includeBuild ('../aptj')
+//includeBuild ('../asdkj')
+//includeBuild ('../clearaudio')
+//includeBuild ('../clearcl')
+//includeBuild ('../clearcontrol-lightsheet')
+//includeBuild ('../cleargl')
+//includeBuild ('../clearvolume')
+//includeBuild ('../coremem')
+//includeBuild ('../dcamj')
+//includeBuild ('../dockfx')
+//includeBuild ('../ecc100j')
+//includeBuild ('../fastfuse')
+//includeBuild ('../GS16AO64c')
+//includeBuild ('../halcyon')
+//includeBuild ('../mirao52j')
+//includeBuild ('../nirioj')
+//includeBuild ('../simbryo')
+//includeBuild ('../turbojpegj')
+
+
+
+
+
+
+

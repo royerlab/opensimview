@@ -3,7 +3,6 @@ package clearcontrol.core.variable.bundle.test;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableListener;
 import clearcontrol.core.variable.bundle.VariableBundle;
-
 import org.junit.Test;
 
 /**
@@ -25,8 +24,7 @@ public class VariableBundleTests
     {
 
       @Override
-      public void setEvent(VariableBundle pCurrentValue,
-                           VariableBundle pNewValue)
+      public void setEvent(VariableBundle pCurrentValue, VariableBundle pNewValue)
       {
         // TODO Auto-generated method stub
 
@@ -40,8 +38,7 @@ public class VariableBundleTests
       }
     });
 
-    final Variable<Double> lTestVariable =
-                                         new Variable<Double>("var1");
+    final Variable<Double> lTestVariable = new Variable<Double>("var1");
     lVariableBundle.addVariable(lTestVariable);
 
   }

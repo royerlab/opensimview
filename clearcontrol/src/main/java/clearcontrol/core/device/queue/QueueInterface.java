@@ -27,7 +27,7 @@ public interface QueueInterface
 
   /**
    * Returns the state queue current length.
-   * 
+   *
    * @return current state queue length
    */
   int getQueueLength();

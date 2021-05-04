@@ -1,17 +1,16 @@
 package clearcontrol.core.file.test;
 
-import static org.junit.Assert.assertEquals;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.core.file.FileEventNotifier;
+import clearcontrol.core.file.FileEventNotifier.FileEventKind;
+import clearcontrol.core.file.FileEventNotifierListener;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.Formatter;
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.core.file.FileEventNotifier;
-import clearcontrol.core.file.FileEventNotifier.FileEventKind;
-import clearcontrol.core.file.FileEventNotifierListener;
-
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * File event notifier tests
@@ -25,39 +24,28 @@ public class FileEventNotifierTests
 
   /**
    * test
-   * 
-   * @throws Exception
-   *           N/A
+   *
+   * @throws Exception N/A
    */
   @Test
   public void test() throws Exception
   {
-    final File lTestFile =
-                         File.createTempFile("FileEventNotifierTests",
-                                             "test");
-    final File lOtherFile =
-                          File.createTempFile("FileEventNotifierTests",
-                                              "other");
+    final File lTestFile = File.createTempFile("FileEventNotifierTests", "test");
+    final File lOtherFile = File.createTempFile("FileEventNotifierTests", "other");
 
     lTestFile.delete();
     lOtherFile.delete();
 
-    final FileEventNotifier lFileEventNotifier =
-                                               new FileEventNotifier(lTestFile);
+    final FileEventNotifier lFileEventNotifier = new FileEventNotifier(lTestFile);
 
     lFileEventNotifier.addFileEventListener(new FileEventNotifierListener()
     {
 
       @Override
-      public void fileEvent(final FileEventNotifier pThis,
-                            final File pFile,
-                            final FileEventKind pEventKind)
+      public void fileEvent(final FileEventNotifier pThis, final File pFile, final FileEventKind pEventKind)
       {
         lEventCounter++;
-        System.out.format("Received Event: %s %s %s \n",
-                          pThis.toString(),
-                          pFile.toString(),
-                          pEventKind.toString());
+        System.out.format("Received Event: %s %s %s \n", pThis.toString(), pFile.toString(), pEventKind.toString());
       }
     });
 

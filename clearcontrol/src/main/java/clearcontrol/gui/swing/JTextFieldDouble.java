@@ -1,22 +1,16 @@
 package clearcontrol.gui.swing;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import clearcontrol.core.variable.Variable;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.EventQueue;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import clearcontrol.core.variable.Variable;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class JTextFieldDouble extends JPanel
 {
@@ -37,25 +31,13 @@ public class JTextFieldDouble extends JPanel
     this("default", true, 0);
   }
 
-  public JTextFieldDouble(final String pValueName,
-                          final boolean pNorthSouthLayout,
-                          final double pValue)
+  public JTextFieldDouble(final String pValueName, final boolean pNorthSouthLayout, final double pValue)
   {
 
-    this(pValueName,
-         pNorthSouthLayout,
-         "%.1f",
-         Double.NEGATIVE_INFINITY,
-         Double.POSITIVE_INFINITY,
-         pValue);
+    this(pValueName, pNorthSouthLayout, "%.1f", Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, pValue);
   }
 
-  public JTextFieldDouble(final String pValueName,
-                          final boolean pNorthSouthLayout,
-                          final String pLabelsFormatString,
-                          final double pMin,
-                          final double pMax,
-                          final double pValue)
+  public JTextFieldDouble(final String pValueName, final boolean pNorthSouthLayout, final String pLabelsFormatString, final double pMin, final double pMax, final double pValue)
   {
     super();
     setMin(pMin);
@@ -64,8 +46,7 @@ public class JTextFieldDouble extends JPanel
     mDoubleVariable = new Variable<Double>(pValueName, pValue)
     {
       @Override
-      public Double setEventHook(final Double pOldValue,
-                                 final Double pNewValue)
+      public Double setEventHook(final Double pOldValue, final Double pNewValue)
       {
 
         if (pNewValue != mNewValue)
@@ -77,9 +58,7 @@ public class JTextFieldDouble extends JPanel
             public void run()
             {
               // System.out.println("mValueTextField.setText('' + pNewValue);");
-              final String lString =
-                                   String.format(getLabelsFormatString(),
-                                                 clamp(pNewValue));
+              final String lString = String.format(getLabelsFormatString(), clamp(pNewValue));
               mValueTextField.setText(lString);
               mValueTextField.setBackground(Color.white);
 
@@ -96,17 +75,14 @@ public class JTextFieldDouble extends JPanel
     mNameLabel = new JLabel(pValueName);
     mValueTextField = new JTextField("" + pValue);
 
-    add(mNameLabel,
-        pNorthSouthLayout ? BorderLayout.NORTH : BorderLayout.WEST);
-    add(mValueTextField,
-        pNorthSouthLayout ? BorderLayout.SOUTH : BorderLayout.CENTER);
+    add(mNameLabel, pNorthSouthLayout ? BorderLayout.NORTH : BorderLayout.WEST);
+    add(mValueTextField, pNorthSouthLayout ? BorderLayout.SOUTH : BorderLayout.CENTER);
 
     if (pNorthSouthLayout)
     {
       mNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mValueTextField.setHorizontalAlignment(SwingConstants.CENTER);
-    }
-    else
+    } else
     {
       mNameLabel.setHorizontalAlignment(SwingConstants.LEFT);
       mValueTextField.setHorizontalAlignment(SwingConstants.LEFT);
@@ -114,28 +90,27 @@ public class JTextFieldDouble extends JPanel
 
     setLabelsFormatString(pLabelsFormatString);
 
-    mValueTextField.getDocument()
-                   .addDocumentListener(new DocumentListener()
-                   {
+    mValueTextField.getDocument().addDocumentListener(new DocumentListener()
+    {
 
-                     @Override
-                     public void removeUpdate(final DocumentEvent pE)
-                     {
-                       mValueTextField.setBackground(Color.red);
-                     }
+      @Override
+      public void removeUpdate(final DocumentEvent pE)
+      {
+        mValueTextField.setBackground(Color.red);
+      }
 
-                     @Override
-                     public void insertUpdate(final DocumentEvent pE)
-                     {
-                       mValueTextField.setBackground(Color.red);
-                     }
+      @Override
+      public void insertUpdate(final DocumentEvent pE)
+      {
+        mValueTextField.setBackground(Color.red);
+      }
 
-                     @Override
-                     public void changedUpdate(final DocumentEvent pE)
-                     {
+      @Override
+      public void changedUpdate(final DocumentEvent pE)
+      {
 
-                     }
-                   });
+      }
+    });
 
     mValueTextField.addActionListener(new ActionListener()
     {
@@ -153,8 +128,7 @@ public class JTextFieldDouble extends JPanel
         try
         {
 
-          final double lNewValue =
-                                 clamp(Double.parseDouble(lTextString));
+          final double lNewValue = clamp(Double.parseDouble(lTextString));
           if (lNewValue != mNewValue)
           {
             mNewValue = lNewValue;
@@ -162,8 +136,7 @@ public class JTextFieldDouble extends JPanel
           }
 
           mValueTextField.setBackground(Color.white);
-        }
-        catch (final NumberFormatException e)
+        } catch (final NumberFormatException e)
         {
           mValueTextField.setBackground(Color.orange);
           return;

@@ -9,10 +9,7 @@ import clearcontrol.devices.lasers.devices.omicron.adapters.protocol.ProtocolOmi
  *
  * @author royer
  */
-public class GetCurrentPowerAdapter extends OmicronAdapter<Number>
-                                    implements
-                                    SerialTextDeviceAdapter<Number>,
-                                    LoggingFeature
+public class GetCurrentPowerAdapter extends OmicronAdapter<Number> implements SerialTextDeviceAdapter<Number>, LoggingFeature
 {
   private static final double cCurrentPowerFilteringAlpha = 0.1;
 
@@ -33,21 +30,12 @@ public class GetCurrentPowerAdapter extends OmicronAdapter<Number>
       // ProtocolXX.splitMessage(pMessage);
       // final String lCurrentPowerString = lSplittedMessage[0];
       final String lCurrentPowerString = new String(pMessage);
-      final double lCurrentPowerInMilliwatts =
-                                             ProtocolOmicron.parseDouble(ProtocolOmicron.cMeasureDiodePowerReplyPrefix,
-                                                                         lCurrentPowerString);
+      final double lCurrentPowerInMilliwatts = ProtocolOmicron.parseDouble(ProtocolOmicron.cMeasureDiodePowerReplyPrefix, lCurrentPowerString);
 
-      mCurrentPowerInMilliwatts = (1 - cCurrentPowerFilteringAlpha)
-                                  * mCurrentPowerInMilliwatts
-                                  + cCurrentPowerFilteringAlpha
-                                    * lCurrentPowerInMilliwatts;
-    }
-    catch (Throwable e)
+      mCurrentPowerInMilliwatts = (1 - cCurrentPowerFilteringAlpha) * mCurrentPowerInMilliwatts + cCurrentPowerFilteringAlpha * lCurrentPowerInMilliwatts;
+    } catch (Throwable e)
     {
-      severe("%s-%s: Problem while parsing current power level (received:'%s') \n",
-             GetCurrentPowerAdapter.class.getSimpleName(),
-             this.toString(),
-             new String(pMessage));
+      severe("%s-%s: Problem while parsing current power level (received:'%s') \n", GetCurrentPowerAdapter.class.getSimpleName(), this.toString(), new String(pMessage));
     }
 
     return mCurrentPowerInMilliwatts;

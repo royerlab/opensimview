@@ -9,22 +9,18 @@ import clearcontrol.core.variable.Variable;
  *
  * @author royer
  */
-public abstract class TSTDoubleVariableBase extends Variable<Double>
-                                            implements LoggingFeature
+public abstract class TSTDoubleVariableBase extends Variable<Double> implements LoggingFeature
 {
 
   protected final APTJDevice mAPTJDevice;
 
   /**
    * Instantiates a TST double variable
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pAPTJDevice
-   *          APTJ device
+   *
+   * @param pVariableName variable name
+   * @param pAPTJDevice   APTJ device
    */
-  public TSTDoubleVariableBase(String pVariableName,
-                               APTJDevice pAPTJDevice)
+  public TSTDoubleVariableBase(String pVariableName, APTJDevice pAPTJDevice)
   {
     super(pVariableName, 0.0);
     mAPTJDevice = pAPTJDevice;
@@ -32,7 +28,7 @@ public abstract class TSTDoubleVariableBase extends Variable<Double>
 
   /**
    * Returns the APTJ device
-   * 
+   *
    * @return APTJ device
    */
   public APTJDevice getAPTJDevice()

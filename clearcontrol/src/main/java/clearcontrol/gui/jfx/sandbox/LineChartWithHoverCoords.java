@@ -25,15 +25,13 @@ public class LineChartWithHoverCoords extends Application
     stage.setTitle("Line Chart Sample");
 
     final LineChart<Number, Number> lineChart = createChart();
-    Label cursorCoords =
-                       createCursorGraphCoordsMonitorLabel(lineChart);
+    Label cursorCoords = createCursorGraphCoordsMonitorLabel(lineChart);
 
     stage.setScene(new Scene(layoutScene(lineChart, cursorCoords)));
     stage.show();
   }
 
-  private VBox layoutScene(LineChart<Number, Number> lineChart,
-                           Label cursorCoords)
+  private VBox layoutScene(LineChart<Number, Number> lineChart, Label cursorCoords)
   {
     VBox layout = new VBox(10);
     layout.setPadding(new Insets(10));
@@ -47,37 +45,10 @@ public class LineChartWithHoverCoords extends Application
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
     xAxis.setLabel("Number of Month");
-    final LineChart<Number, Number> lineChart =
-                                              new LineChart<>(xAxis,
-                                                              yAxis);
+    final LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
     lineChart.setTitle("Stock Monitoring, 2010");
-    XYChart.Series<Number, Number> series =
-                                          new XYChart.Series<>("My portfolio",
-                                                               FXCollections.<XYChart.Data<Number, Number>> observableArrayList(new XYChart.Data<Number, Number>(1,
-                                                                                                                                                                 23),
-                                                                                                                                new XYChart.Data<Number, Number>(2,
-                                                                                                                                                                 14),
-                                                                                                                                new XYChart.Data<Number, Number>(3,
-                                                                                                                                                                 15),
-                                                                                                                                new XYChart.Data<Number, Number>(4,
-                                                                                                                                                                 24),
-                                                                                                                                new XYChart.Data<Number, Number>(5,
-                                                                                                                                                                 34),
-                                                                                                                                new XYChart.Data<Number, Number>(6,
-                                                                                                                                                                 36),
-                                                                                                                                new XYChart.Data<Number, Number>(7,
-                                                                                                                                                                 22),
-                                                                                                                                new XYChart.Data<Number, Number>(8,
-                                                                                                                                                                 45),
-                                                                                                                                new XYChart.Data<Number, Number>(9,
-                                                                                                                                                                 43),
-                                                                                                                                new XYChart.Data<Number, Number>(10,
-                                                                                                                                                                 17),
-                                                                                                                                new XYChart.Data<Number, Number>(11,
-                                                                                                                                                                 29),
-                                                                                                                                new XYChart.Data<Number, Number>(12,
-                                                                                                                                                                 25)));
+    XYChart.Series<Number, Number> series = new XYChart.Series<>("My portfolio", FXCollections.<XYChart.Data<Number, Number>>observableArrayList(new XYChart.Data<Number, Number>(1, 23), new XYChart.Data<Number, Number>(2, 14), new XYChart.Data<Number, Number>(3, 15), new XYChart.Data<Number, Number>(4, 24), new XYChart.Data<Number, Number>(5, 34), new XYChart.Data<Number, Number>(6, 36), new XYChart.Data<Number, Number>(7, 22), new XYChart.Data<Number, Number>(8, 45), new XYChart.Data<Number, Number>(9, 43), new XYChart.Data<Number, Number>(10, 17), new XYChart.Data<Number, Number>(11, 29), new XYChart.Data<Number, Number>(12, 25)));
 
     lineChart.getData().add(series);
     return lineChart;
@@ -90,10 +61,8 @@ public class LineChartWithHoverCoords extends Application
 
     final Label cursorCoords = new Label();
 
-    final Node chartBackground =
-                               lineChart.lookup(".chart-plot-background");
-    for (Node n : chartBackground.getParent()
-                                 .getChildrenUnmodifiable())
+    final Node chartBackground = lineChart.lookup(".chart-plot-background");
+    for (Node n : chartBackground.getParent().getChildrenUnmodifiable())
     {
       if (n != chartBackground && n != xAxis && n != yAxis)
       {
@@ -115,9 +84,7 @@ public class LineChartWithHoverCoords extends Application
       @Override
       public void handle(MouseEvent mouseEvent)
       {
-        cursorCoords.setText(String.format("(%.2f, %.2f)",
-                                           xAxis.getValueForDisplay(mouseEvent.getX()),
-                                           yAxis.getValueForDisplay(mouseEvent.getY())));
+        cursorCoords.setText(String.format("(%.2f, %.2f)", xAxis.getValueForDisplay(mouseEvent.getX()), yAxis.getValueForDisplay(mouseEvent.getY())));
       }
     });
 
@@ -144,8 +111,7 @@ public class LineChartWithHoverCoords extends Application
       @Override
       public void handle(MouseEvent mouseEvent)
       {
-        cursorCoords.setText(String.format("x = %.2f",
-                                           xAxis.getValueForDisplay(mouseEvent.getX())));
+        cursorCoords.setText(String.format("x = %.2f", xAxis.getValueForDisplay(mouseEvent.getX())));
       }
     });
 
@@ -172,8 +138,7 @@ public class LineChartWithHoverCoords extends Application
       @Override
       public void handle(MouseEvent mouseEvent)
       {
-        cursorCoords.setText(String.format("y = %.2f",
-                                           yAxis.getValueForDisplay(mouseEvent.getY())));
+        cursorCoords.setText(String.format("y = %.2f", yAxis.getValueForDisplay(mouseEvent.getY())));
       }
     });
 

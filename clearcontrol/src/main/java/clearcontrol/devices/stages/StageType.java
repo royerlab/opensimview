@@ -7,21 +7,21 @@ package clearcontrol.devices.stages;
  */
 public enum StageType
 {
- /**
-  * Single axis stage
-  */
- Single,
- /**
-  * Multi axis stage
-  */
- Multi,
- /**
-  * X,Y, and R stage
-  */
- XYZR,
+  /**
+   * Single axis stage
+   */
+  Single,
+  /**
+   * Multi axis stage
+   */
+  Multi,
+  /**
+   * X,Y, and R stage
+   */
+  XYZR,
 
- /**
-  * Hub device that combines several other stage devices
-  */
- Hub
+  /**
+   * Hub device that combines several other stage devices
+   */
+  Hub
 }

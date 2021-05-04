@@ -9,19 +9,13 @@ import clearcontrol.core.device.openclose.OpenCloseDeviceInterface;
  *
  * @author royer
  */
-public class VirtualDevice extends
-                           NameableWithChangeListener<VirtualDevice>
-                           implements
-                           OpenCloseDeviceInterface,
-                           HasChangeListenerInterface<VirtualDevice>,
-                           NameableInterface
+public class VirtualDevice extends NameableWithChangeListener<VirtualDevice> implements OpenCloseDeviceInterface, HasChangeListenerInterface<VirtualDevice>, NameableInterface
 {
 
   /**
    * INstanciates a virtual device with a given name
-   * 
-   * @param pDeviceName
-   *          device name
+   *
+   * @param pDeviceName device name
    */
   public VirtualDevice(final String pDeviceName)
   {

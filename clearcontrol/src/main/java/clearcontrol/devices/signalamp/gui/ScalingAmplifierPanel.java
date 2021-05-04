@@ -14,22 +14,12 @@ public class ScalingAmplifierPanel extends CustomVariablePane
     double lMaxGain = pScalingAmplifierInterface.getMaxGain();
 
     addTab("");
-    addSliderForVariable("Gain: ",
-                         pScalingAmplifierInterface.getGainVariable(),
-                         lMinGain,
-                         lMaxGain,
-                         0.001,
-                         0.1 * (lMaxGain - lMinGain));
+    addSliderForVariable("Gain: ", pScalingAmplifierInterface.getGainVariable(), lMinGain, lMaxGain, 0.001, 0.1 * (lMaxGain - lMinGain));
 
     double lMinOffset = pScalingAmplifierInterface.getMinOffset();
     double lMaxOffset = pScalingAmplifierInterface.getMaxOffset();
 
-    addSliderForVariable("Offset: ",
-                         pScalingAmplifierInterface.getOffsetVariable(),
-                         lMinOffset,
-                         lMaxOffset,
-                         0.001,
-                         0.1 * (lMaxOffset - lMinOffset));
+    addSliderForVariable("Offset: ", pScalingAmplifierInterface.getOffsetVariable(), lMinOffset, lMaxOffset, 0.001, 0.1 * (lMaxOffset - lMinOffset));
   }
 
 }

@@ -1,10 +1,10 @@
 package clearcontrol.devices.stages.hub;
 
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.device.name.NameableBase;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.stages.StageDeviceInterface;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Stage DOF for stage hub devices
@@ -18,17 +18,12 @@ public class StageDOF extends NameableBase
 
   /**
    * Instantiates a stage DOF
-   * 
-   * @param pDOFName
-   *          DOF name
-   * @param pStageDevice
-   *          stage device
-   * @param pDOFIndex
-   *          DOF index
+   *
+   * @param pDOFName     DOF name
+   * @param pStageDevice stage device
+   * @param pDOFIndex    DOF index
    */
-  public StageDOF(String pDOFName,
-                  StageDeviceInterface pStageDevice,
-                  int pDOFIndex)
+  public StageDOF(String pDOFName, StageDeviceInterface pStageDevice, int pDOFIndex)
   {
     super(pDOFName);
     mStageDevice = pStageDevice;
@@ -37,7 +32,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns corresponding stage device
-   * 
+   *
    * @return stage device
    */
   public StageDeviceInterface getStageDevice()
@@ -47,7 +42,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns this DOF's index
-   * 
+   *
    * @return DOF's index
    */
   public int getDOFIndex()
@@ -81,7 +76,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's current position
-   * 
+   *
    * @return DOF's current position
    */
   public double getCurrentPosition()
@@ -91,11 +86,9 @@ public class StageDOF extends NameableBase
 
   /**
    * Waits until the DOF is ready.
-   * 
-   * @param pTimeOut
-   *          time out
-   * @param pTimeUnit
-   *          time unit
+   *
+   * @param pTimeOut  time out
+   * @param pTimeUnit time unit
    * @return true -> no timeout, false otherwise
    */
   public Boolean waitToBeReady(long pTimeOut, TimeUnit pTimeUnit)
@@ -105,7 +98,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's min position variable
-   * 
+   *
    * @return min position variable
    */
   public Variable<Double> getMinPositionVariable()
@@ -115,7 +108,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's max position variable
-   * 
+   *
    * @return max position variable
    */
   public Variable<Double> getMaxPositionVariable()
@@ -125,7 +118,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's position granularity variable
-   * 
+   *
    * @return position granularity variable
    */
   public Variable<Double> getGranularityPositionVariable()
@@ -135,7 +128,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's enable variable
-   * 
+   *
    * @return enable variable
    */
   public Variable<Boolean> getEnableVariable()
@@ -145,7 +138,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's target position variable
-   * 
+   *
    * @return DOF's target position variable
    */
   public Variable<Double> getTargetPositionVariable()
@@ -155,7 +148,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's current position variable
-   * 
+   *
    * @return DOF's current position variable
    */
   public Variable<Double> getCurrentPositionVariable()
@@ -165,7 +158,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's ready variable
-   * 
+   *
    * @return ready variable
    */
   public Variable<Boolean> getReadyVariable()
@@ -175,7 +168,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's homing variable
-   * 
+   *
    * @return homing variable
    */
   public Variable<Boolean> getHomingVariable()
@@ -185,7 +178,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's stop variable
-   * 
+   *
    * @return stop variable
    */
   public Variable<Boolean> getStopVariable()
@@ -195,7 +188,7 @@ public class StageDOF extends NameableBase
 
   /**
    * Returns the DOF's reset variable
-   * 
+   *
    * @return reset variable
    */
   public Variable<Boolean> getResetVariable()
@@ -206,10 +199,7 @@ public class StageDOF extends NameableBase
   @Override
   public String toString()
   {
-    return String.format("StageDeviceDOF [name=%s,  device=%s, DOF index=%d]",
-                         getName(),
-                         mStageDevice,
-                         mDOFIndex);
+    return String.format("StageDeviceDOF [name=%s,  device=%s, DOF index=%d]", getName(), mStageDevice, mDOFIndex);
   }
 
 }

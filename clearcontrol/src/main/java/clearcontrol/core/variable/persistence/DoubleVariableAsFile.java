@@ -1,5 +1,7 @@
 package clearcontrol.core.variable.persistence;
 
+import clearcontrol.core.variable.Variable;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -8,19 +10,15 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import clearcontrol.core.variable.Variable;
-
 /**
  * Double variable as file
  *
  * @author royer
  */
-public class DoubleVariableAsFile extends Variable<Double>
-                                  implements Closeable
+public class DoubleVariableAsFile extends Variable<Double> implements Closeable
 
 {
-  private final ExecutorService mSingleThreadExecutor =
-                                                      Executors.newSingleThreadExecutor();
+  private final ExecutorService mSingleThreadExecutor = Executors.newSingleThreadExecutor();
 
   private Double mCachedValue;
 
@@ -31,17 +29,12 @@ public class DoubleVariableAsFile extends Variable<Double>
 
   /**
    * Double variable as file
-   * 
-   * @param pFile
-   *          file
-   * @param pVariableName
-   *          variable name
-   * @param pDoubleValue
-   *          double value
+   *
+   * @param pFile         file
+   * @param pVariableName variable name
+   * @param pDoubleValue  double value
    */
-  public DoubleVariableAsFile(final File pFile,
-                              final String pVariableName,
-                              final double pDoubleValue)
+  public DoubleVariableAsFile(final File pFile, final String pVariableName, final double pDoubleValue)
   {
     super(pVariableName, pDoubleValue);
     mFile = pFile;
@@ -71,8 +64,7 @@ public class DoubleVariableAsFile extends Variable<Double>
         lScanner.close();
       }
       return mCachedValue;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return super.get();
@@ -107,8 +99,7 @@ public class DoubleVariableAsFile extends Variable<Double>
           {
             lFormatter.format("%g\n", lValue);
             lFormatter.flush();
-          }
-          finally
+          } finally
           {
             lFormatter.close();
           }
@@ -116,8 +107,7 @@ public class DoubleVariableAsFile extends Variable<Double>
           	mFileEventNotifier.startMonitoring();/**/
         }
         // ensureFileEventNotifierAllocated();
-      }
-      catch (final Throwable e)
+      } catch (final Throwable e)
       {
         e.printStackTrace();
       }

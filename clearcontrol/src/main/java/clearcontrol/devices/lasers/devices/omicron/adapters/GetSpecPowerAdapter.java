@@ -8,9 +8,7 @@ import clearcontrol.devices.lasers.devices.omicron.adapters.protocol.ProtocolOmi
  *
  * @author royer
  */
-public class GetSpecPowerAdapter extends OmicronAdapter<Number>
-                                 implements
-                                 SerialTextDeviceAdapter<Number>
+public class GetSpecPowerAdapter extends OmicronAdapter<Number> implements SerialTextDeviceAdapter<Number>
 {
 
   @Override
@@ -22,9 +20,7 @@ public class GetSpecPowerAdapter extends OmicronAdapter<Number>
   @Override
   public Number parseValue(final byte[] pMessage)
   {
-    final String[] lSplittedMessage =
-                                    ProtocolOmicron.splitMessage(ProtocolOmicron.cGetSpecInfoReplyPrefix,
-                                                                 pMessage);
+    final String[] lSplittedMessage = ProtocolOmicron.splitMessage(ProtocolOmicron.cGetSpecInfoReplyPrefix, pMessage);
     final String lSpecPowerString = lSplittedMessage[1];
     final int lSpecPower = Integer.parseInt(lSpecPowerString);
     return (double) lSpecPower;

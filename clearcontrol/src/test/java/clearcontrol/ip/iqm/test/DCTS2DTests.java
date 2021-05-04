@@ -10,7 +10,7 @@ public class DCTS2DTests
 
   /**
    * Test
-   * 
+   *
    * @throws IOException
    *           NA
    * @throws FormatException

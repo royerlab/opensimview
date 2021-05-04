@@ -12,10 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MicroscopeDeviceLists
 {
-  private final ArrayList<Object> mAllDeviceList =
-                                                 new ArrayList<Object>();
-  private final ConcurrentHashMap<Object, Integer> mDeviceIndexMap =
-                                                                   new ConcurrentHashMap<>();
+  private final ArrayList<Object> mAllDeviceList = new ArrayList<Object>();
+  private final ConcurrentHashMap<Object, Integer> mDeviceIndexMap = new ConcurrentHashMap<>();
 
   /**
    * Instanciates a microscope device list
@@ -27,12 +25,10 @@ public class MicroscopeDeviceLists
   /**
    * Adds a device to this list. There can only be only one device for a given
    * device class and index.
-   * 
-   * @param pDeviceIndex
-   *          device index. All devices have an index, for example if the
-   *          microscope has two lasers, the indices will be 0 and 1
-   * @param pDevice
-   *          device
+   *
+   * @param pDeviceIndex device index. All devices have an index, for example if the
+   *                     microscope has two lasers, the indices will be 0 and 1
+   * @param pDevice      device
    */
   public <T> void addDevice(int pDeviceIndex, T pDevice)
   {
@@ -42,28 +38,23 @@ public class MicroscopeDeviceLists
 
   /**
    * Returns the device for a given class and index.
-   * 
-   * @param pClass
-   *          class
-   * @param pIndex
-   *          index
+   *
+   * @param pClass class
+   * @param pIndex index
    * @return device of given class and index (there is only one)
    */
   @SuppressWarnings("unchecked")
   public <T> T getDevice(Class<T> pClass, int pIndex)
   {
     for (Object lDevice : mAllDeviceList)
-      if (pClass.isInstance(lDevice))
-        if (mDeviceIndexMap.get(lDevice).equals(pIndex))
-          return (T) lDevice;
+      if (pClass.isInstance(lDevice)) if (mDeviceIndexMap.get(lDevice).equals(pIndex)) return (T) lDevice;
     return null;
   }
 
   /**
    * Returns all devices of a given class.
-   * 
-   * @param pClass
-   *          class
+   *
+   * @param pClass class
    * @return list of devices of given class
    */
   @SuppressWarnings("unchecked")
@@ -71,25 +62,22 @@ public class MicroscopeDeviceLists
   {
     ArrayList<T> lFoundDevices = new ArrayList<>();
     for (Object lDevice : mAllDeviceList)
-      if (pClass.isInstance(lDevice))
-        lFoundDevices.add((T) lDevice);
+      if (pClass.isInstance(lDevice)) lFoundDevices.add((T) lDevice);
 
     return lFoundDevices;
   }
 
   /**
    * Returns the number of devices of a given class
-   * 
-   * @param pClass
-   *          class
+   *
+   * @param pClass class
    * @return number of devices of given class
    */
   public <T> int getNumberOfDevices(Class<T> pClass)
   {
     int lCount = 0;
     for (Object lDevice : mAllDeviceList)
-      if (pClass.isInstance(lDevice))
-        lCount++;
+      if (pClass.isInstance(lDevice)) lCount++;
 
     return lCount;
   }
@@ -97,7 +85,7 @@ public class MicroscopeDeviceLists
   /**
    * Returns one consolidated list for all devices managed by this microscope
    * device list.
-   * 
+   *
    * @return single flat list for all devices
    */
   public ArrayList<Object> getAllDeviceList()
@@ -107,7 +95,7 @@ public class MicroscopeDeviceLists
 
   /**
    * Returns a set of all classes of devices in this microscope device list
-   * 
+   *
    * @return set of classes
    */
   public HashSet<Class<?>> getAllDeviceClassesList()

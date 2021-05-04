@@ -1,12 +1,11 @@
 package clearcontrol.devices.stages.gui.demo;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
 import clearcontrol.devices.stages.StageType;
 import clearcontrol.devices.stages.devices.sim.StageDeviceSimulator;
 import clearcontrol.devices.stages.gui.StageDevicePanel;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * XYZR stage device panel demo
@@ -19,9 +18,7 @@ public class XYZRStageDevicePanelDemo extends Application
   @Override
   public void start(Stage pPrimaryStage) throws Exception
   {
-    StageDeviceSimulator lStageDeviceSimulator =
-                                               new StageDeviceSimulator("demostage",
-                                                                        StageType.XYZR);
+    StageDeviceSimulator lStageDeviceSimulator = new StageDeviceSimulator("demostage", StageType.XYZR);
 
     lStageDeviceSimulator.setSimLogging(true);
 
@@ -30,11 +27,9 @@ public class XYZRStageDevicePanelDemo extends Application
     lStageDeviceSimulator.addDOF("Z", -100, 100);
     lStageDeviceSimulator.addDOF("R", 0, 360);
 
-    StageDevicePanel lStageDevicePanel =
-                                       new StageDevicePanel(lStageDeviceSimulator);
+    StageDevicePanel lStageDevicePanel = new StageDevicePanel(lStageDeviceSimulator);
 
-    Scene scene = new Scene(lStageDevicePanel,
-                            javafx.scene.paint.Color.WHITE);
+    Scene scene = new Scene(lStageDevicePanel, javafx.scene.paint.Color.WHITE);
 
     pPrimaryStage.setTitle(this.getClass().getSimpleName());
     pPrimaryStage.setScene(scene);
@@ -44,9 +39,8 @@ public class XYZRStageDevicePanelDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

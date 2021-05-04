@@ -1,8 +1,9 @@
 package clearcontrol.gui.jfx.custom.tableview;
 
-import java.util.ArrayList;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
+
+import java.util.ArrayList;
 
 /**
  * Row of doubles
@@ -11,14 +12,12 @@ import javafx.beans.value.ChangeListener;
  */
 public class DoubleRow
 {
-  ArrayList<SimpleDoubleProperty> mDoublePropertyList =
-                                                      new ArrayList<>();
+  ArrayList<SimpleDoubleProperty> mDoublePropertyList = new ArrayList<>();
 
   /**
    * Instantiates a row of doubles from a given list of doubles.
-   * 
-   * @param pRowEntries
-   *          row entries
+   *
+   * @param pRowEntries row entries
    */
   public DoubleRow(double... pRowEntries)
   {
@@ -31,11 +30,9 @@ public class DoubleRow
 
   /**
    * Sets the value for a given column index.
-   * 
-   * @param pColumnIndex
-   *          column index
-   * @param pValue
-   *          value to set
+   *
+   * @param pColumnIndex column index
+   * @param pValue       value to set
    */
   public void setValue(int pColumnIndex, double pValue)
   {
@@ -45,17 +42,15 @@ public class DoubleRow
 
   /**
    * Returns the value for a given column index.
-   * 
-   * @param pColumnIndex
-   *          column index
+   *
+   * @param pColumnIndex column index
    * @return double property
    */
   public SimpleDoubleProperty getValue(int pColumnIndex)
   {
     ensureEnoughColumns(pColumnIndex + 1);
 
-    SimpleDoubleProperty lSimpleDoubleProperty =
-                                               mDoublePropertyList.get(pColumnIndex);
+    SimpleDoubleProperty lSimpleDoubleProperty = mDoublePropertyList.get(pColumnIndex);
     /*System.out.format("getValue(%d) = %g \n",
                       pColumnIndex,
                       lSimpleDoubleProperty.get());/**/
@@ -64,14 +59,11 @@ public class DoubleRow
 
   /**
    * Adds a listener for the given cell in row
-   * 
-   * @param pColumnIndex
-   *          column index
-   * @param pListener
-   *          change listener
+   *
+   * @param pColumnIndex column index
+   * @param pListener    change listener
    */
-  public void addListener(int pColumnIndex,
-                          ChangeListener<? super Number> pListener)
+  public void addListener(int pColumnIndex, ChangeListener<? super Number> pListener)
   {
     getValue(pColumnIndex).addListener(pListener);
   }
@@ -80,8 +72,7 @@ public class DoubleRow
   {
     while (mDoublePropertyList.size() < pNumberOfColumns)
     {
-      SimpleDoubleProperty lSimpleDoubleProperty =
-                                                 new SimpleDoubleProperty();
+      SimpleDoubleProperty lSimpleDoubleProperty = new SimpleDoubleProperty();
       mDoublePropertyList.add(lSimpleDoubleProperty);
       /*lSimpleDoubleProperty.addListener((x,
                                          o,

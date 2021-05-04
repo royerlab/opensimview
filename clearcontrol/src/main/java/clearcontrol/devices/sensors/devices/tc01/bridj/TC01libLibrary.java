@@ -3,11 +3,8 @@ package clearcontrol.devices.sensors.devices.tc01.bridj;
 import org.bridj.BridJ;
 import org.bridj.CRuntime;
 import org.bridj.Pointer;
-import org.bridj.ann.CLong;
-import org.bridj.ann.Library;
-import org.bridj.ann.Name;
-import org.bridj.ann.Ptr;
 import org.bridj.ann.Runtime;
+import org.bridj.ann.*;
 
 /**
  * Wrapper for library <b>TC01lib</b><br>
@@ -35,53 +32,39 @@ public class TC01libLibrary
    * <i>native declaration :
    * C:\Users\myerslab\workspace2\RTlib\RTlib-sensors\src
    * \rtlib\sensors\devices\tc01\labview\lib\TC01lib.h:9</i>
-   * 
-   * @param physicalChannel
-   *          channel
-   * @param thermocoupleType
-   *          type
+   *
+   * @param physicalChannel  channel
+   * @param thermocoupleType type
    * @return temperature in Celcius
    */
   @Name("TC01lib")
-  public static double tC01lib(Pointer<Byte> physicalChannel,
-                               int thermocoupleType)
+  public static double tC01lib(Pointer<Byte> physicalChannel, int thermocoupleType)
   {
-    return tC01lib(Pointer.getPeer(physicalChannel),
-                   thermocoupleType);
+    return tC01lib(Pointer.getPeer(physicalChannel), thermocoupleType);
   }
 
   @Name("TC01lib")
-  protected native static double tC01lib(@Ptr long physicalChannel,
-                                         int thermocoupleType);
+  protected native static double tC01lib(@Ptr long physicalChannel, int thermocoupleType);
 
   /**
    * Original signature : <code>long LVDLLStatus(char*, int, void*)</code><br>
    * <i>native declaration :
    * C:\Users\myerslab\workspace2\RTlib\RTlib-sensors\src
    * \rtlib\sensors\devices\tc01\labview\lib\TC01lib.h:11</i>
-   * 
-   * @param errStr
-   *          error string
-   * @param errStrLen
-   *          error str length
-   * @param module
-   *          module
+   *
+   * @param errStr    error string
+   * @param errStrLen error str length
+   * @param module    module
    * @return code
    */
   @Name("LVDLLStatus")
   @CLong
-  public static long lVDLLStatus(Pointer<Byte> errStr,
-                                 int errStrLen,
-                                 Pointer<?> module)
+  public static long lVDLLStatus(Pointer<Byte> errStr, int errStrLen, Pointer<?> module)
   {
-    return lVDLLStatus(Pointer.getPeer(errStr),
-                       errStrLen,
-                       Pointer.getPeer(module));
+    return lVDLLStatus(Pointer.getPeer(errStr), errStrLen, Pointer.getPeer(module));
   }
 
   @Name("LVDLLStatus")
   @CLong
-  protected native static long lVDLLStatus(@Ptr long errStr,
-                                           int errStrLen,
-                                           @Ptr long module);
+  protected native static long lVDLLStatus(@Ptr long errStr, int errStrLen, @Ptr long module);
 }

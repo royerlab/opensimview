@@ -2,12 +2,9 @@ package clearcontrol.core.cpu.test;
 
 import clearcontrol.core.cpu.LoadAverages;
 import clearcontrol.core.cpu.LoadAverages.LoadAveragesResult;
-
 import org.junit.Test;
 
 /**
- *
- *
  * @author royer
  */
 public class LoadAverageTests
@@ -21,8 +18,7 @@ public class LoadAverageTests
   {
     for (int i = 0; i < 10; i++)
     {
-      LoadAveragesResult lLoadAverages =
-                                       LoadAverages.getLoadAverages();
+      LoadAveragesResult lLoadAverages = LoadAverages.getLoadAverages();
       System.out.println(lLoadAverages);
     }
 

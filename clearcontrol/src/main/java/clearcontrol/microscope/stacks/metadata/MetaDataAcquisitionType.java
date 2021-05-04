@@ -9,11 +9,10 @@ import clearcontrol.stack.metadata.MetaDataEntryInterface;
  * @author royer
  */
 @SuppressWarnings("javadoc")
-public enum MetaDataAcquisitionType implements
-                                    MetaDataEntryInterface<AcquisitionType>
+public enum MetaDataAcquisitionType implements MetaDataEntryInterface<AcquisitionType>
 {
 
- AcquisitionType(AcquisitionType.class);
+  AcquisitionType(AcquisitionType.class);
 
   private final Class<AcquisitionType> mClass;
 

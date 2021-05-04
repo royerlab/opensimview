@@ -1,24 +1,21 @@
 package clearcontrol.com.serial.demo;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Scanner;
-
-import jssc.SerialPortException;
 import clearcontrol.com.serial.Serial;
 import clearcontrol.com.serial.SerialException;
 import clearcontrol.com.serial.SerialInterface;
 import clearcontrol.com.serial.SerialListenerAdapter;
-
+import jssc.SerialPortException;
 import org.junit.Test;
+
+import java.util.Scanner;
+
+import static org.junit.Assert.assertTrue;
 
 public class SerialDemo
 {
 
   @Test
-  public void serialConsoleDemo() throws InterruptedException,
-                                  SerialPortException,
-                                  SerialException
+  public void serialConsoleDemo() throws InterruptedException, SerialPortException, SerialException
   {
 
     final Serial lSerial = new Serial(115200);
@@ -27,8 +24,7 @@ public class SerialDemo
     lSerial.addListener(new SerialListenerAdapter()
     {
       @Override
-      public void textMessageReceived(SerialInterface pSerial,
-                                      String pMessage)
+      public void textMessageReceived(SerialInterface pSerial, String pMessage)
       {
         super.textMessageReceived(pSerial, pMessage);
 

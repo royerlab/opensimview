@@ -1,15 +1,14 @@
 package clearcontrol.core.math.interpolation;
 
-import static java.lang.Math.abs;
+import clearcontrol.gui.plots.MultiPlot;
+import clearcontrol.gui.plots.PlotTab;
+import org.apache.commons.math3.analysis.UnivariateFunction;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import clearcontrol.gui.plots.MultiPlot;
-import clearcontrol.gui.plots.PlotTab;
-
-import org.apache.commons.math3.analysis.UnivariateFunction;
+import static java.lang.Math.abs;
 
 /**
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG
@@ -63,8 +62,7 @@ public abstract class AbstractInterpolationTable
   /**
    * Returns the Row at a given index
    *
-   * @param pRowIndex
-   *          Row index
+   * @param pRowIndex Row index
    * @return Row at index
    */
   public Row getRow(int pRowIndex)
@@ -80,8 +78,7 @@ public abstract class AbstractInterpolationTable
   /**
    * Returns the nearest Row for a given X
    *
-   * @param pX
-   *          X
+   * @param pX X
    * @return nearest Row
    */
   public Row getNearestRow(double pX)
@@ -89,17 +86,14 @@ public abstract class AbstractInterpolationTable
     final Row lCeiling = mTable.ceiling(new Row(0, pX));
     final Row lFloor = mTable.floor(new Row(0, pX));
 
-    if (abs(lCeiling.getX() - pX) < abs(lFloor.getX() - pX))
-      return lCeiling;
-    else
-      return lFloor;
+    if (abs(lCeiling.getX() - pX) < abs(lFloor.getX() - pX)) return lCeiling;
+    else return lFloor;
   }
 
   /**
    * Returns the ceiling Row for a given X
    *
-   * @param pX
-   *          X
+   * @param pX X
    * @return ceiling Row
    */
   public Row getCeilRow(double pX)
@@ -111,8 +105,7 @@ public abstract class AbstractInterpolationTable
   /**
    * Returns the floor Row for a given X
    *
-   * @param pX
-   *          X
+   * @param pX X
    * @return floor row
    */
   public Row getFloorRow(double pX)
@@ -124,8 +117,7 @@ public abstract class AbstractInterpolationTable
   /**
    * Adds a Row for a given X value.
    *
-   * @param pX
-   *          X
+   * @param pX X
    * @return Row
    */
   public Row addRow(double pX)
@@ -139,19 +131,16 @@ public abstract class AbstractInterpolationTable
   /**
    * Adds a row after a given X value
    *
-   * @param pX
-   *          X
+   * @param pX X
    */
   public void addRowAfter(double pX)
   {
     Row lRowBefore = getFloorRow(pX);
     Row lRowAfter = getCeilRow(pX + cEpsilon);
 
-    if (lRowAfter == null)
-      lRowAfter = lRowBefore;
+    if (lRowAfter == null) lRowAfter = lRowBefore;
 
-    if (lRowBefore == null)
-      lRowBefore = lRowAfter;
+    if (lRowBefore == null) lRowBefore = lRowAfter;
 
     if (lRowAfter == null)
     {
@@ -161,8 +150,7 @@ public abstract class AbstractInterpolationTable
 
     double lX = (lRowBefore.x + lRowAfter.x) / 2;
 
-    if (pX == lX)
-      lX++;
+    if (pX == lX) lX++;
 
     Row lRow = addRow(lX);
 
@@ -176,8 +164,7 @@ public abstract class AbstractInterpolationTable
   /**
    * Removes the nearest row for a given X value
    *
-   * @param pX
-   *          X
+   * @param pX X
    * @return remove row
    */
   public Row removeRow(double pX)
@@ -191,10 +178,8 @@ public abstract class AbstractInterpolationTable
   /**
    * Moves a row of given index to a new value
    *
-   * @param pRowIndex
-   *          row index
-   * @param pNewX
-   *          new value
+   * @param pRowIndex row index
+   * @param pNewX     new value
    * @return new row
    */
   public Row moveRow(int pRowIndex, double pNewX)
@@ -230,10 +215,8 @@ public abstract class AbstractInterpolationTable
   /**
    * Returns the nearest value Y=f(X) for a given column index and value X.
    *
-   * @param pColumnIndex
-   *          column index
-   * @param pX
-   *          X value
+   * @param pColumnIndex column index
+   * @param pX           X value
    * @return Y=f(X) nearest value
    */
   public double getNearestValue(int pColumnIndex, double pX)
@@ -244,10 +227,8 @@ public abstract class AbstractInterpolationTable
   /**
    * Returns the ceiling value Y=f(X) for a given column index and value X.
    *
-   * @param pColumnIndex
-   *          column index
-   * @param pX
-   *          X value
+   * @param pColumnIndex column index
+   * @param pX           X value
    * @return Y=f(X) ceiling value
    */
   public double getCeil(int pColumnIndex, double pX)
@@ -258,24 +239,18 @@ public abstract class AbstractInterpolationTable
   /**
    * Returns the interpolated value Y=f(X) for a given column index and value X.
    *
-   * @param pColumnIndex
-   *          column index
-   * @param pX
-   *          X value
+   * @param pColumnIndex column index
+   * @param pX           X value
    * @return Y=f(X) interpolated value
    */
-  public abstract double getInterpolatedValue(int pColumnIndex,
-                                              double pX);
+  public abstract double getInterpolatedValue(int pColumnIndex, double pX);
 
   /**
    * Sets the Y value for a given column and row index.
    *
-   * @param pRowIndex
-   *          row index
-   * @param pColumnIndex
-   *          column index
-   * @param pValue
-   *          value
+   * @param pRowIndex    row index
+   * @param pColumnIndex column index
+   * @param pValue       value
    */
   public void setY(int pRowIndex, int pColumnIndex, double pValue)
   {
@@ -285,16 +260,11 @@ public abstract class AbstractInterpolationTable
   /**
    * Sets the Y value for a given column and row index.
    *
-   * @param pRowIndex
-   *          row index
-   * @param pColumnIndex
-   *          column index
-   * @param pDeltaValue
-   *          delta value
+   * @param pRowIndex    row index
+   * @param pColumnIndex column index
+   * @param pDeltaValue  delta value
    */
-  public void addY(int pRowIndex,
-                   int pColumnIndex,
-                   double pDeltaValue)
+  public void addY(int pRowIndex, int pColumnIndex, double pDeltaValue)
   {
     getRow(pRowIndex).addY(pColumnIndex, pDeltaValue);
   }
@@ -302,10 +272,8 @@ public abstract class AbstractInterpolationTable
   /**
    * Returns the Y value for a given column and row index.
    *
-   * @param pRowIndex
-   *          row index
-   * @param pColumnIndex
-   *          column index
+   * @param pRowIndex    row index
+   * @param pColumnIndex column index
    * @return y value
    */
   public double getY(int pRowIndex, int pColumnIndex)
@@ -316,10 +284,8 @@ public abstract class AbstractInterpolationTable
   /**
    * Sets the Y value at a given row index for all columns.
    *
-   * @param pRowIndex
-   *          row index
-   * @param pValue
-   *          value
+   * @param pRowIndex row index
+   * @param pValue    value
    */
   public void setY(int pRowIndex, double pValue)
   {
@@ -331,8 +297,7 @@ public abstract class AbstractInterpolationTable
   /**
    * Sets the Y value for all entries in the table.
    *
-   * @param pValue
-   *          value
+   * @param pValue value
    */
   public void setY(double pValue)
   {
@@ -374,14 +339,12 @@ public abstract class AbstractInterpolationTable
   /**
    * Displays a MultiPlot for debug purposes.
    *
-   * @param pMultiPlotName
-   *          multiplot name
+   * @param pMultiPlotName multiplot name
    * @return multiplot
    */
   public MultiPlot displayTable(String pMultiPlotName)
   {
-    final MultiPlot lMultiPlot =
-                               MultiPlot.getMultiPlot(pMultiPlotName);
+    final MultiPlot lMultiPlot = MultiPlot.getMultiPlot(pMultiPlotName);
 
     for (int i = 0; i < mNumberOfColumns; i++)
     {
@@ -402,12 +365,7 @@ public abstract class AbstractInterpolationTable
       final double lRangeWidth = lMaxX - lMinX;
       final double lStep = (lMaxX - lMinX) / 1024;
 
-      for (double x = lMinX
-                      - 0.5
-                        * lRangeWidth; x <= lMaxX
-                                            + 0.5
-                                              * lRangeWidth; x +=
-                                                               lStep)
+      for (double x = lMinX - 0.5 * lRangeWidth; x <= lMaxX + 0.5 * lRangeWidth; x += lStep)
       {
         final double y = getInterpolatedValue(i, x);
         lPlot.addPoint("interpolated", x, y);

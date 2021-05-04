@@ -12,11 +12,9 @@ public class HomingVariable extends TSTBooleanVariableBase
 {
   /**
    * Instantiates an homing variable
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pAPTJDevice
-   *          APTJ device
+   *
+   * @param pVariableName variable name
+   * @param pAPTJDevice   APTJ device
    */
   public HomingVariable(String pVariableName, APTJDevice pAPTJDevice)
   {
@@ -30,10 +28,8 @@ public class HomingVariable extends TSTBooleanVariableBase
     final Boolean lValue = super.setEventHook(pOldValue, pNewValue);
     try
     {
-      if (lValue && !pOldValue)
-        mAPTJDevice.home();
-    }
-    catch (APTJExeption e)
+      if (lValue && !pOldValue) mAPTJDevice.home();
+    } catch (APTJExeption e)
     {
       severe("Error  while homing device: %s", mAPTJDevice);
       e.printStackTrace();

@@ -10,7 +10,7 @@ public interface ReOpenDeviceInterface
 {
   /**
    * Returns true if this device requires to be reopened.
-   * 
+   *
    * @return true if reopen necessary, false otherwise
    */
   boolean isReOpenDeviceNeeded();

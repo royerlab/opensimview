@@ -11,11 +11,7 @@ import clearcontrol.stack.StackInterface;
  *
  * @author royer
  */
-public class AsynchronousStackProcessorPipeline extends
-                                                StackProcessorPipelineBase
-                                                implements
-                                                StackProcessingPipelineInterface,
-                                                OpenCloseDeviceInterface
+public class AsynchronousStackProcessorPipeline extends StackProcessorPipelineBase implements StackProcessingPipelineInterface, OpenCloseDeviceInterface
 {
 
   // single threaded asycn processor:
@@ -23,25 +19,18 @@ public class AsynchronousStackProcessorPipeline extends
 
   /**
    * Instanciates a synchronous stack processor
-   * 
-   * @param pName
-   *          processor name
-   * @param pStackRecyclerManager
-   *          stack recycler manager
-   * @param pMaxQueueSize
-   *          max queue size
+   *
+   * @param pName                 processor name
+   * @param pStackRecyclerManager stack recycler manager
+   * @param pMaxQueueSize         max queue size
    */
-  public AsynchronousStackProcessorPipeline(String pName,
-                                            StackRecyclerManager pStackRecyclerManager,
-                                            int pMaxQueueSize)
+  public AsynchronousStackProcessorPipeline(String pName, StackRecyclerManager pStackRecyclerManager, int pMaxQueueSize)
   {
     super(pName, pStackRecyclerManager);
 
-    getInputVariable().addSetListener((o,
-                                       n) -> mAsyncStackProcessor.passOrWait(n));
+    getInputVariable().addSetListener((o, n) -> mAsyncStackProcessor.passOrWait(n));
 
-    class Processor extends
-                    AsynchronousProcessorBase<StackInterface, StackInterface>
+    class Processor extends AsynchronousProcessorBase<StackInterface, StackInterface>
     {
       public Processor(String pName, int pMaxQueueSize)
       {
@@ -54,11 +43,9 @@ public class AsynchronousStackProcessorPipeline extends
         try
         {
           StackInterface lProcessedStack = doProcess(pInput);
-          if (lProcessedStack != null)
-            getOutputVariable().set(lProcessedStack);
+          if (lProcessedStack != null) getOutputVariable().set(lProcessedStack);
           return lProcessedStack;
-        }
-        catch (Throwable e)
+        } catch (Throwable e)
         {
           e.printStackTrace();
           pInput.release();

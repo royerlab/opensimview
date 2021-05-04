@@ -1,24 +1,19 @@
 package clearcontrol.gui.swing.demo;
 
-import java.awt.BorderLayout;
-import java.lang.reflect.InvocationTargetException;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
-
 import clearcontrol.core.variable.VariableListener;
 import clearcontrol.gui.swing.JTextFieldDouble;
-
 import org.junit.Test;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class TextFieldDoubleDemo
 {
 
   @Test
-  public void demo() throws InvocationTargetException,
-                     InterruptedException
+  public void demo() throws InvocationTargetException, InterruptedException
   {
 
     final JFrame lJFrame = runDemo();
@@ -30,8 +25,7 @@ public class TextFieldDoubleDemo
 
   }
 
-  public JFrame runDemo() throws InterruptedException,
-                          InvocationTargetException
+  public JFrame runDemo() throws InterruptedException, InvocationTargetException
   {
 
     final JFrame lJFrame = new JFrame("Demo");
@@ -51,35 +45,28 @@ public class TextFieldDoubleDemo
           lJFrame.setContentPane(mcontentPane);
           lJFrame.setVisible(true);
 
-          final JTextFieldDouble lJTextFieldDouble =
-                                                   new JTextFieldDouble();
+          final JTextFieldDouble lJTextFieldDouble = new JTextFieldDouble();
 
-          lJTextFieldDouble.getDoubleVariable()
-                           .addListener(new VariableListener<Double>()
-                           {
+          lJTextFieldDouble.getDoubleVariable().addListener(new VariableListener<Double>()
+          {
 
-                             @Override
-                             public void setEvent(Double pCurrentValue,
-                                                  Double pNewValue)
-                             {
-                               System.out.format("setEvent(%s,%s) \n",
-                                                 pCurrentValue,
-                                                 pNewValue);
+            @Override
+            public void setEvent(Double pCurrentValue, Double pNewValue)
+            {
+              System.out.format("setEvent(%s,%s) \n", pCurrentValue, pNewValue);
 
-                             }
+            }
 
-                             @Override
-                             public void getEvent(Double pCurrentValue)
-                             {
-                               System.out.format("getEvent(%s,%s) \n",
-                                                 pCurrentValue);
-                             }
-                           });
+            @Override
+            public void getEvent(Double pCurrentValue)
+            {
+              System.out.format("getEvent(%s,%s) \n", pCurrentValue);
+            }
+          });
 
           lJFrame.add(lJTextFieldDouble);
 
-        }
-        catch (final Exception e)
+        } catch (final Exception e)
         {
           e.printStackTrace();
         }

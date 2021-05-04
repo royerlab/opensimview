@@ -16,23 +16,14 @@ public class StackRequest implements RecyclerRequestInterface
   /**
    * Instanciates a stack request given: width, height, depth, metadata size in
    * bytes, and alignment
-   * 
-   * @param pWidth
-   *          width
-   * @param pHeight
-   *          height
-   * @param pDepth
-   *          depth
-   * @param pMetaDataSizeInBytes
-   *          metadata size in bytes
-   * @param pAlignment
-   *          alignment
+   *
+   * @param pWidth               width
+   * @param pHeight              height
+   * @param pDepth               depth
+   * @param pMetaDataSizeInBytes metadata size in bytes
+   * @param pAlignment           alignment
    */
-  public StackRequest(final long pWidth,
-                      final long pHeight,
-                      final long pDepth,
-                      long pMetaDataSizeInBytes,
-                      long pAlignment)
+  public StackRequest(final long pWidth, final long pHeight, final long pDepth, long pMetaDataSizeInBytes, long pAlignment)
   {
     mWidth = pWidth;
     mHeight = pHeight;
@@ -43,13 +34,10 @@ public class StackRequest implements RecyclerRequestInterface
 
   /**
    * Instanciates a stack request of given width, height and depth
-   * 
-   * @param pWidth
-   *          width
-   * @param pHeight
-   *          height
-   * @param pDepth
-   *          depth
+   *
+   * @param pWidth  width
+   * @param pHeight height
+   * @param pDepth  depth
    */
   public StackRequest(long pWidth, long pHeight, long pDepth)
   {
@@ -58,89 +46,59 @@ public class StackRequest implements RecyclerRequestInterface
 
   /**
    * Instanciates a stack request of given width, height and depth
-   * 
-   * @param pDimensions
-   *          (width,height,depth)
+   *
+   * @param pDimensions (width,height,depth)
    * @return stack request
    */
   public static StackRequest build(final long... pDimensions)
   {
-    return new StackRequest(pDimensions[0],
-                            pDimensions[1],
-                            pDimensions[2]);
+    return new StackRequest(pDimensions[0], pDimensions[1], pDimensions[2]);
   }
 
   /**
    * Instanciates a stack request of given width, height and depth
-   * 
-   * @param pWidth
-   *          width
-   * @param pHeight
-   *          height
-   * @param pDepth
-   *          depth
-   * @param pMetaDataLength
-   *          metadata length
+   *
+   * @param pWidth          width
+   * @param pHeight         height
+   * @param pDepth          depth
+   * @param pMetaDataLength metadata length
    * @return stack request
    */
-  public static StackRequest build(final long pWidth,
-                                   final long pHeight,
-                                   final long pDepth,
-                                   final long pMetaDataLength)
+  public static StackRequest build(final long pWidth, final long pHeight, final long pDepth, final long pMetaDataLength)
   {
-    return new StackRequest(pWidth,
-                            pHeight,
-                            pDepth,
-                            pMetaDataLength,
-                            0);
+    return new StackRequest(pWidth, pHeight, pDepth, pMetaDataLength, 0);
   }
 
   /**
    * Instanciates a stack request of given width, height, depth, metadtat length
    * and alignment
-   * 
-   * @param pWidth
-   *          width
-   * @param pHeight
-   *          height
-   * @param pDepth
-   *          depth
-   * @param pMetaDataLength
-   *          meta data length
-   * @param pAlignment
-   *          alignment
+   *
+   * @param pWidth          width
+   * @param pHeight         height
+   * @param pDepth          depth
+   * @param pMetaDataLength meta data length
+   * @param pAlignment      alignment
    * @return stack request
    */
-  public static StackRequest build(final long pWidth,
-                                   final long pHeight,
-                                   final long pDepth,
-                                   final long pMetaDataLength,
-                                   final long pAlignment)
+  public static StackRequest build(final long pWidth, final long pHeight, final long pDepth, final long pMetaDataLength, final long pAlignment)
   {
-    return new StackRequest(pWidth,
-                            pHeight,
-                            pDepth,
-                            pMetaDataLength,
-                            pAlignment);
+    return new StackRequest(pWidth, pHeight, pDepth, pMetaDataLength, pAlignment);
   }
 
   /**
    * Instanciates a stack request using the details of a given stack
-   * 
-   * @param pStack
-   *          stack to use as template
+   *
+   * @param pStack stack to use as template
    * @return stack request
    */
   public static StackRequest buildFrom(final StackInterface pStack)
   {
-    return new StackRequest(pStack.getWidth(),
-                            pStack.getHeight(),
-                            pStack.getDepth());
+    return new StackRequest(pStack.getWidth(), pStack.getHeight(), pStack.getDepth());
   }
 
   /**
    * Returns width
-   * 
+   *
    * @return width
    */
   public long getWidth()
@@ -150,7 +108,7 @@ public class StackRequest implements RecyclerRequestInterface
 
   /**
    * Returns height
-   * 
+   *
    * @return height
    */
   public long getHeight()
@@ -160,7 +118,7 @@ public class StackRequest implements RecyclerRequestInterface
 
   /**
    * Returns depth
-   * 
+   *
    * @return depth
    */
   public long getDepth()
@@ -170,18 +128,17 @@ public class StackRequest implements RecyclerRequestInterface
 
   /**
    * Returns dimensions
-   * 
+   *
    * @return dimensions
    */
   public long[] getDimensions()
   {
-    return new long[]
-    { mWidth, mHeight, mDepth };
+    return new long[]{mWidth, mHeight, mDepth};
   }
 
   /**
    * Returns alignment
-   * 
+   *
    * @return alignement
    */
   public long getAlignment()
@@ -191,7 +148,7 @@ public class StackRequest implements RecyclerRequestInterface
 
   /**
    * Returns the metadata size in bytes
-   * 
+   *
    * @return metadata size in bytes
    */
   public long getMetadataSizeInBytes()
@@ -202,10 +159,7 @@ public class StackRequest implements RecyclerRequestInterface
   @Override
   public String toString()
   {
-    return String.format("StackRequest [mWidth=%s, mHeight=%s, mDepth=%s]",
-                         mWidth,
-                         mHeight,
-                         mDepth);
+    return String.format("StackRequest [mWidth=%s, mHeight=%s, mDepth=%s]", mWidth, mHeight, mDepth);
   }
 
 }

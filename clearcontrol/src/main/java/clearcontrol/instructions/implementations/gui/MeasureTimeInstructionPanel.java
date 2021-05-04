@@ -15,10 +15,7 @@ public class MeasureTimeInstructionPanel extends CustomGridPane
 {
   public MeasureTimeInstructionPanel(MeasureTimeInstruction pInstruction)
   {
-    StringVariableTextField
-        lTextField =
-        new StringVariableTextField(pInstruction.getMeasuredTimeKeyVariable().getName(),
-                                    pInstruction.getMeasuredTimeKeyVariable());
+    StringVariableTextField lTextField = new StringVariableTextField(pInstruction.getMeasuredTimeKeyVariable().getName(), pInstruction.getMeasuredTimeKeyVariable());
     add(lTextField.getLabel(), 0, 0);
     add(lTextField.getTextField(), 1, 0);
   }

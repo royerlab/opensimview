@@ -3,8 +3,7 @@ package clearcontrol.core.variable;
 /**
  * Variable sync inerface
  *
- * @param <O>
- *          reference type
+ * @param <O> reference type
  * @author royer
  */
 public interface VariableSyncInterface<O>
@@ -12,17 +11,15 @@ public interface VariableSyncInterface<O>
 
   /**
    * Sends updates to the given variable
-   * 
-   * @param pVariable
-   *          variable to send updates to
+   *
+   * @param pVariable variable to send updates to
    */
   public void sendUpdatesTo(Variable<O> pVariable);
 
   /**
    * Do not send updates (anymore) to the given variable
-   * 
-   * @param pVariable
-   *          variable not to send updates (anymore) to
+   *
+   * @param pVariable variable not to send updates (anymore) to
    */
   public void doNotSendUpdatesTo(Variable<O> pVariable);
 
@@ -35,17 +32,15 @@ public interface VariableSyncInterface<O>
   /**
    * Synced this variable with teh given variable. This means that this and the
    * given variable will send each other updates
-   * 
-   * @param pVariable
-   *          variable to cync to
+   *
+   * @param pVariable variable to cync to
    */
   public void syncWith(Variable<O> pVariable);
 
   /**
    * Stops syncing this and the given variable together.
-   * 
-   * @param pVariable
-   *          variable not to sync with
+   *
+   * @param pVariable variable not to sync with
    */
   public void doNotSyncWith(Variable<O> pVariable);
   /**/

@@ -13,9 +13,8 @@ public class OpticalSwitchDevicePanel extends SwitchingDevicePanel
 
   /**
    * Instantiates an optical switch device panel
-   * 
-   * @param pOpticalSwitchDeviceInterface
-   *          optical switch device
+   *
+   * @param pOpticalSwitchDeviceInterface optical switch device
    */
   public OpticalSwitchDevicePanel(OpticalSwitchDeviceInterface pOpticalSwitchDeviceInterface)
   {

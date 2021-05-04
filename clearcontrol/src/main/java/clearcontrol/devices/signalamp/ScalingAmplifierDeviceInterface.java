@@ -3,8 +3,7 @@ package clearcontrol.devices.signalamp;
 import clearcontrol.core.device.name.NameableInterface;
 import clearcontrol.core.variable.Variable;
 
-public interface ScalingAmplifierDeviceInterface extends
-                                                 NameableInterface
+public interface ScalingAmplifierDeviceInterface extends NameableInterface
 {
   public double getMinGain();
 

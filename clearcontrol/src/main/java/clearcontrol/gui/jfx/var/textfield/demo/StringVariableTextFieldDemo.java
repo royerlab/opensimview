@@ -1,12 +1,11 @@
 package clearcontrol.gui.jfx.var.textfield.demo;
 
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.var.textfield.StringVariableTextField;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.var.textfield.StringVariableTextField;
 
 /**
  * Number text field demo
@@ -25,15 +24,13 @@ public class StringVariableTextFieldDemo extends Application
     stage.setTitle(this.getClass().getSimpleName());
     // scene.setFill(Color.BLACK);
 
-    Variable<String> lStringVariable = new Variable<>("DemoStringVar",
-                                                      "abcd");
-    lStringVariable.addSetListener((o, n) -> {
+    Variable<String> lStringVariable = new Variable<>("DemoStringVar", "abcd");
+    lStringVariable.addSetListener((o, n) ->
+    {
       System.out.println("string: " + n);
     });
 
-    StringVariableTextField lStringVariableTextField =
-                                                     new StringVariableTextField("a string value: ",
-                                                                                 lStringVariable);
+    StringVariableTextField lStringVariableTextField = new StringVariableTextField("a string value: ", lStringVariable);
 
     root.add(lStringVariableTextField, 0, 1);
 
@@ -42,9 +39,8 @@ public class StringVariableTextFieldDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

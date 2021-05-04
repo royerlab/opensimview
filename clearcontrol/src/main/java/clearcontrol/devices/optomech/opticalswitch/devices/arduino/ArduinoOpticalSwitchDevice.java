@@ -12,9 +12,7 @@ import clearcontrol.devices.optomech.opticalswitch.devices.arduino.adapters.Ardu
  *
  * @author royer
  */
-public class ArduinoOpticalSwitchDevice extends SerialDevice
-                                        implements
-                                        OpticalSwitchDeviceInterface
+public class ArduinoOpticalSwitchDevice extends SerialDevice implements OpticalSwitchDeviceInterface
 
 {
 
@@ -28,76 +26,52 @@ public class ArduinoOpticalSwitchDevice extends SerialDevice
 
   /**
    * Instantiates an Arduino Optical Switch device given a device index
-   * 
-   * @param pDeviceIndex
-   *          device index.
+   *
+   * @param pDeviceIndex device index.
    */
   public ArduinoOpticalSwitchDevice(final int pDeviceIndex)
   {
-    this(MachineConfiguration.get().getSerialDevicePort(
-                                                        "fiberswitch.optojena",
-                                                        pDeviceIndex,
-                                                        "NULL"));
+    this(MachineConfiguration.get().getSerialDevicePort("fiberswitch.optojena", pDeviceIndex, "NULL"));
   }
 
   /**
    * Instantiates an Arduino Optical Switch device given a port name
-   * 
-   * @param pPortName
-   *          port name
+   *
+   * @param pPortName port name
    */
   @SuppressWarnings("unchecked")
   public ArduinoOpticalSwitchDevice(final String pPortName)
   {
     super("ArduinoOpticalSwitch", pPortName, 250000);
 
-    final ArduinoOpticalSwitchPositionAdapter lFiberSwitchPosition =
-                                                                   new ArduinoOpticalSwitchPositionAdapter(this);
+    final ArduinoOpticalSwitchPositionAdapter lFiberSwitchPosition = new ArduinoOpticalSwitchPositionAdapter(this);
 
-    mCommandVariable = addSerialVariable("OpticalSwitchPosition",
-                                         lFiberSwitchPosition);
+    mCommandVariable = addSerialVariable("OpticalSwitchPosition", lFiberSwitchPosition);
 
     mLightSheetOnOff = new Variable[4];
 
-    final VariableSetListener<Boolean> lBooleanVariableListener =
-                                                                (u,
-                                                                 v) -> {
+    final VariableSetListener<Boolean> lBooleanVariableListener = (u, v) ->
+    {
 
-                                                                  int lCount =
-                                                                             0;
-                                                                  for (int i =
-                                                                             0; i < mLightSheetOnOff.length; i++)
-                                                                    if (mLightSheetOnOff[i].get())
-                                                                      lCount++;
+      int lCount = 0;
+      for (int i = 0; i < mLightSheetOnOff.length; i++)
+        if (mLightSheetOnOff[i].get()) lCount++;
 
-                                                                  if (lCount == 1)
-                                                                  {
-                                                                    for (int i =
-                                                                               0; i < mLightSheetOnOff.length; i++)
-                                                                      if (mLightSheetOnOff[i].get())
-                                                                        mCommandVariable.set((long) (101
-                                                                                                     + i));
-                                                                  }
-                                                                  else
-                                                                    for (int i =
-                                                                               0; i < mLightSheetOnOff.length; i++)
-                                                                    {
-                                                                      boolean lOn =
-                                                                                  mLightSheetOnOff[i].get();
-                                                                      mCommandVariable.set((long) ((i
-                                                                                                    + 1)
-                                                                                                   * (lOn ? 1
-                                                                                                          : -1)));
-                                                                    }
-                                                                };
+      if (lCount == 1)
+      {
+        for (int i = 0; i < mLightSheetOnOff.length; i++)
+          if (mLightSheetOnOff[i].get()) mCommandVariable.set((long) (101 + i));
+      } else for (int i = 0; i < mLightSheetOnOff.length; i++)
+      {
+        boolean lOn = mLightSheetOnOff[i].get();
+        mCommandVariable.set((long) ((i + 1) * (lOn ? 1 : -1)));
+      }
+    };
 
     for (int i = 0; i < mLightSheetOnOff.length; i++)
     {
 
-      mLightSheetOnOff[i] = new Variable<Boolean>(
-                                                  String.format("LightSheet%dOnOff",
-                                                                i),
-                                                  false);
+      mLightSheetOnOff[i] = new Variable<Boolean>(String.format("LightSheet%dOnOff", i), false);
       mLightSheetOnOff[i].addSetListener(lBooleanVariableListener);
 
     }

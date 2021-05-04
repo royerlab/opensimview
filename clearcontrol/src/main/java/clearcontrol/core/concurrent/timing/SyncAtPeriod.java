@@ -12,9 +12,8 @@ public class SyncAtPeriod
 
   /**
    * Syncs at given period. the number of nanoseconds exceeded is returned.
-   * 
-   * @param pPeriodInMilliseconds
-   *          period in milliseconds
+   *
+   * @param pPeriodInMilliseconds period in milliseconds
    * @return number of milliseconds that the period exceeded.
    */
   public long syncAtPeriod(double pPeriodInMilliseconds)
@@ -30,8 +29,7 @@ public class SyncAtPeriod
         try
         {
           Thread.sleep(1);
-        }
-        catch (InterruptedException e)
+        } catch (InterruptedException e)
         {
         }
       }
@@ -39,7 +37,6 @@ public class SyncAtPeriod
 
     mLastTime = System.nanoTime();
 
-    return (long) (lDeadline == 0 ? 0
-                                  : (mLastTime - lDeadline) * 1e-6);
+    return (long) (lDeadline == 0 ? 0 : (mLastTime - lDeadline) * 1e-6);
   }
 }

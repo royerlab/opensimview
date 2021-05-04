@@ -1,28 +1,25 @@
 package clearcontrol.core.math.argmax.methods;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-
 import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
 import gnu.trove.list.array.TDoubleArrayList;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 /**
  * Normalizing argmax finder.
  *
- *
  * @author royer
  */
-public class NormalizingArgMaxFinder implements
-                                     ArgMaxFinder1DInterface
+public class NormalizingArgMaxFinder implements ArgMaxFinder1DInterface
 {
 
   private ArgMaxFinder1DInterface mArgMaxFinder1DInterface;
 
   /**
    * Instantiates a normalizing argmax finder given a delegated argmax finder.
-   * 
-   * @param pDelegatedArgMaxFinder1D
-   *          delegated argmax finder
+   *
+   * @param pDelegatedArgMaxFinder1D delegated argmax finder
    */
   public NormalizingArgMaxFinder(ArgMaxFinder1DInterface pDelegatedArgMaxFinder1D)
   {
@@ -49,9 +46,7 @@ public class NormalizingArgMaxFinder implements
       lNormY.add(lScaledValue);
     }
 
-    final Double lArgmax =
-                         mArgMaxFinder1DInterface.argmax(pX,
-                                                         lNormY.toArray());
+    final Double lArgmax = mArgMaxFinder1DInterface.argmax(pX, lNormY.toArray());
 
     return lArgmax;
   }
@@ -59,8 +54,7 @@ public class NormalizingArgMaxFinder implements
   @Override
   public String toString()
   {
-    return String.format("NormalizingArgMaxFinder [%s]",
-                         mArgMaxFinder1DInterface);
+    return String.format("NormalizingArgMaxFinder [%s]", mArgMaxFinder1DInterface);
   }
 
 }

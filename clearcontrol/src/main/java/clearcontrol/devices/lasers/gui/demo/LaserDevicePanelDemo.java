@@ -1,11 +1,10 @@
 package clearcontrol.devices.lasers.gui.demo;
 
+import clearcontrol.devices.lasers.devices.sim.LaserDeviceSimulator;
+import clearcontrol.devices.lasers.gui.LaserDevicePanel;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import clearcontrol.devices.lasers.devices.sim.LaserDeviceSimulator;
-import clearcontrol.devices.lasers.gui.LaserDevicePanel;
 
 /**
  * Laser device panel demo
@@ -19,21 +18,15 @@ public class LaserDevicePanelDemo extends Application
   public void start(Stage pPrimaryStage) throws Exception
   {
 
-    LaserDeviceSimulator lLaserDeviceSimulator =
-                                               new LaserDeviceSimulator("demolaser",
-                                                                        0,
-                                                                        594,
-                                                                        100);
+    LaserDeviceSimulator lLaserDeviceSimulator = new LaserDeviceSimulator("demolaser", 0, 594, 100);
     lLaserDeviceSimulator.setSimLogging(true);
 
     // lLaserDeviceSimulator.setLaserOn(true);
     // lLaserDeviceSimulator.setTargetPowerInMilliWatt(20);
 
-    LaserDevicePanel lLaserDevicePanel =
-                                       new LaserDevicePanel(lLaserDeviceSimulator);
+    LaserDevicePanel lLaserDevicePanel = new LaserDevicePanel(lLaserDeviceSimulator);
 
-    Scene scene = new Scene(lLaserDevicePanel,
-                            javafx.scene.paint.Color.WHITE);
+    Scene scene = new Scene(lLaserDevicePanel, javafx.scene.paint.Color.WHITE);
 
     pPrimaryStage.setTitle(this.getClass().getSimpleName());
     pPrimaryStage.setScene(scene);
@@ -43,9 +36,8 @@ public class LaserDevicePanelDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

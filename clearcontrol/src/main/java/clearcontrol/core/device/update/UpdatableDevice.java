@@ -7,17 +7,15 @@ import clearcontrol.core.device.VirtualDevice;
  *
  * @author royer
  */
-public abstract class UpdatableDevice extends VirtualDevice
-                                      implements UpdatableInterface
+public abstract class UpdatableDevice extends VirtualDevice implements UpdatableInterface
 {
 
   private volatile boolean mIsUpToDate = false;
 
   /**
    * Instantiates an updatable device of given name
-   * 
-   * @param pDeviceName
-   *          device name
+   *
+   * @param pDeviceName device name
    */
   public UpdatableDevice(String pDeviceName)
   {

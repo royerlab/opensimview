@@ -1,24 +1,17 @@
 package clearcontrol.gui.swing;
 
-import static java.lang.Math.round;
+import clearcontrol.core.variable.Variable;
+import net.miginfocom.swing.MigLayout;
 
-import java.awt.Color;
-import java.awt.EventQueue;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import net.miginfocom.swing.MigLayout;
-import clearcontrol.core.variable.Variable;
+import static java.lang.Math.round;
 
 public class JSliderIndexedStrings extends JPanel
 {
@@ -37,9 +30,7 @@ public class JSliderIndexedStrings extends JPanel
 
   private List<String> mItemsList;
 
-  public JSliderIndexedStrings(final String pValueName,
-                               List<String> pItemsList,
-                               int pInitialIndex)
+  public JSliderIndexedStrings(final String pValueName, List<String> pItemsList, int pInitialIndex)
   {
     super();
     mItemsList = pItemsList;
@@ -47,8 +38,7 @@ public class JSliderIndexedStrings extends JPanel
     mSliderVariable = new Variable<Double>(pValueName, 0.0)
     {
       @Override
-      public Double setEventHook(final Double pOldValue,
-                                 final Double pNewValue)
+      public Double setEventHook(final Double pOldValue, final Double pNewValue)
       {
 
         final int lSliderIntegerValue = getInt(pNewValue);
@@ -70,9 +60,7 @@ public class JSliderIndexedStrings extends JPanel
         return super.setEventHook(pOldValue, pNewValue);
       }
     };
-    setLayout(new MigLayout("",
-                            "[41px,center][16.00%,grow,center][368px,grow,center][41px,center]",
-                            "[25px:n:25px][27px]"));
+    setLayout(new MigLayout("", "[41px,center][16.00%,grow,center][368px,grow,center][41px,center]", "[25px:n:25px][27px]"));
 
     mNameLabel = new JLabel(pValueName);
     mNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -103,14 +91,12 @@ public class JSliderIndexedStrings extends JPanel
           {
             writeValueIntoTextField(lNewValue);
             mValueTextField.setBackground(Color.white);
-          }
-          catch (final Throwable e)
+          } catch (final Throwable e)
           {
             System.err.println(e.getLocalizedMessage());
           }
 
-          if (isWaitForMouseRelease()
-              && mSlider.getValueIsAdjusting())
+          if (isWaitForMouseRelease() && mSlider.getValueIsAdjusting())
           {
             return;
           }
@@ -129,21 +115,15 @@ public class JSliderIndexedStrings extends JPanel
 
     mMinusStepButton = new JButton("\u2013");
     add(mMinusStepButton, "cell 0 0,alignx left,growy");
-    mMinusStepButton.addActionListener((e) -> {
+    mMinusStepButton.addActionListener((e) ->
+    {
       final double lStep = 1;
       final int lModifiers = e.getModifiers();
-      final double lFactor =
-                           ((lModifiers
-                             & ActionEvent.SHIFT_MASK) == ActionEvent.SHIFT_MASK) ? 100
-                                                                                  : 10;
+      final double lFactor = ((lModifiers & ActionEvent.SHIFT_MASK) == ActionEvent.SHIFT_MASK) ? 100 : 10;
       int lNewValue = getInt(getDoubleVariable().get());
-      if ((lModifiers & ActionEvent.ALT_MASK) == ActionEvent.ALT_MASK)
-        lNewValue += -lStep / lFactor;
-      else if ((lModifiers
-                & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)
-        lNewValue += -lStep * lFactor;
-      else
-        lNewValue += -lStep;
+      if ((lModifiers & ActionEvent.ALT_MASK) == ActionEvent.ALT_MASK) lNewValue += -lStep / lFactor;
+      else if ((lModifiers & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK) lNewValue += -lStep * lFactor;
+      else lNewValue += -lStep;
       lNewValue = getInt(lNewValue);
       getDoubleVariable().set((double) lNewValue);
 
@@ -151,21 +131,15 @@ public class JSliderIndexedStrings extends JPanel
 
     mPlusStepButton = new JButton("+");
     add(mPlusStepButton, "cell 3 0,alignx left,growy");
-    mPlusStepButton.addActionListener((e) -> {
+    mPlusStepButton.addActionListener((e) ->
+    {
       final double lStep = 1;
       final int lModifiers = e.getModifiers();
-      final double lFactor =
-                           ((lModifiers
-                             & ActionEvent.SHIFT_MASK) == ActionEvent.SHIFT_MASK) ? 100
-                                                                                  : 10;
+      final double lFactor = ((lModifiers & ActionEvent.SHIFT_MASK) == ActionEvent.SHIFT_MASK) ? 100 : 10;
       double lNewValue = getDoubleVariable().get();
-      if ((lModifiers & ActionEvent.ALT_MASK) == ActionEvent.ALT_MASK)
-        lNewValue += lStep / lFactor;
-      else if ((lModifiers
-                & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)
-        lNewValue += lStep * lFactor;
-      else
-        lNewValue += lStep;
+      if ((lModifiers & ActionEvent.ALT_MASK) == ActionEvent.ALT_MASK) lNewValue += lStep / lFactor;
+      else if ((lModifiers & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK) lNewValue += lStep * lFactor;
+      else lNewValue += lStep;
       lNewValue = getInt(lNewValue);
       getDoubleVariable().set(lNewValue);
     });
@@ -199,24 +173,16 @@ public class JSliderIndexedStrings extends JPanel
 
   private int getInt(final double pNewValue)
   {
-    final int lIntValue = (int) clamp(0,
-                                      mItemsList.size() - 1,
-                                      round(pNewValue));
+    final int lIntValue = (int) clamp(0, mItemsList.size() - 1, round(pNewValue));
     return lIntValue;
   }
 
-  private static double toDouble(final int pResolution,
-                                 final double pMin,
-                                 final double pMax,
-                                 final int pIntValue)
+  private static double toDouble(final int pResolution, final double pMin, final double pMax, final int pIntValue)
   {
-    return pMin
-           + (double) pIntValue / (pResolution - 1) * (pMax - pMin);
+    return pMin + (double) pIntValue / (pResolution - 1) * (pMax - pMin);
   }
 
-  private static double clamp(final double pMin,
-                              final double pMax,
-                              final double pValue)
+  private static double clamp(final double pMin, final double pMax, final double pValue)
   {
     return Math.min(pMax, Math.max(pMin, pValue));
   }

@@ -1,7 +1,6 @@
 package clearcontrol.devices.signalgen.staves;
 
-public class ConstantStave extends StaveAbstract
-                           implements StaveInterface
+public class ConstantStave extends StaveAbstract implements StaveInterface
 {
   private volatile float mConstantValue;
 

@@ -2,8 +2,7 @@ package clearcontrol.devices.signalgen.staves;
 
 import clearcontrol.core.device.name.NameableBase;
 
-public abstract class StaveAbstract extends NameableBase
-                                    implements StaveInterface
+public abstract class StaveAbstract extends NameableBase implements StaveInterface
 
 {
   private volatile boolean mEnabled = true;
@@ -11,9 +10,8 @@ public abstract class StaveAbstract extends NameableBase
 
   /**
    * Constructor
-   * 
-   * @param pName
-   *          stave name
+   *
+   * @param pName stave name
    */
   public StaveAbstract(final String pName)
   {
@@ -37,9 +35,7 @@ public abstract class StaveAbstract extends NameableBase
   {
     final int prime = 31;
     int result = 1;
-    result =
-           prime * result + (int) (mDurationInNanoseconds
-                                   ^ (mDurationInNanoseconds >>> 32));
+    result = prime * result + (int) (mDurationInNanoseconds ^ (mDurationInNanoseconds >>> 32));
     result = prime * result + (mEnabled ? 1231 : 1237);
     return result;
   }
@@ -47,17 +43,12 @@ public abstract class StaveAbstract extends NameableBase
   @Override
   public boolean equals(Object obj)
   {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     StaveAbstract other = (StaveAbstract) obj;
-    if (mDurationInNanoseconds != other.mDurationInNanoseconds)
-      return false;
-    if (mEnabled != other.mEnabled)
-      return false;
+    if (mDurationInNanoseconds != other.mDurationInNanoseconds) return false;
+    if (mEnabled != other.mEnabled) return false;
     return true;
   }
   /**/
@@ -65,10 +56,7 @@ public abstract class StaveAbstract extends NameableBase
   @Override
   public String toString()
   {
-    return String.format("Stave [getName()=%s, mEnabled=%s, mDurationInNanoseconds=%s, ]",
-                         getName(),
-                         mEnabled,
-                         mDurationInNanoseconds);
+    return String.format("Stave [getName()=%s, mEnabled=%s, mDurationInNanoseconds=%s, ]", getName(), mEnabled, mDurationInNanoseconds);
   }
 
 }

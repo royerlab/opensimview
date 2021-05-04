@@ -1,20 +1,19 @@
 package clearcontrol.stack.imglib2;
 
+import clearcontrol.stack.StackInterface;
+import coremem.ContiguousMemoryInterface;
+import coremem.enums.NativeTypeEnum;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
-import clearcontrol.stack.StackInterface;
-import coremem.ContiguousMemoryInterface;
-import coremem.enums.NativeTypeEnum;
 
 /**
  * Stack to imglib2 Img Image format converter
  *
+ * @param <T> image data type
  * @author Robert Haase, http://github.com/haesleinhuepf
- * @param <T>
- *          image data type
  */
 public class StackToImgConverter<T extends RealType<T>>
 {
@@ -24,9 +23,8 @@ public class StackToImgConverter<T extends RealType<T>>
 
   /**
    * Instantiates a stack to image converter with a given stack.
-   * 
-   * @param pStack
-   *          stack
+   *
+   * @param pStack stack
    */
   public StackToImgConverter(StackInterface pStack)
   {
@@ -35,7 +33,7 @@ public class StackToImgConverter<T extends RealType<T>>
 
   /**
    * Returns a random accessible interval for the
-   * 
+   *
    * @return random accessible interval
    */
   @SuppressWarnings("unchecked")
@@ -43,8 +41,7 @@ public class StackToImgConverter<T extends RealType<T>>
   {
     Img<T> lReturnImg = null;
 
-    final ContiguousMemoryInterface contiguousMemory =
-                                                     mStack.getContiguousMemory();
+    final ContiguousMemoryInterface contiguousMemory = mStack.getContiguousMemory();
 
     int numDimensions = mStack.getNumberOfDimensions();
     if (mStack.getNumberOfChannels() > 1)
@@ -65,60 +62,34 @@ public class StackToImgConverter<T extends RealType<T>>
       dimensions[3] = mStack.getNumberOfChannels();
     }
 
-    if (mStack.getDataType() == NativeTypeEnum.Float
-        || mStack.getDataType() == NativeTypeEnum.HalfFloat)
+    if (mStack.getDataType() == NativeTypeEnum.Float || mStack.getDataType() == NativeTypeEnum.HalfFloat)
     {
-      float[] pixelArray =
-                         new float[(int) (contiguousMemory.getSizeInBytes()
-                                          / mStack.getBytesPerVoxel())
-                                   % Integer.MAX_VALUE];
+      float[] pixelArray = new float[(int) (contiguousMemory.getSizeInBytes() / mStack.getBytesPerVoxel()) % Integer.MAX_VALUE];
       contiguousMemory.copyTo(pixelArray);
       lReturnImg = (Img<T>) ArrayImgs.floats(pixelArray, dimensions);
-    }
-    else if (mStack.getDataType() == NativeTypeEnum.Short
-             || mStack.getDataType() == NativeTypeEnum.UnsignedShort)
+    } else if (mStack.getDataType() == NativeTypeEnum.Short || mStack.getDataType() == NativeTypeEnum.UnsignedShort)
     {
-      short[] pixelArray =
-                         new short[(int) (contiguousMemory.getSizeInBytes()
-                                          / mStack.getBytesPerVoxel())
-                                   % Integer.MAX_VALUE];
+      short[] pixelArray = new short[(int) (contiguousMemory.getSizeInBytes() / mStack.getBytesPerVoxel()) % Integer.MAX_VALUE];
       contiguousMemory.copyTo(pixelArray);
       lReturnImg = (Img<T>) ArrayImgs.shorts(pixelArray, dimensions);
-    }
-    else if (mStack.getDataType() == NativeTypeEnum.Byte
-             || mStack.getDataType() == NativeTypeEnum.UnsignedByte)
+    } else if (mStack.getDataType() == NativeTypeEnum.Byte || mStack.getDataType() == NativeTypeEnum.UnsignedByte)
     {
-      byte[] pixelArray =
-                        new byte[(int) (contiguousMemory.getSizeInBytes()
-                                        / mStack.getBytesPerVoxel())
-                                 % Integer.MAX_VALUE];
+      byte[] pixelArray = new byte[(int) (contiguousMemory.getSizeInBytes() / mStack.getBytesPerVoxel()) % Integer.MAX_VALUE];
       contiguousMemory.copyTo(pixelArray);
       lReturnImg = (Img<T>) ArrayImgs.bytes(pixelArray, dimensions);
-    }
-    else if (mStack.getDataType() == NativeTypeEnum.Int
-             || mStack.getDataType() == NativeTypeEnum.UnsignedInt)
+    } else if (mStack.getDataType() == NativeTypeEnum.Int || mStack.getDataType() == NativeTypeEnum.UnsignedInt)
     {
-      int[] pixelArray =
-                       new int[(int) (contiguousMemory.getSizeInBytes()
-                                      / mStack.getBytesPerVoxel())
-                               % Integer.MAX_VALUE];
+      int[] pixelArray = new int[(int) (contiguousMemory.getSizeInBytes() / mStack.getBytesPerVoxel()) % Integer.MAX_VALUE];
       contiguousMemory.copyTo(pixelArray);
       lReturnImg = (Img<T>) ArrayImgs.ints(pixelArray, dimensions);
-    }
-    else if (mStack.getDataType() == NativeTypeEnum.Long
-             || mStack.getDataType() == NativeTypeEnum.UnsignedLong)
+    } else if (mStack.getDataType() == NativeTypeEnum.Long || mStack.getDataType() == NativeTypeEnum.UnsignedLong)
     {
-      long[] pixelArray =
-                        new long[(int) (contiguousMemory.getSizeInBytes()
-                                        / mStack.getBytesPerVoxel())
-                                 % Integer.MAX_VALUE];
+      long[] pixelArray = new long[(int) (contiguousMemory.getSizeInBytes() / mStack.getBytesPerVoxel()) % Integer.MAX_VALUE];
       contiguousMemory.copyTo(pixelArray);
       lReturnImg = (Img<T>) ArrayImgs.longs(pixelArray, dimensions);
-    }
-    else
+    } else
     {
-      throw new IllegalArgumentException("Unknown type: "
-                                         + mStack.getDataType());
+      throw new IllegalArgumentException("Unknown type: " + mStack.getDataType());
     }
 
     mResultImg = lReturnImg;
@@ -136,7 +107,7 @@ public class StackToImgConverter<T extends RealType<T>>
 
   /**
    * Returns any pixel.
-   * 
+   *
    * @return pixel
    */
   public T getAnyPixel()

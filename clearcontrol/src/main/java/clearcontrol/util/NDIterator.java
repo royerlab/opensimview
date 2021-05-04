@@ -1,8 +1,8 @@
 package clearcontrol.util;
 
-import java.util.Iterator;
-
 import org.python.bouncycastle.util.Arrays;
+
+import java.util.Iterator;
 
 /**
  * n-dimensional iterator
@@ -19,9 +19,8 @@ public class NDIterator implements Iterator<int[]>
 
   /**
    * Instanciates a n-dimensional iterator
-   * 
-   * @param pDimensions
-   *          n-dimensional grid dimensions
+   *
+   * @param pDimensions n-dimensional grid dimensions
    */
   public NDIterator(int... pDimensions)
   {
@@ -67,8 +66,7 @@ public class NDIterator implements Iterator<int[]>
         {
           mReachedEnd = true;
         }
-      }
-      else
+      } else
       {
         lCarry = 0;
       }
@@ -77,9 +75,8 @@ public class NDIterator implements Iterator<int[]>
 
   /**
    * Returns current coordinate value for given dimension
-   * 
-   * @param pIndex
-   *          dimension index
+   *
+   * @param pIndex dimension index
    * @return coordinate values
    */
   public int get(int pIndex)
@@ -90,7 +87,7 @@ public class NDIterator implements Iterator<int[]>
   /**
    * Returns the iterator grid volume which corresponds to the number of
    * iterations
-   * 
+   *
    * @return number of iterationss
    */
   public int getNumberOfIterations()
@@ -104,32 +101,29 @@ public class NDIterator implements Iterator<int[]>
   /**
    * Returns the iterator grid volume which corresponds to the number of
    * iterations
-   * 
+   *
    * @return number of iterationss
    */
   public int getRemainingNumberOfIterations()
   {
-    int lRemainingIterations = getIndex(getLastCursorCoordinates())
-                               - getIndex();
+    int lRemainingIterations = getIndex(getLastCursorCoordinates()) - getIndex();
     return lRemainingIterations;
   }
 
   private int[] getLastCursorCoordinates()
   {
-    int[] lLastCursorCoordinates = Arrays.copyOf(mDimensions,
-                                                 mDimensions.length);
+    int[] lLastCursorCoordinates = Arrays.copyOf(mDimensions, mDimensions.length);
     for (int i = 0; i < lLastCursorCoordinates.length; i++)
     {
       lLastCursorCoordinates[i] = lLastCursorCoordinates[i] - 1;
-      if (lLastCursorCoordinates[i] < 0)
-        lLastCursorCoordinates[i] = 0;
+      if (lLastCursorCoordinates[i] < 0) lLastCursorCoordinates[i] = 0;
     }
     return lLastCursorCoordinates;
   }
 
   /**
    * Returns index
-   * 
+   *
    * @return index
    */
   public int getIndex()

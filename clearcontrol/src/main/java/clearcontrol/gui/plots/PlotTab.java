@@ -1,19 +1,17 @@
 package clearcontrol.gui.plots;
 
-import java.awt.HeadlessException;
+import gnu.trove.list.array.TDoubleArrayList;
+import org.math.plot.Plot2DPanel;
+
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import gnu.trove.list.array.TDoubleArrayList;
-
-import org.math.plot.Plot2DPanel;
-
 public class PlotTab
 {
-  private static final ExecutorService sExecutor =
-                                                 Executors.newSingleThreadExecutor();
+  private static final ExecutorService sExecutor = Executors.newSingleThreadExecutor();
   private static final Object mLock = new Object();
 
   private final HashMap<String, TDoubleArrayList> mX;
@@ -35,9 +33,7 @@ public class PlotTab
     addPoint(pVariableName, mX.size(), pY);
   }
 
-  public void addPoint(final String pVariableName,
-                       final double pX,
-                       final double pY)
+  public void addPoint(final String pVariableName, final double pX, final double pY)
   {
     synchronized (mLock)
     {
@@ -63,8 +59,7 @@ public class PlotTab
         lY.add(pY);
 
         mUpToDate = false;
-      }
-      catch (final Throwable e)
+      } catch (final Throwable e)
       {
         e.printStackTrace();
       }
@@ -87,8 +82,7 @@ public class PlotTab
               try
               {
                 mPlot.removeAllPlots();
-              }
-              catch (final Throwable e)
+              } catch (final Throwable e)
               {
                 System.err.println(e.getLocalizedMessage());
               }
@@ -99,18 +93,12 @@ public class PlotTab
                 final TDoubleArrayList lX = mX.get(lVariableName);
                 final TDoubleArrayList lY = lEntry.getValue();
 
-                if (mIsLinePlot.get(lVariableName) != null
-                    && mIsLinePlot.get(lVariableName))
+                if (mIsLinePlot.get(lVariableName) != null && mIsLinePlot.get(lVariableName))
                 {
-                  mPlot.addLinePlot(lVariableName,
-                                    lX.toArray(),
-                                    lY.toArray());
-                }
-                else
+                  mPlot.addLinePlot(lVariableName, lX.toArray(), lY.toArray());
+                } else
                 {
-                  mPlot.addScatterPlot(lVariableName,
-                                       lX.toArray(),
-                                       lY.toArray());
+                  mPlot.addScatterPlot(lVariableName, lX.toArray(), lY.toArray());
                 }
 
               }
@@ -120,12 +108,10 @@ public class PlotTab
 
               mUpToDate = true;
             }
-          }
-          catch (final Throwable e)
+          } catch (final Throwable e)
           {
             e.printStackTrace();
-            System.err.println(PlotTab.class.getSimpleName() + ": "
-                               + e.getLocalizedMessage());
+            System.err.println(PlotTab.class.getSimpleName() + ": " + e.getLocalizedMessage());
           }
         }
       }

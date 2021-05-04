@@ -1,26 +1,5 @@
 package clearcontrol.devices.lasers.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Stop;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-
 import clearcontrol.core.physics.WavelengthToRGB;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
@@ -32,6 +11,23 @@ import clearcontrol.gui.jfx.var.textfield.NumberVariableTextField;
 import eu.hansolo.enzo.common.Marker;
 import eu.hansolo.enzo.common.SymbolType;
 import eu.hansolo.enzo.onoffswitch.IconSwitch;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Laser device GUI panel
@@ -61,9 +57,8 @@ public class LaserDevicePanel extends HBox
 
   /**
    * Instanciates a laser device panel given a laser device.
-   * 
-   * @param pLaserDeviceInterface
-   *          laser device
+   *
+   * @param pLaserDeviceInterface laser device
    */
   public LaserDevicePanel(LaserDeviceInterface pLaserDeviceInterface)
   {
@@ -76,64 +71,55 @@ public class LaserDevicePanel extends HBox
     // data -> GUI
 
     // Laser Switch update (data -> GUI)
-    mLaserDeviceInterface.getLaserOnVariable()
-                         .addSetListener((o, n) -> {
-                           if (mLaserOnSwitch.isSelected() != n)
-                             Platform.runLater(() -> {
-                               mLaserOnSwitch.setSelected(n);
-                             });
-                         });
+    mLaserDeviceInterface.getLaserOnVariable().addSetListener((o, n) ->
+    {
+      if (mLaserOnSwitch.isSelected() != n) Platform.runLater(() ->
+      {
+        mLaserOnSwitch.setSelected(n);
+      });
+    });
 
     // CurrentPower update (data -> GUI)
-    mLaserDeviceInterface.getCurrentPowerInMilliWattVariable()
-                         .addSetListener((o, n) -> {
-                           if (mCurrentPowerGauge.valueProperty()
-                                                 .getValue() != n)
-                             Platform.runLater(() -> {
-                               mCurrentPowerGauge.valueProperty()
-                                                 .set(n.doubleValue());
-                             });
-                         });
+    mLaserDeviceInterface.getCurrentPowerInMilliWattVariable().addSetListener((o, n) ->
+    {
+      if (mCurrentPowerGauge.valueProperty().getValue() != n) Platform.runLater(() ->
+      {
+        mCurrentPowerGauge.valueProperty().set(n.doubleValue());
+      });
+    });
 
     // Wavelength update (data -> GUI)
-    mLaserDeviceInterface.getWavelengthInNanoMeterVariable()
-                         .addSetListener((o, n) -> {
-                           if (mWaveLength != n)
-                             Platform.runLater(() -> {
-                               mWaveLength = n;
-                               mWavelengthColorBox.setBackground(new Background(new BackgroundFill(getWebColor(mWaveLength),
-                                                                                                   CornerRadii.EMPTY,
-                                                                                                   Insets.EMPTY)));
-                               mLaserLabel.setText(mWaveLength
-                                                   + " nm");
-                             });
-                         });
+    mLaserDeviceInterface.getWavelengthInNanoMeterVariable().addSetListener((o, n) ->
+    {
+      if (mWaveLength != n) Platform.runLater(() ->
+      {
+        mWaveLength = n;
+        mWavelengthColorBox.setBackground(new Background(new BackgroundFill(getWebColor(mWaveLength), CornerRadii.EMPTY, Insets.EMPTY)));
+        mLaserLabel.setText(mWaveLength + " nm");
+      });
+    });
 
     // GUI -> data
     // TargetPower update (GUI -> data)
-    mTargetPowerGauge.valueProperty()
-                     .setValue(mLaserDeviceInterface.getTargetPowerInMilliWatt());
+    mTargetPowerGauge.valueProperty().setValue(mLaserDeviceInterface.getTargetPowerInMilliWatt());
 
-    EventHandler<MouseEvent> lEventHandler =
-                                           new EventHandler<MouseEvent>()
-                                           {
-                                             @Override
-                                             public void handle(MouseEvent event)
-                                             {
+    EventHandler<MouseEvent> lEventHandler = new EventHandler<MouseEvent>()
+    {
+      @Override
+      public void handle(MouseEvent event)
+      {
                                                /*System.out.format("marker=%f, gauge=%f \n",
                                                                  mTargetPowerMarker.getValue(),
                                                                  mTargetPowerGauge.getValue());/**/
-                                               mLaserDeviceInterface.getTargetPowerInMilliWattVariable()
-                                                                    .setAsync(mTargetPowerGauge.getValue());
-                                             }
-                                           };
+        mLaserDeviceInterface.getTargetPowerInMilliWattVariable().setAsync(mTargetPowerGauge.getValue());
+      }
+    };
     mTargetPowerGauge.setOnMouseDragged(lEventHandler);
     mTargetPowerGauge.setOnMousePressed(lEventHandler);
     mTargetPowerGauge.setOnMouseClicked(lEventHandler);
 
     // Laser switch update (GUI -> data)
-    Boolean lLaserOn =
-                     mLaserDeviceInterface.getLaserOnVariable().get();
+    Boolean lLaserOn = mLaserDeviceInterface.getLaserOnVariable().get();
     mLaserOnSwitch.setSelected(lLaserOn == null ? false : lLaserOn);
 
     mLaserOnSwitch.setOnMouseClicked(new EventHandler<MouseEvent>()
@@ -141,21 +127,15 @@ public class LaserDevicePanel extends HBox
       @Override
       public void handle(MouseEvent event)
       {
-        mLaserDeviceInterface.getLaserOnVariable()
-                             .setAsync(mLaserOnSwitch.selectedProperty()
-                                                     .get());
+        mLaserDeviceInterface.getLaserOnVariable().setAsync(mLaserOnSwitch.selectedProperty().get());
       }
     });/**/
 
     setBackground(null);
     // hBox.setPadding(new Insets(15, 15, 15, 15));
     setSpacing(10);
-    getChildren().addAll(pane,
-                         mTargetPowerGauge,
-                         mCurrentPowerGauge,
-                         grid);
-    setStyle("-fx-border-style: solid;" + "-fx-border-width: 1;"
-             + "-fx-border-color: black");
+    getChildren().addAll(pane, mTargetPowerGauge, mCurrentPowerGauge, grid);
+    setStyle("-fx-border-style: solid;" + "-fx-border-width: 1;" + "-fx-border-color: black");
   }
 
   private void init()
@@ -181,27 +161,17 @@ public class LaserDevicePanel extends HBox
 
     // Marker for user input
     mTargetPowerMarker = new Marker(0, mPowerUnits);
-    mTargetPowerGauge = RadialBargraphBuilder.create()
-                                             .title("Target")
-                                             .unit(mPowerUnits)
-                                             .markers(mTargetPowerMarker)
-                                             .maxValue(mMaxPower)
-                                             .build();
+    mTargetPowerGauge = RadialBargraphBuilder.create().title("Target").unit(mPowerUnits).markers(mTargetPowerMarker).maxValue(mMaxPower).build();
     mTargetPowerGauge.setBarGradientEnabled(true);
     mTargetPowerGauge.setBarGradient(stops);
     mTargetPowerGauge.setAnimated(false);
     mTargetPowerGauge.setInteractive(true);
 
     // As soon as user changes the target value, it updates gauge value
-    mTargetPowerMarker.valueProperty()
-                      .bindBidirectional(mTargetPowerGauge.valueProperty());
+    mTargetPowerMarker.valueProperty().bindBidirectional(mTargetPowerGauge.valueProperty());
 
     // Actual gauge build
-    mCurrentPowerGauge = RadialBargraphBuilder.create()
-                                              .title("Current")
-                                              .unit(mPowerUnits)
-                                              .maxValue(mMaxPower)
-                                              .build();
+    mCurrentPowerGauge = RadialBargraphBuilder.create().title("Current").unit(mPowerUnits).maxValue(mMaxPower).build();
     mCurrentPowerGauge.setAnimated(false);
     mCurrentPowerGauge.setBarGradientEnabled(true);
     mCurrentPowerGauge.setBarGradient(stops);
@@ -219,25 +189,17 @@ public class LaserDevicePanel extends HBox
     mLaserLabel.setFont(new Font(fontFamily, 24));
 
     mWavelengthColorBox = new VBox();
-    mWavelengthColorBox.setBackground(new Background(new BackgroundFill(getWebColor(mWaveLength),
-                                                                        CornerRadii.EMPTY,
-                                                                        Insets.EMPTY)));
+    mWavelengthColorBox.setBackground(new Background(new BackgroundFill(getWebColor(mWaveLength), CornerRadii.EMPTY, Insets.EMPTY)));
     Rectangle rectangle = new Rectangle(33, 80, Color.TRANSPARENT);
 
-    properties.widthProperty()
-              .addListener(new ChangeListener<Number>()
-              {
-                @Override
-                public void changed(ObservableValue<? extends Number> observable,
-                                    Number oldValue,
-                                    Number newValue)
-                {
-                  mLaserLabel.fontProperty()
-                             .set(Font.font(fontFamily,
-                                            newValue.doubleValue()
-                                                        / 4.1));
-                }
-              });
+    properties.widthProperty().addListener(new ChangeListener<Number>()
+    {
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+      {
+        mLaserLabel.fontProperty().set(Font.font(fontFamily, newValue.doubleValue() / 4.1));
+      }
+    });
 
     properties.getChildren().add(mLaserLabel);
 
@@ -246,9 +208,7 @@ public class LaserDevicePanel extends HBox
     pane.widthProperty().addListener(new ChangeListener<Number>()
     {
       @Override
-      public void changed(ObservableValue<? extends Number> observable,
-                          Number oldValue,
-                          Number newValue)
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
       {
         rectangle.setWidth(newValue.doubleValue() / 4.5);
       }
@@ -271,8 +231,7 @@ public class LaserDevicePanel extends HBox
     // ---------------------------------------------------------------
     int lRow = 0;
     grid = new CustomGridPane();
-    Label lLabel =
-                 new Label("*The tools on the left are deprecated and just kept for legacy. Future laser control comes here (under development):");
+    Label lLabel = new Label("*The tools on the left are deprecated and just kept for legacy. Future laser control comes here (under development):");
     lLabel.setTextFill(Color.web("#DD0000"));
     lLabel.setWrapText(true);
     lLabel.setMaxWidth(150);
@@ -282,7 +241,8 @@ public class LaserDevicePanel extends HBox
     Button lLaserOffButton = new Button("Turn laser OFF");
     lLaserOffButton.setGraphic(new LaserIcon(50, 50));
     lLaserOffButton.setMaxWidth(Double.MAX_VALUE);
-    lLaserOffButton.setOnAction((e) -> {
+    lLaserOffButton.setOnAction((e) ->
+    {
       mLaserDeviceInterface.setLaserOn(false);
       mLaserDeviceInterface.setLaserPowerOn(false);
       mLaserDeviceInterface.setTargetPowerInPercent(0);
@@ -293,7 +253,8 @@ public class LaserDevicePanel extends HBox
     Button lLaserOnButton = new Button("Turn laser on");
     lLaserOnButton.setGraphic(new LaserIcon(50, 50));
     lLaserOnButton.setMaxWidth(Double.MAX_VALUE);
-    lLaserOnButton.setOnAction((e) -> {
+    lLaserOnButton.setOnAction((e) ->
+    {
       mLaserDeviceInterface.setLaserOn(true);
       mLaserDeviceInterface.setLaserPowerOn(true);
     });
@@ -316,56 +277,41 @@ public class LaserDevicePanel extends HBox
     grid.add(lTargetLaserPowerField.getTextField(),0 ,lRow);
     lRow++;
     */
-    final Variable<Number> lTargetPowerVariable =
-                                                new Variable<Number>("",
-                                                                     0.0);
-    mLaserDeviceInterface.getTargetPowerInMilliWattVariable()
-                         .addSetListener((o, n) -> {
-                           if (Math.abs(lTargetPowerVariable.get()
-                                                            .doubleValue()
-                                        - n.doubleValue()) > 0.1)
-                           {
-                             Platform.runLater(() -> {
-                               lTargetPowerVariable.set(n);
-                             });
-                           }
-                         });
-    lTargetPowerVariable.addSetListener((o, n) -> {
+    final Variable<Number> lTargetPowerVariable = new Variable<Number>("", 0.0);
+    mLaserDeviceInterface.getTargetPowerInMilliWattVariable().addSetListener((o, n) ->
+    {
+      if (Math.abs(lTargetPowerVariable.get().doubleValue() - n.doubleValue()) > 0.1)
+      {
+        Platform.runLater(() ->
+        {
+          lTargetPowerVariable.set(n);
+        });
+      }
+    });
+    lTargetPowerVariable.addSetListener((o, n) ->
+    {
       mLaserDeviceInterface.setTargetPowerInMilliWatt(n.doubleValue());
     });
 
-    Variable<Number> lCurrentPowerVariable =
-                                           new Variable<Number>("",
-                                                                0.0);
-    mLaserDeviceInterface.getCurrentPowerInMilliWattVariable()
-                         .addSetListener((o, n) -> {
-                           if (Math.abs(lCurrentPowerVariable.get()
-                                                             .doubleValue()
-                                        - n.doubleValue()) > 0.1)
-                           {
-                             Platform.runLater(() -> {
-                               lCurrentPowerVariable.set(n);
-                             });
-                           }
-                         });
+    Variable<Number> lCurrentPowerVariable = new Variable<Number>("", 0.0);
+    mLaserDeviceInterface.getCurrentPowerInMilliWattVariable().addSetListener((o, n) ->
+    {
+      if (Math.abs(lCurrentPowerVariable.get().doubleValue() - n.doubleValue()) > 0.1)
+      {
+        Platform.runLater(() ->
+        {
+          lCurrentPowerVariable.set(n);
+        });
+      }
+    });
 
-    NumberVariableTextField<Number> lTargetLaserPowerField =
-                                                           new NumberVariableTextField<Number>("Target laser power:",
-                                                                                               lTargetPowerVariable,
-                                                                                               0.0,
-                                                                                               mLaserDeviceInterface.getMaxPowerInMilliWatt(),
-                                                                                               0.1);
+    NumberVariableTextField<Number> lTargetLaserPowerField = new NumberVariableTextField<Number>("Target laser power:", lTargetPowerVariable, 0.0, mLaserDeviceInterface.getMaxPowerInMilliWatt(), 0.1);
     grid.add(lTargetLaserPowerField.getLabel(), 0, lRow);
     lRow++;
     grid.add(lTargetLaserPowerField.getTextField(), 0, lRow);
     lRow++;
 
-    NumberVariableTextField<Number> lCurrentLaserPowerField =
-                                                            new NumberVariableTextField<Number>("Target laser power (read only):",
-                                                                                                lCurrentPowerVariable,
-                                                                                                0.0,
-                                                                                                mLaserDeviceInterface.getMaxPowerInMilliWatt(),
-                                                                                                0.1);
+    NumberVariableTextField<Number> lCurrentLaserPowerField = new NumberVariableTextField<Number>("Target laser power (read only):", lCurrentPowerVariable, 0.0, mLaserDeviceInterface.getMaxPowerInMilliWatt(), 0.1);
     grid.add(lCurrentLaserPowerField.getLabel(), 0, lRow);
     lRow++;
     grid.add(lCurrentLaserPowerField.getTextField(), 0, lRow);

@@ -14,19 +14,10 @@ import clearcontrol.instructions.PropertyIOableInstructionInterface;
  * <p>
  * Author: @haesleinhuepf September 2018
  */
-public class ChangeLaserPowerInstruction extends InstructionBase implements
-                                                                 InstructionInterface,
-                                                                 LoggingFeature,
-                                                                 PropertyIOableInstructionInterface
+public class ChangeLaserPowerInstruction extends InstructionBase implements InstructionInterface, LoggingFeature, PropertyIOableInstructionInterface
 {
   private final LaserDeviceInterface laserDevice;
-  private final BoundedVariable<Double>
-      laserPowerInMilliwatt =
-      new BoundedVariable<Double>("Laser power in milliwatt",
-                                  0.0,
-                                  0.0,
-                                  Double.MAX_VALUE,
-                                  0.1);
+  private final BoundedVariable<Double> laserPowerInMilliwatt = new BoundedVariable<Double>("Laser power in milliwatt", 0.0, 0.0, Double.MAX_VALUE, 0.1);
 
   /**
    * @param pLaser laser to control
@@ -38,18 +29,21 @@ public class ChangeLaserPowerInstruction extends InstructionBase implements
     // laserPowerInMilliwatt.setMinMax(0, pLaser.getMaxPowerInMilliWatt());
   }
 
-  @Override public boolean initialize()
+  @Override
+  public boolean initialize()
   {
     return true;
   }
 
-  @Override public boolean enqueue(long pTimePoint)
+  @Override
+  public boolean enqueue(long pTimePoint)
   {
     laserDevice.getTargetPowerInMilliWattVariable().set(laserPowerInMilliwatt.get());
     return true;
   }
 
-  @Override public ChangeLaserPowerInstruction copy()
+  @Override
+  public ChangeLaserPowerInstruction copy()
   {
     ChangeLaserPowerInstruction copied = new ChangeLaserPowerInstruction(laserDevice);
     copied.laserPowerInMilliwatt.set(laserPowerInMilliwatt.get());
@@ -61,8 +55,9 @@ public class ChangeLaserPowerInstruction extends InstructionBase implements
     return laserPowerInMilliwatt;
   }
 
-  @Override public Variable[] getProperties()
+  @Override
+  public Variable[] getProperties()
   {
-    return new Variable[] { getLaserPowerInMilliwatt() };
+    return new Variable[]{getLaserPowerInMilliwatt()};
   }
 }

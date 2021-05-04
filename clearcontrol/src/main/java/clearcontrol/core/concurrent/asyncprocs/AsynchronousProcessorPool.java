@@ -1,32 +1,24 @@
 package clearcontrol.core.concurrent.asyncprocs;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
 import clearcontrol.core.concurrent.executors.ClearControlExecutors;
 import clearcontrol.core.concurrent.executors.CompletingThreadPoolExecutor;
 import clearcontrol.core.log.LoggingFeature;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Asynchronous processor pool
  *
- * @param <I>
- *          input type
- * @param <O>
- *          output type
+ * @param <I> input type
+ * @param <O> output type
  * @author royer
  */
-public class AsynchronousProcessorPool<I, O> extends
-                                      AsynchronousProcessorBase<I, O>
-                                      implements
-                                      AsynchronousProcessorInterface<I, O>,
-                                      AsynchronousExecutorFeature,
-                                      AsynchronousSchedulerFeature,
-                                      LoggingFeature
+public class AsynchronousProcessorPool<I, O> extends AsynchronousProcessorBase<I, O> implements AsynchronousProcessorInterface<I, O>, AsynchronousExecutorFeature, AsynchronousSchedulerFeature, LoggingFeature
 {
 
   private final ProcessorInterface<I, O> mProcessor;
@@ -35,28 +27,16 @@ public class AsynchronousProcessorPool<I, O> extends
   /**
    * Instanciates an asynchronous processor pool given a name, max input queue
    * size, thread pool size, and processor.
-   * 
-   * @param pName
-   *          processor pool name
-   * @param pMaxQueueSize
-   *          max input queue size
-   * @param pThreadPoolSize
-   *          thread pool size
-   * @param pProcessor
-   *          processor
+   *
+   * @param pName           processor pool name
+   * @param pMaxQueueSize   max input queue size
+   * @param pThreadPoolSize thread pool size
+   * @param pProcessor      processor
    */
-  public AsynchronousProcessorPool(final String pName,
-                                   final int pMaxQueueSize,
-                                   final int pThreadPoolSize,
-                                   final ProcessorInterface<I, O> pProcessor)
+  public AsynchronousProcessorPool(final String pName, final int pMaxQueueSize, final int pThreadPoolSize, final ProcessorInterface<I, O> pProcessor)
   {
     super(pName, pMaxQueueSize);
-    mThreadPoolExecutor =
-                        ClearControlExecutors.getOrCreateThreadPoolExecutor(this,
-                                                                            Thread.NORM_PRIORITY,
-                                                                            pThreadPoolSize,
-                                                                            pThreadPoolSize,
-                                                                            pMaxQueueSize);
+    mThreadPoolExecutor = ClearControlExecutors.getOrCreateThreadPoolExecutor(this, Thread.NORM_PRIORITY, pThreadPoolSize, pThreadPoolSize, pMaxQueueSize);
 
     mProcessor = pProcessor;
   }
@@ -64,46 +44,34 @@ public class AsynchronousProcessorPool<I, O> extends
   /**
    * Instanciates an asynchronous processor pool given a name, max queue size,
    * and processor.
-   * 
-   * @param pName
-   *          processor pool name
-   * @param pMaxQueueSize
-   *          max queue size
-   * @param pProcessor
-   *          processors
+   *
+   * @param pName         processor pool name
+   * @param pMaxQueueSize max queue size
+   * @param pProcessor    processors
    */
-  public AsynchronousProcessorPool(final String pName,
-                                   final int pMaxQueueSize,
-                                   final ProcessorInterface<I, O> pProcessor)
+  public AsynchronousProcessorPool(final String pName, final int pMaxQueueSize, final ProcessorInterface<I, O> pProcessor)
   {
-    this(pName,
-         pMaxQueueSize,
-         Runtime.getRuntime().availableProcessors(),
-         pProcessor);
+    this(pName, pMaxQueueSize, Runtime.getRuntime().availableProcessors(), pProcessor);
   }
 
   @Override
   public boolean start()
   {
-    final Runnable lRunnable = () -> {
+    final Runnable lRunnable = () ->
+    {
       try
       {
 
-        @SuppressWarnings("unchecked")
-        final Future<O> lFuture =
-                                (Future<O>) mThreadPoolExecutor.getFutur(1,
-                                                                         TimeUnit.NANOSECONDS);
+        @SuppressWarnings("unchecked") final Future<O> lFuture = (Future<O>) mThreadPoolExecutor.getFutur(1, TimeUnit.NANOSECONDS);
         if (lFuture != null)
         {
           final O lResult = lFuture.get();
           send(lResult);
         }
-      }
-      catch (final InterruptedException e)
+      } catch (final InterruptedException e)
       {
         return;
-      }
-      catch (final ExecutionException e)
+      } catch (final ExecutionException e)
       {
         e.printStackTrace();
       }
@@ -123,15 +91,12 @@ public class AsynchronousProcessorPool<I, O> extends
   @Override
   public boolean waitToFinish(final long pTimeOut, TimeUnit pTimeUnit)
   {
-    final boolean lNoTimeOut =
-                             super.waitToFinish(pTimeOut, pTimeUnit);
-    if (!lNoTimeOut)
-      return false;
+    final boolean lNoTimeOut = super.waitToFinish(pTimeOut, pTimeUnit);
+    if (!lNoTimeOut) return false;
     try
     {
       return waitForCompletion(pTimeOut, pTimeUnit);
-    }
-    catch (final ExecutionException e)
+    } catch (final ExecutionException e)
     {
       e.printStackTrace();
       return false;
@@ -142,7 +107,8 @@ public class AsynchronousProcessorPool<I, O> extends
   @Override
   public final O process(final I pInput)
   {
-    final Callable<O> lCallable = () -> {
+    final Callable<O> lCallable = () ->
+    {
       return mProcessor.process(pInput);
     };
     mThreadPoolExecutor.submit(lCallable);

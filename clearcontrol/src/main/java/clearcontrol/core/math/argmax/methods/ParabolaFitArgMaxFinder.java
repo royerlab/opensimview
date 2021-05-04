@@ -4,21 +4,18 @@ import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
 import clearcontrol.core.math.argmax.ComputeFitError;
 import clearcontrol.core.math.argmax.Fitting1DBase;
 import clearcontrol.core.math.argmax.Fitting1DInterface;
-
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.fitting.PolynomialCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
 
 /**
  * Parabola fit argmax finder.
- * 
+ * <p>
  * Fits a parabola and returns the center as argmax.
  *
  * @author royer
  */
-public class ParabolaFitArgMaxFinder extends Fitting1DBase implements
-                                     ArgMaxFinder1DInterface,
-                                     Fitting1DInterface
+public class ParabolaFitArgMaxFinder extends Fitting1DBase implements ArgMaxFinder1DInterface, Fitting1DInterface
 {
 
   private PolynomialCurveFitter mPolynomialCurveFitter;
@@ -35,22 +32,18 @@ public class ParabolaFitArgMaxFinder extends Fitting1DBase implements
   /**
    * Instantiates a parabola fit argmax finder with a given maximal number of
    * iterations.
-   * 
-   * @param pMaxIterations
-   *          max iterations
+   *
+   * @param pMaxIterations max iterations
    */
   public ParabolaFitArgMaxFinder(int pMaxIterations)
   {
-    mPolynomialCurveFitter =
-                           PolynomialCurveFitter.create(2)
-                                                .withMaxIterations(pMaxIterations);
+    mPolynomialCurveFitter = PolynomialCurveFitter.create(2).withMaxIterations(pMaxIterations);
   }
 
   @Override
   public Double argmax(double[] pX, double[] pY)
   {
-    if (mPolynomialFunction == null)
-      fit(pX, pY);
+    if (mPolynomialFunction == null) fit(pX, pY);
 
     double[] lCoefficients = mPolynomialFunction.getCoefficients();
     mPolynomialFunction = null;
@@ -63,18 +56,14 @@ public class ParabolaFitArgMaxFinder extends Fitting1DBase implements
       double lArgMax = -b / (2 * a);
 
       return lArgMax;
-    }
-    else if (lCoefficients.length == 2)
+    } else if (lCoefficients.length == 2)
     {
       double b = lCoefficients[1];
 
-      if (b > 0)
-        return pX[pX.length - 1];
-      else
-        return pX[0];
+      if (b > 0) return pX[pX.length - 1];
+      else return pX[0];
 
-    }
-    else if (lCoefficients.length == 1)
+    } else if (lCoefficients.length == 1)
     {
       return null;
     }
@@ -85,16 +74,14 @@ public class ParabolaFitArgMaxFinder extends Fitting1DBase implements
   @Override
   public double[] fit(double[] pX, double[] pY)
   {
-    WeightedObservedPoints lObservedPoints =
-                                           new WeightedObservedPoints();
+    WeightedObservedPoints lObservedPoints = new WeightedObservedPoints();
 
     for (int i = 0; i < pX.length; i++)
       lObservedPoints.add(pX[i], pY[i]);
 
     try
     {
-      double[] lFitInfo =
-                        mPolynomialCurveFitter.fit(lObservedPoints.toList());
+      double[] lFitInfo = mPolynomialCurveFitter.fit(lObservedPoints.toList());
 
       mPolynomialFunction = new PolynomialFunction(lFitInfo);
 
@@ -106,8 +93,7 @@ public class ParabolaFitArgMaxFinder extends Fitting1DBase implements
       mRMSD = ComputeFitError.rmsd(pY, lFittedY);
 
       return lFittedY;
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       // e.printStackTrace();
       return null;
@@ -116,7 +102,7 @@ public class ParabolaFitArgMaxFinder extends Fitting1DBase implements
 
   /**
    * Returns last polynomial function fit.
-   * 
+   *
    * @return last polynomial fit
    */
   public PolynomialFunction getFunction()
@@ -127,8 +113,7 @@ public class ParabolaFitArgMaxFinder extends Fitting1DBase implements
   @Override
   public String toString()
   {
-    return String.format("ParabolaFitArgMaxFinder [mPolynomialFunction=%s]",
-                         mPolynomialFunction);
+    return String.format("ParabolaFitArgMaxFinder [mPolynomialFunction=%s]", mPolynomialFunction);
   }
 
 }

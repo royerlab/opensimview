@@ -1,16 +1,12 @@
 package clearcontrol.core.log.gui;
 
-import java.lang.reflect.InvocationTargetException;
+import clearcontrol.core.gui.LineLimitedDocumentFilter;
+import net.miginfocom.swing.MigLayout;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.DefaultCaret;
-
-import net.miginfocom.swing.MigLayout;
-import clearcontrol.core.gui.LineLimitedDocumentFilter;
+import java.lang.reflect.InvocationTargetException;
 
 class LogPanel extends JPanel
 {
@@ -25,15 +21,11 @@ class LogPanel extends JPanel
     super();
     mTextArea = new JTextArea();
 
-    ((AbstractDocument) mTextArea.getDocument()).setDocumentFilter(new LineLimitedDocumentFilter(mTextArea,
-                                                                                                 cMaxNumberOfLines));
+    ((AbstractDocument) mTextArea.getDocument()).setDocumentFilter(new LineLimitedDocumentFilter(mTextArea, cMaxNumberOfLines));
 
-    final DefaultCaret lDefaultCaret =
-                                     (DefaultCaret) mTextArea.getCaret();
+    final DefaultCaret lDefaultCaret = (DefaultCaret) mTextArea.getCaret();
     lDefaultCaret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-    setLayout(new MigLayout("insets 0",
-                            "[4px,grow,fill]",
-                            "[20px,grow,fill]"));
+    setLayout(new MigLayout("insets 0", "[4px,grow,fill]", "[20px,grow,fill]"));
 
     mPane = new JScrollPane(mTextArea);
     add(mPane, "cell 0 0,alignx left,aligny top");
@@ -54,8 +46,7 @@ class LogPanel extends JPanel
           LogPanel.this.validate();
         }
       });
-    }
-    catch (InvocationTargetException | InterruptedException e)
+    } catch (InvocationTargetException | InterruptedException e)
     {
       e.printStackTrace();
     }

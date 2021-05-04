@@ -1,5 +1,7 @@
 package clearcontrol.stack.sourcesink;
 
+import clearcontrol.stack.sourcesink.server.StackServerBase;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -7,35 +9,28 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import clearcontrol.stack.sourcesink.server.StackServerBase;
-
 /**
  * Base class providing common fields and methods for a local file stack sinks
  * and sources
  *
  * @author royer
  */
-public abstract class FileStackBase extends StackServerBase
-                                    implements FileStackInterface
+public abstract class FileStackBase extends StackServerBase implements FileStackInterface
 {
   private boolean mReadOnly;
 
   protected File mFolder;
   protected File mStacksFolder;
-  protected ConcurrentHashMap<String, File> mChannelToFolderMap =
-                                                                new ConcurrentHashMap<>();
+  protected ConcurrentHashMap<String, File> mChannelToFolderMap = new ConcurrentHashMap<>();
 
-  protected ConcurrentHashMap<String, File> mChannelToIndexFileMap =
-                                                                   new ConcurrentHashMap<>();
-  protected ConcurrentHashMap<String, File> mChannelToMetadataFileMap =
-                                                                      new ConcurrentHashMap<>();
+  protected ConcurrentHashMap<String, File> mChannelToIndexFileMap = new ConcurrentHashMap<>();
+  protected ConcurrentHashMap<String, File> mChannelToMetadataFileMap = new ConcurrentHashMap<>();
 
   /**
    * Instantiates a local file stack source or sink. The method setLocation must
    * be called to set a folder location
-   * 
-   * @param pReadOnly
-   *          read only
+   *
+   * @param pReadOnly read only
    */
   public FileStackBase(final boolean pReadOnly)
   {
@@ -86,8 +81,7 @@ public abstract class FileStackBase extends StackServerBase
   {
     ArrayList<String> lChannelList = getChannelList();
 
-    if (lChannelList.isEmpty())
-      return null;
+    if (lChannelList.isEmpty()) return null;
 
     String lFirstChannel = lChannelList.get(0);
 
@@ -95,8 +89,7 @@ public abstract class FileStackBase extends StackServerBase
 
     File[] lListFiles = lChannelFolder.listFiles();
 
-    if (lListFiles.length == 0)
-      return null;
+    if (lListFiles.length == 0) return null;
 
     return lListFiles[0];
   }
@@ -131,30 +124,23 @@ public abstract class FileStackBase extends StackServerBase
     if (lChannelFolder == null)
     {
       lChannelFolder = new File(mStacksFolder, pChannel);
-      if (!lChannelFolder.exists())
-        lChannelFolder.mkdirs();
+      if (!lChannelFolder.exists()) lChannelFolder.mkdirs();
       mChannelToFolderMap.put(pChannel, lChannelFolder);
     }
     return lChannelFolder;
   }
 
-  protected FileChannel getFileChannel(File pFile,
-                                       final boolean pReadOnly) throws IOException
+  protected FileChannel getFileChannel(File pFile, final boolean pReadOnly) throws IOException
   {
     FileChannel lFileChannel;
     if (pReadOnly)
     {
-      lFileChannel = FileChannel.open(pFile.toPath(),
-                                      StandardOpenOption.READ);
+      lFileChannel = FileChannel.open(pFile.toPath(), StandardOpenOption.READ);
 
-    }
-    else
+    } else
     {
 
-      lFileChannel = FileChannel.open(pFile.toPath(),
-                                      StandardOpenOption.APPEND,
-                                      StandardOpenOption.WRITE,
-                                      StandardOpenOption.CREATE);
+      lFileChannel = FileChannel.open(pFile.toPath(), StandardOpenOption.APPEND, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 
     }
     return lFileChannel;
@@ -162,7 +148,7 @@ public abstract class FileStackBase extends StackServerBase
 
   /**
    * Returns data folder
-   * 
+   *
    * @return data folder
    */
   public File getDataFolder()
@@ -172,7 +158,7 @@ public abstract class FileStackBase extends StackServerBase
 
   /**
    * Returns folder
-   * 
+   *
    * @return folder
    */
   public File getFolder()

@@ -6,15 +6,12 @@ import clearcontrol.core.log.LoggingFeature;
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG
  * (http://mpi-cbg.de) March 2018
  */
-public class LinearInterpolationTable extends
-                                      AbstractInterpolationTable
-                                      implements LoggingFeature
+public class LinearInterpolationTable extends AbstractInterpolationTable implements LoggingFeature
 {
   /**
    * Creates a LinearInterpolationTable witha given number of columns.
    *
-   * @param pNumberOfColumns
-   *          number of columns
+   * @param pNumberOfColumns number of columns
    */
   public LinearInterpolationTable(int pNumberOfColumns)
   {
@@ -66,8 +63,7 @@ public class LinearInterpolationTable extends
   /**
    * Creates a copy of a SplineInterpolationTable.
    *
-   * @param pInterpolationTable
-   *          table to copy
+   * @param pInterpolationTable table to copy
    */
   public LinearInterpolationTable(LinearInterpolationTable pInterpolationTable)
   {

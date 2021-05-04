@@ -1,10 +1,9 @@
 package clearcontrol.gui.swing;
 
-import java.awt.EventQueue;
-
-import javax.swing.JLabel;
-
 import clearcontrol.core.variable.Variable;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class JLabelDouble extends JLabel
 {
@@ -16,14 +15,9 @@ public class JLabelDouble extends JLabel
 
   private boolean mIntegerConstraint = false;
 
-  public JLabelDouble(final String pLabelName,
-                      final boolean pIntegerConstraint,
-                      final String pFormatString,
-                      final double pInicialValue)
+  public JLabelDouble(final String pLabelName, final boolean pIntegerConstraint, final String pFormatString, final double pInicialValue)
   {
-    super(getTextFromValue(pIntegerConstraint,
-                           pFormatString,
-                           pInicialValue));
+    super(getTextFromValue(pIntegerConstraint, pFormatString, pInicialValue));
     mFormatString = pFormatString;
     mIntegerConstraint = pIntegerConstraint;
     mThis = this;
@@ -31,8 +25,7 @@ public class JLabelDouble extends JLabel
     mDoubleVariable = new Variable<Double>(pLabelName, pInicialValue)
     {
       @Override
-      public Double setEventHook(final Double pOldValue,
-                                 final Double pNewValue)
+      public Double setEventHook(final Double pOldValue, final Double pNewValue)
       {
         if (pNewValue != mNewValue)
         {
@@ -41,9 +34,7 @@ public class JLabelDouble extends JLabel
             @Override
             public void run()
             {
-              mThis.setText(getTextFromValue(mIntegerConstraint,
-                                             pFormatString,
-                                             pNewValue));
+              mThis.setText(getTextFromValue(mIntegerConstraint, pFormatString, pNewValue));
               mNewValue = pNewValue;
             }
 
@@ -58,9 +49,7 @@ public class JLabelDouble extends JLabel
       @Override
       public void run()
       {
-        setText(getTextFromValue(mIntegerConstraint,
-                                 pFormatString,
-                                 pInicialValue));
+        setText(getTextFromValue(mIntegerConstraint, pFormatString, pInicialValue));
       }
     });
 
@@ -71,15 +60,12 @@ public class JLabelDouble extends JLabel
     return mDoubleVariable;
   }
 
-  private static String getTextFromValue(final boolean pIntegerConstraint,
-                                         final String pFormatString,
-                                         final double pNewValue)
+  private static String getTextFromValue(final boolean pIntegerConstraint, final String pFormatString, final double pNewValue)
   {
     if (pIntegerConstraint)
     {
       return String.format(pFormatString, Math.round(pNewValue));
-    }
-    else
+    } else
     {
       return String.format(pFormatString, pNewValue);
     }

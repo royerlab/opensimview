@@ -1,7 +1,5 @@
 package clearcontrol.devices.optomech.filterwheels.devices.fli;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import clearcontrol.com.serial.SerialDevice;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.variable.Variable;
@@ -10,32 +8,22 @@ import clearcontrol.devices.optomech.filterwheels.FilterWheelDeviceInterface;
 import clearcontrol.devices.optomech.filterwheels.devices.fli.adapters.FilterWheelPositionDeviceAdapter;
 import clearcontrol.devices.optomech.filterwheels.devices.fli.adapters.FilterWheelSpeedDeviceAdapter;
 
-public class FLIFilterWheelDevice extends SerialDevice implements
-                                  FilterWheelDeviceInterface
+import java.util.concurrent.ConcurrentHashMap;
+
+public class FLIFilterWheelDevice extends SerialDevice implements FilterWheelDeviceInterface
 {
 
-  private final Variable<Integer> mFilterPositionVariable,
-      mFilterSpeedVariable;
+  private final Variable<Integer> mFilterPositionVariable, mFilterSpeedVariable;
   private volatile int mCachedPosition, mCachedSpeed;
   private ConcurrentHashMap<Integer, String> mFilterPositionToNameMap;
 
   public FLIFilterWheelDevice(final int pDeviceIndex)
   {
-    this(MachineConfiguration.get().getSerialDevicePort(
-                                                        "filterwheel.fli",
-                                                        pDeviceIndex,
-                                                        "NULL"));
+    this(MachineConfiguration.get().getSerialDevicePort("filterwheel.fli", pDeviceIndex, "NULL"));
 
     for (int i : getValidPositions())
     {
-      setPositionName(i,
-                      MachineConfiguration.get()
-                                          .getStringProperty("filterwheel.fli."
-                                                             + pDeviceIndex
-                                                             + "."
-                                                             + i,
-                                                             "filter "
-                                                                  + i));
+      setPositionName(i, MachineConfiguration.get().getStringProperty("filterwheel.fli." + pDeviceIndex + "." + i, "filter " + i));
     }
   }
 
@@ -45,46 +33,36 @@ public class FLIFilterWheelDevice extends SerialDevice implements
 
     mFilterPositionToNameMap = new ConcurrentHashMap<>();
 
-    final FilterWheelPositionDeviceAdapter lFilterWheelPosition =
-                                                                new FilterWheelPositionDeviceAdapter(this);
-    mFilterPositionVariable = addSerialVariable("FilterWheelPosition",
-                                                lFilterWheelPosition);
+    final FilterWheelPositionDeviceAdapter lFilterWheelPosition = new FilterWheelPositionDeviceAdapter(this);
+    mFilterPositionVariable = addSerialVariable("FilterWheelPosition", lFilterWheelPosition);
 
     mFilterPositionVariable.addSetListener(new VariableSetListener<Integer>()
     {
       @Override
-      public void setEvent(final Integer pCurrentValue,
-                           final Integer pNewValue)
+      public void setEvent(final Integer pCurrentValue, final Integer pNewValue)
       {
         updateCache(pNewValue);
       }
 
       private void updateCache(final Integer pNewValue)
       {
-        mCachedPosition =
-                        (int) (pNewValue == null ? 0
-                                                 : pNewValue.doubleValue());
+        mCachedPosition = (int) (pNewValue == null ? 0 : pNewValue.doubleValue());
       }
     });
 
-    final FilterWheelSpeedDeviceAdapter lFilterWheelSpeed =
-                                                          new FilterWheelSpeedDeviceAdapter(this);
-    mFilterSpeedVariable = addSerialVariable("FilterWheelSpeed",
-                                             lFilterWheelSpeed);
+    final FilterWheelSpeedDeviceAdapter lFilterWheelSpeed = new FilterWheelSpeedDeviceAdapter(this);
+    mFilterSpeedVariable = addSerialVariable("FilterWheelSpeed", lFilterWheelSpeed);
     mFilterSpeedVariable.addSetListener(new VariableSetListener<Integer>()
     {
       @Override
-      public void setEvent(final Integer pCurrentValue,
-                           final Integer pNewValue)
+      public void setEvent(final Integer pCurrentValue, final Integer pNewValue)
       {
         updateCache(pNewValue);
       }
 
       private void updateCache(final Integer pNewValue)
       {
-        mCachedSpeed =
-                     (int) (pNewValue == null ? 0
-                                              : pNewValue.doubleValue());
+        mCachedSpeed = (int) (pNewValue == null ? 0 : pNewValue.doubleValue());
       }
     });
   }
@@ -148,13 +126,11 @@ public class FLIFilterWheelDevice extends SerialDevice implements
   @Override
   public int[] getValidPositions()
   {
-    return new int[]
-    { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    return new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   }
 
   @Override
-  public void setPositionName(int pPositionIndex,
-                              String pPositionName)
+  public void setPositionName(int pPositionIndex, String pPositionName)
   {
     mFilterPositionToNameMap.put(pPositionIndex, pPositionName);
 

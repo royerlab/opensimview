@@ -2,8 +2,7 @@ package clearcontrol.devices.signalgen.staves;
 
 import static java.lang.Math.floor;
 
-public class RampSteppingStave extends RampContinuousStave
-                               implements StaveInterface
+public class RampSteppingStave extends RampContinuousStave implements StaveInterface
 {
 
   private volatile boolean mStepping = true;
@@ -15,40 +14,15 @@ public class RampSteppingStave extends RampContinuousStave
     super(pName);
   }
 
-  public RampSteppingStave(final String pName,
-                           float pSyncStart,
-                           float pSyncStop,
-                           float pStartValue,
-                           float pStopValue,
-                           float pOutsideValue,
-                           float pStepHeight)
+  public RampSteppingStave(final String pName, float pSyncStart, float pSyncStop, float pStartValue, float pStopValue, float pOutsideValue, float pStepHeight)
   {
-    super(pName,
-          pSyncStart,
-          pSyncStop,
-          pStartValue,
-          pStopValue,
-          pOutsideValue,
-          1);
+    super(pName, pSyncStart, pSyncStop, pStartValue, pStopValue, pOutsideValue, 1);
     setStepHeight(pStepHeight);
   }
 
-  public RampSteppingStave(final String pName,
-                           float pSyncStart,
-                           float pSyncStop,
-                           float pStartValue,
-                           float pStopValue,
-                           float pOutsideValue,
-                           float pExponent,
-                           float pStepHeight)
+  public RampSteppingStave(final String pName, float pSyncStart, float pSyncStop, float pStartValue, float pStopValue, float pOutsideValue, float pExponent, float pStepHeight)
   {
-    super(pName,
-          pSyncStart,
-          pSyncStop,
-          pStartValue,
-          pStopValue,
-          pOutsideValue,
-          pExponent);
+    super(pName, pSyncStart, pSyncStop, pStartValue, pStopValue, pOutsideValue, pExponent);
     // important next line must be after all others!
     setStepHeight(pStepHeight);
   }
@@ -56,14 +30,7 @@ public class RampSteppingStave extends RampContinuousStave
   @Override
   public StaveInterface duplicate()
   {
-    final RampSteppingStave lRampSteppingStave =
-                                               new RampSteppingStave(getName(),
-                                                                     getSyncStart(),
-                                                                     getSyncStop(),
-                                                                     getStartValue(),
-                                                                     getStopValue(),
-                                                                     getOutsideValue(),
-                                                                     getStepHeight());
+    final RampSteppingStave lRampSteppingStave = new RampSteppingStave(getName(), getSyncStart(), getSyncStop(), getStartValue(), getStopValue(), getOutsideValue(), getStepHeight());
 
     lRampSteppingStave.setStepping(isStepping());
     lRampSteppingStave.setExponent(getExponent());
@@ -76,30 +43,20 @@ public class RampSteppingStave extends RampContinuousStave
   @Override
   public float getValue(float pNormalizedTime)
   {
-    if (!isStepping())
-      return super.getValue(pNormalizedTime);
+    if (!isStepping()) return super.getValue(pNormalizedTime);
 
-    if (pNormalizedTime < getSyncStart()
-        || pNormalizedTime > getSyncStop())
-      return getOutsideValue();
+    if (pNormalizedTime < getSyncStart() || pNormalizedTime > getSyncStop()) return getOutsideValue();
 
-    float lNormalizedRampTime = (pNormalizedTime - getSyncStart())
-                                / (getSyncStop() - getSyncStart());
+    float lNormalizedRampTime = (pNormalizedTime - getSyncStart()) / (getSyncStop() - getSyncStart());
 
     if (getExponent() != 1)
     {
-      lNormalizedRampTime =
-                          abspow(lNormalizedRampTime, getExponent());
+      lNormalizedRampTime = abspow(lNormalizedRampTime, getExponent());
     }
 
-    final float lNormalizedSteppingRampTime =
-                                            (float) (floor(getNumberOfSteps()
-                                                           * lNormalizedRampTime)
-                                                     / getNumberOfSteps());
+    final float lNormalizedSteppingRampTime = (float) (floor(getNumberOfSteps() * lNormalizedRampTime) / getNumberOfSteps());
 
-    final float lValue = getStartValue()
-                         + (getStopValue() - getStartValue())
-                           * lNormalizedSteppingRampTime;
+    final float lValue = getStartValue() + (getStopValue() - getStartValue()) * lNormalizedSteppingRampTime;
     return lValue;
 
   }

@@ -1,40 +1,23 @@
 package clearcontrol.scripting.lang.jython;
 
-import java.io.OutputStream;
-import java.util.Map;
-
 import org.python.core.Options;
 import org.python.util.PythonInterpreter;
+
+import java.io.OutputStream;
+import java.util.Map;
 
 public class JythonUtils
 {
 
-  public static Object runScript(final String pScriptName,
-                                 final String pScriptString,
-                                 Map<String, Object> pMap,
-                                 OutputStream pOutputStream,
-                                 boolean pDebug)
+  public static Object runScript(final String pScriptName, final String pScriptString, Map<String, Object> pMap, OutputStream pOutputStream, boolean pDebug)
   {
-    return runScript(pScriptName,
-                     "",
-                     pScriptString,
-                     "",
-                     pMap,
-                     pOutputStream,
-                     pDebug);
+    return runScript(pScriptName, "", pScriptString, "", pMap, pOutputStream, pDebug);
   }
 
-  public static Object runScript(final String pScriptName,
-                                 final String pPreambleString,
-                                 final String pScriptString,
-                                 final String pPostambleString,
-                                 Map<String, Object> pMap,
-                                 OutputStream pOutputStream,
-                                 boolean pDebug)
+  public static Object runScript(final String pScriptName, final String pPreambleString, final String pScriptString, final String pPostambleString, Map<String, Object> pMap, OutputStream pOutputStream, boolean pDebug)
   {
     Options.importSite = false;
-    final PythonInterpreter lPythonInterpreter =
-                                               new PythonInterpreter();
+    final PythonInterpreter lPythonInterpreter = new PythonInterpreter();
 
     for (final Map.Entry<String, Object> lEntry : pMap.entrySet())
     {

@@ -1,24 +1,20 @@
 package clearcontrol.gui.jfx.custom.labelgrid;
 
-import java.util.concurrent.ConcurrentHashMap;
+import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-
-import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
-
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
- *
- *
  * @author royer
  */
 public class LabelGrid extends CustomGridPane
 {
-  ConcurrentHashMap<Pair<Integer, Integer>, Label> mCellToLabelMap =
-                                                                   new ConcurrentHashMap<>();
+  ConcurrentHashMap<Pair<Integer, Integer>, Label> mCellToLabelMap = new ConcurrentHashMap<>();
 
   /**
    * Instantiates a label grid
@@ -30,11 +26,9 @@ public class LabelGrid extends CustomGridPane
 
   /**
    * Sets a given column name
-   * 
-   * @param pX
-   *          column index
-   * @param pColumnName
-   *          column name
+   *
+   * @param pX          column index
+   * @param pColumnName column name
    * @return corresponding label
    */
   public Label setColumnName(int pX, String pColumnName)
@@ -46,11 +40,9 @@ public class LabelGrid extends CustomGridPane
 
   /**
    * Sets a given row name
-   * 
-   * @param pY
-   *          row index
-   * @param pRowName
-   *          row name
+   *
+   * @param pY       row index
+   * @param pRowName row name
    * @return corresponding row name
    */
   public Label setRowName(int pY, String pRowName)
@@ -62,11 +54,9 @@ public class LabelGrid extends CustomGridPane
 
   /**
    * Returns the label at the given coordinates
-   * 
-   * @param pX
-   *          column index
-   * @param pY
-   *          row index
+   *
+   * @param pX column index
+   * @param pY row index
    * @return label
    */
   public Label getLabel(int pX, int pY)
@@ -92,8 +82,7 @@ public class LabelGrid extends CustomGridPane
     if (lLabel == null)
     {
       lLabel = new Label();
-      if (pBoxStyle)
-        lLabel.setStyle("-fx-border-color: lightgray;");
+      if (pBoxStyle) lLabel.setStyle("-fx-border-color: lightgray;");
       mCellToLabelMap.put(lKey, lLabel);
       setLabelInternal(pX, pY, lLabel);
     }

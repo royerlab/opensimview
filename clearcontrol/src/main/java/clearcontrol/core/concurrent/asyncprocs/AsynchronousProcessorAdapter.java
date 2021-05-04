@@ -5,14 +5,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Asynchronous processor adapter
  *
- * @param <I>
- *          input
- * @param <O>
- *          output
+ * @param <I> input
+ * @param <O> output
  * @author royer
  */
-public class AsynchronousProcessorAdapter<I, O> implements
-                                         AsynchronousProcessorInterface<I, O>
+public class AsynchronousProcessorAdapter<I, O> implements AsynchronousProcessorInterface<I, O>
 {
 
   @Override
@@ -51,9 +48,7 @@ public class AsynchronousProcessorAdapter<I, O> implements
   }
 
   @Override
-  public boolean passOrWait(final I pObject,
-                            final long pTimeOut,
-                            TimeUnit pTimeUnit)
+  public boolean passOrWait(final I pObject, final long pTimeOut, TimeUnit pTimeUnit)
   {
     return true;
   }

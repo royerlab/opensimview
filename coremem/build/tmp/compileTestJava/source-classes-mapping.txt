@@ -1,0 +1,45 @@
+coremem/offheap/test/OffHeapMemoryTests.java
+ coremem.offheap.test.OffHeapMemoryTests
+coremem/recycling/test/RecyclerTests.java
+ coremem.recycling.test.RecyclerTests
+ coremem.recycling.test.RecyclerTests$1
+ coremem.recycling.test.RecyclerTests$2
+ coremem.recycling.test.RecyclerTests$3
+ coremem.recycling.test.RecyclerTests$4
+ coremem.recycling.test.RecyclerTests$5
+ coremem.recycling.test.RecyclerTests$6
+coremem/buffers/test/ContiguousBufferTests.java
+ coremem.buffers.test.ContiguousBufferTests
+coremem/memmap/test/FileMappedMemoryRegionTests.java
+ coremem.memmap.test.FileMappedMemoryRegionTests
+coremem/interop/test/JNABuffersInteropTests.java
+ coremem.interop.test.JNABuffersInteropTests
+coremem/util/test/SizeTests.java
+ coremem.util.test.SizeTests
+coremem/offheap/test/OffHeapMemoryAccessTests.java
+ coremem.offheap.test.OffHeapMemoryAccessTests
+coremem/memmap/test/MemoryMappedFileTest.java
+ coremem.memmap.test.MemoryMappedFileTest
+coremem/util/test/NativeLibResourceHandlerTests.java
+ coremem.util.test.NativeLibResourceHandlerTests
+coremem/recycling/test/TestRequest.java
+ coremem.recycling.test.TestRequest
+coremem/buffers/test/CompressedBufferTests.java
+ coremem.buffers.test.CompressedBufferTests
+coremem/test/ContiguousMemoryTestsHelper.java
+ coremem.test.ContiguousMemoryTestsHelper
+coremem/rgc/test/RessourceGarbageCollectorTests.java
+ coremem.rgc.test.RessourceGarbageCollectorTests
+ coremem.rgc.test.RessourceGarbageCollectorTests$1
+ coremem.rgc.test.RessourceGarbageCollectorTests$ClassWithRessource
+ coremem.rgc.test.RessourceGarbageCollectorTests$ClassWithRessource$MyCleaner
+coremem/recycling/test/TestRecyclable.java
+ coremem.recycling.test.TestRecyclable
+coremem/fragmented/tests/FragmentedMemoryTests.java
+ coremem.fragmented.test.FragmentedMemoryTests
+coremem/interop/test/NIOBuffersInteropTests.java
+ coremem.interop.test.NIOBuffersInteropTests
+coremem/interop/test/BridJInteropTests.java
+ coremem.interop.test.BridJInteropTests
+coremem/test/ClassScope.java
+ coremem.test.ClassScope

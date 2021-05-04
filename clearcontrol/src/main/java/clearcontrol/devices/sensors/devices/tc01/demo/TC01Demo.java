@@ -3,7 +3,6 @@ package clearcontrol.devices.sensors.devices.tc01.demo;
 import clearcontrol.core.variable.VariableGetListener;
 import clearcontrol.devices.sensors.devices.tc01.NIThermoCoupleType;
 import clearcontrol.devices.sensors.devices.tc01.TC01;
-
 import org.junit.Test;
 
 public class TC01Demo
@@ -16,15 +15,14 @@ public class TC01Demo
 
     lTC01.open();
 
-    lTC01.getTemperatureInCelciusVariable()
-         .addGetListener(new VariableGetListener<Double>()
-         {
-           @Override
-           public void getEvent(Double pCurrentValue)
-           {
-             System.out.format("Temp = %g deg C \n", pCurrentValue);
-           }
-         });
+    lTC01.getTemperatureInCelciusVariable().addGetListener(new VariableGetListener<Double>()
+    {
+      @Override
+      public void getEvent(Double pCurrentValue)
+      {
+        System.out.format("Temp = %g deg C \n", pCurrentValue);
+      }
+    });
 
     Thread.sleep(10 * 1000);
 

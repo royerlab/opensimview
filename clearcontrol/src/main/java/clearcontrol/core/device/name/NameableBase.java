@@ -17,9 +17,8 @@ public abstract class NameableBase implements NameableInterface
 
   /**
    * Instanciates an object given a name
-   * 
-   * @param pName
-   *          name
+   *
+   * @param pName name
    */
   public NameableBase(final String pName)
   {

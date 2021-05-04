@@ -3,8 +3,7 @@ package clearcontrol.devices.signalgen.staves;
 import static java.lang.Math.PI;
 import static java.lang.Math.sin;
 
-public class SinusStave extends StaveAbstract
-                        implements StaveInterface
+public class SinusStave extends StaveAbstract implements StaveInterface
 {
   private volatile float mSinusPeriod;
   private volatile float mSinusPhase;
@@ -12,10 +11,7 @@ public class SinusStave extends StaveAbstract
 
   private volatile float mOmega;
 
-  public SinusStave(final String pName,
-                    final float pSinusPeriod,
-                    final float pSinusPhase,
-                    final float pSinusAmplitude)
+  public SinusStave(final String pName, final float pSinusPeriod, final float pSinusPhase, final float pSinusAmplitude)
   {
     super(pName);
     setSinusPeriod(pSinusPeriod);
@@ -26,10 +22,7 @@ public class SinusStave extends StaveAbstract
   @Override
   public StaveInterface duplicate()
   {
-    StaveInterface lStave =  new SinusStave(getName(),
-                          getSinusPeriod(),
-                          getSinusPhase(),
-                          getSinusAmplitude());
+    StaveInterface lStave = new SinusStave(getName(), getSinusPeriod(), getSinusPhase(), getSinusAmplitude());
 
     lStave.setEnabled(this.isEnabled());
 
@@ -39,11 +32,7 @@ public class SinusStave extends StaveAbstract
   @Override
   public float getValue(float pNormalizedTime)
   {
-    final float lValue =
-                       (float) (getSinusAmplitude() * sin(
-                                                          (pNormalizedTime
-                                                           + getSinusPhase())
-                                                          * mOmega));
+    final float lValue = (float) (getSinusAmplitude() * sin((pNormalizedTime + getSinusPhase()) * mOmega));
 
     return lValue;
   }

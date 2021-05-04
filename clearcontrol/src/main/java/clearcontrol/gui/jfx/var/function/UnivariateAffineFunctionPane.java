@@ -1,5 +1,8 @@
 package clearcontrol.gui.jfx.var.function;
 
+import clearcontrol.core.math.functions.UnivariateAffineFunction;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,10 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-
-import clearcontrol.core.math.functions.UnivariateAffineFunction;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 
 /**
  * Univariate function pane
@@ -30,14 +29,11 @@ public class UnivariateAffineFunctionPane extends CustomGridPane
 
   /**
    * Instantiates a univariate function pane
-   * 
-   * @param pLabelText
-   *          label text
-   * @param pFunctionVariable
-   *          function variable
+   *
+   * @param pLabelText        label text
+   * @param pFunctionVariable function variable
    */
-  public UnivariateAffineFunctionPane(String pLabelText,
-                                      Variable<UnivariateAffineFunction> pFunctionVariable)
+  public UnivariateAffineFunctionPane(String pLabelText, Variable<UnivariateAffineFunction> pFunctionVariable)
   {
     super();
     mFunctionVariable = pFunctionVariable;
@@ -49,23 +45,16 @@ public class UnivariateAffineFunctionPane extends CustomGridPane
     setPadding(new Insets(0, 10, 0, 10));
 
     Label lNameLabel = null;
-    if (pLabelText != null)
-      lNameLabel = new Label(pLabelText + ":  y = ");
-    else
-      lNameLabel = new Label(" y = ");
-    mSlopeTextField =
-                    new TextField("" + mFunctionVariable.get()
-                                                        .getSlope());
+    if (pLabelText != null) lNameLabel = new Label(pLabelText + ":  y = ");
+    else lNameLabel = new Label(" y = ");
+    mSlopeTextField = new TextField("" + mFunctionVariable.get().getSlope());
     mSlopeTextField.setPrefColumnCount(2 + mPrecision);
     mSlopeTextField.setStyle("-fx-text-box-border: transparent;");
     mSlopeTextField.setStyle("-fx-background-insets: 0;");
     mSlopeTextField.setStyle("-fx-background-color: -fx-control-inner-background;");
 
     Label lXLabel = new Label("* x +");
-    mConstantTextField =
-                       new TextField(""
-                                     + mFunctionVariable.get()
-                                                        .getConstant());
+    mConstantTextField = new TextField("" + mFunctionVariable.get().getConstant());
     mConstantTextField.setPrefColumnCount(2 + mPrecision);
     mConstantTextField.setStyle("-fx-text-box-border: transparent;");
     mConstantTextField.setStyle("-fx-background-insets: 0;");
@@ -81,29 +70,30 @@ public class UnivariateAffineFunctionPane extends CustomGridPane
     add(lXLabel, mCursor++, 0);
     add(mConstantTextField, mCursor++, 0);
 
-    pFunctionVariable.addSetListener((o, n) -> {
+    pFunctionVariable.addSetListener((o, n) ->
+    {
       // if (o.getSlope() != n.getSlope()
       // || o.getConstant() != n.getConstant())
       setFunctionTextField(n);
     });
 
-    mSlopeTextField.focusedProperty().addListener((obs, o, n) -> {
-      if (!n)
-        parseSlopeAndSetVariable();
+    mSlopeTextField.focusedProperty().addListener((obs, o, n) ->
+    {
+      if (!n) parseSlopeAndSetVariable();
     });
-    mSlopeTextField.setOnKeyPressed((e) -> {
-      if (e.getCode().equals(KeyCode.ENTER))
-        parseSlopeAndSetVariable();
+    mSlopeTextField.setOnKeyPressed((e) ->
+    {
+      if (e.getCode().equals(KeyCode.ENTER)) parseSlopeAndSetVariable();
       ;
     });
 
-    mConstantTextField.focusedProperty().addListener((obs, o, n) -> {
-      if (!n)
-        parseOffsetAndSetVariable();
+    mConstantTextField.focusedProperty().addListener((obs, o, n) ->
+    {
+      if (!n) parseOffsetAndSetVariable();
     });
-    mConstantTextField.setOnKeyPressed((e) -> {
-      if (e.getCode().equals(KeyCode.ENTER))
-        parseOffsetAndSetVariable();
+    mConstantTextField.setOnKeyPressed((e) ->
+    {
+      if (e.getCode().equals(KeyCode.ENTER)) parseOffsetAndSetVariable();
       ;
     });
 
@@ -122,8 +112,7 @@ public class UnivariateAffineFunctionPane extends CustomGridPane
         mFunctionVariable.setCurrent();
         mSlopeTextField.setStyle("-fx-text-fill: black");
       }
-    }
-    catch (NumberFormatException e)
+    } catch (NumberFormatException e)
     {
       mSlopeTextField.setStyle("-fx-text-fill: red");
     }
@@ -141,8 +130,7 @@ public class UnivariateAffineFunctionPane extends CustomGridPane
         mFunctionVariable.setCurrent();
         mConstantTextField.setStyle("-fx-text-fill: black");
       }
-    }
-    catch (NumberFormatException e)
+    } catch (NumberFormatException e)
     {
       mConstantTextField.setStyle("-fx-text-fill: red");
     }
@@ -150,15 +138,10 @@ public class UnivariateAffineFunctionPane extends CustomGridPane
 
   private void setFunctionTextField(UnivariateAffineFunction pFunction)
   {
-    Platform.runLater(() -> {
-      mSlopeTextField.textProperty()
-                     .set(String.format("%." + mPrecision
-                                        + "g",
-                                        pFunction.getSlope()));
-      mConstantTextField.textProperty()
-                        .set(String.format("%." + mPrecision
-                                           + "f",
-                                           pFunction.getConstant()));
+    Platform.runLater(() ->
+    {
+      mSlopeTextField.textProperty().set(String.format("%." + mPrecision + "g", pFunction.getSlope()));
+      mConstantTextField.textProperty().set(String.format("%." + mPrecision + "f", pFunction.getConstant()));
     });
   }
 

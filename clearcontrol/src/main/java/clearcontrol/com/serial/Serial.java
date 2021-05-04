@@ -1,28 +1,19 @@
 package clearcontrol.com.serial;
 
+import clearcontrol.core.log.LoggingFeature;
+import gnu.trove.list.array.TByteArrayList;
+import jssc.*;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
-import jssc.SerialPort;
-import jssc.SerialPortEvent;
-import jssc.SerialPortEventListener;
-import jssc.SerialPortException;
-import jssc.SerialPortList;
-import clearcontrol.core.log.LoggingFeature;
-import gnu.trove.list.array.TByteArrayList;
-
 public class Serial implements SerialInterface, LoggingFeature
 {
-  public final static int cFLOWCONTROL_NONE =
-                                            SerialPort.FLOWCONTROL_NONE;
-  public final static int cFLOWCONTROL_RTSCTS =
-                                              SerialPort.FLOWCONTROL_RTSCTS_IN
-                                                | SerialPort.FLOWCONTROL_RTSCTS_OUT;
-  public final static int cFLOWCONTROL_XONXOFF =
-                                               SerialPort.FLOWCONTROL_XONXOFF_IN
-                                                 | SerialPort.FLOWCONTROL_XONXOFF_OUT;
+  public final static int cFLOWCONTROL_NONE = SerialPort.FLOWCONTROL_NONE;
+  public final static int cFLOWCONTROL_RTSCTS = SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT;
+  public final static int cFLOWCONTROL_XONXOFF = SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT;
   private static final int cReadTimeOutInMilliseconds = 10 * 1000;
 
   private final String mPortNameHint;
@@ -34,8 +25,7 @@ public class Serial implements SerialInterface, LoggingFeature
   private volatile int mMessageLength = 1;
   private volatile boolean mNotifyEvents = true;
 
-  private final CopyOnWriteArrayList<SerialListener> mListenerList =
-                                                                   new CopyOnWriteArrayList<SerialListener>();
+  private final CopyOnWriteArrayList<SerialListener> mListenerList = new CopyOnWriteArrayList<SerialListener>();
 
   private SerialPort mSerialPort;
 
@@ -57,19 +47,15 @@ public class Serial implements SerialInterface, LoggingFeature
 
   public static ArrayList<String> getListOfAllTTYSerialCommPorts()
   {
-    final ArrayList<String> lListOfFreeCommPorts =
-                                                 new ArrayList<String>();
-    final String[] lPortNameList =
-                                 SerialPortList.getPortNames(Pattern.compile("tty\\..+"),
-                                                             new Comparator<String>()
-                                                             {
-                                                               @Override
-                                                               public int compare(final String pO1,
-                                                                                  final String pO2)
-                                                               {
-                                                                 return -1;
-                                                               }
-                                                             });
+    final ArrayList<String> lListOfFreeCommPorts = new ArrayList<String>();
+    final String[] lPortNameList = SerialPortList.getPortNames(Pattern.compile("tty\\..+"), new Comparator<String>()
+    {
+      @Override
+      public int compare(final String pO1, final String pO2)
+      {
+        return -1;
+      }
+    });
 
     for (final String lPortName : lPortNameList)
     {
@@ -80,8 +66,7 @@ public class Serial implements SerialInterface, LoggingFeature
 
   public static ArrayList<String> getListOfAllSerialCommPorts()
   {
-    final ArrayList<String> lListOfFreeCommPorts =
-                                                 new ArrayList<String>();
+    final ArrayList<String> lListOfFreeCommPorts = new ArrayList<String>();
     final String[] lPortNameList = SerialPortList.getPortNames();
     for (final String lPortName : lPortNameList)
     {
@@ -92,37 +77,29 @@ public class Serial implements SerialInterface, LoggingFeature
 
   public static ArrayList<String> getListOfAllSerialCommPortsWithNameContaining(final String pNameHint)
   {
-    final ArrayList<String> lListOfFreeCommPorts =
-                                                 getListOfAllTTYSerialCommPorts();
+    final ArrayList<String> lListOfFreeCommPorts = getListOfAllTTYSerialCommPorts();
 
-    final ArrayList<String> lListOfSelectedCommPorts =
-                                                     new ArrayList<String>();
+    final ArrayList<String> lListOfSelectedCommPorts = new ArrayList<String>();
     for (final String lPortName : lListOfFreeCommPorts)
     {
-      if (lPortName.contains(pNameHint))
-        lListOfSelectedCommPorts.add(lPortName);
+      if (lPortName.contains(pNameHint)) lListOfSelectedCommPorts.add(lPortName);
     }
     return lListOfSelectedCommPorts;
   }
 
   public static String getOneSerialCommPortWithNameContaining(final String pNameHint)
   {
-    final ArrayList<String> lListOfAllSerialCommPortsWithNameContaining =
-                                                                        getListOfAllSerialCommPortsWithNameContaining(pNameHint);
+    final ArrayList<String> lListOfAllSerialCommPortsWithNameContaining = getListOfAllSerialCommPortsWithNameContaining(pNameHint);
     if (lListOfAllSerialCommPortsWithNameContaining.size() > 0)
       return lListOfAllSerialCommPortsWithNameContaining.get(0);
-    else
-      return null;
+    else return null;
   }
 
   @Override
-  public final boolean connect() throws SerialPortException,
-                                 SerialException
+  public final boolean connect() throws SerialPortException, SerialException
   {
-    if (mPortNameHint == null)
-      throw new SerialException("No hint given for port name.");
-    final String lPortName =
-                           getOneSerialCommPortWithNameContaining(mPortNameHint);
+    if (mPortNameHint == null) throw new SerialException("No hint given for port name.");
+    final String lPortName = getOneSerialCommPortWithNameContaining(mPortNameHint);
 
     return connect(lPortName);
   }
@@ -135,24 +112,17 @@ public class Serial implements SerialInterface, LoggingFeature
       info("Connecting to '%s'\n", pPortName);
       mSerialPort = new SerialPort(pPortName);
 
-      info("Opening port '%s' with baudrate: %d \n",
-           pPortName,
-           mBaudRate);
+      info("Opening port '%s' with baudrate: %d \n", pPortName, mBaudRate);
       mSerialPort.openPort();
-      mSerialPort.setParams(mBaudRate,
-                            SerialPort.DATABITS_8,
-                            SerialPort.STOPBITS_1,
-                            SerialPort.PARITY_NONE);
+      mSerialPort.setParams(mBaudRate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
       mSerialPort.setFlowControlMode(mFlowControl);
-      mSerialPort.purgePort(SerialPort.PURGE_RXCLEAR
-                            | SerialPort.PURGE_TXCLEAR);
+      mSerialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
 
       // System.out.println("Flow Control: " +
       // mSerialPort.getFlowControlMode());
 
-      if (mNotifyEvents)
-        mSerialPort.addEventListener(new Serial.SerialReaderEventBased(mSerialPort));
+      if (mNotifyEvents) mSerialPort.addEventListener(new Serial.SerialReaderEventBased(mSerialPort));
       return true;
     }
 
@@ -184,8 +154,7 @@ public class Serial implements SerialInterface, LoggingFeature
     mSerialPort.writeByte(pByte);
   }
 
-  public void format(String format,
-                     Object... args) throws SerialPortException
+  public void format(String format, Object... args) throws SerialPortException
   {
     write(String.format(format, args));
   }
@@ -203,8 +172,7 @@ public class Serial implements SerialInterface, LoggingFeature
     {
       mSerialPort.readBytes();
     }
-    mSerialPort.purgePort(SerialPort.PURGE_TXCLEAR
-                          | SerialPort.PURGE_RXCLEAR);
+    mSerialPort.purgePort(SerialPort.PURGE_TXCLEAR | SerialPort.PURGE_RXCLEAR);
   }
 
   private final void textMessageReceived(final String pMessage)
@@ -308,13 +276,11 @@ public class Serial implements SerialInterface, LoggingFeature
 
   public boolean isConnected()
   {
-    if (mSerialPort == null)
-      return false;
+    if (mSerialPort == null) return false;
     return mSerialPort.isOpened();
   }
 
-  public final class SerialReaderEventBased implements
-                                            SerialPortEventListener
+  public final class SerialReaderEventBased implements SerialPortEventListener
   {
     public SerialReaderEventBased(final SerialPort pSerialPort)
     {
@@ -333,8 +299,7 @@ public class Serial implements SerialInterface, LoggingFeature
           {
             binaryMessageReceived(lMessage);
           }
-        }
-        else
+        } else
         {
           final String lMessage = readTextMessageAsString();
           if (lMessage != null)
@@ -342,12 +307,10 @@ public class Serial implements SerialInterface, LoggingFeature
             textMessageReceived(lMessage);
           }
         }
-      }
-      else if (event.getEventType() == SerialPortEvent.ERR)
+      } else if (event.getEventType() == SerialPortEvent.ERR)
       {
         warning("Serial connection error!");
-      }
-      else if (event.getEventType() == SerialPortEvent.BREAK)
+      } else if (event.getEventType() == SerialPortEvent.BREAK)
       {
         warning(": Serial connection broken!");
       }
@@ -362,12 +325,10 @@ public class Serial implements SerialInterface, LoggingFeature
       try
       {
         mSerialPort.removeEventListener();
-      }
-      catch (final Throwable e)
+      } catch (final Throwable e)
       {
       }
-      if (mSerialPort.isOpened())
-        mSerialPort.closePort();
+      if (mSerialPort.isOpened()) mSerialPort.closePort();
       mSerialPort = null;
     }
   }
@@ -379,8 +340,7 @@ public class Serial implements SerialInterface, LoggingFeature
       try
       {
         Thread.sleep(pWaitTime);
-      }
-      catch (final InterruptedException e)
+      } catch (final InterruptedException e)
       {
       }
     }
@@ -403,15 +363,11 @@ public class Serial implements SerialInterface, LoggingFeature
         do
         {
           lByte = mSerialPort.readBytes(1, pTimeOutInMilliseconds);
-        }
-        while (lByte[0] != mEndOfMessageCharacter);
+        } while (lByte[0] != mEndOfMessageCharacter);
       }
-      final byte[] lReadBytes =
-                              mSerialPort.readBytes(mMessageLength,
-                                                    pTimeOutInMilliseconds);
+      final byte[] lReadBytes = mSerialPort.readBytes(mMessageLength, pTimeOutInMilliseconds);
       return lReadBytes;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       errorOccured(e);
       return null;
@@ -425,24 +381,20 @@ public class Serial implements SerialInterface, LoggingFeature
     try
     {
       mBuffer.clear();
-      while ((data =
-                   mSerialPort.readBytes(1)[0]) != mEndOfMessageCharacter.charValue())
+      while ((data = mSerialPort.readBytes(1)[0]) != mEndOfMessageCharacter.charValue())
       {
         mBuffer.add((byte) data);
       }
 
       if (mEcho)
       {
-        final String lMessage = new String(mBuffer.toArray(),
-                                           0,
-                                           mBuffer.size());
+        final String lMessage = new String(mBuffer.toArray(), 0, mBuffer.size());
         // System.out.print(lMessage);
       }
 
       return mBuffer.toArray();
 
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       errorOccured(e);
       return null;
@@ -453,9 +405,7 @@ public class Serial implements SerialInterface, LoggingFeature
   public String readTextMessageAsString()
   {
     final byte[] lReadTextMessage = readTextMessage();
-    final String lMessage = new String(lReadTextMessage,
-                                       0,
-                                       lReadTextMessage.length);
+    final String lMessage = new String(lReadTextMessage, 0, lReadTextMessage.length);
     return lMessage;
   }
 

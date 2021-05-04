@@ -13,9 +13,8 @@ public class FilterWheelDevicePanel extends PositionDevicePanel
 
   /**
    * Instanciates a filter wheel device panel
-   * 
-   * @param pFilterWheelDeviceInterface
-   *          device panel
+   *
+   * @param pFilterWheelDeviceInterface device panel
    */
   public FilterWheelDevicePanel(FilterWheelDeviceInterface pFilterWheelDeviceInterface)
   {

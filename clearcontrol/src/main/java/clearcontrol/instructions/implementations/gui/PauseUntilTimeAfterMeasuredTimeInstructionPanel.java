@@ -11,8 +11,7 @@ import clearcontrol.instructions.implementations.PauseUntilTimeAfterMeasuredTime
  */
 public class PauseUntilTimeAfterMeasuredTimeInstructionPanel extends PauseInstructionPanel
 {
-  public PauseUntilTimeAfterMeasuredTimeInstructionPanel(
-      PauseUntilTimeAfterMeasuredTimeInstruction pInstruction)
+  public PauseUntilTimeAfterMeasuredTimeInstructionPanel(PauseUntilTimeAfterMeasuredTimeInstruction pInstruction)
   {
     super(pInstruction);
   }

@@ -11,11 +11,7 @@ import clearcontrol.devices.optomech.opticalswitch.OpticalSwitchDeviceInterface;
  *
  * @author royer
  */
-public class OpticalSwitchDeviceSimulator extends VirtualDevice
-                                          implements
-                                          OpticalSwitchDeviceInterface,
-                                          LoggingFeature,
-                                          SimulationDeviceInterface
+public class OpticalSwitchDeviceSimulator extends VirtualDevice implements OpticalSwitchDeviceInterface, LoggingFeature, SimulationDeviceInterface
 
 {
 
@@ -24,34 +20,27 @@ public class OpticalSwitchDeviceSimulator extends VirtualDevice
 
   /**
    * Instantiates an optical switch device simulator
-   * 
-   * @param pDeviceName
-   *          device name
-   * @param pNumberOfSwitches
-   *          number of switches
+   *
+   * @param pDeviceName       device name
+   * @param pNumberOfSwitches number of switches
    */
   @SuppressWarnings("unchecked")
-  public OpticalSwitchDeviceSimulator(String pDeviceName,
-                                      final int pNumberOfSwitches)
+  public OpticalSwitchDeviceSimulator(String pDeviceName, final int pNumberOfSwitches)
   {
     super(pDeviceName);
 
     mNumberOfSwitches = pNumberOfSwitches;
 
-    mOpticalSwitchOnOffVariableArray =
-                                     new Variable[mNumberOfSwitches];
+    mOpticalSwitchOnOffVariableArray = new Variable[mNumberOfSwitches];
 
     for (int i = 0; i < pNumberOfSwitches; i++)
     {
-      mOpticalSwitchOnOffVariableArray[i] =
-                                          new Variable<Boolean>("Switch"
-                                                                + i,
-                                                                false);
+      mOpticalSwitchOnOffVariableArray[i] = new Variable<Boolean>("Switch" + i, false);
 
       final int fi = i;
-      mOpticalSwitchOnOffVariableArray[i].addSetListener((o, n) -> {
-        if (isSimLogging())
-          info(pDeviceName + ": switch " + fi + " new state: " + n);
+      mOpticalSwitchOnOffVariableArray[i].addSetListener((o, n) ->
+      {
+        if (isSimLogging()) info(pDeviceName + ": switch " + fi + " new state: " + n);
       });
     }
 

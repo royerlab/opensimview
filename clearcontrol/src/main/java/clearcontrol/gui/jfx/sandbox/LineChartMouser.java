@@ -23,31 +23,7 @@ public class LineChartMouser extends Application
   public void start(Stage stage)
   {
     // initialize data
-    ObservableList<XYChart.Data> data =
-                                      FXCollections.observableArrayList(new XYChart.Data(1,
-                                                                                         23),
-                                                                        new XYChart.Data(2,
-                                                                                         14),
-                                                                        new XYChart.Data(3,
-                                                                                         15),
-                                                                        new XYChart.Data(4,
-                                                                                         24),
-                                                                        new XYChart.Data(5,
-                                                                                         34),
-                                                                        new XYChart.Data(6,
-                                                                                         36),
-                                                                        new XYChart.Data(7,
-                                                                                         22),
-                                                                        new XYChart.Data(8,
-                                                                                         45),
-                                                                        new XYChart.Data(9,
-                                                                                         43),
-                                                                        new XYChart.Data(10,
-                                                                                         17),
-                                                                        new XYChart.Data(11,
-                                                                                         29),
-                                                                        new XYChart.Data(12,
-                                                                                         25));
+    ObservableList<XYChart.Data> data = FXCollections.observableArrayList(new XYChart.Data(1, 23), new XYChart.Data(2, 14), new XYChart.Data(3, 15), new XYChart.Data(4, 24), new XYChart.Data(5, 34), new XYChart.Data(6, 36), new XYChart.Data(7, 22), new XYChart.Data(8, 45), new XYChart.Data(9, 43), new XYChart.Data(10, 17), new XYChart.Data(11, 29), new XYChart.Data(12, 25));
 
     // create chart
     final LineChart lineChart = createChart(data);
@@ -75,8 +51,7 @@ public class LineChartMouser extends Application
       final Path mousingPath = new Path();
       mousingPath.setStrokeWidth(24);
       mousingPath.setStroke(Color.rgb(255, 255, 255, 0.01));
-      Bindings.bindContent(mousingPath.getElements(),
-                           path.getElements());
+      Bindings.bindContent(mousingPath.getElements(), path.getElements());
       ((Group) path.getParent()).getChildren().add(mousingPath);
 
       mousingPath.setOnMouseEntered(e -> path.setEffect(glow));

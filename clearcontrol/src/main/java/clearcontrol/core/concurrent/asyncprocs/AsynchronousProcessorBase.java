@@ -1,5 +1,11 @@
 package clearcontrol.core.concurrent.asyncprocs;
 
+import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
+import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
+import clearcontrol.core.concurrent.executors.WaitingScheduledFuture;
+import clearcontrol.core.concurrent.timing.WaitingInterface;
+import clearcontrol.core.log.LoggingFeature;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -7,53 +13,33 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
-import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
-import clearcontrol.core.concurrent.executors.WaitingScheduledFuture;
-import clearcontrol.core.concurrent.timing.WaitingInterface;
-import clearcontrol.core.log.LoggingFeature;
-
 /**
  * Asynchronous processor base
  *
- * @param <I>
- *          input type
- * @param <O>
- *          output type
+ * @param <I> input type
+ * @param <O> output type
  * @author royer
  */
-public abstract class AsynchronousProcessorBase<I, O> implements
-                                               AsynchronousProcessorInterface<I, O>,
-                                               AsynchronousExecutorFeature,
-                                               AsynchronousSchedulerFeature,
-                                               LoggingFeature,
-                                               WaitingInterface
+public abstract class AsynchronousProcessorBase<I, O> implements AsynchronousProcessorInterface<I, O>, AsynchronousExecutorFeature, AsynchronousSchedulerFeature, LoggingFeature, WaitingInterface
 {
 
   private final String mName;
   private AsynchronousProcessorInterface<O, ?> mReceiver;
   private final BlockingQueue<I> mInputQueue;
-  private final AtomicReference<WaitingScheduledFuture<?>> mScheduledFuture =
-                                                                            new AtomicReference<>();
-  private final AtomicBoolean mIsProcessing =
-                                            new AtomicBoolean(false);
+  private final AtomicReference<WaitingScheduledFuture<?>> mScheduledFuture = new AtomicReference<>();
+  private final AtomicBoolean mIsProcessing = new AtomicBoolean(false);
 
   /**
    * Instanciates a processor given a name and max input queue size.
-   * 
-   * @param pName
-   *          name
-   * @param pMaxQueueSize
-   *          max input queue size
+   *
+   * @param pName         name
+   * @param pMaxQueueSize max input queue size
    */
-  public AsynchronousProcessorBase(final String pName,
-                                   final int pMaxQueueSize)
+  public AsynchronousProcessorBase(final String pName, final int pMaxQueueSize)
   {
     super();
     mName = pName;
-    mInputQueue =
-                new ArrayBlockingQueue<I>(pMaxQueueSize <= 0 ? 1
-                                                             : pMaxQueueSize);
+    mInputQueue = new ArrayBlockingQueue<I>(pMaxQueueSize <= 0 ? 1 : pMaxQueueSize);
 
   }
 
@@ -68,7 +54,8 @@ public abstract class AsynchronousProcessorBase<I, O> implements
   {
     try
     {
-      final Runnable lRunnable = () -> {
+      final Runnable lRunnable = () ->
+      {
 
         try
         {
@@ -84,21 +71,17 @@ public abstract class AsynchronousProcessorBase<I, O> implements
           {
             send(lOutput);
           }
-        }
-        catch (final Throwable e)
+        } catch (final Throwable e)
         {
           e.printStackTrace();
         }
 
       };
 
-      mScheduledFuture.set(scheduleAtFixedRate(lRunnable,
-                                               1,
-                                               TimeUnit.NANOSECONDS));
+      mScheduledFuture.set(scheduleAtFixedRate(lRunnable, 1, TimeUnit.NANOSECONDS));
 
       return true;
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
       return false;
@@ -116,17 +99,14 @@ public abstract class AsynchronousProcessorBase<I, O> implements
   {
     try
     {
-      final WaitingScheduledFuture<?> lWaitingScheduledFuture =
-                                                              mScheduledFuture.getAndSet(null);
+      final WaitingScheduledFuture<?> lWaitingScheduledFuture = mScheduledFuture.getAndSet(null);
       if (lWaitingScheduledFuture != null)
       {
         lWaitingScheduledFuture.cancel(false);
-        lWaitingScheduledFuture.waitForCompletion(pTimeOut,
-                                                  pTimeUnit);
+        lWaitingScheduledFuture.waitForCompletion(pTimeOut, pTimeUnit);
       }
       return true;
-    }
-    catch (final ExecutionException e)
+    } catch (final ExecutionException e)
     {
       throw new RuntimeException(e);
     }
@@ -135,27 +115,19 @@ public abstract class AsynchronousProcessorBase<I, O> implements
   @Override
   public boolean waitToFinish(final long pTimeOut, TimeUnit pTimeUnit)
   {
-    waitFor(pTimeOut,
-            pTimeUnit,
-            () -> !mIsProcessing.get() && mInputQueue.isEmpty());
+    waitFor(pTimeOut, pTimeUnit, () -> !mIsProcessing.get() && mInputQueue.isEmpty());
     return mInputQueue.isEmpty();
   }
 
   @Override
-  public boolean passOrWait(final I pObject,
-                            final long pTimeOut,
-                            TimeUnit pTimeUnit)
+  public boolean passOrWait(final I pObject, final long pTimeOut, TimeUnit pTimeUnit)
   {
-    waitFor(pTimeOut,
-            pTimeUnit,
-            () -> mScheduledFuture.get() != null);
+    waitFor(pTimeOut, pTimeUnit, () -> mScheduledFuture.get() != null);
     try
     {
-      if (pObject == null)
-        return false;
+      if (pObject == null) return false;
       mInputQueue.offer(pObject, pTimeOut, pTimeUnit);
-    }
-    catch (final InterruptedException e)
+    } catch (final InterruptedException e)
     {
       return passOrWait(pObject, pTimeOut, pTimeUnit);
     }
@@ -168,12 +140,10 @@ public abstract class AsynchronousProcessorBase<I, O> implements
     waitFor(() -> mScheduledFuture.get() != null);
     try
     {
-      if (pObject == null)
-        return false;
+      if (pObject == null) return false;
       mInputQueue.put(pObject);
       return true;
-    }
-    catch (final InterruptedException e)
+    } catch (final InterruptedException e)
     {
       return passOrWait(pObject);
     }
@@ -188,10 +158,8 @@ public abstract class AsynchronousProcessorBase<I, O> implements
       return false;
     }
 
-    if (pObject != null)
-      return mInputQueue.offer(pObject);
-    else
-      return false;
+    if (pObject != null) return mInputQueue.offer(pObject);
+    else return false;
   }
 
   @Override
@@ -225,11 +193,7 @@ public abstract class AsynchronousProcessorBase<I, O> implements
   @Override
   public String toString()
   {
-    return String.format("AsynchronousProcessorBase [mName=%s, mReceiver=%s, mIsProcessing=%s, getInputQueueLength()=%s]",
-                         mName,
-                         mReceiver,
-                         mIsProcessing,
-                         getInputQueueLength());
+    return String.format("AsynchronousProcessorBase [mName=%s, mReceiver=%s, mIsProcessing=%s, getInputQueueLength()=%s]", mName, mReceiver, mIsProcessing, getInputQueueLength());
   }
 
 }

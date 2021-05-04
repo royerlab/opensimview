@@ -4,7 +4,7 @@ import gnu.trove.list.array.TDoubleArrayList;
 
 /**
  * Single Row in a in interpolation table
- * 
+ *
  * @author royer
  */
 public class Row implements Comparable<Row>
@@ -15,9 +15,8 @@ public class Row implements Comparable<Row>
 
   /**
    * Constructs a copy of a row.
-   * 
-   * @param pRow
-   *          row to copy
+   *
+   * @param pRow row to copy
    */
   public Row(Row pRow)
   {
@@ -28,11 +27,9 @@ public class Row implements Comparable<Row>
 
   /**
    * Constructs a copy of a row, but for a different x
-   * 
-   * @param pRow
-   *          row to copy
-   * @param pX
-   *          new x value
+   *
+   * @param pRow row to copy
+   * @param pX   new x value
    */
   public Row(Row pRow, double pX)
   {
@@ -43,11 +40,9 @@ public class Row implements Comparable<Row>
 
   /**
    * Constructs a Row with a given number of columns at a given X value.
-   * 
-   * @param pNumberOfColumns
-   *          number of columns
-   * @param pX
-   *          X value
+   *
+   * @param pNumberOfColumns number of columns
+   * @param pX               X value
    */
   public Row(int pNumberOfColumns, double pX)
   {
@@ -58,15 +53,13 @@ public class Row implements Comparable<Row>
       y = new TDoubleArrayList();
       for (int i = 0; i < pNumberOfColumns; i++)
         y.add(0);
-    }
-    else
-      y = null;
+    } else y = null;
 
   }
 
   /**
    * Returns the number of columns
-   * 
+   *
    * @return number of columns
    */
   public int getNumberOfColumns()
@@ -76,7 +69,7 @@ public class Row implements Comparable<Row>
 
   /**
    * Returns X value.
-   * 
+   *
    * @return X value
    */
   public double getX()
@@ -86,9 +79,8 @@ public class Row implements Comparable<Row>
 
   /**
    * Returns the Y value at a given column index.
-   * 
-   * @param pColumnIndex
-   *          column index
+   *
+   * @param pColumnIndex column index
    * @return Y value
    */
   public double getY(int pColumnIndex)
@@ -98,11 +90,9 @@ public class Row implements Comparable<Row>
 
   /**
    * Sets the Y value for a given column.
-   * 
-   * @param pColumnIndex
-   *          column index
-   * @param pValue
-   *          Y value
+   *
+   * @param pColumnIndex column index
+   * @param pValue       Y value
    */
   public void setY(int pColumnIndex, double pValue)
   {
@@ -112,11 +102,9 @@ public class Row implements Comparable<Row>
 
   /**
    * Adds to the Y value of a given column by a certain amount.
-   * 
-   * @param pColumnIndex
-   *          column index
-   * @param pDelta
-   *          Y value delta
+   *
+   * @param pColumnIndex column index
+   * @param pDelta       Y value delta
    */
   public void addY(int pColumnIndex, double pDelta)
   {
@@ -126,7 +114,7 @@ public class Row implements Comparable<Row>
 
   /**
    * Returns true if this Row is up-to-date.
-   * 
+   *
    * @return true if up-to-date , false otherwise.
    */
   public boolean isUpToDate()
@@ -136,9 +124,8 @@ public class Row implements Comparable<Row>
 
   /**
    * Sets the up-to-date flag of this Row.
-   * 
-   * @param pIsUpToDate
-   *          true if up-to-date, false otherwise
+   *
+   * @param pIsUpToDate true if up-to-date, false otherwise
    */
   public void setUpToDate(boolean pIsUpToDate)
   {
@@ -148,22 +135,15 @@ public class Row implements Comparable<Row>
   @Override
   public int compareTo(Row pRow)
   {
-    if (getX() > pRow.getX())
-      return 1;
-    else if (getX() < pRow.getX())
-      return -1;
+    if (getX() > pRow.getX()) return 1;
+    else if (getX() < pRow.getX()) return -1;
     return 0;
   }
 
   @Override
   public String toString()
   {
-    return "Row [x=" + x
-           + ", y="
-           + y
-           + ", mIsUpToDate="
-           + mIsUpToDate
-           + "]";
+    return "Row [x=" + x + ", y=" + y + ", mIsUpToDate=" + mIsUpToDate + "]";
   }
 
 }

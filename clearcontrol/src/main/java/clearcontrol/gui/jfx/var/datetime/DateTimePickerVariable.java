@@ -1,10 +1,10 @@
 package clearcontrol.gui.jfx.var.datetime;
 
-import java.time.LocalDateTime;
-import javafx.application.Platform;
-
 import clearcontrol.core.variable.Variable;
 import clearcontrol.gui.jfx.custom.datetime.DateTimePicker;
+import javafx.application.Platform;
+
+import java.time.LocalDateTime;
 
 /**
  * Date and time picker that syncs with a variable
@@ -18,32 +18,29 @@ public class DateTimePickerVariable extends DateTimePicker
 
   /**
    * Instanciates a date and time picker that syncs with a given variable
-   * 
-   * @param pLocalDateTimeVariable
-   *          variabel to sync with
-   * 
+   *
+   * @param pLocalDateTimeVariable variabel to sync with
    */
   public DateTimePickerVariable(Variable<LocalDateTime> pLocalDateTimeVariable)
   {
     super();
     mLocalDateTimeVariable = pLocalDateTimeVariable;
 
-    if (mLocalDateTimeVariable.get() != null)
-      setDateTimeValue(mLocalDateTimeVariable.get());
+    if (mLocalDateTimeVariable.get() != null) setDateTimeValue(mLocalDateTimeVariable.get());
 
-    mLocalDateTimeVariable.addSetListener((o, n) -> {
-      if (!n.equals(o) && n != null)
-        Platform.runLater(() -> {
-          if (n.equals(getDateTimeValue()))
-            return;
-          setDateTimeValue(n);
-        });
+    mLocalDateTimeVariable.addSetListener((o, n) ->
+    {
+      if (!n.equals(o) && n != null) Platform.runLater(() ->
+      {
+        if (n.equals(getDateTimeValue())) return;
+        setDateTimeValue(n);
+      });
     });
 
-    showingProperty().addListener((obs, o, n) -> {
-      if (!n)
-        if (!mLocalDateTimeVariable.get().equals(getDateTimeValue()))
-          mLocalDateTimeVariable.setAsync(getDateTimeValue());
+    showingProperty().addListener((obs, o, n) ->
+    {
+      if (!n) if (!mLocalDateTimeVariable.get().equals(getDateTimeValue()))
+        mLocalDateTimeVariable.setAsync(getDateTimeValue());
     });
 
     /*setOnMousePressed((e) -> {

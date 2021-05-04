@@ -5,8 +5,7 @@ import jssc.SerialPortException;
 public interface SerialInterface
 {
 
-  public boolean connect() throws SerialPortException,
-                           SerialException;
+  public boolean connect() throws SerialPortException, SerialException;
 
   boolean connect(String pPortName) throws SerialPortException;
 

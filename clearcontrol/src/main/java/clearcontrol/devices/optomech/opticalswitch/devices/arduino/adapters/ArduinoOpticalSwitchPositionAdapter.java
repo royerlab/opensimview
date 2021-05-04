@@ -9,17 +9,13 @@ import clearcontrol.devices.optomech.opticalswitch.devices.arduino.ArduinoOptica
  *
  * @author royer
  */
-public class ArduinoOpticalSwitchPositionAdapter extends
-                                                 SerialDeviceAdapterAdapter<Long>
-                                                 implements
-                                                 SerialTextDeviceAdapter<Long>
+public class ArduinoOpticalSwitchPositionAdapter extends SerialDeviceAdapterAdapter<Long> implements SerialTextDeviceAdapter<Long>
 {
 
   /**
    * Instantiates an Arduino optical switch position adapter
-   * 
-   * @param pArduinoOpticalSwitchDevice
-   *          arduino optical switch device
+   *
+   * @param pArduinoOpticalSwitchDevice arduino optical switch device
    */
   public ArduinoOpticalSwitchPositionAdapter(final ArduinoOpticalSwitchDevice pArduinoOpticalSwitchDevice)
   {
@@ -27,8 +23,7 @@ public class ArduinoOpticalSwitchPositionAdapter extends
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(Long pOldValue,
-                                          Long pNewValue)
+  public byte[] getSetValueCommandMessage(Long pOldValue, Long pNewValue)
   {
     String lMessage = String.format("%d\n", pNewValue);
     return lMessage.getBytes();

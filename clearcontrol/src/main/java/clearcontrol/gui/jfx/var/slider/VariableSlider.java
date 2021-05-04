@@ -1,29 +1,24 @@
 package clearcontrol.gui.jfx.var.slider;
 
-import static java.lang.Math.abs;
-
+import clearcontrol.core.variable.Variable;
+import clearcontrol.core.variable.bounded.BoundedVariable;
+import clearcontrol.gui.jfx.var.slider.customslider.Slider;
 import javafx.application.Platform;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
-import clearcontrol.core.variable.Variable;
-import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.gui.jfx.var.slider.customslider.Slider;
+import static java.lang.Math.abs;
 
 /**
  * Slider that syncs its value to a variable
  *
- * @param <T>
- *          number type
+ * @param <T> number type
  * @author royer
  */
 public class VariableSlider<T extends Number> extends HBox
@@ -44,83 +39,46 @@ public class VariableSlider<T extends Number> extends HBox
 
   /**
    * Instantiates a variable slider
-   * 
-   * @param pSliderLabelText
-   *          slider label text
-   * @param pVariable
-   *          variable
-   * @param pMin
-   *          min
-   * @param pMax
-   *          max
-   * @param pGranularity
-   *          granularity
-   * @param pTicks
-   *          number of major ticks (if set to null the best tick value will be
-   *          determined)
+   *
+   * @param pSliderLabelText slider label text
+   * @param pVariable        variable
+   * @param pMin             min
+   * @param pMax             max
+   * @param pGranularity     granularity
+   * @param pTicks           number of major ticks (if set to null the best tick value will be
+   *                         determined)
    */
-  public VariableSlider(String pSliderLabelText,
-                        Variable<T> pVariable,
-                        T pMin,
-                        T pMax,
-                        T pGranularity,
-                        T pTicks)
+  public VariableSlider(String pSliderLabelText, Variable<T> pVariable, T pMin, T pMax, T pGranularity, T pTicks)
   {
-    this(pSliderLabelText,
-         pVariable,
-         new Variable<T>("min", pMin),
-         new Variable<T>("max", pMax),
-         new Variable<T>("granularity", pGranularity),
-         pTicks);
+    this(pSliderLabelText, pVariable, new Variable<T>("min", pMin), new Variable<T>("max", pMax), new Variable<T>("granularity", pGranularity), pTicks);
 
   }
 
   /**
    * Instantiates a variable slider
-   * 
-   * @param pSliderLabelText
-   *          Slider label text
-   * @param pBoundedVariable
-   *          bounded variable
-   * @param pTicks
-   *          number of major ticks (if set to null the best tick value will be
-   *          determined)
+   *
+   * @param pSliderLabelText Slider label text
+   * @param pBoundedVariable bounded variable
+   * @param pTicks           number of major ticks (if set to null the best tick value will be
+   *                         determined)
    */
-  public VariableSlider(String pSliderLabelText,
-                        BoundedVariable<T> pBoundedVariable,
-                        T pTicks)
+  public VariableSlider(String pSliderLabelText, BoundedVariable<T> pBoundedVariable, T pTicks)
   {
-    this(pSliderLabelText,
-         pBoundedVariable,
-         pBoundedVariable.getMinVariable(),
-         pBoundedVariable.getMaxVariable(),
-         pBoundedVariable.getGranularityVariable(),
-         pTicks);
+    this(pSliderLabelText, pBoundedVariable, pBoundedVariable.getMinVariable(), pBoundedVariable.getMaxVariable(), pBoundedVariable.getGranularityVariable(), pTicks);
   }
 
   /**
    * Instantiates a variable slider
-   * 
-   * @param pSliderLabelText
-   *          Slider label text
-   * @param pVariable
-   *          variable
-   * @param pMin
-   *          min variable
-   * @param pMax
-   *          max variable
-   * @param pGranularity
-   *          granularity variable
-   * @param pTicks
-   *          number of major ticks (if set to null the best tick value will be
-   *          determined)
+   *
+   * @param pSliderLabelText Slider label text
+   * @param pVariable        variable
+   * @param pMin             min variable
+   * @param pMax             max variable
+   * @param pGranularity     granularity variable
+   * @param pTicks           number of major ticks (if set to null the best tick value will be
+   *                         determined)
    */
-  public VariableSlider(String pSliderLabelText,
-                        Variable<T> pVariable,
-                        Variable<T> pMin,
-                        Variable<T> pMax,
-                        Variable<T> pGranularity,
-                        T pTicks)
+  public VariableSlider(String pSliderLabelText, Variable<T> pVariable, Variable<T> pMin, Variable<T> pMax, Variable<T> pGranularity, T pTicks)
   {
     super();
     mVariable = pVariable;
@@ -130,12 +88,8 @@ public class VariableSlider<T extends Number> extends HBox
 
     if (pTicks == null)
     {
-      mTicks =
-             abs(mMax.get().doubleValue() - mMin.get().doubleValue())
-               / 10;
-    }
-    else
-      mTicks = pTicks.doubleValue();
+      mTicks = abs(mMax.get().doubleValue() - mMin.get().doubleValue()) / 10;
+    } else mTicks = pTicks.doubleValue();
 
     setMaxWidth(Double.MAX_VALUE);
     setAlignment(Pos.CENTER);
@@ -166,30 +120,34 @@ public class VariableSlider<T extends Number> extends HBox
     if (pGranularity != null && pGranularity.get() != null)
       getSlider().setBlockIncrement(pGranularity.get().doubleValue());
 
-    pMin.addSetListener((o, n) -> {
-      if (!o.equals(n) && n != null)
-        Platform.runLater(() -> {
-          updateSliderMinMax(pMin, pMax);
-        });
+    pMin.addSetListener((o, n) ->
+    {
+      if (!o.equals(n) && n != null) Platform.runLater(() ->
+      {
+        updateSliderMinMax(pMin, pMax);
+      });
     });
 
-    pMax.addSetListener((o, n) -> {
-      if (!o.equals(n) && n != null)
-        Platform.runLater(() -> {
-          updateSliderMinMax(pMin, pMax);
-        });
+    pMax.addSetListener((o, n) ->
+    {
+      if (!o.equals(n) && n != null) Platform.runLater(() ->
+      {
+        updateSliderMinMax(pMin, pMax);
+      });
     });
 
-    Platform.runLater(() -> {
+    Platform.runLater(() ->
+    {
       updateSliderMinMax(pMin, pMax);
     });
 
-    getTextField().textProperty().addListener((obs, o, n) -> {
-      if (!o.equals(n))
-        setUpdatedTextField();
+    getTextField().textProperty().addListener((obs, o, n) ->
+    {
+      if (!o.equals(n)) setUpdatedTextField();
     });
 
-    getTextField().focusedProperty().addListener((obs, o, n) -> {
+    getTextField().focusedProperty().addListener((obs, o, n) ->
+    {
       if (!n)
       {
         setTextFieldValue(getTextFieldValue());
@@ -198,7 +156,8 @@ public class VariableSlider<T extends Number> extends HBox
       }
     });
 
-    getTextField().setOnKeyPressed((e) -> {
+    getTextField().setOnKeyPressed((e) ->
+    {
       if (e.getCode().equals(KeyCode.ENTER))
       {
         setTextFieldValue(getTextFieldValue());
@@ -208,107 +167,85 @@ public class VariableSlider<T extends Number> extends HBox
       ;
     });
 
-    if (mVariable.get() instanceof Double
-        || mVariable.get() instanceof Float)
+    if (mVariable.get() instanceof Double || mVariable.get() instanceof Float)
     {
       setTextFieldDouble(mVariable.get());
     }
-    if (mVariable.get() instanceof Integer
-        || mVariable.get() instanceof Long)
+    if (mVariable.get() instanceof Integer || mVariable.get() instanceof Long)
     {
       setTextFieldLongValue(mVariable.get());
     }
 
-    getSlider().setOnMouseDragged((e) -> {
-      double lCorrectedSliderValue =
-                                   correctValueDouble(getSlider().getValue());
+    getSlider().setOnMouseDragged((e) ->
+    {
+      double lCorrectedSliderValue = correctValueDouble(getSlider().getValue());
       setTextFieldValue(lCorrectedSliderValue);
 
-      if (!isUpdateIfChanging() && getSlider().isValueChanging())
-        return;
+      if (!isUpdateIfChanging() && getSlider().isValueChanging()) return;
 
-      if (lCorrectedSliderValue != mVariable.get().doubleValue())
-        setVariableValue(lCorrectedSliderValue);
+      if (lCorrectedSliderValue != mVariable.get().doubleValue()) setVariableValue(lCorrectedSliderValue);
     });
 
-    getSlider().setOnScroll(event -> setSliderValue(getSlider().getValue()+getSlider().getBlockIncrement()*event.getDeltaX()));
+    getSlider().setOnScroll(event -> setSliderValue(getSlider().getValue() + getSlider().getBlockIncrement() * event.getDeltaX()));
 
-    getSlider().valueChangingProperty().addListener((obs, o, n) -> {
-      if (isUpdateIfChanging())
-        return;
-      if (o && !n)
-        setVariableValue(getSlider().getValue());
+    getSlider().valueChangingProperty().addListener((obs, o, n) ->
+    {
+      if (isUpdateIfChanging()) return;
+      if (o && !n) setVariableValue(getSlider().getValue());
     });
 
-    mVariable.addSetListener((o, n) -> {
-      if (n != null && !n.equals(o))
-        Platform.runLater(() -> {
-          if (n.equals(getSlider().getValue())
-              && n.equals(getTextFieldValue()))
-          {
-            // System.out.println("rejected");
-            return;
-          }
+    mVariable.addSetListener((o, n) ->
+    {
+      if (n != null && !n.equals(o)) Platform.runLater(() ->
+      {
+        if (n.equals(getSlider().getValue()) && n.equals(getTextFieldValue()))
+        {
+          // System.out.println("rejected");
+          return;
+        }
 
-          if (mVariable.get() instanceof Double
-              || mVariable.get() instanceof Float)
-            setTextFieldDouble(n);
-          else
-            setTextFieldLongValue(n);
+        if (mVariable.get() instanceof Double || mVariable.get() instanceof Float) setTextFieldDouble(n);
+        else setTextFieldLongValue(n);
 
-          setSliderValueFromTextField();
+        setSliderValueFromTextField();
 
-        });
+      });
     });
 
-    Platform.runLater(() -> {
+    Platform.runLater(() ->
+    {
       setSliderValue(mVariable.get().doubleValue());
 
-      if (mVariable.get() instanceof Double
-          || mVariable.get() instanceof Float)
+      if (mVariable.get() instanceof Double || mVariable.get() instanceof Float)
         setTextFieldDouble(mVariable.get().doubleValue());
-      else
-        setTextFieldLongValue(mVariable.get().longValue());
+      else setTextFieldLongValue(mVariable.get().longValue());
     });
 
   }
 
   private void setTextFieldValue(Number n)
   {
-    if (mVariable.get() instanceof Double
-        || mVariable.get() instanceof Float)
-      setTextFieldDouble(n);
+    if (mVariable.get() instanceof Double || mVariable.get() instanceof Float) setTextFieldDouble(n);
 
-    else if (mVariable.get() instanceof Integer
-             || mVariable.get() instanceof Long)
-      setTextFieldLongValue(n);
+    else if (mVariable.get() instanceof Integer || mVariable.get() instanceof Long) setTextFieldLongValue(n);
   }
 
   private void updateSliderMinMax(Variable<T> pMin, Variable<T> pMax)
   {
 
-    if (!Double.isInfinite(mMin.get().doubleValue())
-        && !Double.isInfinite(mMax.get().doubleValue())
-        && mMin.get().doubleValue() != mMax.get().doubleValue())
+    if (!Double.isInfinite(mMin.get().doubleValue()) && !Double.isInfinite(mMax.get().doubleValue()) && mMin.get().doubleValue() != mMax.get().doubleValue())
     {
-      mTicks =
-             abs(mMax.get().doubleValue() - mMin.get().doubleValue())
-               / 10;
+      mTicks = abs(mMax.get().doubleValue() - mMin.get().doubleValue()) / 10;
 
       getSlider().setMajorTickUnit(mTicks);
     }
 
-    if (Double.isInfinite(mMin.get().doubleValue())
-        || Double.isNaN(mMin.get().doubleValue()))
+    if (Double.isInfinite(mMin.get().doubleValue()) || Double.isNaN(mMin.get().doubleValue()))
       getSlider().setMin(-1717);
-    else
-      getSlider().setMin(mMin.get().doubleValue());
+    else getSlider().setMin(mMin.get().doubleValue());
 
-    if (Double.isInfinite(mMax.get().doubleValue())
-        || Double.isNaN(mMax.get().doubleValue()))
-      getSlider().setMax(1717);
-    else
-      getSlider().setMax(mMax.get().doubleValue());
+    if (Double.isInfinite(mMax.get().doubleValue()) || Double.isNaN(mMax.get().doubleValue())) getSlider().setMax(1717);
+    else getSlider().setMax(mMax.get().doubleValue());
   }
 
   @SuppressWarnings("unchecked")
@@ -316,41 +253,29 @@ public class VariableSlider<T extends Number> extends HBox
   {
     if (!mVariable.get().equals(pNewValue))
     {
-      double lCorrectedValueDouble =
-                                   correctValueDouble(pNewValue.doubleValue());
-      long lCorrectedValueLong =
-                               correctValueLong(pNewValue.longValue());
-      if (mVariable.get() instanceof Double)
-        mVariable.set((T) new Double(lCorrectedValueDouble));
-      else if (mVariable.get() instanceof Float)
-        mVariable.set((T) new Float(lCorrectedValueDouble));
-      else if (mVariable.get() instanceof Long)
-        mVariable.set((T) new Long(lCorrectedValueLong));
-      else if (mVariable.get() instanceof Integer)
-        mVariable.set((T) new Integer((int) lCorrectedValueLong));
-      else if (mVariable.get() instanceof Short)
-        mVariable.set((T) new Short((short) lCorrectedValueLong));
-      else if (mVariable.get() instanceof Byte)
-        mVariable.set((T) new Byte((byte) lCorrectedValueLong));
+      double lCorrectedValueDouble = correctValueDouble(pNewValue.doubleValue());
+      long lCorrectedValueLong = correctValueLong(pNewValue.longValue());
+      if (mVariable.get() instanceof Double) mVariable.set((T) new Double(lCorrectedValueDouble));
+      else if (mVariable.get() instanceof Float) mVariable.set((T) new Float(lCorrectedValueDouble));
+      else if (mVariable.get() instanceof Long) mVariable.set((T) new Long(lCorrectedValueLong));
+      else if (mVariable.get() instanceof Integer) mVariable.set((T) new Integer((int) lCorrectedValueLong));
+      else if (mVariable.get() instanceof Short) mVariable.set((T) new Short((short) lCorrectedValueLong));
+      else if (mVariable.get() instanceof Byte) mVariable.set((T) new Byte((byte) lCorrectedValueLong));
     }
   }
 
   private double correctValueDouble(double pValue)
   {
-    if (pValue < mMin.get().doubleValue())
-      return mMin.get().doubleValue();
-    if (pValue > mMax.get().doubleValue())
-      return mMax.get().doubleValue();
+    if (pValue < mMin.get().doubleValue()) return mMin.get().doubleValue();
+    if (pValue > mMax.get().doubleValue()) return mMax.get().doubleValue();
 
     if (mGranularity.get() != null)
     {
       double lGranularity = mGranularity.get().doubleValue();
 
-      if (lGranularity == 0)
-        return pValue;
+      if (lGranularity == 0) return pValue;
 
-      double lCorrectedValue = lGranularity
-                               * Math.round(pValue / lGranularity);
+      double lCorrectedValue = lGranularity * Math.round(pValue / lGranularity);
 
       return lCorrectedValue;
     }
@@ -360,21 +285,16 @@ public class VariableSlider<T extends Number> extends HBox
 
   private long correctValueLong(long pValue)
   {
-    if (pValue < mMin.get().longValue())
-      return mMin.get().longValue();
-    if (pValue > mMax.get().longValue())
-      return mMax.get().longValue();
+    if (pValue < mMin.get().longValue()) return mMin.get().longValue();
+    if (pValue > mMax.get().longValue()) return mMax.get().longValue();
 
     if (mGranularity.get() != null)
     {
       long lGranularity = mGranularity.get().longValue();
 
-      if (lGranularity == 0)
-        return pValue;
+      if (lGranularity == 0) return pValue;
 
-      long lCorrectedValue =
-                           lGranularity * Math.round(1.0 * pValue
-                                                     / lGranularity);
+      long lCorrectedValue = lGranularity * Math.round(1.0 * pValue / lGranularity);
       return lCorrectedValue;
     }
 
@@ -383,11 +303,8 @@ public class VariableSlider<T extends Number> extends HBox
 
   private void setTextFieldDouble(Number pDoubleValue)
   {
-    double lCorrectedValue =
-                           correctValueDouble(pDoubleValue.doubleValue());
-    getTextField().setText(String.format("%." + mPrecision
-                                         + "g",
-                                         lCorrectedValue));
+    double lCorrectedValue = correctValueDouble(pDoubleValue.doubleValue());
+    getTextField().setText(String.format("%." + mPrecision + "g", lCorrectedValue));
     getTextField().setStyle("-fx-text-fill: black");
   }
 
@@ -404,8 +321,7 @@ public class VariableSlider<T extends Number> extends HBox
       double lCorrectedValue = getTextFieldValue();
       mSlider.setValue(lCorrectedValue);
       getTextField().setStyle("-fx-text-fill: black");
-    }
-    catch (NumberFormatException e)
+    } catch (NumberFormatException e)
     {
       getTextField().setStyle("-fx-text-fill: red");
       // e.printStackTrace();
@@ -434,7 +350,7 @@ public class VariableSlider<T extends Number> extends HBox
 
   /**
    * Returns label
-   * 
+   *
    * @return label
    */
   public Label getLabel()
@@ -444,7 +360,7 @@ public class VariableSlider<T extends Number> extends HBox
 
   /**
    * Returns slider
-   * 
+   *
    * @return slider
    */
   public Slider getSlider()
@@ -454,7 +370,7 @@ public class VariableSlider<T extends Number> extends HBox
 
   /**
    * Returns text field
-   * 
+   *
    * @return text field
    */
   public TextField getTextField()
@@ -464,7 +380,7 @@ public class VariableSlider<T extends Number> extends HBox
 
   /**
    * Returns if the variable value should b updated while the slider is dragged.
-   * 
+   *
    * @return true -> update while changing
    */
   public boolean isUpdateIfChanging()
@@ -475,9 +391,8 @@ public class VariableSlider<T extends Number> extends HBox
   /**
    * Sets whether the variable value should b updated while the slider is
    * dragged.
-   * 
-   * @param pUpdateIfChanging
-   *          true -> update while changing
+   *
+   * @param pUpdateIfChanging true -> update while changing
    */
   public void setUpdateIfChanging(boolean pUpdateIfChanging)
   {

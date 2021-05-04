@@ -1,49 +1,37 @@
 package clearcontrol.microscope.adaptive.modules;
 
-import java.util.ArrayList;
-import java.util.concurrent.Future;
-
 import clearcontrol.core.device.name.NameableBase;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.microscope.adaptive.AdaptiveEngine;
 import clearcontrol.microscope.state.AcquisitionStateInterface;
 
+import java.util.ArrayList;
+import java.util.concurrent.Future;
+
 /**
  * Base class providing common fields and methods for all adaptation modules
  *
+ * @param <S> state type
  * @author royer
- * 
- * @param <S>
- *          state type
  */
-public abstract class AdaptationModuleBase<S extends AcquisitionStateInterface<?, ?>>
-                                          extends NameableBase
-                                          implements
-                                          AdaptationModuleInterface<S>,
-                                          LoggingFeature
+public abstract class AdaptationModuleBase<S extends AcquisitionStateInterface<?, ?>> extends NameableBase implements AdaptationModuleInterface<S>, LoggingFeature
 {
 
   private AdaptiveEngine<S> mAdaptiveEngine;
 
   private int mPriority = 1;
 
-  protected ArrayList<Future<?>> mListOfFuturTasks =
-                                                   new ArrayList<>();
+  protected ArrayList<Future<?>> mListOfFuturTasks = new ArrayList<>();
 
-  private final Variable<Boolean> mIsActiveVariable =
-                                                    new Variable<>("IsActive",
-                                                                   true);
+  private final Variable<Boolean> mIsActiveVariable = new Variable<>("IsActive", true);
 
-  private final Variable<String> mStatusStringVariable =
-                                                       new Variable<>("Status",
-                                                                      "");
+  private final Variable<String> mStatusStringVariable = new Variable<>("Status", "");
 
   /**
    * Instanciate an adaptation module given a name
-   * 
-   * @param pName
-   *          name
+   *
+   * @param pName name
    */
   public AdaptationModuleBase(String pName)
   {
@@ -114,11 +102,7 @@ public abstract class AdaptationModuleBase<S extends AcquisitionStateInterface<?
   @Override
   public String toString()
   {
-    return String.format("AdaptationModuleBase [getName()=%s, getPriority()=%s, getIsActiveVariable()=%s, isReady()=%s]",
-                         getName(),
-                         getPriority(),
-                         getIsActiveVariable(),
-                         isReady());
+    return String.format("AdaptationModuleBase [getName()=%s, getPriority()=%s, getIsActiveVariable()=%s, isReady()=%s]", getName(), getPriority(), getIsActiveVariable(), isReady());
   }
 
 }

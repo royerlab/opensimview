@@ -1,6 +1,7 @@
 package clearcontrol.gui.jfx.var.file;
 
-import java.io.File;
+import clearcontrol.core.log.LoggingFeature;
+import clearcontrol.core.variable.Variable;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -11,16 +12,14 @@ import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
-import clearcontrol.core.log.LoggingFeature;
-import clearcontrol.core.variable.Variable;
+import java.io.File;
 
 /**
  * File chooser that syncs the file to a variable
  *
  * @author royer
  */
-public class VariableFileChooser extends HBox
-                                 implements LoggingFeature
+public class VariableFileChooser extends HBox implements LoggingFeature
 {
 
   private final Variable<File> mFileVariable;
@@ -31,17 +30,12 @@ public class VariableFileChooser extends HBox
 
   /**
    * Instantiates a variable file chooser
-   * 
-   * @param pLabelString
-   *          label string
-   * @param pFileVariable
-   *          file variable
-   * @param pOnlyFolders
-   *          true -> choose only folders
+   *
+   * @param pLabelString  label string
+   * @param pFileVariable file variable
+   * @param pOnlyFolders  true -> choose only folders
    */
-  public VariableFileChooser(String pLabelString,
-                             Variable<File> pFileVariable,
-                             boolean pOnlyFolders)
+  public VariableFileChooser(String pLabelString, Variable<File> pFileVariable, boolean pOnlyFolders)
   {
     super();
     mFileVariable = pFileVariable;
@@ -56,23 +50,21 @@ public class VariableFileChooser extends HBox
 
     mChooseFileButton = new Button("Browse");
 
-    this.getChildren().addAll(mLabel,
-                              mFileTextField,
-                              mChooseFileButton);
+    this.getChildren().addAll(mLabel, mFileTextField, mChooseFileButton);
 
-    getTextField().textProperty().addListener((obs, o, n) -> {
-      if (o != null && !o.equals(n))
-        setUpdatedTextField();
+    getTextField().textProperty().addListener((obs, o, n) ->
+    {
+      if (o != null && !o.equals(n)) setUpdatedTextField();
     });
 
-    getTextField().focusedProperty().addListener((obs, o, n) -> {
-      if (!n)
-        setVariableValueFromTextField();
+    getTextField().focusedProperty().addListener((obs, o, n) ->
+    {
+      if (!n) setVariableValueFromTextField();
     });
 
-    getTextField().setOnKeyPressed((e) -> {
-      if (e.getCode().equals(KeyCode.ENTER))
-        setVariableValueFromTextField();
+    getTextField().setOnKeyPressed((e) ->
+    {
+      if (e.getCode().equals(KeyCode.ENTER)) setVariableValueFromTextField();
     });
 
     if (pOnlyFolders)
@@ -80,21 +72,20 @@ public class VariableFileChooser extends HBox
       final DirectoryChooser lFolderChooser = new DirectoryChooser();
       lFolderChooser.setTitle("Choose Folder");
 
-      mChooseFileButton.setOnAction((e) -> {
-        if (lFile != null)
-          lFolderChooser.setInitialDirectory(lFile);
+      mChooseFileButton.setOnAction((e) ->
+      {
+        if (lFile != null) lFolderChooser.setInitialDirectory(lFile);
         setFile(lFolderChooser.showDialog(null));
         getTextField().setStyle("-fx-text-fill: black");
       });
-    }
-    else
+    } else
     {
       final FileChooser lFileChooser = new FileChooser();
       lFileChooser.setTitle("Choose File");
 
-      mChooseFileButton.setOnAction((e) -> {
-        if (lFile != null)
-          lFileChooser.setInitialDirectory(lFile);
+      mChooseFileButton.setOnAction((e) ->
+      {
+        if (lFile != null) lFileChooser.setInitialDirectory(lFile);
         setFile(lFileChooser.showOpenDialog(null));
         getTextField().setStyle("-fx-text-fill: black");
       });
@@ -103,7 +94,7 @@ public class VariableFileChooser extends HBox
 
   /**
    * Returns label
-   * 
+   *
    * @return label
    */
   public Label getLabel()
@@ -113,7 +104,7 @@ public class VariableFileChooser extends HBox
 
   /**
    * Returns textfield
-   * 
+   *
    * @return textfield
    */
   public TextField getTextField()
@@ -123,7 +114,7 @@ public class VariableFileChooser extends HBox
 
   /**
    * Returns button
-   * 
+   *
    * @return button
    */
   public Button getButton()
@@ -146,28 +137,23 @@ public class VariableFileChooser extends HBox
     try
     {
       return pFile == null ? "" : pFile.getCanonicalPath();
-    }
-    catch (Exception e)
+    } catch (Exception e)
     {
-      warning("Problem while obtaining the canonical path for file '%s': %s",
-              pFile,
-              e);
+      warning("Problem while obtaining the canonical path for file '%s': %s", pFile, e);
       return "";
     }
   }
 
   private void setFile(File pFile)
   {
-    if (pFile != null)
-      Platform.runLater(() -> {
-        mFileTextField.setText(getTextFieldFromFile(pFile));
-        if (pFile.exists())
-          getTextField().setStyle("-fx-text-fill: black");
-        else
-          getTextField().setStyle("-fx-text-fill: red");
-        mFileVariable.setAsync(pFile);
+    if (pFile != null) Platform.runLater(() ->
+    {
+      mFileTextField.setText(getTextFieldFromFile(pFile));
+      if (pFile.exists()) getTextField().setStyle("-fx-text-fill: black");
+      else getTextField().setStyle("-fx-text-fill: red");
+      mFileVariable.setAsync(pFile);
 
-      });
+    });
   }
 
 }

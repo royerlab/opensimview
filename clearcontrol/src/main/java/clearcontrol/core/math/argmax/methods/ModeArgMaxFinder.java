@@ -4,7 +4,7 @@ import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
 
 /**
  * Mode argmax finder.
- * 
+ * <p>
  * Returns the mode of the (X,Y) data interpreted as a distribution.
  *
  * @author royer

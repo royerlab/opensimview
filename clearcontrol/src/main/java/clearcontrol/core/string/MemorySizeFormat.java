@@ -13,11 +13,9 @@ public class MemorySizeFormat
    * Returns a formatted string for a given size in bytes. if the short form is
    * chosen, 'Bytes' will be replaced by 'B', and so one for 'KiloBytes' to
    * 'KB'...
-   * 
-   * @param pSizeInBytes
-   *          size in bytes
-   * @param pShortForm
-   *          short form flag
+   *
+   * @param pSizeInBytes size in bytes
+   * @param pShortForm   short form flag
    * @return formatted string
    */
   public static String format(double pSizeInBytes, boolean pShortForm)
@@ -30,20 +28,17 @@ public class MemorySizeFormat
       lSizeScaled = pSizeInBytes;
       lPostFix = pShortForm ? "B" : "Bytes";
       return String.format("%d %s", (int) lSizeScaled, lPostFix);
-    }
-    else if (pSizeInBytes < 1000_000)
+    } else if (pSizeInBytes < 1000_000)
     {
       lSizeScaled = pSizeInBytes / 1000;
       lPostFix = pShortForm ? "KB" : "KiloBytes";
       return String.format("%.2f %s", lSizeScaled, lPostFix);
-    }
-    else if (pSizeInBytes < 1000_000_000)
+    } else if (pSizeInBytes < 1000_000_000)
     {
       lSizeScaled = pSizeInBytes / 1000_000;
       lPostFix = pShortForm ? "MB" : "MegaBytes";
       return String.format("%.2f %s", lSizeScaled, lPostFix);
-    }
-    else
+    } else
     {
       lSizeScaled = pSizeInBytes / 1000_000_000;
       lPostFix = pShortForm ? "GB" : "GigaBytes";

@@ -12,14 +12,11 @@ public class MaxPositionVariable extends TSTDoubleVariableBase
 
   /**
    * Instantiates a max position variable
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pAPTJDevice
-   *          APTJ device
+   *
+   * @param pVariableName variable name
+   * @param pAPTJDevice   APTJ device
    */
-  public MaxPositionVariable(String pVariableName,
-                             APTJDevice pAPTJDevice)
+  public MaxPositionVariable(String pVariableName, APTJDevice pAPTJDevice)
   {
     super(pVariableName, pAPTJDevice);
   }

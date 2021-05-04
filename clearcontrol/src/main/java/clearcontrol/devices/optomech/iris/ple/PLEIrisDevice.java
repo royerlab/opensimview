@@ -2,13 +2,6 @@ package clearcontrol.devices.optomech.iris.ple;
 
 import clearcontrol.com.serial.SerialDevice;
 import clearcontrol.core.configuration.MachineConfiguration;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.core.variable.VariableSetListener;
-import clearcontrol.devices.optomech.filterwheels.FilterWheelDeviceInterface;
-import clearcontrol.devices.optomech.filterwheels.devices.fli.adapters.FilterWheelPositionDeviceAdapter;
-import clearcontrol.devices.optomech.filterwheels.devices.fli.adapters.FilterWheelSpeedDeviceAdapter;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PLEIrisDevice extends SerialDevice
 {
@@ -18,10 +11,7 @@ public class PLEIrisDevice extends SerialDevice
 
   public PLEIrisDevice(final int pDeviceIndex)
   {
-    this(MachineConfiguration.get().getSerialDevicePort(
-                                                        "filterwheel.fli",
-                                                        pDeviceIndex,
-                                                        "NULL"));
+    this(MachineConfiguration.get().getSerialDevicePort("filterwheel.fli", pDeviceIndex, "NULL"));
 
   }
 
@@ -34,7 +24,6 @@ public class PLEIrisDevice extends SerialDevice
 //                                                                new FilterWheelPositionDeviceAdapter(this);
 //    mIrisPositionVariable = addSerialVariable("FilterWheelPosition",
 //                                                lFilterWheelPosition);
-
 
 
   }
@@ -73,7 +62,6 @@ public class PLEIrisDevice extends SerialDevice
 //    //  sendCommand();
 //    return lIsOpened;
 //  }
-
 
 
 }

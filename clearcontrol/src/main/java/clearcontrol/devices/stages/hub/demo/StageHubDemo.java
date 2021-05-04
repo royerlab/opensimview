@@ -1,13 +1,12 @@
 package clearcontrol.devices.stages.hub.demo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import clearcontrol.devices.stages.devices.ecc100.ECC100StageDevice;
 import clearcontrol.devices.stages.devices.smc100.SMC100StageDevice;
 import clearcontrol.devices.stages.hub.StageHubDevice;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Stage hub demo
@@ -24,9 +23,7 @@ public class StageHubDemo
   public void test()
   {
     ECC100StageDevice lECC100StageDevice = new ECC100StageDevice();
-    SMC100StageDevice lSMC100StageDevice =
-                                         new SMC100StageDevice("SMC100",
-                                                               "COM1");
+    SMC100StageDevice lSMC100StageDevice = new SMC100StageDevice("SMC100", "COM1");
 
     StageHubDevice lStageHub = new StageHubDevice("Hub");
 

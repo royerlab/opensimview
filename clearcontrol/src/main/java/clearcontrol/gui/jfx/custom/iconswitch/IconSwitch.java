@@ -1,19 +1,12 @@
 package clearcontrol.gui.jfx.custom.iconswitch;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.BooleanPropertyBase;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ObjectPropertyBase;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.css.CssMetaData;
-import javafx.css.PseudoClass;
-import javafx.css.Styleable;
-import javafx.css.StyleableObjectProperty;
-import javafx.css.StyleableProperty;
+import clearcontrol.gui.jfx.custom.iconswitch.skin.IconSwitchSkin;
+import com.sun.javafx.css.converters.PaintConverter;
+import eu.hansolo.enzo.common.Symbol;
+import eu.hansolo.enzo.common.SymbolType;
+import eu.hansolo.enzo.onoffswitch.SelectionEvent;
+import javafx.beans.property.*;
+import javafx.css.*;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.control.Control;
@@ -23,13 +16,9 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import clearcontrol.gui.jfx.custom.iconswitch.skin.IconSwitchSkin;
-
-import com.sun.javafx.css.converters.PaintConverter;
-
-import eu.hansolo.enzo.common.Symbol;
-import eu.hansolo.enzo.common.SymbolType;
-import eu.hansolo.enzo.onoffswitch.SelectionEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * User: hansolo Date: 10.10.13 Time: 08:41
@@ -39,8 +28,7 @@ public class IconSwitch extends Control implements Toggle
   public static final Color DEFAULT_SWITCH_COLOR = Color.WHITE;
   public static final Color DEFAULT_THUMB_COLOR = Color.WHITE;
   public static final Color DEFAULT_SYMBOL_COLOR = Color.DARKGRAY;
-  private static final PseudoClass PSEUDO_CLASS_SELECTED =
-                                                         PseudoClass.getPseudoClass("selected");
+  private static final PseudoClass PSEUDO_CLASS_SELECTED = PseudoClass.getPseudoClass("selected");
   private final Symbol symbol;
 
   // CSS styleable properties
@@ -56,10 +44,7 @@ public class IconSwitch extends Control implements Toggle
   public IconSwitch()
   {
     getStyleClass().setAll("icon-switch");
-    symbol = new Symbol(SymbolType.NONE,
-                        19,
-                        DEFAULT_SYMBOL_COLOR,
-                        Symbol.RESIZEABLE);
+    symbol = new Symbol(SymbolType.NONE, 19, DEFAULT_SYMBOL_COLOR, Symbol.RESIZEABLE);
   }
 
   // ******************** Methods *******************************************
@@ -90,23 +75,17 @@ public class IconSwitch extends Control implements Toggle
             if (get())
             {
               getToggleGroup().selectToggle(IconSwitch.this);
-            }
-            else if (getToggleGroup().getSelectedToggle() == IconSwitch.this)
+            } else if (getToggleGroup().getSelectedToggle() == IconSwitch.this)
             {
               getToggleGroup().selectToggle(null);
             }
           }
           if (selected.get())
           {
-            fireSelectionEvent(new SelectionEvent(this,
-                                                  null,
-                                                  SelectionEvent.SELECT));
-          }
-          else
+            fireSelectionEvent(new SelectionEvent(this, null, SelectionEvent.SELECT));
+          } else
           {
-            fireSelectionEvent(new SelectionEvent(this,
-                                                  null,
-                                                  SelectionEvent.DESELECT));
+            fireSelectionEvent(new SelectionEvent(this, null, SelectionEvent.DESELECT));
           }
           pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, get());
         }
@@ -152,16 +131,14 @@ public class IconSwitch extends Control implements Toggle
         protected void invalidated()
         {
           final ToggleGroup toggleGroup = get();
-          if (null != toggleGroup
-              && !toggleGroup.getToggles().contains(IconSwitch.this))
+          if (null != toggleGroup && !toggleGroup.getToggles().contains(IconSwitch.this))
           {
             if (oldToggleGroup != null)
             {
               oldToggleGroup.getToggles().remove(IconSwitch.this);
             }
             toggleGroup.getToggles().add(IconSwitch.this);
-          }
-          else if (null == toggleGroup)
+          } else if (null == toggleGroup)
           {
             oldToggleGroup.getToggles().remove(IconSwitch.this);
           }
@@ -241,8 +218,7 @@ public class IconSwitch extends Control implements Toggle
   // ******************** CSS Stylable Properties ***************************
   public final Paint getSwitchColor()
   {
-    return null == switchColor ? DEFAULT_SWITCH_COLOR
-                               : switchColor.get();
+    return null == switchColor ? DEFAULT_SWITCH_COLOR : switchColor.get();
   }
 
   public final void setSwitchColor(Paint value)
@@ -254,35 +230,33 @@ public class IconSwitch extends Control implements Toggle
   {
     if (null == switchColor)
     {
-      switchColor =
-                  new StyleableObjectProperty<Paint>(DEFAULT_SWITCH_COLOR)
-                  {
-                    @Override
-                    public CssMetaData getCssMetaData()
-                    {
-                      return StyleableProperties.SWITCH_COLOR;
-                    }
+      switchColor = new StyleableObjectProperty<Paint>(DEFAULT_SWITCH_COLOR)
+      {
+        @Override
+        public CssMetaData getCssMetaData()
+        {
+          return StyleableProperties.SWITCH_COLOR;
+        }
 
-                    @Override
-                    public Object getBean()
-                    {
-                      return IconSwitch.this;
-                    }
+        @Override
+        public Object getBean()
+        {
+          return IconSwitch.this;
+        }
 
-                    @Override
-                    public String getName()
-                    {
-                      return "switchColor";
-                    }
-                  };
+        @Override
+        public String getName()
+        {
+          return "switchColor";
+        }
+      };
     }
     return switchColor;
   }
 
   public final Paint getThumbColor()
   {
-    return null == thumbColor ? DEFAULT_THUMB_COLOR
-                              : thumbColor.get();
+    return null == thumbColor ? DEFAULT_THUMB_COLOR : thumbColor.get();
   }
 
   public final void setThumbColor(Paint value)
@@ -294,27 +268,26 @@ public class IconSwitch extends Control implements Toggle
   {
     if (null == thumbColor)
     {
-      thumbColor =
-                 new StyleableObjectProperty<Paint>(DEFAULT_THUMB_COLOR)
-                 {
-                   @Override
-                   public CssMetaData getCssMetaData()
-                   {
-                     return StyleableProperties.THUMB_COLOR;
-                   }
+      thumbColor = new StyleableObjectProperty<Paint>(DEFAULT_THUMB_COLOR)
+      {
+        @Override
+        public CssMetaData getCssMetaData()
+        {
+          return StyleableProperties.THUMB_COLOR;
+        }
 
-                   @Override
-                   public Object getBean()
-                   {
-                     return IconSwitch.this;
-                   }
+        @Override
+        public Object getBean()
+        {
+          return IconSwitch.this;
+        }
 
-                   @Override
-                   public String getName()
-                   {
-                     return "thumbColor";
-                   }
-                 };
+        @Override
+        public String getName()
+        {
+          return "thumbColor";
+        }
+      };
     }
     return thumbColor;
   }
@@ -334,61 +307,53 @@ public class IconSwitch extends Control implements Toggle
 
   private static class StyleableProperties
   {
-    private static final CssMetaData<IconSwitch, Paint> SWITCH_COLOR =
-                                                                     new CssMetaData<IconSwitch, Paint>("-switch-color",
-                                                                                                        PaintConverter.getInstance(),
-                                                                                                        DEFAULT_SWITCH_COLOR)
-                                                                     {
-                                                                       @Override
-                                                                       public boolean isSettable(IconSwitch iconSwitch)
-                                                                       {
-                                                                         return null == iconSwitch.switchColor
-                                                                                || !iconSwitch.switchColor.isBound();
-                                                                       }
+    private static final CssMetaData<IconSwitch, Paint> SWITCH_COLOR = new CssMetaData<IconSwitch, Paint>("-switch-color", PaintConverter.getInstance(), DEFAULT_SWITCH_COLOR)
+    {
+      @Override
+      public boolean isSettable(IconSwitch iconSwitch)
+      {
+        return null == iconSwitch.switchColor || !iconSwitch.switchColor.isBound();
+      }
 
-                                                                       @Override
-                                                                       public StyleableProperty<Paint> getStyleableProperty(IconSwitch iconSwitch)
-                                                                       {
-                                                                         return (StyleableProperty) iconSwitch.switchColorProperty();
-                                                                       }
+      @Override
+      public StyleableProperty<Paint> getStyleableProperty(IconSwitch iconSwitch)
+      {
+        return (StyleableProperty) iconSwitch.switchColorProperty();
+      }
 
-                                                                       @Override
-                                                                       public Color getInitialValue(IconSwitch iconSwitch)
-                                                                       {
-                                                                         return (Color) iconSwitch.getSwitchColor();
-                                                                       }
-                                                                     };
+      @Override
+      public Color getInitialValue(IconSwitch iconSwitch)
+      {
+        return (Color) iconSwitch.getSwitchColor();
+      }
+    };
 
-    private static final CssMetaData<IconSwitch, Paint> THUMB_COLOR =
-                                                                    new CssMetaData<IconSwitch, Paint>("-thumb-color",
-                                                                                                       PaintConverter.getInstance(),
-                                                                                                       DEFAULT_THUMB_COLOR)
-                                                                    {
-                                                                      @Override
-                                                                      public boolean isSettable(IconSwitch iconSwitch)
-                                                                      {
-                                                                        return null == iconSwitch.thumbColor
-                                                                               || !iconSwitch.thumbColor.isBound();
-                                                                      }
+    private static final CssMetaData<IconSwitch, Paint> THUMB_COLOR = new CssMetaData<IconSwitch, Paint>("-thumb-color", PaintConverter.getInstance(), DEFAULT_THUMB_COLOR)
+    {
+      @Override
+      public boolean isSettable(IconSwitch iconSwitch)
+      {
+        return null == iconSwitch.thumbColor || !iconSwitch.thumbColor.isBound();
+      }
 
-                                                                      @Override
-                                                                      public StyleableProperty<Paint> getStyleableProperty(IconSwitch iconSwitch)
-                                                                      {
-                                                                        return (StyleableProperty) iconSwitch.thumbColorProperty();
-                                                                      }
+      @Override
+      public StyleableProperty<Paint> getStyleableProperty(IconSwitch iconSwitch)
+      {
+        return (StyleableProperty) iconSwitch.thumbColorProperty();
+      }
 
-                                                                      @Override
-                                                                      public Color getInitialValue(IconSwitch iconSwitch)
-                                                                      {
-                                                                        return (Color) iconSwitch.getThumbColor();
-                                                                      }
-                                                                    };
+      @Override
+      public Color getInitialValue(IconSwitch iconSwitch)
+      {
+        return (Color) iconSwitch.getThumbColor();
+      }
+    };
 
     private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
     static
     {
-      final List<CssMetaData<? extends Styleable, ?>> styleables =
-                                                                 new ArrayList<>(Control.getClassCssMetaData());
+      final List<CssMetaData<? extends Styleable, ?>> styleables = new ArrayList<>(Control.getClassCssMetaData());
       Collections.addAll(styleables, SWITCH_COLOR, THUMB_COLOR);
       STYLEABLES = Collections.unmodifiableList(styleables);
     }
@@ -421,21 +386,20 @@ public class IconSwitch extends Control implements Toggle
     return onSelectProperty().get();
   }
 
-  private ObjectProperty<EventHandler<SelectionEvent>> onSelect =
-                                                                new ObjectPropertyBase<EventHandler<SelectionEvent>>()
-                                                                {
-                                                                  @Override
-                                                                  public Object getBean()
-                                                                  {
-                                                                    return this;
-                                                                  }
+  private ObjectProperty<EventHandler<SelectionEvent>> onSelect = new ObjectPropertyBase<EventHandler<SelectionEvent>>()
+  {
+    @Override
+    public Object getBean()
+    {
+      return this;
+    }
 
-                                                                  @Override
-                                                                  public String getName()
-                                                                  {
-                                                                    return "onSelect";
-                                                                  }
-                                                                };
+    @Override
+    public String getName()
+    {
+      return "onSelect";
+    }
+  };
 
   public final ObjectProperty<EventHandler<SelectionEvent>> onDeselectProperty()
   {
@@ -452,21 +416,20 @@ public class IconSwitch extends Control implements Toggle
     return onDeselectProperty().get();
   }
 
-  private ObjectProperty<EventHandler<SelectionEvent>> onDeselect =
-                                                                  new ObjectPropertyBase<EventHandler<SelectionEvent>>()
-                                                                  {
-                                                                    @Override
-                                                                    public Object getBean()
-                                                                    {
-                                                                      return this;
-                                                                    }
+  private ObjectProperty<EventHandler<SelectionEvent>> onDeselect = new ObjectPropertyBase<EventHandler<SelectionEvent>>()
+  {
+    @Override
+    public Object getBean()
+    {
+      return this;
+    }
 
-                                                                    @Override
-                                                                    public String getName()
-                                                                    {
-                                                                      return "onDeselect";
-                                                                    }
-                                                                  };
+    @Override
+    public String getName()
+    {
+      return "onDeselect";
+    }
+  };
 
   public void fireSelectionEvent(final SelectionEvent EVENT)
   {
@@ -476,17 +439,14 @@ public class IconSwitch extends Control implements Toggle
     if (SelectionEvent.SELECT == TYPE)
     {
       HANDLER = getOnSelect();
-    }
-    else if (SelectionEvent.DESELECT == TYPE)
+    } else if (SelectionEvent.DESELECT == TYPE)
     {
       HANDLER = getOnDeselect();
-    }
-    else
+    } else
     {
       HANDLER = null;
     }
-    if (null == HANDLER)
-      return;
+    if (null == HANDLER) return;
     HANDLER.handle(EVENT);
   }
 }

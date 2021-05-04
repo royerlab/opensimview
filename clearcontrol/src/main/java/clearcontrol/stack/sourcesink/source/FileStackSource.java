@@ -1,9 +1,5 @@
 package clearcontrol.stack.sourcesink.source;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
 import clearcontrol.stack.sourcesink.FileStackBase;
@@ -11,15 +7,16 @@ import clearcontrol.stack.sourcesink.FileStackInterface;
 import coremem.recycling.BasicRecycler;
 import coremem.recycling.RecyclerInterface;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Raw file stack sink
  *
  * @author royer
  */
-public class FileStackSource extends FileStackBase implements
-                             FileStackInterface,
-                             FileStackSourceInterface,
-                             AutoCloseable
+public class FileStackSource extends FileStackBase implements FileStackInterface, FileStackSourceInterface, AutoCloseable
 {
 
   FileStackSourceInterface mDelegatedFileStackSource;
@@ -29,10 +26,8 @@ public class FileStackSource extends FileStackBase implements
    * Instantiates a file stack sink given a root folder and dataset name. This
    * delegates to the appropriate file stack sink by determining the format
    * automatically.
-   * 
-   * @param pStackRecycler
-   *          stack recycler
-   * 
+   *
+   * @param pStackRecycler stack recycler
    */
   public FileStackSource(final BasicRecycler<StackInterface, StackRequest> pStackRecycler)
   {
@@ -54,10 +49,8 @@ public class FileStackSource extends FileStackBase implements
 
     if (lExampleDataFileName.contains(".raw"))
     {
-      mDelegatedFileStackSource =
-                                new RawFileStackSource(mStackRecycler);
-    }
-    else if (lExampleDataFileName.contains(".sqy"))
+      mDelegatedFileStackSource = new RawFileStackSource(mStackRecycler);
+    } else if (lExampleDataFileName.contains(".sqy"))
     {
       /// would be sqeazy...
     }
@@ -95,25 +88,15 @@ public class FileStackSource extends FileStackBase implements
   }
 
   @Override
-  public StackInterface getStack(final String pChannel,
-                                 final long pStackIndex)
+  public StackInterface getStack(final String pChannel, final long pStackIndex)
   {
-    return mDelegatedFileStackSource.getStack(pChannel,
-                                              pStackIndex,
-                                              1,
-                                              TimeUnit.NANOSECONDS);
+    return mDelegatedFileStackSource.getStack(pChannel, pStackIndex, 1, TimeUnit.NANOSECONDS);
   }
 
   @Override
-  public StackInterface getStack(final String pChannel,
-                                 final long pStackIndex,
-                                 final long pTime,
-                                 final TimeUnit pTimeUnit)
+  public StackInterface getStack(final String pChannel, final long pStackIndex, final long pTime, final TimeUnit pTimeUnit)
   {
-    return mDelegatedFileStackSource.getStack(pChannel,
-                                              pStackIndex,
-                                              pTime,
-                                              pTimeUnit);
+    return mDelegatedFileStackSource.getStack(pChannel, pStackIndex, pTime, pTimeUnit);
   }
 
   @Override
@@ -122,8 +105,7 @@ public class FileStackSource extends FileStackBase implements
     try
     {
       mDelegatedFileStackSource.close();
-    }
-    catch (Throwable e)
+    } catch (Throwable e)
     {
       throw new IOException("Exception while closing", e);
     }

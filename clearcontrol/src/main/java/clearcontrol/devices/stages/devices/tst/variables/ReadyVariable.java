@@ -13,11 +13,9 @@ public class ReadyVariable extends TSTBooleanVariableBase
 
   /**
    * Instantiates a ready variable
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pAPTJDevice
-   *          APTJ device
+   *
+   * @param pVariableName variable name
+   * @param pAPTJDevice   APTJ device
    */
   public ReadyVariable(String pVariableName, APTJDevice pAPTJDevice)
   {
@@ -31,11 +29,9 @@ public class ReadyVariable extends TSTBooleanVariableBase
     try
     {
       return !mAPTJDevice.isMoving();
-    }
-    catch (APTJExeption e)
+    } catch (APTJExeption e)
     {
-      severe("Error while querying whether this device is ready: %s",
-             mAPTJDevice);
+      severe("Error while querying whether this device is ready: %s", mAPTJDevice);
       e.printStackTrace();
     }
     return pCurrentValue;

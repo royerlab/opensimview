@@ -1,12 +1,11 @@
 package clearcontrol.devices.signalamp.devices.srs.demo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import clearcontrol.devices.signalamp.devices.srs.SIM900MainframeDevice;
 import clearcontrol.devices.signalamp.devices.srs.SIM983ScalingAmplifierDevice;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SIM900MainFrameDeviceDemo
 {
@@ -14,14 +13,11 @@ public class SIM900MainFrameDeviceDemo
   @Test
   public void demo() throws InterruptedException
   {
-    final SIM900MainframeDevice lSIM900MainframeDevice =
-                                                       new SIM900MainframeDevice("COM1");
+    final SIM900MainframeDevice lSIM900MainframeDevice = new SIM900MainframeDevice("COM1");
 
     assertTrue(lSIM900MainframeDevice.open());
 
-    final SIM983ScalingAmplifierDevice lScalingAmp =
-                                                   new SIM983ScalingAmplifierDevice(lSIM900MainframeDevice,
-                                                                                    4);
+    final SIM983ScalingAmplifierDevice lScalingAmp = new SIM983ScalingAmplifierDevice(lSIM900MainframeDevice, 4);
 
     assertTrue(lScalingAmp.open());
 

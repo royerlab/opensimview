@@ -1,20 +1,16 @@
 package clearcontrol.core.math.functions;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import java.io.Serializable;
 
 /**
  * Univariate affine function.
  *
  * @author royer
  */
-@JsonPropertyOrder(
-{ "slope", "constant" })
-public class UnivariateAffineFunction implements
-                                      ComposableFunction<UnivariateAffineFunction>,
-                                      InvertibleFunction<UnivariateAffineFunction>,
-                                      Serializable
+@JsonPropertyOrder({"slope", "constant"})
+public class UnivariateAffineFunction implements ComposableFunction<UnivariateAffineFunction>, InvertibleFunction<UnivariateAffineFunction>, Serializable
 {
 
   private static final long serialVersionUID = 1L;
@@ -23,7 +19,7 @@ public class UnivariateAffineFunction implements
 
   /**
    * Returns the identity function.
-   * 
+   *
    * @return identity function
    */
   public static UnivariateAffineFunction identity()
@@ -33,11 +29,9 @@ public class UnivariateAffineFunction implements
 
   /**
    * Returns the function ax+b with given a and b parameters.
-   * 
-   * @param pA
-   *          parameter a (slope)
-   * @param pB
-   *          parameter b (constant)
+   *
+   * @param pA parameter a (slope)
+   * @param pB parameter b (constant)
    * @return function ax+b
    */
   public static UnivariateAffineFunction axplusb(double pA, double pB)
@@ -55,9 +49,8 @@ public class UnivariateAffineFunction implements
 
   /**
    * Instanciates a copy of a given univariate affine function.
-   * 
-   * @param pUnivariateAffineFunction
-   *          univariate affine function
+   *
+   * @param pUnivariateAffineFunction univariate affine function
    */
   public UnivariateAffineFunction(UnivariateAffineFunction pUnivariateAffineFunction)
   {
@@ -67,11 +60,9 @@ public class UnivariateAffineFunction implements
 
   /**
    * Instanciates an univariate affine function of given slope and constant.
-   * 
-   * @param pA
-   *          parameter a (slope)
-   * @param pB
-   *          parameter b (constant)
+   *
+   * @param pA parameter a (slope)
+   * @param pB parameter b (constant)
    */
   public UnivariateAffineFunction(double pA, double pB)
   {
@@ -90,9 +81,8 @@ public class UnivariateAffineFunction implements
 
   /**
    * Sets the constant parameter
-   * 
-   * @param pB
-   *          paramter b (constant)
+   *
+   * @param pB paramter b (constant)
    */
   public void setConstant(double pB)
   {
@@ -101,9 +91,8 @@ public class UnivariateAffineFunction implements
 
   /**
    * Sets the slope parameter
-   * 
-   * @param pA
-   *          parameter a (slope)
+   *
+   * @param pA parameter a (slope)
    */
   public void setSlope(double pA)
   {
@@ -112,7 +101,7 @@ public class UnivariateAffineFunction implements
 
   /**
    * Returns the constant parameter
-   * 
+   *
    * @return parameter b (constant)
    */
   public double getConstant()
@@ -122,7 +111,7 @@ public class UnivariateAffineFunction implements
 
   /**
    * Returns the slope parameters
-   * 
+   *
    * @return parameter a (slope)
    */
   public double getSlope()
@@ -139,23 +128,19 @@ public class UnivariateAffineFunction implements
 
   /**
    * Returns true if this function has and inverse univariate affine function.
-   * 
+   *
    * @return true if inverse defined.
    */
   @Override
   public boolean hasInverse()
   {
-    return (mA > 0 || mA < 0) && Double.isFinite(mA)
-           && !Double.isNaN(mA)
-           && Double.isFinite(mB)
-           && !Double.isNaN(mB);
+    return (mA > 0 || mA < 0) && Double.isFinite(mA) && !Double.isNaN(mA) && Double.isFinite(mB) && !Double.isNaN(mB);
   }
 
   @Override
   public UnivariateAffineFunction inverse()
   {
-    if (mA == 0)
-      return null;
+    if (mA == 0) return null;
     double lInverseA = 1 / mA;
     double lInverseB = -mB / mA;
     return new UnivariateAffineFunction(lInverseA, lInverseB);
@@ -170,10 +155,7 @@ public class UnivariateAffineFunction implements
   @Override
   public String toString()
   {
-    return "UnivariateAffineFunction [Y = " + mA
-           + " * X + "
-           + mB
-           + "]";
+    return "UnivariateAffineFunction [Y = " + mA + " * X + " + mB + "]";
   }
 
 }

@@ -1,21 +1,19 @@
 package clearcontrol.core.gc;
 
-import java.lang.management.GarbageCollectorMXBean;
-import java.util.List;
+import clearcontrol.core.log.LoggingFeature;
 
 import javax.management.NotificationEmitter;
 import javax.management.NotificationListener;
-
-import clearcontrol.core.log.LoggingFeature;
+import java.lang.management.GarbageCollectorMXBean;
+import java.util.List;
 
 /**
  * GarbageCollector handles programatic triggering of GC and monitoring of GC
  * events
- * 
+ * <p>
  * NOTE: some code from : http://www.fasterj.com/articles/gcnotifs.shtml
- * 
- * @author royer
  *
+ * @author royer
  */
 public class GarbageCollector implements LoggingFeature
 {
@@ -33,7 +31,7 @@ public class GarbageCollector implements LoggingFeature
 
   /**
    * Returns singleton garbage collector
-   * 
+   *
    * @return singleton garbage collector
    */
   public static GarbageCollector getSingletonGarbageCollector()
@@ -43,20 +41,17 @@ public class GarbageCollector implements LoggingFeature
 
   /**
    * Adds a garbage collection notification listener
-   * 
-   * @param pNotificationListener
-   *          garbage collection notification listener
+   *
+   * @param pNotificationListener garbage collection notification listener
    */
   public void addGCNotificationListener(NotificationListener pNotificationListener)
   {
-    info("Adding GC notification listener: %s",
-         pNotificationListener);
+    info("Adding GC notification listener: %s", pNotificationListener);
 
     // get all the GarbageCollectorMXBeans - there's one for each heap
     // generation
     // so probably two - the old generation and young generation
-    List<GarbageCollectorMXBean> gcbeans =
-                                         java.lang.management.ManagementFactory.getGarbageCollectorMXBeans();
+    List<GarbageCollectorMXBean> gcbeans = java.lang.management.ManagementFactory.getGarbageCollectorMXBeans();
 
     // Install a notifcation handler for each bean
     for (GarbageCollectorMXBean gcbean : gcbeans)
@@ -67,37 +62,31 @@ public class GarbageCollector implements LoggingFeature
       // - proper code should really use a named class
 
       // Add the listener
-      emitter.addNotificationListener(pNotificationListener,
-                                      null,
-                                      null);
+      emitter.addNotificationListener(pNotificationListener, null, null);
     }
   }
 
   /**
    * Sets the debug output flag
-   * 
-   * @param pGCDebugOutputFlag
-   *          new debug output flag value
+   *
+   * @param pGCDebugOutputFlag new debug output flag value
    */
   public static void setDebugOutputFlag(boolean pGCDebugOutputFlag)
   {
-    sGarbageCollector.info("Setting GC debug output notification flag to %s",
-                           pGCDebugOutputFlag);
+    sGarbageCollector.info("Setting GC debug output notification flag to %s", pGCDebugOutputFlag);
     sGCDebugOutputFlag = pGCDebugOutputFlag;
   }
 
   private void installGCNotifier()
   {
     info("Adding Debug GC notification listener");
-    NotificationListener lDebugGCNotificationListener =
-                                                      getDebugGCNotificationListener();
+    NotificationListener lDebugGCNotificationListener = getDebugGCNotificationListener();
     addGCNotificationListener(lDebugGCNotificationListener);
   }
 
   private NotificationListener getDebugGCNotificationListener()
   {
-    NotificationListener listener =
-                                  new DebugGCNotificationListener(this);
+    NotificationListener listener = new DebugGCNotificationListener(this);
     return listener;
   }
 

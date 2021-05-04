@@ -11,13 +11,7 @@ import java.util.concurrent.TimeUnit;
 public enum TimeUnitEnum
 {
 
- Nanoseconds(TimeUnit.NANOSECONDS),
- Microseconds(TimeUnit.MICROSECONDS),
- Milliseconds(TimeUnit.MILLISECONDS),
- Seconds(TimeUnit.SECONDS),
- Minutes(TimeUnit.MINUTES),
- Hours(TimeUnit.HOURS),
- Days(TimeUnit.DAYS);
+  Nanoseconds(TimeUnit.NANOSECONDS), Microseconds(TimeUnit.MICROSECONDS), Milliseconds(TimeUnit.MILLISECONDS), Seconds(TimeUnit.SECONDS), Minutes(TimeUnit.MINUTES), Hours(TimeUnit.HOURS), Days(TimeUnit.DAYS);
 
   TimeUnit mTimeUnit;
 
@@ -28,7 +22,7 @@ public enum TimeUnitEnum
 
   /**
    * Returns the time unit
-   * 
+   *
    * @return time unit
    */
   public TimeUnit getTimeUnit()

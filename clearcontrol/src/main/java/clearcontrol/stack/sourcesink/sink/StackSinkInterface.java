@@ -13,24 +13,19 @@ public interface StackSinkInterface extends StackSinkSourceInterface
 
   /**
    * Appends stack to this sink
-   * 
-   * @param pStack
-   *          stack
+   *
+   * @param pStack stack
    * @return true -> success
    */
   boolean appendStack(StackInterface pStack);
 
   /**
    * Appends stack to this sink for at a given channel
-   * 
-   * @param pChannel
-   *          Channel to append stack to
-   * 
-   * @param pStack
-   *          stack
+   *
+   * @param pChannel Channel to append stack to
+   * @param pStack   stack
    * @return true -> success
    */
-  public boolean appendStack(String pChannel,
-                             final StackInterface pStack);
+  public boolean appendStack(String pChannel, final StackInterface pStack);
 
 }

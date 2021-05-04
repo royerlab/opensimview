@@ -5,8 +5,6 @@ import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
 /**
  * Denoising argmax finder. It wraps an argmax finder and cleanses up the input
  * data (X,Y) by smoothing Y.
- * 
- * 
  *
  * @author royer
  */
@@ -17,9 +15,8 @@ public class DenoisingArgMaxFinder implements ArgMaxFinder1DInterface
 
   /**
    * Instantiates a denoising argmax finder given a delegated argmax finder.
-   * 
-   * @param pArgMaxFinder1D
-   *          delegated 1D argmax finder
+   *
+   * @param pArgMaxFinder1D delegated 1D argmax finder
    */
   public DenoisingArgMaxFinder(ArgMaxFinder1DInterface pArgMaxFinder1D)
   {
@@ -34,22 +31,16 @@ public class DenoisingArgMaxFinder implements ArgMaxFinder1DInterface
 
     final double[] lY = new double[lLength];
 
-    if (pY[0] > pY[1])
-      lY[0] = pY[1];
-    else
-      lY[0] = pY[0];
+    if (pY[0] > pY[1]) lY[0] = pY[1];
+    else lY[0] = pY[0];
 
     for (int i = 1; i < lLength - 1; i++)
     {
-      if (pY[i] > pY[i - 1] && pY[i] > pY[i + 1])
-        lY[i] = 0.5 * (pY[i - 1] + pY[i + 1]);
-      else
-        lY[i] = pY[i];
+      if (pY[i] > pY[i - 1] && pY[i] > pY[i + 1]) lY[i] = 0.5 * (pY[i - 1] + pY[i + 1]);
+      else lY[i] = pY[i];
     }
-    if (pY[lLength - 2] < pY[lLength - 1])
-      lY[lLength - 1] = pY[lLength - 2];
-    else
-      lY[lLength - 1] = pY[lLength - 1];
+    if (pY[lLength - 2] < pY[lLength - 1]) lY[lLength - 1] = pY[lLength - 2];
+    else lY[lLength - 1] = pY[lLength - 1];
 
     /*System.out.println("_____________________");
     for (final double y : lY)
@@ -63,8 +54,7 @@ public class DenoisingArgMaxFinder implements ArgMaxFinder1DInterface
   @Override
   public String toString()
   {
-    return String.format("DenoisingArgMaxFinder [%s]",
-                         mDelegatedArgMaxFinder1D);
+    return String.format("DenoisingArgMaxFinder [%s]", mDelegatedArgMaxFinder1D);
   }
 
 }

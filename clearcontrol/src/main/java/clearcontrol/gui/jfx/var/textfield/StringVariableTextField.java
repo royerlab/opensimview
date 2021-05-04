@@ -1,13 +1,12 @@
 package clearcontrol.gui.jfx.var.textfield;
 
+import clearcontrol.core.variable.Variable;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-
-import clearcontrol.core.variable.Variable;
 
 /**
  * Text field that is synced to a Number
@@ -24,14 +23,11 @@ public class StringVariableTextField extends HBox
 
   /**
    * Instantiates a number variable text field.
-   * 
-   * @param pTextFieldLabel
-   *          text field
-   * @param pVariable
-   *          variable
+   *
+   * @param pTextFieldLabel text field
+   * @param pVariable       variable
    */
-  public StringVariableTextField(String pTextFieldLabel,
-                                 Variable<String> pVariable)
+  public StringVariableTextField(String pTextFieldLabel, Variable<String> pVariable)
   {
     super();
     mVariable = pVariable;
@@ -49,31 +45,31 @@ public class StringVariableTextField extends HBox
 
     mTextField.setText(mVariable.get());
 
-    getTextField().textProperty().addListener((obs, o, n) -> {
-      if (o != null && !o.equals(n))
-        setUpdatedTextField();
+    getTextField().textProperty().addListener((obs, o, n) ->
+    {
+      if (o != null && !o.equals(n)) setUpdatedTextField();
     });
 
-    getTextField().focusedProperty().addListener((obs, o, n) -> {
-      if (!n)
-        setVariableValueFromTextField();
+    getTextField().focusedProperty().addListener((obs, o, n) ->
+    {
+      if (!n) setVariableValueFromTextField();
     });
 
-    getTextField().setOnKeyPressed((e) -> {
-      if (e.getCode().equals(KeyCode.ENTER))
-        setVariableValueFromTextField();
+    getTextField().setOnKeyPressed((e) ->
+    {
+      if (e.getCode().equals(KeyCode.ENTER)) setVariableValueFromTextField();
     });
 
     getChildren().add(getLabel());
     getChildren().add(getTextField());
 
-    mVariable.addSetListener((o, n) -> {
-      if (n != null && !n.equals(o))
-        Platform.runLater(() -> {
-          if (n.equals(getTextFieldValue()))
-            return;
-          mTextField.setText(n);
-        });
+    mVariable.addSetListener((o, n) ->
+    {
+      if (n != null && !n.equals(o)) Platform.runLater(() ->
+      {
+        if (n.equals(getTextFieldValue())) return;
+        mTextField.setText(n);
+      });
     });
 
   }
@@ -97,8 +93,7 @@ public class StringVariableTextField extends HBox
     {
       setVariableValue(getTextFieldValue());
       getTextField().setStyle("-fx-text-fill: black");
-    }
-    catch (NumberFormatException e)
+    } catch (NumberFormatException e)
     {
       getTextField().setStyle("-fx-text-fill: red");
     }
@@ -111,7 +106,7 @@ public class StringVariableTextField extends HBox
 
   /**
    * Returns the label
-   * 
+   *
    * @return label
    */
   public Label getLabel()
@@ -121,7 +116,7 @@ public class StringVariableTextField extends HBox
 
   /**
    * Returns the text field
-   * 
+   *
    * @return text field
    */
   public TextField getTextField()

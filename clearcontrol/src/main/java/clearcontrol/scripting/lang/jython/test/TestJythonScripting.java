@@ -1,7 +1,13 @@
 package clearcontrol.scripting.lang.jython.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import clearcontrol.scripting.engine.ScriptingEngine;
+import clearcontrol.scripting.engine.ScriptingEngineListener;
+import clearcontrol.scripting.lang.jython.JythonScripting;
+import clearcontrol.scripting.lang.jython.JythonUtils;
+import org.junit.Test;
+import org.python.core.Options;
+import org.python.core.PyInteger;
+import org.python.util.PythonInterpreter;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -9,15 +15,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import clearcontrol.scripting.engine.ScriptingEngine;
-import clearcontrol.scripting.engine.ScriptingEngineListener;
-import clearcontrol.scripting.lang.jython.JythonScripting;
-import clearcontrol.scripting.lang.jython.JythonUtils;
-
-import org.junit.Test;
-import org.python.core.Options;
-import org.python.core.PyInteger;
-import org.python.util.PythonInterpreter;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestJythonScripting
 {
@@ -28,12 +27,10 @@ public class TestJythonScripting
   public void testJythonInterpreter() throws IOException
   {
     Options.importSite = false;
-    final PythonInterpreter lPythonInterpreter =
-                                               new PythonInterpreter();
+    final PythonInterpreter lPythonInterpreter = new PythonInterpreter();
     lPythonInterpreter.set("integer", new PyInteger(42));
     lPythonInterpreter.exec("square = integer*integer");
-    final PyInteger square =
-                           (PyInteger) lPythonInterpreter.get("square");
+    final PyInteger square = (PyInteger) lPythonInterpreter.get("square");
     System.out.println("square: " + square.asInt());
     assertEquals(1764, square.asInt());
     lPythonInterpreter.close();
@@ -45,8 +42,7 @@ public class TestJythonScripting
     final Double x = new Double(1);
     final Double y = new Double(2);
 
-    final LinkedHashMap<String, Object> lMap =
-                                             new LinkedHashMap<String, Object>();
+    final LinkedHashMap<String, Object> lMap = new LinkedHashMap<String, Object>();
     lMap.put("x", x);
     lMap.put("y", y);
 
@@ -56,17 +52,14 @@ public class TestJythonScripting
   }
 
   @Test
-  public void testJythonScriptingWithScriptEngine() throws IOException,
-                                                    ExecutionException
+  public void testJythonScriptingWithScriptEngine() throws IOException, ExecutionException
   {
     final Double x = new Double(1);
     final Double y = new Double(2);
 
     final JythonScripting lJythonScripting = new JythonScripting();
 
-    final ScriptingEngine lScriptingEngine =
-                                           new ScriptingEngine(lJythonScripting,
-                                                               null);
+    final ScriptingEngine lScriptingEngine = new ScriptingEngine(lJythonScripting, null);
 
     lScriptingEngine.set("x", x);
     lScriptingEngine.set("y", y);
@@ -76,31 +69,24 @@ public class TestJythonScripting
     {
 
       @Override
-      public void updatedScript(ScriptingEngine pScriptingEngine,
-                                String pScript)
+      public void updatedScript(ScriptingEngine pScriptingEngine, String pScript)
       {
       }
 
       @Override
-      public void beforeScriptExecution(ScriptingEngine pScriptingEngine,
-                                        String pScriptString)
+      public void beforeScriptExecution(ScriptingEngine pScriptingEngine, String pScriptString)
       {
         System.out.println("before");
       }
 
       @Override
-      public void afterScriptExecution(ScriptingEngine pScriptingEngine,
-                                       String pScriptString)
+      public void afterScriptExecution(ScriptingEngine pScriptingEngine, String pScriptString)
       {
         System.out.println("after");
       }
 
       @Override
-      public void asynchronousResult(ScriptingEngine pScriptingEngine,
-                                     String pScriptString,
-                                     Map<String, Object> pBinding,
-                                     Throwable pThrowable,
-                                     String pErrorMessage)
+      public void asynchronousResult(ScriptingEngine pScriptingEngine, String pScriptString, Map<String, Object> pBinding, Throwable pThrowable, String pErrorMessage)
       {
         System.out.println(pBinding);
       }
@@ -114,10 +100,8 @@ public class TestJythonScripting
 
     lScriptingEngine.executeScriptAsynchronously();
 
-    assertTrue(lScriptingEngine.waitForCompletion(1,
-                                                  TimeUnit.SECONDS));
-    assertEquals(lScriptingEngine.get("x"),
-                 lScriptingEngine.get("y"));
+    assertTrue(lScriptingEngine.waitForCompletion(1, TimeUnit.SECONDS));
+    assertEquals(lScriptingEngine.get("x"), lScriptingEngine.get("y"));
 
   }
 

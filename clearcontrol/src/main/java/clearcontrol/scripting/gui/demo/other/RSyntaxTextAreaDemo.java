@@ -1,19 +1,15 @@
 package clearcontrol.scripting.gui.demo.other;
 
-import java.awt.BorderLayout;
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.TimeUnit;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import clearcontrol.core.concurrent.thread.ThreadSleep;
-
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.junit.Test;
+
+import javax.swing.*;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
 
 public class RSyntaxTextAreaDemo
 {
@@ -43,8 +39,7 @@ public class RSyntaxTextAreaDemo
   }
 
   @Test
-  public void test() throws InvocationTargetException,
-                     InterruptedException
+  public void test() throws InvocationTargetException, InterruptedException
   {
     final TextEditorDemo lTextEditorDemo = new TextEditorDemo();
 

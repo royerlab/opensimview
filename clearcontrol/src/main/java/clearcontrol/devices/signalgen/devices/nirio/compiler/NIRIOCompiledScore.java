@@ -1,8 +1,8 @@
 package clearcontrol.devices.signalgen.devices.nirio.compiler;
 
-import java.util.concurrent.locks.ReentrantLock;
-
 import coremem.buffers.ContiguousBuffer;
+
+import java.util.concurrent.locks.ReentrantLock;
 
 public class NIRIOCompiledScore
 
@@ -23,12 +23,7 @@ public class NIRIOCompiledScore
   @Override
   public String toString()
   {
-    return String.format("NIRIOCompiledScore:\n mNumberOfMeasures=%s\n mDeltaTimeBuffer=%s\n mSyncBuffer=%s\n mNumberOfTimePointsBuffer=%s\n mScoreBuffer=%s\n\n",
-                         getNumberOfMeasures(),
-                         getDeltaTimeBuffer(),
-                         getSyncBuffer(),
-                         getNumberOfTimePointsBuffer(),
-                         getScoreBuffer());
+    return String.format("NIRIOCompiledScore:\n mNumberOfMeasures=%s\n mDeltaTimeBuffer=%s\n mSyncBuffer=%s\n mNumberOfTimePointsBuffer=%s\n mScoreBuffer=%s\n\n", getNumberOfMeasures(), getDeltaTimeBuffer(), getSyncBuffer(), getNumberOfTimePointsBuffer(), getScoreBuffer());
   }
 
   public ContiguousBuffer getDeltaTimeBuffer()

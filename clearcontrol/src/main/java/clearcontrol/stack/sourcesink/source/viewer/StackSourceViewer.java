@@ -1,13 +1,13 @@
 package clearcontrol.stack.sourcesink.source.viewer;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-
 import clearcontrol.core.variable.Variable;
 import clearcontrol.gui.video.video3d.Stack3DDisplay;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.sourcesink.StackSinkSourceInterface;
 import clearcontrol.stack.sourcesink.source.StackSourceInterface;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 /**
  * Stack source viewer
@@ -16,15 +16,9 @@ import clearcontrol.stack.sourcesink.source.StackSourceInterface;
  */
 public class StackSourceViewer implements AutoCloseable
 {
-  private Variable<StackSourceInterface> mStackSourceVariable =
-                                                              new Variable<>("StackSource",
-                                                                             null);
-  private Variable<String> mStackChannelVariable =
-                                                 new Variable<>("StackChannel",
-                                                                StackSinkSourceInterface.cDefaultChannel);
-  private Variable<Long> mStackIndexVariable =
-                                             new Variable<>("StackIndex",
-                                                            0L);
+  private Variable<StackSourceInterface> mStackSourceVariable = new Variable<>("StackSource", null);
+  private Variable<String> mStackChannelVariable = new Variable<>("StackChannel", StackSinkSourceInterface.cDefaultChannel);
+  private Variable<Long> mStackIndexVariable = new Variable<>("StackIndex", 0L);
 
   private Variable<StackInterface> mFrameReferenceVariable;
 
@@ -32,20 +26,19 @@ public class StackSourceViewer implements AutoCloseable
 
   /**
    * Instantiates a stack source
-   * 
    */
   public StackSourceViewer()
   {
     super();
     mVideoFrame3DDisplay = new Stack3DDisplay("Test");
 
-    mFrameReferenceVariable =
-                            mVideoFrame3DDisplay.getInputStackVariable();
+    mFrameReferenceVariable = mVideoFrame3DDisplay.getInputStackVariable();
 
     mVideoFrame3DDisplay.open();
     mVideoFrame3DDisplay.setVisible(true);
 
-    mStackSourceVariable.addSetListener((o, n) -> {
+    mStackSourceVariable.addSetListener((o, n) ->
+    {
 
       if (n != o)
       {
@@ -55,7 +48,8 @@ public class StackSourceViewer implements AutoCloseable
 
     });
 
-    mStackChannelVariable.addSetListener((o, n) -> {
+    mStackChannelVariable.addSetListener((o, n) ->
+    {
 
       if (n != o)
       {
@@ -64,7 +58,8 @@ public class StackSourceViewer implements AutoCloseable
 
     });
 
-    mStackIndexVariable.addSetListener((o, n) -> {
+    mStackIndexVariable.addSetListener((o, n) ->
+    {
 
       if (n != o)
       {
@@ -81,27 +76,22 @@ public class StackSourceViewer implements AutoCloseable
   {
     StackSourceInterface lStackSource = mStackSourceVariable.get();
 
-    if (lStackSource == null)
-      return;
+    if (lStackSource == null) return;
 
     String lChannel = mStackChannelVariable.get();
 
-    if (!lStackSource.getChannelList().contains(lChannel))
-      return;
+    if (!lStackSource.getChannelList().contains(lChannel)) return;
 
     Long lIndex = mStackIndexVariable.get();
 
-    long lMaxNumberOfStacks =
-                            lStackSource.getNumberOfStacks(lChannel);
+    long lMaxNumberOfStacks = lStackSource.getNumberOfStacks(lChannel);
 
     // clamping:
     long lStackIndex = min(max(lIndex, 0), lMaxNumberOfStacks - 1);
 
-    if (lStackIndex < 0)
-      return;
+    if (lStackIndex < 0) return;
 
-    StackInterface lStack = lStackSource.getStack(lChannel,
-                                                  lStackIndex);
+    StackInterface lStack = lStackSource.getStack(lChannel, lStackIndex);
 
     mFrameReferenceVariable.set(lStack);
 
@@ -120,7 +110,7 @@ public class StackSourceViewer implements AutoCloseable
 
   /**
    * Returns the variable holding the stack
-   * 
+   *
    * @return stack source variable
    */
   public Variable<StackSourceInterface> getStackSourceVariable()
@@ -130,7 +120,7 @@ public class StackSourceViewer implements AutoCloseable
 
   /**
    * Returns stack channel variable
-   * 
+   *
    * @return stack channel variable
    */
   public Variable<String> getStackChannelVariable()
@@ -140,7 +130,7 @@ public class StackSourceViewer implements AutoCloseable
 
   /**
    * Returns stack index variable
-   * 
+   *
    * @return stack index variable
    */
   public Variable<Long> getStackIndexVariable()

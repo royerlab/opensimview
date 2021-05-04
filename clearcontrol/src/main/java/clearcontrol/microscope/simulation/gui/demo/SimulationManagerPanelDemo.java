@@ -1,12 +1,11 @@
 package clearcontrol.microscope.simulation.gui.demo;
 
+import clearcontrol.microscope.simulation.SimulationManager;
+import clearcontrol.microscope.simulation.gui.SimulationManagerPanel;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import clearcontrol.microscope.simulation.SimulationManager;
-import clearcontrol.microscope.simulation.gui.SimulationManagerPanel;
 
 /**
  * Simulation manager demo
@@ -25,11 +24,9 @@ public class SimulationManagerPanelDemo extends Application
     stage.setTitle("Slider Sample");
     // scene.setFill(Color.BLACK);
 
-    SimulationManager lSimulationManager =
-                                         new SimulationManager(null);
+    SimulationManager lSimulationManager = new SimulationManager(null);
 
-    SimulationManagerPanel lSimulationManagerPanel =
-                                                   new SimulationManagerPanel(lSimulationManager);
+    SimulationManagerPanel lSimulationManagerPanel = new SimulationManagerPanel(lSimulationManager);
 
     root.getChildren().add(lSimulationManagerPanel);
 
@@ -38,9 +35,8 @@ public class SimulationManagerPanelDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

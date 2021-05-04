@@ -1,18 +1,16 @@
 package clearcontrol.microscope.timelapse.timer.fixed;
 
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.microscope.timelapse.timer.TimelapseTimerBase;
 import clearcontrol.microscope.timelapse.timer.TimelapseTimerInterface;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Fixed interval timelapse timer
  *
  * @author royer
  */
-public class FixedIntervalTimelapseTimer extends TimelapseTimerBase
-                                         implements
-                                         TimelapseTimerInterface
+public class FixedIntervalTimelapseTimer extends TimelapseTimerBase implements TimelapseTimerInterface
 {
 
   /**

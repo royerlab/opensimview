@@ -1,8 +1,8 @@
 package clearcontrol.core.cpu;
 
-import java.lang.reflect.Field;
-
 import sun.misc.Unsafe;
+
+import java.lang.reflect.Field;
 
 /**
  * Load averages
@@ -21,16 +21,13 @@ public class LoadAverages
       f = Unsafe.class.getDeclaredField("theUnsafe");
       f.setAccessible(true);
       cUnsafe = (Unsafe) f.get(null);
-    }
-    catch (NoSuchFieldException | SecurityException
-        | IllegalArgumentException | IllegalAccessException e)
+    } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
     {
       e.printStackTrace();
     }
   }
 
-  private static ThreadLocal<double[]> cLoadAverageThreadLocal =
-                                                               new ThreadLocal<double[]>();
+  private static ThreadLocal<double[]> cLoadAverageThreadLocal = new ThreadLocal<double[]>();
 
   /**
    * Class carrying the load averages
@@ -45,16 +42,13 @@ public class LoadAverages
     @Override
     public String toString()
     {
-      return String.format("LoadAveragesResult [mOneMinute=%s, mFiveMinute=%s, mFifteenMinute=%s]",
-                           mOneMinute,
-                           mFiveMinute,
-                           mFifteenMinute);
+      return String.format("LoadAveragesResult [mOneMinute=%s, mFiveMinute=%s, mFifteenMinute=%s]", mOneMinute, mFiveMinute, mFifteenMinute);
     }
   }
 
   /**
    * Returns the load averages (1min, 5min, 15min)
-   * 
+   *
    * @return load averages results
    */
   public static final LoadAveragesResult getLoadAverages()
@@ -70,12 +64,9 @@ public class LoadAverages
     cUnsafe.getLoadAverage(lLoadAveragesArray, 3);
 
     LoadAveragesResult lLoadAveragesResult = new LoadAveragesResult();
-    lLoadAveragesResult.mOneMinute = lLoadAveragesArray[0]
-                                     / lNumberOfCores;
-    lLoadAveragesResult.mFiveMinute = lLoadAveragesArray[1]
-                                      / lNumberOfCores;
-    lLoadAveragesResult.mFifteenMinute = lLoadAveragesArray[2]
-                                         / lNumberOfCores;
+    lLoadAveragesResult.mOneMinute = lLoadAveragesArray[0] / lNumberOfCores;
+    lLoadAveragesResult.mFiveMinute = lLoadAveragesArray[1] / lNumberOfCores;
+    lLoadAveragesResult.mFifteenMinute = lLoadAveragesArray[2] / lNumberOfCores;
 
     return lLoadAveragesResult;
   }

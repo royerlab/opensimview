@@ -1,14 +1,13 @@
 package clearcontrol.core.concurrent.timing.test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import clearcontrol.core.concurrent.timing.WaitingInterface;
+import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import clearcontrol.core.concurrent.timing.WaitingInterface;
-
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Waiting tests
@@ -24,18 +23,18 @@ public class WaitingTests
   {
     public void switchOn()
     {
-      final Runnable lRunnable = () -> {
-        if (waitFor(() -> mWaitFlag.get()))
-          mDoneFlag.set(true);
+      final Runnable lRunnable = () ->
+      {
+        if (waitFor(() -> mWaitFlag.get())) mDoneFlag.set(true);
       };
       new Thread(lRunnable).start();
     }
 
     public void switchOff()
     {
-      final Runnable lRunnable = () -> {
-        if (waitFor(1L, TimeUnit.NANOSECONDS, () -> mWaitFlag.get()))
-          mDoneFlag.set(true);
+      final Runnable lRunnable = () ->
+      {
+        if (waitFor(1L, TimeUnit.NANOSECONDS, () -> mWaitFlag.get())) mDoneFlag.set(true);
       };
       new Thread(lRunnable).start();
     }
@@ -43,9 +42,8 @@ public class WaitingTests
 
   /**
    * tests the methods provided by the Waiting Interface
-   * 
-   * @throws InterruptedException
-   *           n/A
+   *
+   * @throws InterruptedException n/A
    */
   @Test
   public void test() throws InterruptedException

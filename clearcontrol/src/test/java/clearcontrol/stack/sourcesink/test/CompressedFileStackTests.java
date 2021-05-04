@@ -5,9 +5,7 @@ import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
 import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
-import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
 import clearcontrol.stack.sourcesink.source.CompressedStackSource;
-import clearcontrol.stack.sourcesink.source.RawFileStackSource;
 import coremem.ContiguousMemoryInterface;
 import coremem.buffers.ContiguousBuffer;
 import coremem.recycling.BasicRecycler;
@@ -41,9 +39,8 @@ public class CompressedFileStackTests
 
   /**
    * Test write speed
-   * 
-   * @throws IOException
-   *           NA
+   *
+   * @throws IOException NA
    */
   @Test
   public void testWriteSpeed() throws IOException
@@ -53,48 +50,33 @@ public class CompressedFileStackTests
     {
       System.gc();
 
-      final File lRootFolder =
-                             new File(File.createTempFile("test",
-                                                          "test")
-                                          .getParentFile(),
-                                      "LocalFileStackTests" + Math.random());/**/
+      final File lRootFolder = new File(File.createTempFile("test", "test").getParentFile(), "LocalFileStackTests" + Math.random());/**/
 
       lRootFolder.mkdirs();
       System.out.println(lRootFolder);
 
-      final CompressedStackSink lLocalFileStackSink =
-                                                 new CompressedStackSink();
+      final CompressedStackSink lLocalFileStackSink = new CompressedStackSink();
       lLocalFileStackSink.setLocation(lRootFolder, "testSink");
 
-      final OffHeapPlanarStack lStack =
-                                      OffHeapPlanarStack.createStack(cSizeX,
-                                                                     cSizeY,
-                                                                     cSizeZ);
+      final OffHeapPlanarStack lStack = OffHeapPlanarStack.createStack(cSizeX, cSizeY, cSizeZ);
 
       lStack.getMetaData().setIndex(0);
-      lStack.getMetaData()
-            .setTimeStampInNanoseconds(System.nanoTime());
+      lStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
 
       assertEquals(cSizeX * cSizeY * cSizeZ, lStack.getVolume());
 
-      assertEquals(cSizeX * cSizeY
-                   * cSizeZ
-                   * cBytesPerVoxel,
-                   lStack.getSizeInBytes());
+      assertEquals(cSizeX * cSizeY * cSizeZ * cBytesPerVoxel, lStack.getSizeInBytes());
 
       System.out.println("generating data...");
-      System.out.println("size: " + lStack.getSizeInBytes()
-                         + " bytes!");
-      ContiguousMemoryInterface lContiguousMemory =
-                                                  lStack.getContiguousMemory();
+      System.out.println("size: " + lStack.getSizeInBytes() + " bytes!");
+      ContiguousMemoryInterface lContiguousMemory = lStack.getContiguousMemory();
 
-      ContiguousBuffer lBuffer =
-                               ContiguousBuffer.wrap(lContiguousMemory);
+      ContiguousBuffer lBuffer = ContiguousBuffer.wrap(lContiguousMemory);
       Random rand = new Random();
       int i = 0;
       while (lBuffer.hasRemainingByte())
       {
-        lBuffer.writeByte((byte) ((i+1)^(i*i)));
+        lBuffer.writeByte((byte) ((i + 1) ^ (i * i)));
         //lBuffer.writeByte((byte) (rand.nextInt()));
         //(i+1)^(i*i)
         i++;
@@ -103,14 +85,13 @@ public class CompressedFileStackTests
       System.out.println("done generating data...");
 
       long lStart = System.nanoTime();
-      for (int j=0; j<cNumberOfStacks; j++)
+      for (int j = 0; j < cNumberOfStacks; j++)
         assertTrue(lLocalFileStackSink.appendStack(lStack));
       long lStop = System.nanoTime();
 
-      double lElapsedTimeInSeconds = ((lStop - lStart) * 1e-9) /cNumberOfStacks ;
+      double lElapsedTimeInSeconds = ((lStop - lStart) * 1e-9) / cNumberOfStacks;
 
-      double lSpeed = ( lStack.getSizeInBytes() * 1e-6)
-                      / lElapsedTimeInSeconds;
+      double lSpeed = (lStack.getSizeInBytes() * 1e-6) / lElapsedTimeInSeconds;
 
       System.out.format("speed: %g MB/s \n", lSpeed);
       System.out.format("time : %g   ms \n", (lStop - lStart) * 1e-6);
@@ -120,8 +101,7 @@ public class CompressedFileStackTests
       try
       {
         FileUtils.deleteDirectory(lRootFolder);
-      }
-      catch (Exception e)
+      } catch (Exception e)
       {
         System.out.println(e);
       }
@@ -133,19 +113,14 @@ public class CompressedFileStackTests
 
   /**
    * test sink and source
-   * 
-   * @throws IOException
-   *           NA
+   *
+   * @throws IOException NA
    */
   @Test
   public void testSinkAndSource() throws IOException
   {
 
-    final File lRootFolder =
-                           new File(File.createTempFile("test",
-                                                        "test")
-                                        .getParentFile(),
-                                    "LocalFileStackTests" + Math.random());/**/
+    final File lRootFolder = new File(File.createTempFile("test", "test").getParentFile(), "LocalFileStackTests" + Math.random());/**/
 
     // final File lRootFolder = new File("/Volumes/External/Temp");
 
@@ -153,37 +128,27 @@ public class CompressedFileStackTests
     System.out.println(lRootFolder);
 
     {
-      final CompressedStackSink lLocalFileStackSink =
-                                                 new CompressedStackSink();
+      final CompressedStackSink lLocalFileStackSink = new CompressedStackSink();
       lLocalFileStackSink.setLocation(lRootFolder, "testSink");
 
-      final OffHeapPlanarStack lStack =
-                                      OffHeapPlanarStack.createStack(cSizeX,
-                                                                     cSizeY,
-                                                                     cSizeZ);
+      final OffHeapPlanarStack lStack = OffHeapPlanarStack.createStack(cSizeX, cSizeY, cSizeZ);
 
       lStack.getMetaData().setIndex(0);
-      lStack.getMetaData()
-            .setTimeStampInNanoseconds(System.nanoTime());
+      lStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
 
       assertEquals(cSizeX * cSizeY * cSizeZ, lStack.getVolume());
       // System.out.println(lStack.mNDimensionalArray.getLengthInElements()
       // *
       // 2);
 
-      assertEquals(cSizeX * cSizeY
-                   * cSizeZ
-                   * cBytesPerVoxel,
-                   lStack.getSizeInBytes());
+      assertEquals(cSizeX * cSizeY * cSizeZ * cBytesPerVoxel, lStack.getSizeInBytes());
 
       for (int i = 0; i < cNumberOfStacks; i++)
       {
 
-        final ContiguousMemoryInterface lContiguousMemory =
-                                                          lStack.getContiguousMemory();
+        final ContiguousMemoryInterface lContiguousMemory = lStack.getContiguousMemory();
 
-        ContiguousBuffer lContiguousBuffer =
-                                           ContiguousBuffer.wrap(lContiguousMemory);
+        ContiguousBuffer lContiguousBuffer = ContiguousBuffer.wrap(lContiguousMemory);
 
         while (lContiguousBuffer.hasRemainingShort())
         {
@@ -201,29 +166,23 @@ public class CompressedFileStackTests
         assertTrue(lLocalFileStackSink.appendStack(lStack));
       }
 
-      assertEquals(cNumberOfStacks,
-                   lLocalFileStackSink.getNumberOfStacks());
+      assertEquals(cNumberOfStacks, lLocalFileStackSink.getNumberOfStacks());
 
       lLocalFileStackSink.close();
     }
 
     {
-      final ContiguousOffHeapPlanarStackFactory lOffHeapPlanarStackFactory =
-                                                                           new ContiguousOffHeapPlanarStackFactory();
+      final ContiguousOffHeapPlanarStackFactory lOffHeapPlanarStackFactory = new ContiguousOffHeapPlanarStackFactory();
 
-      final BasicRecycler<StackInterface, StackRequest> lStackRecycler =
-                                                                       new BasicRecycler<StackInterface, StackRequest>(lOffHeapPlanarStackFactory,
-                                                                                                                       cMaximalNumberOfAvailableStacks);
+      final BasicRecycler<StackInterface, StackRequest> lStackRecycler = new BasicRecycler<StackInterface, StackRequest>(lOffHeapPlanarStackFactory, cMaximalNumberOfAvailableStacks);
 
-      final CompressedStackSource lLocalFileStackSource =
-                                                     new CompressedStackSource(lStackRecycler);
+      final CompressedStackSource lLocalFileStackSource = new CompressedStackSource(lStackRecycler);
 
       lLocalFileStackSource.setLocation(lRootFolder, "testSink");
 
       lLocalFileStackSource.update();
 
-      assertEquals(cNumberOfStacks,
-                   lLocalFileStackSource.getNumberOfStacks());
+      assertEquals(cNumberOfStacks, lLocalFileStackSource.getNumberOfStacks());
 
       StackInterface lStack = lLocalFileStackSource.getStack(0);
 
@@ -237,8 +196,7 @@ public class CompressedFileStackTests
     try
     {
       FileUtils.deleteDirectory(lRootFolder);
-    }
-    catch (Exception e)
+    } catch (Exception e)
     {
     }
 

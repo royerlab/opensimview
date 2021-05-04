@@ -6,12 +6,7 @@ import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.signalamp.ScalingAmplifierBaseDevice;
 import clearcontrol.devices.signalamp.ScalingAmplifierDeviceInterface;
 
-public class ScalingAmplifierSimulator extends
-                                       ScalingAmplifierBaseDevice
-                                       implements
-                                       ScalingAmplifierDeviceInterface,
-                                       LoggingFeature,
-                                       SimulationDeviceInterface
+public class ScalingAmplifierSimulator extends ScalingAmplifierBaseDevice implements ScalingAmplifierDeviceInterface, LoggingFeature, SimulationDeviceInterface
 {
 
   public ScalingAmplifierSimulator(String pDeviceName)
@@ -19,15 +14,15 @@ public class ScalingAmplifierSimulator extends
     super(pDeviceName);
 
     mGainVariable = new Variable<Number>("Gain", 1.0);
-    mGainVariable.addSetListener((o, n) -> {
-      if (isSimLogging())
-        info(getName() + ": new gain: " + n);
+    mGainVariable.addSetListener((o, n) ->
+    {
+      if (isSimLogging()) info(getName() + ": new gain: " + n);
     });
 
     mOffsetVariable = new Variable<Number>("Offset", 0.0);
-    mOffsetVariable.addSetListener((o, n) -> {
-      if (isSimLogging())
-        info(getName() + ": new offset: " + n);
+    mOffsetVariable.addSetListener((o, n) ->
+    {
+      if (isSimLogging()) info(getName() + ": new offset: " + n);
     });
 
     mMinGain = -19.9;

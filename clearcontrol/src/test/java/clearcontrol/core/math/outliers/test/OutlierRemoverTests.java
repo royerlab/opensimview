@@ -1,12 +1,11 @@
 package clearcontrol.core.math.outliers.test;
 
-import static org.junit.Assert.assertTrue;
-
 import clearcontrol.core.math.outliers.OutlierRemover;
 import gnu.trove.list.array.TDoubleArrayList;
-
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * outlier remover tests.
@@ -23,8 +22,7 @@ public class OutlierRemoverTests
   public void test()
   {
 
-    final NormalDistribution lNormalDistribution =
-                                                 new NormalDistribution();
+    final NormalDistribution lNormalDistribution = new NormalDistribution();
 
     final TDoubleArrayList lSamples = new TDoubleArrayList();
     for (int i = 0; i < 1000; i++)
@@ -42,9 +40,7 @@ public class OutlierRemoverTests
     assertTrue(lSamples.min() <= -10);
     assertTrue(lSamples.max() >= 10);
 
-    final TDoubleArrayList lOutliersRemoved =
-                                            OutlierRemover.removeOutliers(lSamples.toArray(),
-                                                                          6);
+    final TDoubleArrayList lOutliersRemoved = OutlierRemover.removeOutliers(lSamples.toArray(), 6);
 
     System.out.println(lOutliersRemoved.min());
     System.out.println(lOutliersRemoved.max());

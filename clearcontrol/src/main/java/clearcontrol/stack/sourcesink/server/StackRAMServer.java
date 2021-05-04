@@ -1,29 +1,26 @@
 package clearcontrol.stack.sourcesink.server;
 
-import static java.lang.Math.toIntExact;
-
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
 import clearcontrol.stack.sourcesink.sink.StackSinkInterface;
 import clearcontrol.stack.sourcesink.source.StackSourceInterface;
 import coremem.recycling.RecyclerInterface;
 
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.Math.toIntExact;
+
 /**
  * Stack RAM server
  *
  * @author royer
  */
-public class StackRAMServer extends StackServerBase implements
-                            StackSinkInterface,
-                            StackSourceInterface
+public class StackRAMServer extends StackServerBase implements StackSinkInterface, StackSourceInterface
 {
 
-  private ConcurrentHashMap<String, ArrayList<StackInterface>> mStackMap =
-                                                                         new ConcurrentHashMap<>();
+  private ConcurrentHashMap<String, ArrayList<StackInterface>> mStackMap = new ConcurrentHashMap<>();
 
   private Long mStartTimeStampInNanoseconds = null;
 
@@ -47,10 +44,7 @@ public class StackRAMServer extends StackServerBase implements
   }
 
   @Override
-  public StackInterface getStack(String pChannel,
-                                 final long pStackIndex,
-                                 long pTime,
-                                 TimeUnit pTimeUnit)
+  public StackInterface getStack(String pChannel, final long pStackIndex, long pTime, TimeUnit pTimeUnit)
   {
     return getStack(pStackIndex);
   }
@@ -64,11 +58,9 @@ public class StackRAMServer extends StackServerBase implements
   @Override
   public StackInterface getStack(String pChannel, long pStackIndex)
   {
-    ArrayList<StackInterface> lChannelStackList =
-                                                mStackMap.get(pChannel);
+    ArrayList<StackInterface> lChannelStackList = mStackMap.get(pChannel);
 
-    if (lChannelStackList == null)
-      return null;
+    if (lChannelStackList == null) return null;
 
     return lChannelStackList.get(toIntExact(pStackIndex));
   }
@@ -80,15 +72,12 @@ public class StackRAMServer extends StackServerBase implements
   }
 
   @Override
-  public boolean appendStack(String pChannel,
-                             final StackInterface pStack)
+  public boolean appendStack(String pChannel, final StackInterface pStack)
   {
     long lNowInNanoseconds = System.nanoTime();
-    if (mStartTimeStampInNanoseconds == null)
-      mStartTimeStampInNanoseconds = lNowInNanoseconds;
+    if (mStartTimeStampInNanoseconds == null) mStartTimeStampInNanoseconds = lNowInNanoseconds;
 
-    ArrayList<StackInterface> lChannelStackList =
-                                                mStackMap.get(pChannel);
+    ArrayList<StackInterface> lChannelStackList = mStackMap.get(pChannel);
     if (lChannelStackList == null)
     {
       lChannelStackList = new ArrayList<StackInterface>();
@@ -99,13 +88,9 @@ public class StackRAMServer extends StackServerBase implements
 
     int lIndexLastAddedStack = lChannelStackList.size() - 1;
 
-    double lTimeStampInSeconds = 1e-9
-                                 * (lNowInNanoseconds
-                                    - mStartTimeStampInNanoseconds);
+    double lTimeStampInSeconds = 1e-9 * (lNowInNanoseconds - mStartTimeStampInNanoseconds);
 
-    setStackTimeStampInSeconds(pChannel,
-                               lIndexLastAddedStack,
-                               lTimeStampInSeconds);
+    setStackTimeStampInSeconds(pChannel, lIndexLastAddedStack, lTimeStampInSeconds);
 
     return true;
   }

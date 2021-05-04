@@ -1,13 +1,13 @@
 package clearcontrol.gui.jfx.var.combo.demo;
 
-import java.util.ArrayList;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.var.combo.ClassComboBoxVariable;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.var.combo.ClassComboBoxVariable;
+import java.util.ArrayList;
 
 /**
  * Enum combo box demo
@@ -27,7 +27,8 @@ public class ClassComboBoxDemo extends Application
     // scene.setFill(Color.BLACK);
 
     Variable<Class<?>> lVariable = new Variable<>("var", null);
-    lVariable.addSetListener((o, n) -> {
+    lVariable.addSetListener((o, n) ->
+    {
       System.out.println(n);
     });
 
@@ -36,10 +37,7 @@ public class ClassComboBoxDemo extends Application
     lClassList.add(Double.class);
     lClassList.add(Integer.class);
 
-    ClassComboBoxVariable lClassComboBox =
-                                         new ClassComboBoxVariable(lVariable,
-                                                                   lClassList,
-                                                                   100);
+    ClassComboBoxVariable lClassComboBox = new ClassComboBoxVariable(lVariable, lClassList, 100);
 
     root.add(lClassComboBox, 0, 2);
 
@@ -48,9 +46,8 @@ public class ClassComboBoxDemo extends Application
 
   /**
    * Main
-   * 
-   * @param args
-   *          NA
+   *
+   * @param args NA
    */
   public static void main(String[] args)
   {

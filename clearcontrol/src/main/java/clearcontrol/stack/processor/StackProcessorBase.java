@@ -8,17 +8,14 @@ import clearcontrol.core.variable.Variable;
  *
  * @author royer
  */
-public abstract class StackProcessorBase extends VirtualDevice
-                                         implements
-                                         StackProcessorInterface
+public abstract class StackProcessorBase extends VirtualDevice implements StackProcessorInterface
 {
   private final Variable<Boolean> mIsActiveVariable;
 
   /**
    * Instanciates a stack processor of given name
-   * 
-   * @param pProcessorName
-   *          processor name
+   *
+   * @param pProcessorName processor name
    */
   public StackProcessorBase(final String pProcessorName)
   {
@@ -41,7 +38,7 @@ public abstract class StackProcessorBase extends VirtualDevice
   /**
    * Returns the is-active boolean variable. This variable decides whether this
    * processor is active
-   * 
+   *
    * @return true -> processor is acctive
    */
   public Variable<Boolean> getIsActiveBooleanVariable()
@@ -52,9 +49,7 @@ public abstract class StackProcessorBase extends VirtualDevice
   @Override
   public String toString()
   {
-    return String.format("StackProcessor [mProcessorName=%s,mIsActiveVariable=%s]",
-                         getName(),
-                         mIsActiveVariable);
+    return String.format("StackProcessor [mProcessorName=%s,mIsActiveVariable=%s]", getName(), mIsActiveVariable);
   }
 
 }

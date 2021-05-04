@@ -3,10 +3,7 @@ package clearcontrol.devices.stages.devices.smc100.adapters;
 import clearcontrol.com.serial.adapters.SerialDeviceAdapterAdapter;
 import clearcontrol.com.serial.adapters.SerialTextDeviceAdapter;
 
-public class SMC100HomingAdapter extends
-                                 SerialDeviceAdapterAdapter<Boolean>
-                                 implements
-                                 SerialTextDeviceAdapter<Boolean>
+public class SMC100HomingAdapter extends SerialDeviceAdapterAdapter<Boolean> implements SerialTextDeviceAdapter<Boolean>
 {
 
   @Override
@@ -28,13 +25,10 @@ public class SMC100HomingAdapter extends
   }
 
   @Override
-  public byte[] getSetValueCommandMessage(Boolean pOldValue,
-                                          Boolean pNewValue)
+  public byte[] getSetValueCommandMessage(Boolean pOldValue, Boolean pNewValue)
   {
-    if (pOldValue == false && pNewValue == true)
-      return SMC100Protocol.cHomeSearchCommand.getBytes();
-    else
-      return null;
+    if (pOldValue == false && pNewValue == true) return SMC100Protocol.cHomeSearchCommand.getBytes();
+    else return null;
   }
 
   @Override

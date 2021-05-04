@@ -9,13 +9,10 @@ import clearcontrol.stack.metadata.StackMetaData;
 /**
  * Queue for stack camera devices
  *
+ * @param <Q> reflexive queue type
  * @author royer
- * @param <Q>
- *          reflexive queue type
  */
-public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
-                                      extends VariableQueueBase
-                                      implements QueueInterface
+public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>> extends VariableQueueBase implements QueueInterface
 {
   private StackCameraDeviceInterface<Q> mStackCamera;
 
@@ -23,13 +20,11 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
   private final Variable<StackMetaData> mMetaData;
 
   protected final Variable<Boolean> mKeepPlane;
-  protected BoundedVariable<Long> mStackWidthVariable,
-      mStackHeightVariable;
+  protected BoundedVariable<Long> mStackWidthVariable, mStackHeightVariable;
   protected Variable<Long> mStackDepthVariable;
 
   /**
    * Instantiates a real-time stack camera queue
-   * 
    */
   public StackCameraQueue()
   {
@@ -37,54 +32,36 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
 
     mKeepPlane = new Variable<Boolean>("KeepPlane", true);
 
-    mExposureInSecondsVariable =
-                               new Variable<Number>("ExposureInSeconds",
-                                                    0);
+    mExposureInSecondsVariable = new Variable<Number>("ExposureInSeconds", 0);
 
-    mStackWidthVariable =
-                        new BoundedVariable<Long>("FrameWidth",
-                                                  320L,
-                                                  0L,
-                                                  Long.MAX_VALUE);
+    mStackWidthVariable = new BoundedVariable<Long>("FrameWidth", 320L, 0L, Long.MAX_VALUE);
 
-    mStackHeightVariable = new BoundedVariable<Long>("FrameHeight",
-                                                     320L,
-                                                     0L,
-                                                     Long.MAX_VALUE);
+    mStackHeightVariable = new BoundedVariable<Long>("FrameHeight", 320L, 0L, Long.MAX_VALUE);
 
     mStackDepthVariable = new Variable<Long>("FrameDepth", 100L);
 
-    mMetaData = new Variable<StackMetaData>("MetaData",
-                                            new StackMetaData());
+    mMetaData = new Variable<StackMetaData>("MetaData", new StackMetaData());
 
     registerVariable(mKeepPlane);
   }
 
   /**
    * Returns parent stack camera
-   * 
-   * @param pStackCamera
-   *          parent stack camera
-   * 
+   *
+   * @param pStackCamera parent stack camera
    */
   public void setStackCamera(StackCameraDeviceInterface<Q> pStackCamera)
   {
     mStackCamera = pStackCamera;
 
-    mStackWidthVariable.setMinMax(0L,
-                                  pStackCamera.getMaxWidthVariable()
-                                              .get()
-                                              .longValue());
+    mStackWidthVariable.setMinMax(0L, pStackCamera.getMaxWidthVariable().get().longValue());
 
-    mStackHeightVariable.setMinMax(0L,
-                                   pStackCamera.getMaxHeightVariable()
-                                               .get()
-                                               .longValue());
+    mStackHeightVariable.setMinMax(0L, pStackCamera.getMaxHeightVariable().get().longValue());
   }
 
   /**
    * Returns parent stack camera
-   * 
+   *
    * @return parent stack camera
    */
   public StackCameraDeviceInterface<Q> getStackCamera()
@@ -94,9 +71,8 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
 
   /**
    * Instantiates a stack camera queue
-   * 
-   * @param pStackCameraQueue
-   *          stack camera queue
+   *
+   * @param pStackCameraQueue stack camera queue
    */
   public StackCameraQueue(StackCameraQueue<Q> pStackCameraQueue)
   {
@@ -104,24 +80,17 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
 
     setStackCamera(pStackCameraQueue.getStackCamera());
 
-    getKeepPlaneVariable().set(pStackCameraQueue.getKeepPlaneVariable()
-                                                .get());
+    getKeepPlaneVariable().set(pStackCameraQueue.getKeepPlaneVariable().get());
 
-    getExposureInSecondsVariable().set(pStackCameraQueue.getExposureInSecondsVariable()
-                                                        .get());
+    getExposureInSecondsVariable().set(pStackCameraQueue.getExposureInSecondsVariable().get());
 
-    getStackWidthVariable().set(pStackCameraQueue.getStackWidthVariable()
-                                                 .get());
+    getStackWidthVariable().set(pStackCameraQueue.getStackWidthVariable().get());
 
-    getStackHeightVariable().set(pStackCameraQueue.getStackHeightVariable()
-                                                  .get());
+    getStackHeightVariable().set(pStackCameraQueue.getStackHeightVariable().get());
 
-    getStackDepthVariable().set(pStackCameraQueue.getStackDepthVariable()
-                                                 .get());
+    getStackDepthVariable().set(pStackCameraQueue.getStackDepthVariable().get());
 
-    getMetaDataVariable().set(pStackCameraQueue.getMetaDataVariable()
-                                               .get()
-                                               .clone());
+    getMetaDataVariable().set(pStackCameraQueue.getMetaDataVariable().get().clone());
 
   }
 
@@ -130,7 +99,7 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
    * image. This is for state queueing purposes, and allows to discard images
    * within an acquired stack. This can be used for discarding images at the
    * beginning or end of a stack.
-   * 
+   *
    * @return keep plane flag variable
    */
   public Variable<Boolean> getKeepPlaneVariable()
@@ -140,7 +109,7 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
 
   /**
    * Returns the meta data variable
-   * 
+   *
    * @return meta data variable
    */
   public Variable<StackMetaData> getMetaDataVariable()
@@ -150,7 +119,7 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
 
   /**
    * Returns the exposure variable (in seconds)
-   * 
+   *
    * @return exposure variable
    */
   public Variable<Number> getExposureInSecondsVariable()
@@ -160,7 +129,7 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
 
   /**
    * Returns the stack width
-   * 
+   *
    * @return stack width
    */
   public Variable<Long> getStackWidthVariable()
@@ -170,7 +139,7 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
 
   /**
    * Returns the stack height
-   * 
+   *
    * @return stack height
    */
   public Variable<Long> getStackHeightVariable()
@@ -180,7 +149,7 @@ public abstract class StackCameraQueue<Q extends StackCameraQueue<Q>>
 
   /**
    * Returns the stack depth
-   * 
+   *
    * @return stack depth
    */
   public Variable<Long> getStackDepthVariable()

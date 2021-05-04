@@ -8,5 +8,5 @@ package clearcontrol.devices.cameras;
 @SuppressWarnings("javadoc")
 public enum StandardTriggerType implements TriggerTypeInterface
 {
- Internal, Software, ExternalEdge, ExternalLevel
+  Internal, Software, ExternalEdge, ExternalLevel
 };

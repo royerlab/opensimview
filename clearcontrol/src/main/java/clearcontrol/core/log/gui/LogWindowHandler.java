@@ -1,10 +1,10 @@
 package clearcontrol.core.log.gui;
 
+import clearcontrol.core.log.CompactFormatter;
+
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-
-import clearcontrol.core.log.CompactFormatter;
 
 /**
  * Log window handler
@@ -23,20 +23,17 @@ public class LogWindowHandler extends Handler
   private LogWindowHandler(String pTitle, int pWidth, int pHeight)
   {
     setLevel(Level.INFO);
-    if (mWindow == null)
-      mWindow = new LogWindow(pTitle, pWidth, pHeight);
+    if (mWindow == null) mWindow = new LogWindow(pTitle, pWidth, pHeight);
   }
 
   /**
    * Sets the visibility of the log window
-   * 
-   * @param pVisible
-   *          visible if true, invisible otherwise
+   *
+   * @param pVisible visible if true, invisible otherwise
    */
   public static synchronized void setVisible(boolean pVisible)
   {
-    if (sHandler != null)
-      sHandler.mWindow.setVisible(pVisible);
+    if (sHandler != null) sHandler.mWindow.setVisible(pVisible);
   }
 
   /**
@@ -44,16 +41,14 @@ public class LogWindowHandler extends Handler
    */
   public static void dispose()
   {
-    if (sHandler != null)
-      sHandler.mWindow.dispose();
+    if (sHandler != null) sHandler.mWindow.dispose();
   }
 
   /**
    * Returns a log window handler for a given title. if it does not exist it is
    * created.
-   * 
-   * @param pTitle
-   *          log window title
+   *
+   * @param pTitle log window title
    * @return log window handler
    */
   public static synchronized LogWindowHandler getInstance(String pTitle)
@@ -64,18 +59,13 @@ public class LogWindowHandler extends Handler
   /**
    * Returns a log window handler for a given title and window dimensions. if it
    * does not exist it is created.
-   * 
-   * @param pTitle
-   *          log window title
-   * @param pWidth
-   *          window width
-   * @param pHeight
-   *          window height
+   *
+   * @param pTitle  log window title
+   * @param pWidth  window width
+   * @param pHeight window height
    * @return log window handler
    */
-  public static synchronized LogWindowHandler getInstance(String pTitle,
-                                                          int pWidth,
-                                                          int pHeight)
+  public static synchronized LogWindowHandler getInstance(String pTitle, int pWidth, int pHeight)
   {
     if (sHandler == null)
     {
@@ -92,13 +82,11 @@ public class LogWindowHandler extends Handler
     {
       String message = null;
       // check if the record is loggable
-      if (!isLoggable(record))
-        return;
+      if (!isLoggable(record)) return;
       try
       {
         message = getFormatter().format(record);
-      }
-      catch (final Exception e)
+      } catch (final Exception e)
       {
         e.printStackTrace();
       }
@@ -106,13 +94,11 @@ public class LogWindowHandler extends Handler
       try
       {
         mWindow.append(message);
-      }
-      catch (final Exception e)
+      } catch (final Exception e)
       {
         e.printStackTrace();
       }
-    }
-    catch (final Throwable e)
+    } catch (final Throwable e)
     {
       e.printStackTrace();
     }
@@ -124,10 +110,8 @@ public class LogWindowHandler extends Handler
   {
     try
     {
-      if (mWindow != null)
-        mWindow.dispose();
-    }
-    catch (final Throwable e)
+      if (mWindow != null) mWindow.dispose();
+    } catch (final Throwable e)
     {
       e.printStackTrace();
     }

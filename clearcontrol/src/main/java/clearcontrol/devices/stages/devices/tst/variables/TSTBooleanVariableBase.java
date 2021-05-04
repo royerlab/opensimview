@@ -9,22 +9,18 @@ import clearcontrol.core.variable.Variable;
  *
  * @author royer
  */
-public abstract class TSTBooleanVariableBase extends Variable<Boolean>
-                                             implements LoggingFeature
+public abstract class TSTBooleanVariableBase extends Variable<Boolean> implements LoggingFeature
 {
 
   protected final APTJDevice mAPTJDevice;
 
   /**
    * Instantiates a TST boolean variable
-   * 
-   * @param pVariableName
-   *          variable name
-   * @param pAPTJDevice
-   *          APTJ device
+   *
+   * @param pVariableName variable name
+   * @param pAPTJDevice   APTJ device
    */
-  public TSTBooleanVariableBase(String pVariableName,
-                                APTJDevice pAPTJDevice)
+  public TSTBooleanVariableBase(String pVariableName, APTJDevice pAPTJDevice)
   {
     super(pVariableName, false);
     mAPTJDevice = pAPTJDevice;
@@ -32,7 +28,7 @@ public abstract class TSTBooleanVariableBase extends Variable<Boolean>
 
   /**
    * Returns the APTJ device
-   * 
+   *
    * @return APTJ device
    */
   public APTJDevice getAPTJDevice()

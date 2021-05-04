@@ -23,7 +23,7 @@ public class CameraResolutionGrid extends GridPane
     /**
      * Returns an event handler for the button of corresponding image width and
      * height
-     * 
+     *
      * @param pWidth
      * @param pheight
      * @return handler
@@ -33,17 +33,12 @@ public class CameraResolutionGrid extends GridPane
 
   /**
    * Instantiates a camera resolution grid
-   * 
-   * @param pButtonEventHandler
-   *          button handler
-   * @param pMaxWidth
-   *          max width
-   * @param pMaxHeight
-   *          max height
+   *
+   * @param pButtonEventHandler button handler
+   * @param pMaxWidth           max width
+   * @param pMaxHeight          max height
    */
-  public CameraResolutionGrid(ButtonEventHandler pButtonEventHandler,
-                              int pMaxWidth,
-                              int pMaxHeight)
+  public CameraResolutionGrid(ButtonEventHandler pButtonEventHandler, int pMaxWidth, int pMaxHeight)
   {
     super();
 
@@ -63,8 +58,7 @@ public class CameraResolutionGrid extends GridPane
         button.setMaxWidth(Double.MAX_VALUE);
         button.setMinWidth(45);
         button.setMinHeight(45);
-        button.setOnAction(pButtonEventHandler.getHandler(width,
-                                                          height));
+        button.setOnAction(pButtonEventHandler.getHandler(width, height));
 
         // Place the button on the GridPane
         add(button, x, y);
@@ -74,8 +68,7 @@ public class CameraResolutionGrid extends GridPane
 
   private static int log2(int n)
   {
-    if (n <= 0)
-      throw new IllegalArgumentException();
+    if (n <= 0) throw new IllegalArgumentException();
     return 31 - Integer.numberOfLeadingZeros(n);
   }
 

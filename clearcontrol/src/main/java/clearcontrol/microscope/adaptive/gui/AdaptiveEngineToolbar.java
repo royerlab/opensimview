@@ -1,21 +1,5 @@
 package clearcontrol.microscope.adaptive.gui;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TitledPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableSetListener;
@@ -23,21 +7,30 @@ import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import clearcontrol.gui.jfx.var.checkbox.VariableCheckBox;
 import clearcontrol.microscope.adaptive.AdaptiveEngine;
 import clearcontrol.microscope.adaptive.modules.AdaptationModuleInterface;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Adaptor Panel
  *
  * @author royer
  */
-public class AdaptiveEngineToolbar extends CustomGridPane
-                                   implements LoggingFeature
+public class AdaptiveEngineToolbar extends CustomGridPane implements LoggingFeature
 {
 
   /**
    * Instantiates a panel given an adaptive engine
-   * 
-   * @param pAdaptiveEngine
-   *          adaptor
+   *
+   * @param pAdaptiveEngine adaptor
    */
   public AdaptiveEngineToolbar(AdaptiveEngine<?> pAdaptiveEngine)
   {
@@ -58,7 +51,8 @@ public class AdaptiveEngineToolbar extends CustomGridPane
       Button lStart = new Button("Start");
       lStart.setAlignment(Pos.CENTER);
       lStart.setMaxWidth(Double.MAX_VALUE);
-      lStart.setOnAction((e) -> {
+      lStart.setOnAction((e) ->
+      {
         pAdaptiveEngine.startTask();
       });
       GridPane.setColumnSpan(lStart, 2);
@@ -72,7 +66,8 @@ public class AdaptiveEngineToolbar extends CustomGridPane
       Button lStop = new Button("Stop");
       lStop.setAlignment(Pos.CENTER);
       lStop.setMaxWidth(Double.MAX_VALUE);
-      lStop.setOnAction((e) -> {
+      lStop.setOnAction((e) ->
+      {
         pAdaptiveEngine.stopTask();
       });
       GridPane.setColumnSpan(lStop, 2);
@@ -86,7 +81,8 @@ public class AdaptiveEngineToolbar extends CustomGridPane
       Button lReset = new Button("Reset");
       lReset.setAlignment(Pos.CENTER);
       lReset.setMaxWidth(Double.MAX_VALUE);
-      lReset.setOnAction((e) -> {
+      lReset.setOnAction((e) ->
+      {
         pAdaptiveEngine.reset();
       });
       GridPane.setColumnSpan(lReset, 2);
@@ -97,43 +93,35 @@ public class AdaptiveEngineToolbar extends CustomGridPane
     }
 
     {
-      ProgressIndicator lCalibrationProgressIndicator =
-                                                      new ProgressIndicator(0.0);
+      ProgressIndicator lCalibrationProgressIndicator = new ProgressIndicator(0.0);
       lCalibrationProgressIndicator.setMaxWidth(Double.MAX_VALUE);
       lCalibrationProgressIndicator.setStyle(".percentage { visibility: hidden; }");
       GridPane.setRowSpan(lCalibrationProgressIndicator, 3);
       GridPane.setColumnSpan(lCalibrationProgressIndicator, 2);
       add(lCalibrationProgressIndicator, 2, 0);
 
-      pAdaptiveEngine.getProgressVariable().addEdgeListener((n) -> {
-        Platform.runLater(() -> {
-          lCalibrationProgressIndicator.setProgress(pAdaptiveEngine.getProgressVariable()
-                                                                   .get());
+      pAdaptiveEngine.getProgressVariable().addEdgeListener((n) ->
+      {
+        Platform.runLater(() ->
+        {
+          lCalibrationProgressIndicator.setProgress(pAdaptiveEngine.getProgressVariable().get());
         });
       });
     }
 
     {
-      VariableCheckBox lCheckBox =
-                                 new VariableCheckBox("run until done",
-                                                      pAdaptiveEngine.getRunUntilAllModulesReadyVariable());
+      VariableCheckBox lCheckBox = new VariableCheckBox("run until done", pAdaptiveEngine.getRunUntilAllModulesReadyVariable());
       GridPane.setColumnSpan(lCheckBox, 3);
       add(lCheckBox, 0, lRow);
       lRow++;
     }
 
-    @SuppressWarnings(
-    { "unchecked", "rawtypes" })
-    ArrayList<AdaptationModuleInterface<?>> lModuleList =
-                                                        (ArrayList) pAdaptiveEngine.getModuleList();
+    @SuppressWarnings({"unchecked", "rawtypes"}) ArrayList<AdaptationModuleInterface<?>> lModuleList = (ArrayList) pAdaptiveEngine.getModuleList();
 
     {
       for (AdaptationModuleInterface<?> lAdaptationModuleInterface : lModuleList)
       {
-        addCalibrationModuleCheckBoxAndStatus(pAdaptiveEngine,
-                                              lAdaptationModuleInterface,
-                                              0,
-                                              lRow++);
+        addCalibrationModuleCheckBoxAndStatus(pAdaptiveEngine, lAdaptationModuleInterface, 0, lRow++);
       }
     }
 
@@ -146,39 +134,24 @@ public class AdaptiveEngineToolbar extends CustomGridPane
       {
         try
         {
-          Class<?> lAdaptationModuleClass =
-                                          lAdaptationModule.getClass();
-          String lAdaptationModuleClassName =
-                                            lAdaptationModuleClass.getSimpleName();
-          String lAdaptationModulePanelClassName =
-                                                 lAdaptationModuleClass.getPackage()
-                                                                       .getName()
-                                                   + ".gui."
-                                                   + lAdaptationModuleClassName
-                                                   + "Panel";
-          info("Searching for class %s as panel for adaptation module %s \n",
-               lAdaptationModulePanelClassName,
-               lAdaptationModuleClassName);
-          Class<?> lClass =
-                          Class.forName(lAdaptationModulePanelClassName);
-          Constructor<?> lConstructor =
-                                      lClass.getConstructor(lAdaptationModule.getClass());
-          Node lPanel =
-                      (Node) lConstructor.newInstance(lAdaptationModule);
+          Class<?> lAdaptationModuleClass = lAdaptationModule.getClass();
+          String lAdaptationModuleClassName = lAdaptationModuleClass.getSimpleName();
+          String lAdaptationModulePanelClassName = lAdaptationModuleClass.getPackage().getName() + ".gui." + lAdaptationModuleClassName + "Panel";
+          info("Searching for class %s as panel for adaptation module %s \n", lAdaptationModulePanelClassName, lAdaptationModuleClassName);
+          Class<?> lClass = Class.forName(lAdaptationModulePanelClassName);
+          Constructor<?> lConstructor = lClass.getConstructor(lAdaptationModule.getClass());
+          Node lPanel = (Node) lConstructor.newInstance(lAdaptationModule);
 
           Tab lTab = new Tab(lAdaptationModule.getName());
           lTab.setClosable(false);
           lTab.setContent(lPanel);
           lTabPane.getTabs().add(lTab);
 
-        }
-        catch (ClassNotFoundException e)
+        } catch (ClassNotFoundException e)
         {
-          warning("Cannot find panel for module %s \n",
-                  lAdaptationModule.getName());
+          warning("Cannot find panel for module %s \n", lAdaptationModule.getName());
           // e.printStackTrace();
-        }
-        catch (Throwable e)
+        } catch (Throwable e)
         {
           e.printStackTrace();
         }
@@ -190,20 +163,13 @@ public class AdaptiveEngineToolbar extends CustomGridPane
 
   }
 
-  private void addCalibrationModuleCheckBoxAndStatus(AdaptiveEngine<?> pAdaptiveEngine,
-                                                     AdaptationModuleInterface<?> pAdaptationModule,
-                                                     int pColumn,
-                                                     int pRow)
+  private void addCalibrationModuleCheckBoxAndStatus(AdaptiveEngine<?> pAdaptiveEngine, AdaptationModuleInterface<?> pAdaptationModule, int pColumn, int pRow)
   {
     String pName = pAdaptationModule.getName();
-    Variable<Boolean> lCalibrateVariable =
-                                         pAdaptationModule.getIsActiveVariable();
-    Variable<String> pStatusStringVariable =
-                                           pAdaptationModule.getStatusStringVariable();
+    Variable<Boolean> lCalibrateVariable = pAdaptationModule.getIsActiveVariable();
+    Variable<String> pStatusStringVariable = pAdaptationModule.getStatusStringVariable();
 
-    VariableCheckBox lCheckBox =
-                               new VariableCheckBox(pName,
-                                                    lCalibrateVariable);
+    VariableCheckBox lCheckBox = new VariableCheckBox(pName, lCalibrateVariable);
 
     lCheckBox.getLabel().setAlignment(Pos.CENTER_LEFT);
     lCheckBox.getLabel().setMaxWidth(Double.MAX_VALUE);
@@ -215,14 +181,13 @@ public class AdaptiveEngineToolbar extends CustomGridPane
     Label lEstimatedTimeLabel = new Label();
     lStatusLabel.setPrefWidth(100);
     lEstimatedTimeLabel.setPrefWidth(200);
-    VariableSetListener<String> lListener = (o, n) -> {
+    VariableSetListener<String> lListener = (o, n) ->
+    {
 
-      Runnable lRunnable = () -> {
+      Runnable lRunnable = () ->
+      {
         lStatusLabel.setText(" -> " + n);
-        lEstimatedTimeLabel.setText("Estimated time: "
-                                    + pAdaptiveEngine.getEstimatedModuleStepTime(pAdaptationModule,
-                                                                                 TimeUnit.MILLISECONDS)
-                                    + " ms");
+        lEstimatedTimeLabel.setText("Estimated time: " + pAdaptiveEngine.getEstimatedModuleStepTime(pAdaptationModule, TimeUnit.MILLISECONDS) + " ms");
       };
 
       Platform.runLater(lRunnable);

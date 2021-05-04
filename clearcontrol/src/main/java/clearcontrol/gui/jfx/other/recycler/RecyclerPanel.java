@@ -1,6 +1,8 @@
 package clearcontrol.gui.jfx.other.recycler;
 
-import java.util.concurrent.CountDownLatch;
+import clearcontrol.core.string.MemorySizeFormat;
+import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
+import coremem.recycling.RecyclerInterface;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
@@ -13,11 +15,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 
-import javax.swing.SwingUtilities;
-
-import clearcontrol.core.string.MemorySizeFormat;
-import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
-import coremem.recycling.RecyclerInterface;
+import javax.swing.*;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Recycler panel
@@ -39,9 +38,8 @@ public class RecyclerPanel extends CustomGridPane
 
   /**
    * Instanciates a recycler panel given a recycler
-   * 
-   * @param pRecycler
-   *          recycler
+   *
+   * @param pRecycler recycler
    */
   public RecyclerPanel(RecyclerInterface<?, ?> pRecycler)
   {
@@ -57,22 +55,13 @@ public class RecyclerPanel extends CustomGridPane
     int lMaxAvailable = pRecycler.getMaxNumberOfAvailableObjects();
     long lFailedRequests = pRecycler.getNumberOfFailedRequests();
 
-    Label lNumberLiveObjectsLabel = new Label(String.format("%d/%d ",
-                                                            0,
-                                                            lMaxLive));
-    Label lNumberAvailableObjectsLabel =
-                                       new Label(String.format("%d/%d ",
-                                                               0,
-                                                               lMaxAvailable));
+    Label lNumberLiveObjectsLabel = new Label(String.format("%d/%d ", 0, lMaxLive));
+    Label lNumberAvailableObjectsLabel = new Label(String.format("%d/%d ", 0, lMaxAvailable));
 
-    Label lNumberOfFailedRequestsLabel =
-                                       new Label(String.format("%d ",
-                                                               0,
-                                                               lFailedRequests));
+    Label lNumberOfFailedRequestsLabel = new Label(String.format("%d ", 0, lFailedRequests));
 
     ProgressBar lFillFactorBarLiveObjectsBar = new ProgressBar(0);
-    ProgressBar lFillFactorBarAvailableObjectsBar =
-                                                  new ProgressBar(0);
+    ProgressBar lFillFactorBarAvailableObjectsBar = new ProgressBar(0);
     ProgressBar lFailedRequestsBar = new ProgressBar(0);
 
     lFillFactorBarLiveObjectsBar.setMaxWidth(Double.MAX_VALUE);
@@ -85,12 +74,13 @@ public class RecyclerPanel extends CustomGridPane
     Label lAvailableMemorySizeLabel = new Label("0");
 
     Button lClearLiveObjectsButton = new Button("Clear Live");
-    lClearLiveObjectsButton.setOnAction((e) -> {
+    lClearLiveObjectsButton.setOnAction((e) ->
+    {
       pRecycler.clearLive();
     });
-    Button lClearAvailableObjectsButton =
-                                        new Button("Clear Available");
-    lClearAvailableObjectsButton.setOnAction((e) -> {
+    Button lClearAvailableObjectsButton = new Button("Clear Available");
+    lClearAvailableObjectsButton.setOnAction((e) ->
+    {
       pRecycler.clearReleased();
     });
 
@@ -110,8 +100,7 @@ public class RecyclerPanel extends CustomGridPane
     getColumnConstraints().addAll(col1, col2, col3, col4, col5);
 
     GridPane.setHgrow(lFillFactorBarLiveObjectsBar, Priority.ALWAYS);
-    GridPane.setHgrow(lFillFactorBarAvailableObjectsBar,
-                      Priority.ALWAYS);
+    GridPane.setHgrow(lFillFactorBarAvailableObjectsBar, Priority.ALWAYS);
     GridPane.setHgrow(lFailedRequestsBar, Priority.ALWAYS);
 
     add(lLiveObjectsLabel, 0, 0);
@@ -130,46 +119,29 @@ public class RecyclerPanel extends CustomGridPane
     add(lNumberOfFailedRequestsLabel, 1, 2);
     add(lFailedRequestsBar, 2, 2);
 
-    pRecycler.addListener((live, available, failed) -> {
+    pRecycler.addListener((live, available, failed) ->
+    {
 
-      final double lLiveObjectsFillFactor =
-                                          ((double) live) / lMaxLive;
-      final double lAvailableObjectsFillFactor = ((double) available)
-                                                 / lMaxAvailable;
-      final double lFailedRequestsFillFactor = 1 - Math.exp(-failed
-                                                            / 10.0);
+      final double lLiveObjectsFillFactor = ((double) live) / lMaxLive;
+      final double lAvailableObjectsFillFactor = ((double) available) / lMaxAvailable;
+      final double lFailedRequestsFillFactor = 1 - Math.exp(-failed / 10.0);
 
-      final double lTotalLiveMemoryInBytes =
-                                           pRecycler.computeLiveMemorySizeInBytes();
-      final double lTotalAvailableMemoryInBytes =
-                                                pRecycler.computeAvailableMemorySizeInBytes();
+      final double lTotalLiveMemoryInBytes = pRecycler.computeLiveMemorySizeInBytes();
+      final double lTotalAvailableMemoryInBytes = pRecycler.computeAvailableMemorySizeInBytes();
 
-      Platform.runLater(() -> {
-        lNumberLiveObjectsLabel.textProperty()
-                               .set(String.format("%d/%d ",
-                                                  live,
-                                                  lMaxLive));
-        lNumberAvailableObjectsLabel.textProperty()
-                                    .set(String.format("%d/%d ",
-                                                       available,
-                                                       lMaxAvailable));
-        lNumberOfFailedRequestsLabel.textProperty()
-                                    .set(String.format("%d", failed));
+      Platform.runLater(() ->
+      {
+        lNumberLiveObjectsLabel.textProperty().set(String.format("%d/%d ", live, lMaxLive));
+        lNumberAvailableObjectsLabel.textProperty().set(String.format("%d/%d ", available, lMaxAvailable));
+        lNumberOfFailedRequestsLabel.textProperty().set(String.format("%d", failed));
 
-        lFillFactorBarLiveObjectsBar.progressProperty()
-                                    .set(lLiveObjectsFillFactor);
-        lFillFactorBarAvailableObjectsBar.progressProperty()
-                                         .set(lAvailableObjectsFillFactor);
-        lFailedRequestsBar.progressProperty()
-                          .set(lFailedRequestsFillFactor);
+        lFillFactorBarLiveObjectsBar.progressProperty().set(lLiveObjectsFillFactor);
+        lFillFactorBarAvailableObjectsBar.progressProperty().set(lAvailableObjectsFillFactor);
+        lFailedRequestsBar.progressProperty().set(lFailedRequestsFillFactor);
 
-        lLiveMemorySizeLabel.textProperty()
-                            .set(MemorySizeFormat.format(lTotalLiveMemoryInBytes,
-                                                         true));
+        lLiveMemorySizeLabel.textProperty().set(MemorySizeFormat.format(lTotalLiveMemoryInBytes, true));
 
-        lAvailableMemorySizeLabel.textProperty()
-                                 .set(MemorySizeFormat.format(lTotalAvailableMemoryInBytes,
-                                                              true));
+        lAvailableMemorySizeLabel.textProperty().set(MemorySizeFormat.format(lTotalAvailableMemoryInBytes, true));
       });
 
     });
@@ -178,14 +150,11 @@ public class RecyclerPanel extends CustomGridPane
 
   /**
    * Opens panel in separate window
-   * 
-   * @param pWindowTitle
-   *          window
-   * @param pRecycler
-   *          recycler
+   *
+   * @param pWindowTitle window
+   * @param pRecycler    recycler
    */
-  public static void openPaneInWindow(String pWindowTitle,
-                                      RecyclerInterface<?, ?> pRecycler)
+  public static void openPaneInWindow(String pWindowTitle, RecyclerInterface<?, ?> pRecycler)
   {
     try
     {
@@ -200,20 +169,19 @@ public class RecyclerPanel extends CustomGridPane
         }
       });
       lCountDownLatch.await();
-    }
-    catch (InterruptedException e)
+    } catch (InterruptedException e)
     {
     }
 
-    Platform.runLater(() -> {
+    Platform.runLater(() ->
+    {
       Stage lStage = new Stage();
       Group root = new Group();
       Scene scene = new Scene(root, cPrefWidth, cPrefHeight);
       lStage.setScene(scene);
       lStage.setTitle(pWindowTitle);
 
-      RecyclerPanel lInstrumentedRecyclerPane =
-                                              new RecyclerPanel(pRecycler);
+      RecyclerPanel lInstrumentedRecyclerPane = new RecyclerPanel(pRecycler);
 
       root.getChildren().add(lInstrumentedRecyclerPane);
 

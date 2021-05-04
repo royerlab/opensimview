@@ -11,8 +11,7 @@ import clearcontrol.core.device.VirtualDevice;
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de) January
  * 2018
  */
-public abstract class InstructionBase extends VirtualDevice implements
-                                                            InstructionInterface
+public abstract class InstructionBase extends VirtualDevice implements InstructionInterface
 {
   /**
    * @param pInstructionName instruction name

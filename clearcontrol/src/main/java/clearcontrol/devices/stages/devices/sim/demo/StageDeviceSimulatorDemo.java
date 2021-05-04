@@ -1,14 +1,13 @@
 package clearcontrol.devices.stages.devices.sim.demo;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.devices.stages.StageType;
 import clearcontrol.devices.stages.devices.sim.StageDeviceSimulator;
-
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertTrue;
 
 public class StageDeviceSimulatorDemo
 {
@@ -16,9 +15,7 @@ public class StageDeviceSimulatorDemo
   @Test
   public void test() throws InterruptedException
   {
-    StageDeviceSimulator lStageDeviceSimulator =
-                                               new StageDeviceSimulator("demostage",
-                                                                        StageType.Single);
+    StageDeviceSimulator lStageDeviceSimulator = new StageDeviceSimulator("demostage", StageType.Single);
 
     lStageDeviceSimulator.setSimLogging(true);
 
@@ -27,8 +24,7 @@ public class StageDeviceSimulatorDemo
 
     lStageDeviceSimulator.setTargetPosition(0, 1);
 
-    while (Math.abs(lStageDeviceSimulator.getCurrentPosition(0)
-                    - 1) > 0.01)
+    while (Math.abs(lStageDeviceSimulator.getCurrentPosition(0) - 1) > 0.01)
     {
       System.out.println(lStageDeviceSimulator.getCurrentPosition(0));
       ThreadSleep.sleep(200, TimeUnit.MILLISECONDS);
@@ -45,9 +41,7 @@ public class StageDeviceSimulatorDemo
   @Test
   public void testDirectionVector()
   {
-    StageDeviceSimulator sds =
-                             new StageDeviceSimulator("demo",
-                                                      StageType.XYZR);
+    StageDeviceSimulator sds = new StageDeviceSimulator("demo", StageType.XYZR);
     sds.setSimLogging(true);
     sds.addXYZRDOFs();
     sds.enable(0);
@@ -58,8 +52,7 @@ public class StageDeviceSimulatorDemo
     try
     {
       Thread.sleep(5000);
-    }
-    catch (InterruptedException e)
+    } catch (InterruptedException e)
     {
       e.printStackTrace();
     }

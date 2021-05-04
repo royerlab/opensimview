@@ -1,21 +1,18 @@
 package clearcontrol.core.concurrent.asyncprocs;
 
-import java.util.concurrent.TimeUnit;
-
 import clearcontrol.core.device.startstop.StartStopDeviceInterface;
 import clearcontrol.core.variable.Variable;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Asynchronous processor that receives and sends objects via variables
  *
- * @param <I>
- *          input type
- * @param <O>
- *          outpt type
+ * @param <I> input type
+ * @param <O> outpt type
  * @author royer
  */
-public class ObjectVariableAsynchronousProcessor<I, O> implements
-                                                StartStopDeviceInterface
+public class ObjectVariableAsynchronousProcessor<I, O> implements StartStopDeviceInterface
 {
   private static final long cTimeOutInSeconds = 1;
 
@@ -26,21 +23,14 @@ public class ObjectVariableAsynchronousProcessor<I, O> implements
 
   /**
    * Instantiates an asynchronous
-   * 
-   * @param pName
-   *          name
-   * @param pMaxQueueSize
-   *          max queue size
-   * @param pProcessor
-   *          processor
-   * @param pDropIfQueueFull
-   *          drops objects if queue is full, otherwise just waits until queue
-   *          has free slots
+   *
+   * @param pName            name
+   * @param pMaxQueueSize    max queue size
+   * @param pProcessor       processor
+   * @param pDropIfQueueFull drops objects if queue is full, otherwise just waits until queue
+   *                         has free slots
    */
-  public ObjectVariableAsynchronousProcessor(final String pName,
-                                             final int pMaxQueueSize,
-                                             final ProcessorInterface<I, O> pProcessor,
-                                             final boolean pDropIfQueueFull)
+  public ObjectVariableAsynchronousProcessor(final String pName, final int pMaxQueueSize, final ProcessorInterface<I, O> pProcessor, final boolean pDropIfQueueFull)
   {
     super();
 
@@ -54,24 +44,21 @@ public class ObjectVariableAsynchronousProcessor<I, O> implements
         if (pDropIfQueueFull)
         {
           mAsynchronousProcessorBase.passOrFail(pNewReference);
-        }
-        else
+        } else
         {
           mAsynchronousProcessorBase.passOrWait(pNewReference);
         }
       }
     };
 
-    mAsynchronousProcessorBase =
-                               new AsynchronousProcessorBase<I, O>(pName,
-                                                                   pMaxQueueSize)
-                               {
-                                 @Override
-                                 public O process(final I pInput)
-                                 {
-                                   return pProcessor.process(pInput);
-                                 }
-                               };
+    mAsynchronousProcessorBase = new AsynchronousProcessorBase<I, O>(pName, pMaxQueueSize)
+    {
+      @Override
+      public O process(final I pInput)
+      {
+        return pProcessor.process(pInput);
+      }
+    };
 
     mAsynchronousProcessorBase.connectToReceiver(new AsynchronousProcessorAdapter<O, O>()
     {
@@ -96,7 +83,7 @@ public class ObjectVariableAsynchronousProcessor<I, O> implements
 
   /**
    * Returns the input object variable
-   * 
+   *
    * @return input object variable
    */
   public Variable<I> getInputObjectVariable()
@@ -106,7 +93,7 @@ public class ObjectVariableAsynchronousProcessor<I, O> implements
 
   /**
    * Returns the output object variable
-   * 
+   *
    * @return output object variable
    */
   public Variable<O> getOutputObjectVariable()
@@ -123,8 +110,7 @@ public class ObjectVariableAsynchronousProcessor<I, O> implements
   @Override
   public boolean stop()
   {
-    return mAsynchronousProcessorBase.stop(cTimeOutInSeconds,
-                                           TimeUnit.SECONDS);
+    return mAsynchronousProcessorBase.stop(cTimeOutInSeconds, TimeUnit.SECONDS);
   }
 
 }

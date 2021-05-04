@@ -1,13 +1,11 @@
 package clearcontrol.devices.signalgen.staves;
 
-public class ClosurePatternSteppingStave extends PatternSteppingStave
-                                         implements StaveInterface
+public class ClosurePatternSteppingStave extends PatternSteppingStave implements StaveInterface
 {
 
   private final SteppingFunction mSteppingFunction;
 
-  public ClosurePatternSteppingStave(final String pName,
-                                     SteppingFunction pSteppingFunction)
+  public ClosurePatternSteppingStave(final String pName, SteppingFunction pSteppingFunction)
   {
     super(pName);
     mSteppingFunction = pSteppingFunction;
@@ -16,8 +14,7 @@ public class ClosurePatternSteppingStave extends PatternSteppingStave
   @Override
   public StaveInterface duplicate()
   {
-    StaveInterface lStave = new ClosurePatternSteppingStave(getName(),
-                                           getSteppingFunction());
+    StaveInterface lStave = new ClosurePatternSteppingStave(getName(), getSteppingFunction());
     lStave.setEnabled(this.isEnabled());
     return lStave;
   }

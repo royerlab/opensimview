@@ -1,5 +1,9 @@
 package clearcontrol.gui.jfx.var.onoffarray;
 
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
+import clearcontrol.gui.jfx.custom.iconswitch.IconSwitch;
+import eu.hansolo.enzo.common.SymbolType;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Pos;
@@ -8,11 +12,6 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
-import clearcontrol.gui.jfx.custom.iconswitch.IconSwitch;
-import eu.hansolo.enzo.common.SymbolType;
 
 /**
  * Horizontal array of on/off switches
@@ -36,31 +35,23 @@ public class OnOffArrayPane extends CustomGridPane
 
   /**
    * Adds a given switch.
-   * 
-   * @param pLabelText
-   *          label text
-   * @param pVariable
-   *          boolean variable for switch
+   *
+   * @param pLabelText label text
+   * @param pVariable  boolean variable for switch
    */
-  public void addSwitch(String pLabelText,
-                        Variable<Boolean> pVariable)
+  public void addSwitch(String pLabelText, Variable<Boolean> pVariable)
   {
     addSwitch(pLabelText, pVariable, true);
   }
 
   /**
    * Adds a given switch.
-   * 
-   * @param pLabelText
-   *          label text
-   * @param pVariable
-   *          boolean variable for switch
-   * @param pBidirectional
-   *          bidirectional synchronization
+   *
+   * @param pLabelText     label text
+   * @param pVariable      boolean variable for switch
+   * @param pBidirectional bidirectional synchronization
    */
-  public void addSwitch(String pLabelText,
-                        Variable<Boolean> pVariable,
-                        boolean pBidirectional)
+  public void addSwitch(String pLabelText, Variable<Boolean> pVariable, boolean pBidirectional)
   {
     Control lControl;
     BooleanProperty lSelectedProperty;
@@ -75,18 +66,17 @@ public class OnOffArrayPane extends CustomGridPane
 
       lControl = lIconSwitch;
       lSelectedProperty = lIconSwitch.selectedProperty();
-    }
-    else
+    } else
     {
       CheckBox lCheckBox = new CheckBox();
       lControl = lCheckBox;
       lSelectedProperty = lCheckBox.selectedProperty();
     }
 
-    lControl.setOnMouseClicked((e) -> {
+    lControl.setOnMouseClicked((e) ->
+    {
       boolean lValue = lSelectedProperty.get();
-      if (lValue != pVariable.get())
-        pVariable.setAsync(lValue);
+      if (lValue != pVariable.get()) pVariable.setAsync(lValue);
     });
 
     Label lSwitchName = new Label(pLabelText);
@@ -94,28 +84,28 @@ public class OnOffArrayPane extends CustomGridPane
 
     HBox lHBox = new HBox(lSwitchName, lControl);
     lHBox.setSpacing(8);
-    if (isVertical())
-      lHBox.setAlignment(Pos.CENTER);
-    else
-      lHBox.setAlignment(Pos.CENTER_LEFT);
+    if (isVertical()) lHBox.setAlignment(Pos.CENTER);
+    else lHBox.setAlignment(Pos.CENTER_LEFT);
     add(lHBox, mCursor++, 0);
 
-    pVariable.addSetListener((o, n) -> {
-      if (lSelectedProperty.get() != n && n != null)
-        Platform.runLater(() -> {
-          lSelectedProperty.set(n);
-        });
+    pVariable.addSetListener((o, n) ->
+    {
+      if (lSelectedProperty.get() != n && n != null) Platform.runLater(() ->
+      {
+        lSelectedProperty.set(n);
+      });
 
     });
 
-    Platform.runLater(() -> {
+    Platform.runLater(() ->
+    {
       lSelectedProperty.set(pVariable.get());
     });
   }
 
   /**
    * Returns true if this array is vertical
-   * 
+   *
    * @return true -> vertical
    */
   public boolean isVertical()
@@ -125,9 +115,8 @@ public class OnOffArrayPane extends CustomGridPane
 
   /**
    * Sets whether this array should be vertical
-   * 
-   * @param pVertical
-   *          true -> vertical
+   *
+   * @param pVertical true -> vertical
    */
   public void setVertical(boolean pVertical)
   {
@@ -136,7 +125,7 @@ public class OnOffArrayPane extends CustomGridPane
 
   /**
    * Returns true if this array has the 'fancy style'
-   * 
+   *
    * @return true -> fancy style
    */
   public boolean isFancyStyle()
@@ -146,9 +135,8 @@ public class OnOffArrayPane extends CustomGridPane
 
   /**
    * Sets whether this array should be 'fancy'
-   * 
-   * @param pFancyStyle
-   *          true -> fancy style
+   *
+   * @param pFancyStyle true -> fancy style
    */
   public void setFancyStyle(boolean pFancyStyle)
   {

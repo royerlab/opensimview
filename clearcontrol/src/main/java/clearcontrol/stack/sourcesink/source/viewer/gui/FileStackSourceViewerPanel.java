@@ -1,12 +1,11 @@
 package clearcontrol.stack.sourcesink.source.viewer.gui;
 
-import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-
 import clearcontrol.gui.jfx.var.file.VariableFileChooser;
 import clearcontrol.gui.jfx.var.textfield.StringVariableTextField;
 import clearcontrol.stack.sourcesink.source.viewer.FileStackSourceViewer;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 /**
  * Laser device GUI panel
@@ -21,9 +20,8 @@ public class FileStackSourceViewerPanel extends StackSourceViewerPanel
 
   /**
    * Instantiates a stack source viewer panel
-   * 
-   * @param pFileStackSourceViewer
-   *          stack source viewer
+   *
+   * @param pFileStackSourceViewer stack source viewer
    */
   public FileStackSourceViewerPanel(FileStackSourceViewer pFileStackSourceViewer)
   {
@@ -31,20 +29,15 @@ public class FileStackSourceViewerPanel extends StackSourceViewerPanel
 
     super.init(pFileStackSourceViewer);
 
-    mDatasetNameTextField =
-                          new StringVariableTextField("name: ",
-                                                      pFileStackSourceViewer.getDatasetNameVariable());
+    mDatasetNameTextField = new StringVariableTextField("name: ", pFileStackSourceViewer.getDatasetNameVariable());
 
-    mVariableFileChooser = new VariableFileChooser("Root folder: ",
-                                                   pFileStackSourceViewer.getRootFolderVariable(),
-                                                   true);
+    mVariableFileChooser = new VariableFileChooser("Root folder: ", pFileStackSourceViewer.getRootFolderVariable(), true);
 
     add(mVariableFileChooser.getLabel(), 0, 0);
     add(mVariableFileChooser.getTextField(), 1, 0);
     add(mVariableFileChooser.getButton(), 2, 0);
 
-    GridPane.setHgrow(mDatasetNameTextField.getTextField(),
-                      Priority.SOMETIMES);
+    GridPane.setHgrow(mDatasetNameTextField.getTextField(), Priority.SOMETIMES);
     add(mDatasetNameTextField.getLabel(), 0, 1);
     add(mDatasetNameTextField.getTextField(), 1, 1);
 

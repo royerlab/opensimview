@@ -8,9 +8,7 @@ import clearcontrol.devices.lasers.devices.omicron.adapters.protocol.ProtocolOmi
  *
  * @author royer
  */
-public class GetMaxPowerAdapter extends OmicronAdapter<Number>
-                                implements
-                                SerialTextDeviceAdapter<Number>
+public class GetMaxPowerAdapter extends OmicronAdapter<Number> implements SerialTextDeviceAdapter<Number>
 {
 
   @Override
@@ -23,9 +21,7 @@ public class GetMaxPowerAdapter extends OmicronAdapter<Number>
   public Number parseValue(final byte[] pMessage)
   {
     // System.out.println(new String(pMessage));
-    final String[] lSplittedMessage =
-                                    ProtocolOmicron.splitMessage(ProtocolOmicron.cGetMaxPowerReplyPrefix,
-                                                                 pMessage);
+    final String[] lSplittedMessage = ProtocolOmicron.splitMessage(ProtocolOmicron.cGetMaxPowerReplyPrefix, pMessage);
     final String lMaxPowerString = lSplittedMessage[0];
     final int lMaxPower = Integer.parseInt(lMaxPowerString);
     return (double) lMaxPower;

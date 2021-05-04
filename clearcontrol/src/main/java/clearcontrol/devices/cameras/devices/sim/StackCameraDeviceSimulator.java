@@ -1,11 +1,5 @@
 package clearcontrol.devices.cameras.devices.sim;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.core.concurrent.executors.AsynchronousSchedulerFeature;
 import clearcontrol.core.device.sim.SimulationDeviceInterface;
@@ -18,18 +12,14 @@ import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
 import coremem.recycling.BasicRecycler;
 
+import java.util.concurrent.*;
+
 /**
  * Stack camera simulator.
  *
  * @author royer
  */
-public class StackCameraDeviceSimulator extends
-                                        StackCameraDeviceBase<StackCameraSimulationQueue>
-                                        implements
-                                        LoggingFeature,
-                                        SimulationDeviceInterface,
-                                        AsynchronousSchedulerFeature,
-                                        AsynchronousExecutorFeature
+public class StackCameraDeviceSimulator extends StackCameraDeviceBase<StackCameraSimulationQueue> implements LoggingFeature, SimulationDeviceInterface, AsynchronousSchedulerFeature, AsynchronousExecutorFeature
 {
   private StackCameraSimulationProvider mStackCameraSimulationProvider;
 
@@ -38,15 +28,11 @@ public class StackCameraDeviceSimulator extends
    * default noisy stack provider are sent to the output variable when a
    * positive edge is sent to the trigger variable (false -> true). the stack
    * provider can be changed at any point if needed.
-   * 
-   * @param pDeviceName
-   *          camera device name
-   * @param pTriggerVariable
-   *          trigger variable
    *
+   * @param pDeviceName      camera device name
+   * @param pTriggerVariable trigger variable
    */
-  public StackCameraDeviceSimulator(String pDeviceName,
-                                    Variable<Boolean> pTriggerVariable)
+  public StackCameraDeviceSimulator(String pDeviceName, Variable<Boolean> pTriggerVariable)
   {
     this(pDeviceName, new RandomStackProvider(), pTriggerVariable);
   }
@@ -55,61 +41,49 @@ public class StackCameraDeviceSimulator extends
    * Crates a StackCameraDeviceSimulator of a given name. Stacks from the given
    * stack provider are sent to the output variable when a positive edge is sent
    * to the trigger variable (false -> true).
-   * 
-   * @param pDeviceName
-   *          camera device name
-   * @param pStackCameraSimulationProvider
-   *          stack provider
-   * @param pTriggerVariable
-   *          trigger variable
    *
+   * @param pDeviceName                    camera device name
+   * @param pStackCameraSimulationProvider stack provider
+   * @param pTriggerVariable               trigger variable
    */
-  public StackCameraDeviceSimulator(String pDeviceName,
-                                    StackCameraSimulationProvider pStackCameraSimulationProvider,
-                                    Variable<Boolean> pTriggerVariable)
+  public StackCameraDeviceSimulator(String pDeviceName, StackCameraSimulationProvider pStackCameraSimulationProvider, Variable<Boolean> pTriggerVariable)
   {
-    super(pDeviceName,
-          pTriggerVariable,
-          new StackCameraSimulationQueue());
+    super(pDeviceName, pTriggerVariable, new StackCameraSimulationQueue());
 
     mTemplateQueue.setStackCamera(this);
 
     setStackCameraSimulationProvider(pStackCameraSimulationProvider);
 
-    getStackWidthVariable().addSetListener((o, n) -> {
-      if (isSimLogging())
-        info(getName() + ": New camera width: " + n);
+    getStackWidthVariable().addSetListener((o, n) ->
+    {
+      if (isSimLogging()) info(getName() + ": New camera width: " + n);
     });
 
-    getStackHeightVariable().addSetListener((o, n) -> {
-      if (isSimLogging())
-        info(getName() + ": New camera height: " + n);
+    getStackHeightVariable().addSetListener((o, n) ->
+    {
+      if (isSimLogging()) info(getName() + ": New camera height: " + n);
     });
 
-    getStackDepthVariable().addSetListener((o, n) -> {
-      if (isSimLogging())
-        info(getName() + ": New camera stack depth: " + n);
+    getStackDepthVariable().addSetListener((o, n) ->
+    {
+      if (isSimLogging()) info(getName() + ": New camera stack depth: " + n);
     });
 
-    getExposureInSecondsVariable().addSetListener((o, n) -> {
-      if (isSimLogging())
-        info(getName() + ": New camera exposure: " + n);
+    getExposureInSecondsVariable().addSetListener((o, n) ->
+    {
+      if (isSimLogging()) info(getName() + ": New camera exposure: " + n);
     });
 
-    final ContiguousOffHeapPlanarStackFactory lContiguousOffHeapPlanarStackFactory =
-                                                                                   new ContiguousOffHeapPlanarStackFactory();
+    final ContiguousOffHeapPlanarStackFactory lContiguousOffHeapPlanarStackFactory = new ContiguousOffHeapPlanarStackFactory();
 
-    mRecycler =
-              new BasicRecycler<StackInterface, StackRequest>(lContiguousOffHeapPlanarStackFactory,
-                                                              40);
+    mRecycler = new BasicRecycler<StackInterface, StackRequest>(lContiguousOffHeapPlanarStackFactory, 40);
 
   }
 
   /**
    * Sets the stack provider
-   * 
-   * @param pStackCameraSimulationProvider
-   *          new stack provider
+   *
+   * @param pStackCameraSimulationProvider new stack provider
    */
   public void setStackCameraSimulationProvider(StackCameraSimulationProvider pStackCameraSimulationProvider)
   {
@@ -118,7 +92,7 @@ public class StackCameraDeviceSimulator extends
 
   /**
    * Returns the stack provider
-   * 
+   *
    * @return current state provider.
    */
   public StackCameraSimulationProvider getStackCameraSimulationProvider()
@@ -141,8 +115,7 @@ public class StackCameraDeviceSimulator extends
   @Override
   public Future<Boolean> playQueue(StackCameraSimulationQueue pQueue)
   {
-    if (isSimLogging())
-      info("Playing queue...");
+    if (isSimLogging()) info("Playing queue...");
 
     final CountDownLatch lLatch = pQueue.startAcquisition();
 
@@ -170,18 +143,14 @@ public class StackCameraDeviceSimulator extends
       }
 
       @Override
-      public Boolean get() throws InterruptedException,
-                           ExecutionException
+      public Boolean get() throws InterruptedException, ExecutionException
       {
         lLatch.await();
         return true;
       }
 
       @Override
-      public Boolean get(long pTimeout,
-                         TimeUnit pUnit) throws InterruptedException,
-                                         ExecutionException,
-                                         TimeoutException
+      public Boolean get(long pTimeout, TimeUnit pUnit) throws InterruptedException, ExecutionException, TimeoutException
       {
         lLatch.await(pTimeout, pUnit);
         return true;
