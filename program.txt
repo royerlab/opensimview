@@ -1,0 +1,4 @@
+Acquisition: Sequential::
+IO: Write sequential raw data to disc::
+Memory: Recycle container of type StackInterfaceContainer::
+Memory: Reset memory::

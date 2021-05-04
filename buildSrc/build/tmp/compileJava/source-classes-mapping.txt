@@ -1,6 +1,0 @@
-DoradoJavaApplicationConventionsPlugin.java
- DoradoJavaApplicationConventionsPlugin
-DoradoJavaLibraryConventionsPlugin.java
- DoradoJavaLibraryConventionsPlugin
-DoradoJavaCommonConventionsPlugin.java
- DoradoJavaCommonConventionsPlugin
