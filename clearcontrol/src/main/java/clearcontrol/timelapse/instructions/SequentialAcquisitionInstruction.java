@@ -1,17 +1,15 @@
-package clearcontrol.imaging.sequential;
+package clearcontrol.timelapse.instructions;
 
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
-import clearcontrol.imaging.AbstractAcquistionInstruction;
 import clearcontrol.processor.MetaDataFusion;
 import clearcontrol.stack.MetaDataView;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.LightSheetAcquisitionStateInterface;
 import clearcontrol.stack.metadata.MetaDataAcquisitionType;
 import clearcontrol.state.AcquisitionType;
-import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.metadata.MetaDataChannel;
 import clearcontrol.stack.metadata.MetaDataOrdinals;
 import clearcontrol.stack.metadata.StackMetaData;
@@ -57,8 +55,6 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
     int lNumberOfLightSheets = getLightSheetMicroscope().getNumberOfLightSheets();
 
     HashMap<Integer, LightSheetMicroscopeQueue> lViewToQueueMap = new HashMap<>();
-
-    SequentialImageDataContainer lContainer = new SequentialImageDataContainer(getLightSheetMicroscope());
 
     // preparing queues:
     for (int l = 0; l < lNumberOfLightSheets; l++)
@@ -119,20 +115,18 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
           return false;
         }
 
-        // store results in a DataContainer
-        for (int d = 0; d < getLightSheetMicroscope().getNumberOfDetectionArms(); d++)
-        {
-          if (isCameraOn(d))
-          {
-            StackInterface lStack = getLightSheetMicroscope().getCameraStackVariable(d).get();
-            putStackInContainer("C" + d + "L" + l, lStack, lContainer);
-          }
-        }
+//        // store results in a DataContainer
+//        for (int d = 0; d < getLightSheetMicroscope().getNumberOfDetectionArms(); d++)
+//        {
+//          if (isCameraOn(d))
+//          {
+//            StackInterface lStack = getLightSheetMicroscope().getCameraStackVariable(d).get();
+//            putStackInContainer("C" + d + "L" + l, lStack, lContainer);
+//          }
+//        }
       }
     }
 
-    // store container in the DataWarehouse
-    getLightSheetMicroscope().getDataWarehouse().put("sequential_raw_" + pTimePoint, lContainer);
 
     return true;
   }

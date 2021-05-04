@@ -209,7 +209,7 @@ public class DoradoMain extends Application implements LoggingFeature
             lSimulationContext =
             lClearCL.getDeviceByName(sMachineConfiguration.getStringProperty(
                 "clearcl.device.simulation",
-                "HD")).createContext();
+                "")).createContext();
 
         info("Using device %s for simulation (Simbryo) \n",
              lSimulationContext.getDevice());

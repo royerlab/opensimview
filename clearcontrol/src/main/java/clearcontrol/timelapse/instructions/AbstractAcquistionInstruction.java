@@ -1,6 +1,5 @@
-package clearcontrol.imaging;
+package clearcontrol.timelapse.instructions;
 
-import clearcl.util.ElapsedTime;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.instructions.InstructionInterface;
@@ -8,18 +7,10 @@ import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.instructions.LightSheetMicroscopeInstructionBase;
 import clearcontrol.processor.LightSheetFastFusionProcessor;
-import clearcontrol.stack.MetaDataView;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.timelapse.LightSheetTimelapse;
-import clearcontrol.warehouse.containers.StackInterfaceContainer;
-import clearcontrol.stack.StackRecyclerManager;
 import clearcontrol.stack.StackInterface;
-import clearcontrol.stack.StackRequest;
-import clearcontrol.stack.metadata.MetaDataOrdinals;
 import clearcontrol.stack.sourcesink.sink.FileStackSinkInterface;
-import coremem.recycling.RecyclerInterface;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class contains generalised methods for all AcquisitionSchedulers
@@ -67,32 +58,32 @@ public abstract class AbstractAcquistionInstruction extends LightSheetMicroscope
     return true;
   }
 
-  protected void putStackInContainer(String pKey, StackInterface pStack, StackInterfaceContainer pContainer)
-  {
-    StackRecyclerManager lStackRecyclerManager = getLightSheetMicroscope().getDevice(StackRecyclerManager.class, 0);
-    RecyclerInterface<StackInterface, StackRequest> lRecycler = lStackRecyclerManager.getRecycler("warehouse", 1024, 1024);
-
-    Variable<StackInterface> lStackCopyVariable = new Variable<StackInterface>("stackcopy", null);
-    ElapsedTime.measureForceOutput("Copy stack (" + pKey + ") for container", () ->
-    {
-      lStackCopyVariable.set(lRecycler.getOrWait(1000, TimeUnit.SECONDS, StackRequest.build(pStack.getDimensions())));
-
-      // we need to copy the data out of the
-      // input-buffer from the camera
-      pStack.getContiguousMemory().copyTo(lStackCopyVariable.get().getContiguousMemory());
-      lStackCopyVariable.get().setMetaData(pStack.getMetaData().clone());
-    });
-    if ((lStackCopyVariable.get().getMetaData().getTimeStampInNanoseconds() - mTimeStampBeforeImaging) < 0)
-    {
-      warning("Error: an acquired image is older than its request!");
-    }
-
-    info(pKey + " (" + lStackCopyVariable.get().getMetaData().getValue(MetaDataOrdinals.TimePoint) + ") in a container " + MetaDataView.getCxLyString(lStackCopyVariable.get().getMetaData()));
-    pContainer.put(pKey, lStackCopyVariable.get());
-
-    mLastAcquiredStack = lStackCopyVariable.get();
-
-  }
+//  protected void putStackInContainer(String pKey, StackInterface pStack, StackInterfaceContainer pContainer)
+//  {
+//    StackRecyclerManager lStackRecyclerManager = getLightSheetMicroscope().getDevice(StackRecyclerManager.class, 0);
+//    RecyclerInterface<StackInterface, StackRequest> lRecycler = lStackRecyclerManager.getRecycler("warehouse", 1024, 1024);
+//
+//    Variable<StackInterface> lStackCopyVariable = new Variable<StackInterface>("stackcopy", null);
+//    ElapsedTime.measureForceOutput("Copy stack (" + pKey + ") for container", () ->
+//    {
+//      lStackCopyVariable.set(lRecycler.getOrWait(1000, TimeUnit.SECONDS, StackRequest.build(pStack.getDimensions())));
+//
+//      // we need to copy the data out of the
+//      // input-buffer from the camera
+//      pStack.getContiguousMemory().copyTo(lStackCopyVariable.get().getContiguousMemory());
+//      lStackCopyVariable.get().setMetaData(pStack.getMetaData().clone());
+//    });
+//    if ((lStackCopyVariable.get().getMetaData().getTimeStampInNanoseconds() - mTimeStampBeforeImaging) < 0)
+//    {
+//      warning("Error: an acquired image is older than its request!");
+//    }
+//
+//    info(pKey + " (" + lStackCopyVariable.get().getMetaData().getValue(MetaDataOrdinals.TimePoint) + ") in a container " + MetaDataView.getCxLyString(lStackCopyVariable.get().getMetaData()));
+//    pContainer.put(pKey, lStackCopyVariable.get());
+//
+//    mLastAcquiredStack = lStackCopyVariable.get();
+//
+//  }
 
   @Deprecated
   protected void initializeStackSaving(FileStackSinkInterface pFileStackSinkInterface)

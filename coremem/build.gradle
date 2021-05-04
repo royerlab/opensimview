@@ -24,7 +24,15 @@ dependencies {
 
 test {
     useJUnit()
-    maxHeapSize = '1G'
+
+    testLogging.showStandardStreams = true
+    testLogging
+            { events "passed", "skipped", "failed" }
+
+    exclude '**/demo/**'
+    exclude '**/run/**'
+
+    maxHeapSize = "16G"
 }
 
 sourceSets {

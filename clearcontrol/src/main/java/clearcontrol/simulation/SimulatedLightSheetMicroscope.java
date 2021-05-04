@@ -19,47 +19,24 @@ import clearcontrol.devices.signalgen.devices.sim.SignalGeneratorSimulatorDevice
 import clearcontrol.devices.stages.StageType;
 import clearcontrol.devices.stages.devices.sim.StageDeviceSimulator;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.instructions.implementations.MeasureTimeInstruction;
-import clearcontrol.instructions.implementations.PauseInstruction;
-import clearcontrol.instructions.implementations.PauseUntilTimeAfterMeasuredTimeInstruction;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.adaptive.AdaptationStateEngine;
-import clearcontrol.adaptive.instructions.*;
 import clearcontrol.calibrator.CalibrationEngine;
 import clearcontrol.component.detection.DetectionArm;
 import clearcontrol.component.lightsheet.LightSheet;
 import clearcontrol.component.lightsheet.instructions.*;
 import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
-import clearcontrol.imaging.interleaved.InterleavedAcquisitionInstruction;
-import clearcontrol.imaging.interleaved.InterleavedFusionInstruction;
-import clearcontrol.imaging.interleaved.InterleavedImageDataContainer;
-import clearcontrol.imaging.interleaved.WriteInterleavedRawDataToDiscInstruction;
-import clearcontrol.imaging.opticsprefused.OpticsPrefusedAcquisitionInstruction;
-import clearcontrol.imaging.opticsprefused.OpticsPrefusedFusionInstruction;
-import clearcontrol.imaging.opticsprefused.OpticsPrefusedImageDataContainer;
-import clearcontrol.imaging.opticsprefused.WriteOpticsPrefusedRawDataAsRawToDiscInstruction;
-import clearcontrol.imaging.sequential.SequentialAcquisitionInstruction;
-import clearcontrol.imaging.sequential.SequentialFusionInstruction;
-import clearcontrol.imaging.sequential.SequentialImageDataContainer;
-import clearcontrol.imaging.sequential.WriteSequentialRawDataToDiscInstruction;
-import clearcontrol.imaging.singleview.SingleViewAcquisitionInstruction;
-import clearcontrol.imaging.singleview.WriteSingleLightSheetImageAsRawToDiscInstruction;
-import clearcontrol.postprocessing.visualisation.instructions.ViewStack2DInstruction;
-import clearcontrol.postprocessing.visualisation.instructions.ViewStack3DInstruction;
-import clearcontrol.processor.fusion.FusedImageDataContainer;
-import clearcontrol.processor.fusion.WriteFusedImageAsRawToDiscInstruction;
+import clearcontrol.timelapse.instructions.InterleavedAcquisitionInstruction;
+
+import clearcontrol.timelapse.instructions.SequentialAcquisitionInstruction;
+import clearcontrol.timelapse.instructions.SingleViewAcquisitionInstruction;
+
 import clearcontrol.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.state.ControlPlaneLayout;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.LightSheetAcquisitionStateInterface;
 import clearcontrol.state.instructions.*;
 import clearcontrol.timelapse.LightSheetTimelapse;
-import clearcontrol.timelapse.instructions.TimelapseStopInstruction;
-import clearcontrol.warehouse.containers.StackInterfaceContainer;
-import clearcontrol.warehouse.containers.io.ReadStackInterfaceContainerFromDiscInstruction;
-import clearcontrol.warehouse.containers.io.WriteAllStacksAsRawToDiscInstruction;
-import clearcontrol.warehouse.containers.io.WriteSpecificStackToSpecificRawFolderInstruction;
-import clearcontrol.warehouse.instructions.DropOldestStackInterfaceContainerInstruction;
 import clearcontrol.state.AcquisitionStateManager;
 import clearcontrol.timelapse.TimelapseInterface;
 import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
@@ -331,32 +308,12 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
       // ------------------------------------------------------------------------
       // interleaved imaging
       addDevice(0, new InterleavedAcquisitionInstruction(this));
-      addDevice(0, new InterleavedFusionInstruction(this));
-      addDevice(0, new WriteInterleavedRawDataToDiscInstruction(this));
-      addDevice(0, new WriteFusedImageAsRawToDiscInstruction("interleaved", this));
-      addDevice(0, new DropOldestStackInterfaceContainerInstruction(InterleavedImageDataContainer.class, getDataWarehouse()));
 
 
       // ------------------------------------------------------------------------
       // Sequential imaging
       addDevice(0, new SequentialAcquisitionInstruction(this));
-      addDevice(0, new SequentialFusionInstruction(this));
-      addDevice(0, new WriteSequentialRawDataToDiscInstruction(this));
-      addDevice(0, new WriteFusedImageAsRawToDiscInstruction("sequential", this));
-      addDevice(0, new DropOldestStackInterfaceContainerInstruction(SequentialImageDataContainer.class, getDataWarehouse()));
 
-
-      // ------------------------------------------------------------------------
-      // optics prefused imaging
-      addDevice(0, new OpticsPrefusedAcquisitionInstruction(this));
-      addDevice(0, new OpticsPrefusedFusionInstruction(this));
-      addDevice(0, new WriteOpticsPrefusedRawDataAsRawToDiscInstruction(this));
-      addDevice(0, new WriteFusedImageAsRawToDiscInstruction("opticsprefused", this));
-      addDevice(0, new DropOldestStackInterfaceContainerInstruction(OpticsPrefusedImageDataContainer.class, getDataWarehouse()));
-
-
-      addDevice(0, new DropOldestStackInterfaceContainerInstruction(FusedImageDataContainer.class, getDataWarehouse()));
-      addDevice(0, new ViewStack3DInstruction<FusedImageDataContainer>(FusedImageDataContainer.class, this));
     }
 
     String[] lOpticPrefusedStackKeys = new String[getNumberOfDetectionArms()];
@@ -370,11 +327,7 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
       for (int l = 0; l < getNumberOfLightSheets(); l++)
       {
         addDevice(0, new SingleViewAcquisitionInstruction(c, l, this));
-
-        addDevice(0, new WriteSingleLightSheetImageAsRawToDiscInstruction(c, l, this));
-
         lSequentialStackKeys[c * getNumberOfLightSheets() + l] = "C" + c + "L" + l;
-        addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(new String[]{"C" + c + "L" + l}, this));
       }
       lOpticPrefusedStackKeys[c] = "C" + c + "opticsprefused";
       lInterleavedStackKeys[c] = "C" + c + "interleaved";
@@ -384,78 +337,6 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
 
     }
 
-    // ------------------------------------------------------------------------
-    // Simple autofocus
-    addDevice(0, new AutoFocusSinglePlaneInstruction(this));
-
-    // ------------------------------------------------------------------------
-    // setup writers
-    addDevice(0, new WriteSpecificStackToSpecificRawFolderInstruction("fused", "default", this));
-
-    addDevice(0, new WriteAllStacksAsRawToDiscInstruction(StackInterfaceContainer.class, this));
-
-    // ------------------------------------------------------------------------
-    // setup reades / simulated acquisition
-    addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(new String[]{"default"}, this));
-    addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(new String[]{"sequential"}, this));
-    addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(new String[]{"interleaved"}, this));
-    addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(new String[]{"opticsprefused"}, this));
-    addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(lOpticPrefusedStackKeys, this));
-    addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(lSequentialStackKeys, this));
-    addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(lInterleavedStackKeys, this));
-    addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(lHybridInterleavedOpticsPrefusedStackKeys, this));
-    addDevice(0, new ReadStackInterfaceContainerFromDiscInstruction(lInterleavedWaistStackKeys, this));
-
-
-    // ------------------------------------------------------------------------
-    // Setup viewers
-    addDevice(0, new ViewStack2DInstruction(0, StackInterfaceContainer.class, this));
-    addDevice(0, new ViewStack3DInstruction<StackInterfaceContainer>(StackInterfaceContainer.class, this));
-    if (getNumberOfLightSheets() > 1 || getNumberOfDetectionArms() > 1)
-    {
-      addDevice(0, new ViewStack2DInstruction(0, FusedImageDataContainer.class, this));
-    }
-
-    // -------------------------------------------------------------------------
-    // Setup pauses
-    int[] pauseTimes = {1000, // 1 s
-            10000, // 10 s
-            30000, // 30 s
-            60000, // 1 min
-            300000, // 5 min
-            600000, // 10 min
-            3600000 // 1 h
-    };
-    String[] timeMeasurementKeys = {"A", "B", "C"};
-    for (int i = 0; i < pauseTimes.length; i++)
-    {
-      addDevice(0, new PauseInstruction(pauseTimes[i]));
-    }
-    for (int k = 0; k < timeMeasurementKeys.length; k++)
-    {
-      addDevice(0, new MeasureTimeInstruction(timeMeasurementKeys[k]));
-      for (int i = 0; i < pauseTimes.length; i++)
-      {
-        addDevice(9, new PauseUntilTimeAfterMeasuredTimeInstruction(timeMeasurementKeys[k], pauseTimes[i]));
-      }
-    }
-
-    // --------------------------------------------------------------------
-    // setup focus finders
-    int lNumberOfControlPlanes = ((InterpolatedAcquisitionState) (getAcquisitionStateManager().getCurrentState())).getNumberOfControlPlanes();
-    for (int cpi = 0; cpi < lNumberOfControlPlanes; cpi++)
-    {
-      for (int d = 0; d < getNumberOfDetectionArms(); d++)
-      {
-        for (int l = 0; l < getNumberOfLightSheets(); l++)
-        {
-          addDevice(0, new FocusFinderZInstruction(l, d, cpi, this));
-          addDevice(0, new FocusFinderAlphaByVariationInstruction(l, d, cpi, this));
-        }
-        addDevice(0, new ControlPlaneFocusFinderAlphaByVariationInstruction(d, cpi, this));
-        addDevice(0, new ControlPlaneFocusFinderZInstruction(d, cpi, this));
-      }
-    }
 
     // -------------------------------------------------------------------------
     // setup configuration instructions
@@ -468,11 +349,6 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
     addDevice(0, new ChangeLaserLineOnOffInstruction(this, 0));
     addDevice(0, new ChangeLightSheetBrightnessInstruction(this, 0, 0));
 
-
-    addDevice(0, new ChangeImageSizeInstruction(this));
-    addDevice(0, new ChangeZRangeInstruction(this));
-
-    addDevice(0, new TimelapseStopInstruction(this));
 
     addDefaultProgram();
   }

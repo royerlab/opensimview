@@ -3,8 +3,6 @@ package dorado.gui;
 import clearcontrol.gui.halcyon.MicroscopeNodeType;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.gui.LightSheetMicroscopeGUI;
-import dorado.adaptive.AdaptiveZInstruction;
-import dorado.adaptive.gui.AdaptiveZSchedulerPanel;
 import javafx.stage.Stage;
 
 /**
@@ -39,10 +37,6 @@ public class DoradoGui extends LightSheetMicroscopeGUI
 
     addGroovyScripting("lsm");
     addJythonScripting("lsm");
-
-    addPanelMappingEntry(AdaptiveZInstruction.class,
-            AdaptiveZSchedulerPanel.class,
-            MicroscopeNodeType.AdaptiveOptics);
 
 
   }

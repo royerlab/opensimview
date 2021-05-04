@@ -8,7 +8,6 @@ import clearcontrol.devices.lasers.devices.sim.LaserDeviceSimulator;
 import clearcontrol.devices.optomech.filterwheels.devices.ludl.LudlFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.instructions.FilterWheelInstruction;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
-import clearcontrol.adaptive.instructions.AdaptationInstruction;
 import clearcontrol.component.detection.DetectionArm;
 import clearcontrol.component.lightsheet.LightSheet;
 import clearcontrol.component.lightsheet.instructions.ChangeLightSheetWidthInstruction;
@@ -17,7 +16,6 @@ import clearcontrol.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.simulation.SimulatedLightSheetMicroscope;
 import clearcontrol.timelapse.LightSheetTimelapse;
-import dorado.adaptive.AdaptiveZInstruction;
 import clearcontrol.component.lightsheet.instructions.MultiChannelInstruction;
 
 
@@ -192,44 +190,6 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
 
     LightSheetTimelapse timelapse = getTimelapse();
     timelapse.getListOfActivatedSchedulers().add(0, new ChangeLightSheetWidthInstruction(this, 0.45));
-
-
-    // setup adaptators/schedulers
-    {
-      AdaptiveZInstruction lAdaptiveZInstruction = new AdaptiveZInstruction(this);
-      addDevice(0, lAdaptiveZInstruction);
-    }
-
-    {
-      AdaptationInstruction lAdaptationScheduler = new AdaptationInstruction("Adaptation: Focus Z",
-                                                                         AdaptationZ.class, this);
-      addDevice(0, lAdaptationScheduler);
-    }
-    {
-      AdaptationInstruction lAdaptationScheduler = new AdaptationInstruction("Adaptation: Focus Z with manual detection arm selection",
-                                                                         AdaptationZManualDetectionArmSelection.class, this);
-      addDevice(0, lAdaptationScheduler);
-    }
-    {
-      AdaptationInstruction lAdaptationScheduler = new AdaptationInstruction("Adaptation: Focus Z with sliding window detection arm selection",
-                                                                         AdaptationZSlidingWindowDetectionArmSelection.class, this);
-      addDevice(0, lAdaptationScheduler);
-    }
-    {
-      AdaptationInstruction lAdaptationScheduler = new AdaptationInstruction("Adaptation: Lightsheet angle alpha",
-                                                                         AdaptationA.class, this);
-      addDevice(0, lAdaptationScheduler);
-    }
-    {
-      AdaptationInstruction lAdaptationScheduler = new AdaptationInstruction("Adaptation: Power",
-                                                                         AdaptationP.class, this);
-      addDevice(0, lAdaptationScheduler);
-    }
-    {
-      AdaptationInstruction lAdaptationScheduler = new AdaptationInstruction("Adaptation: Lightsheet X position",
-                                                                         AdaptationX.class, this);
-      addDevice(0, lAdaptationScheduler);
-    }
 
     {
       MultiChannelInstruction lMultiChannelInstruction = new MultiChannelInstruction(this);

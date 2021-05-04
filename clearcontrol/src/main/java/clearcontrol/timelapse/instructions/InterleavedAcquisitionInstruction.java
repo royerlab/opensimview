@@ -1,16 +1,14 @@
-package clearcontrol.imaging.opticsprefused;
+package clearcontrol.timelapse.instructions;
 
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
-import clearcontrol.imaging.AbstractAcquistionInstruction;
 import clearcontrol.processor.MetaDataFusion;
 import clearcontrol.stack.MetaDataView;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.stack.metadata.MetaDataAcquisitionType;
 import clearcontrol.state.AcquisitionType;
-import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.metadata.MetaDataChannel;
 import clearcontrol.stack.metadata.MetaDataOrdinals;
 import clearcontrol.stack.metadata.StackMetaData;
@@ -20,22 +18,27 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * This instructions acquires an image stack per camera where all light sheets are on. The
- * image stacks are stored in the DataWarehouse in an OpticsPrefusedImageDataContainer
- * with keys like CXopticsprefused with X representing the camera number.
+ * This instructions acquires an image stack per camera where every slice is imaged
+ * several times for each light sheet. A stack might contain slices like:
+ * <p>
+ * C0L0Z0 C0L1Z0 C0L2Z0 C0L3Z0 C0L0Z1 C0L1Z1 C0L2Z1 C0L3Z1 ...
+ * <p>
+ * The image stacks are stored in the DataWarehouse in a InterleavedImageDataContainer
+ * with keys like CXinterleaved with X representing the camera number.
  * <p>
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de) February
  * 2018
  */
-public class OpticsPrefusedAcquisitionInstruction extends AbstractAcquistionInstruction implements InstructionInterface, LoggingFeature
+public class InterleavedAcquisitionInstruction extends AbstractAcquistionInstruction implements InstructionInterface, LoggingFeature
 {
+
   /**
    * INstanciates a virtual device with a given name
    */
-  public OpticsPrefusedAcquisitionInstruction(LightSheetMicroscope pLightSheetMicroscope)
+  public InterleavedAcquisitionInstruction(LightSheetMicroscope pLightSheetMicroscope)
   {
-    super("Acquisition: optics-prefused", pLightSheetMicroscope);
-    mChannelName.set("opticsprefused");
+    super("Acquisition: Interleaved", pLightSheetMicroscope);
+    mChannelName.set("interleaved");
   }
 
   @Override
@@ -66,16 +69,19 @@ public class OpticsPrefusedAcquisitionInstruction extends AbstractAcquistionInst
 
     for (int lImageCounter = 0; lImageCounter < lNumberOfImagesToTake; lImageCounter++)
     {
-      // acuqire an image with all light sheets on
-      mCurrentState.applyAcquisitionStateAtStackPlane(lQueue, lImageCounter);
-
-      for (int k = 0; k < getLightSheetMicroscope().getNumberOfLightSheets(); k++)
+      // acuqire an image per light sheet + one more
+      for (int l = 0; l < getLightSheetMicroscope().getNumberOfLightSheets(); l++)
       {
+        mCurrentState.applyAcquisitionStateAtStackPlane(lQueue, lImageCounter);
 
-        lQueue.setI(k, true);
+        // configure light sheets accordingly
+        for (int k = 0; k < getLightSheetMicroscope().getNumberOfLightSheets(); k++)
+        {
+          lQueue.setI(k, false);
+        }
+        lQueue.setI(l, true);
+        lQueue.addCurrentStateToQueue();
       }
-      lQueue.addCurrentStateToQueue();
-
     }
 
     // back to initial position
@@ -88,12 +94,12 @@ public class OpticsPrefusedAcquisitionInstruction extends AbstractAcquistionInst
     {
       StackMetaData lMetaData = lQueue.getCameraDeviceQueue(c).getMetaDataVariable().get();
 
-      lMetaData.addEntry(MetaDataAcquisitionType.AcquisitionType, AcquisitionType.TimeLapseOpticallyCameraFused);
+      lMetaData.addEntry(MetaDataAcquisitionType.AcquisitionType, AcquisitionType.TimeLapseInterleaved);
       lMetaData.addEntry(MetaDataView.Camera, c);
 
       lMetaData.addEntry(MetaDataFusion.RequestFullFusion, true);
 
-      lMetaData.addEntry(MetaDataChannel.Channel, "opticsprefused");
+      lMetaData.addEntry(MetaDataChannel.Channel, "interleaved");
     }
     lQueue.addVoxelDimMetaData(getLightSheetMicroscope(), mCurrentState.getStackZStepVariable().get().doubleValue());
     lQueue.addMetaDataEntry(MetaDataOrdinals.TimePoint, pTimePoint);
@@ -106,6 +112,7 @@ public class OpticsPrefusedAcquisitionInstruction extends AbstractAcquistionInst
     {
       mTimeStampBeforeImaging = System.nanoTime();
       lPlayQueueAndWait = getLightSheetMicroscope().playQueueAndWait(lQueue, 100 + lQueue.getQueueLength(), TimeUnit.SECONDS);
+
     } catch (InterruptedException e)
     {
       e.printStackTrace();
@@ -123,21 +130,22 @@ public class OpticsPrefusedAcquisitionInstruction extends AbstractAcquistionInst
       return false;
     }
 
-    // store resulting stacks in the DataWarehouse
-    OpticsPrefusedImageDataContainer lContainer = new OpticsPrefusedImageDataContainer(getLightSheetMicroscope());
-    for (int d = 0; d < getLightSheetMicroscope().getNumberOfDetectionArms(); d++)
-    {
-      StackInterface lStack = getLightSheetMicroscope().getCameraStackVariable(d).get();
-      putStackInContainer("C" + d + "opticsprefused", lStack, lContainer);
-    }
-    getLightSheetMicroscope().getDataWarehouse().put("opticsprefused_raw_" + pTimePoint, lContainer);
+//    // Store results in the DataWarehouse
+//    InterleavedImageDataContainer lContainer = new InterleavedImageDataContainer(getLightSheetMicroscope());
+//    for (int d = 0; d < getLightSheetMicroscope().getNumberOfDetectionArms(); d++)
+//    {
+//      StackInterface lStack = getLightSheetMicroscope().getCameraStackVariable(d).get();
+//
+//      putStackInContainer("C" + d + "interleaved", lStack, lContainer);
+//    }
+//    getLightSheetMicroscope().getDataWarehouse().put("interleaved_raw_" + pTimePoint, lContainer);
 
     return true;
   }
 
   @Override
-  public OpticsPrefusedAcquisitionInstruction copy()
+  public InterleavedAcquisitionInstruction copy()
   {
-    return new OpticsPrefusedAcquisitionInstruction(getLightSheetMicroscope());
+    return new InterleavedAcquisitionInstruction(getLightSheetMicroscope());
   }
 }

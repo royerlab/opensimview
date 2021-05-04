@@ -100,7 +100,7 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
     CleanupStackVariable lCleanupStackVariable = new CleanupStackVariable("CleanupStackVariable", 3);
     mStackProcessingPipeline.getOutputVariable().sendUpdatesTo(lCleanupStackVariable);
 
-    /*
+
     mStackProcessingPipeline.getInputVariable()
                             .addSetListener((o, n) -> {
                               System.out.println("pipeline input:"
@@ -110,7 +110,7 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
                             .addSetListener((o, n) -> {
                               System.out.println("pipeline output:"
                                                  + n);
-                            });/**/
+                            });
 
     addDevice(0, mStackProcessingPipeline);
   }

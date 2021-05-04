@@ -1,9 +1,8 @@
-package clearcontrol.imaging.singleview;
+package clearcontrol.timelapse.instructions;
 
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.LightSheetMicroscope;
-import clearcontrol.imaging.sequential.SequentialAcquisitionInstruction;
 import clearcontrol.stack.StackInterface;
 
 /**

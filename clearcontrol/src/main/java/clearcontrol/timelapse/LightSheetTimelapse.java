@@ -53,7 +53,6 @@ public class LightSheetTimelapse extends TimelapseBase implements TimelapseInter
   {
     super.startTimelapse();
 
-    mLightSheetMicroscope.getDataWarehouse().clear();
 
     File lProgramFile = new File(getWorkingDirectory(), "program.txt");
     ProgramWriter writer = new ProgramWriter(mCurrentProgram, lProgramFile);
@@ -84,7 +83,7 @@ public class LightSheetTimelapse extends TimelapseBase implements TimelapseInter
       //LightSheetFastFusionProcessor
       //    lLightSheetFastFusionProcessor =
       //    mLightSheetMicroscope.getDevice(LightSheetFastFusionProcessor.class, 0);
-      info("Executing timepoint: " + getTimePointCounterVariable().get() + " data warehouse holds " + mLightSheetMicroscope.getDataWarehouse().size() + " items");
+      info("Executing timepoint: " + getTimePointCounterVariable().get());
 
       mLightSheetMicroscope.useRecycler("3DTimelapse", cMinimumNumberOfAvailableStacks, cMaximumNumberOfAvailableStacks, cMaximumNumberOfLiveStacks);
 
@@ -104,16 +103,6 @@ public class LightSheetTimelapse extends TimelapseBase implements TimelapseInter
         lNextInstructionToRun.enqueue(getTimePointCounterVariable().get());
       });
       info("Finished " + lNextInstructionToRun + "in " + duration + " ms");
-
-      // store how long the execution took
-//      InstructionDurationContainer
-//          lContainer =
-//          new InstructionDurationContainer(getTimePointCounterVariable().get(),
-//                                           lNextInstructionToRun,
-//                                           duration);
-//      mLightSheetMicroscope.getDataWarehouse()
-//                           .put("duration_" + getTimePointCounterVariable().get()+"_"+mInstructionIndexVariable.get(),
-//                                lContainer);
 
       // Determine the next instruction
       mInstructionIndexVariable.set(mInstructionIndexVariable.get() + 1);

@@ -12,22 +12,11 @@ import clearcontrol.calibrator.CalibrationEngine;
 import clearcontrol.component.detection.DetectionArmInterface;
 import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
-import clearcontrol.imaging.interleaved.InterleavedImageDataContainer;
-import clearcontrol.imaging.opticsprefused.OpticsPrefusedImageDataContainer;
-import clearcontrol.imaging.sequential.SequentialImageDataContainer;
 import clearcontrol.interactive.InteractiveAcquisition;
-import clearcontrol.postprocessing.containers.MeasurementContainer;
-import clearcontrol.postprocessing.containers.MeasurementInSpaceContainer;
 import clearcontrol.processor.LightSheetFastFusionProcessor;
-import clearcontrol.processor.fusion.FusedImageDataContainer;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.instructions.ChangeExposureTimeInstruction;
 import clearcontrol.timelapse.LightSheetTimelapse;
-import clearcontrol.timelapse.containers.InstructionDurationContainer;
-import clearcontrol.warehouse.DataWarehouse;
-import clearcontrol.warehouse.containers.DataContainerInterface;
-import clearcontrol.warehouse.containers.StackInterfaceContainer;
-import clearcontrol.warehouse.instructions.*;
 import clearcontrol.timelapse.TimelapseInterface;
 
 import java.util.ArrayList;
@@ -40,7 +29,6 @@ import java.util.ArrayList;
 public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, LightSheetMicroscopeQueue> implements LightSheetMicroscopeInterface
 {
   private LightSheetFastFusionProcessor mStackFusionProcessor;
-  private DataWarehouse mDataWarehouse;
 
   /**
    * Instantiates a lightsheet microscope with a given name.
@@ -56,18 +44,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
 
     mStackFusionProcessor = new LightSheetFastFusionProcessor("Fusion Stack Processor", this, pStackFusionContext);
     addDevice(0, mStackFusionProcessor);
-
-    mDataWarehouse = new DataWarehouse();
-
-    addDevice(0, new DataWarehouseResetInstruction(getDataWarehouse()));
-    addDevice(0, new FilterStacksInStackInterfaceContainerInstruction(getDataWarehouse()));
-    addDevice(0, new DataWarehouseLogInstruction(this));
-
-    for (Class lContainerType : new Class[]{StackInterfaceContainer.class, FusedImageDataContainer.class, InterleavedImageDataContainer.class, OpticsPrefusedImageDataContainer.class, SequentialImageDataContainer.class, MeasurementInSpaceContainer.class, MeasurementContainer.class, InstructionDurationContainer.class, DataContainerInterface.class})
-    {
-      addDevice(0, new DropOldestStackInterfaceContainerInstruction(lContainerType, getDataWarehouse()));
-      addDevice(0, new DropAllContainersOfTypeInstruction(lContainerType, getDataWarehouse()));
-    }
 
   }
 
@@ -319,11 +295,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
   public FutureBooleanList playQueue(LightSheetMicroscopeQueue pQueue)
   {
     return super.playQueue(pQueue);
-  }
-
-  public DataWarehouse getDataWarehouse()
-  {
-    return mDataWarehouse;
   }
 
   public InstructionInterface getSchedulerDevice(String... pMustContainStrings)
