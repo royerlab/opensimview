@@ -1,6 +1,5 @@
 package dorado.main;
 
-import java.io.InputStream;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -11,9 +10,9 @@ import clearcl.backend.ClearCLBackends;
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.log.LoggingFeature;
-import clearcontrol.microscope.lightsheet.LightSheetMicroscope;
-import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
-import clearcontrol.microscope.lightsheet.simulation.SimulationUtils;
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.simulation.LightSheetMicroscopeSimulationDevice;
+import clearcontrol.simulation.SimulationUtils;
 import dorado.DoradoMicroscope;
 import dorado.icon.SplashScreen;
 import javafx.application.Application;

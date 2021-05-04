@@ -2,7 +2,7 @@ package clearcontrol.stack.processor;
 
 import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorBase;
 import clearcontrol.core.device.openclose.OpenCloseDeviceInterface;
-import clearcontrol.microscope.stacks.StackRecyclerManager;
+import clearcontrol.stack.StackRecyclerManager;
 import clearcontrol.stack.StackInterface;
 
 /**

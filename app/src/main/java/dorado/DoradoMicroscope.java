@@ -1,30 +1,24 @@
 package dorado;
 
 import clearcl.ClearCLContext;
+import clearcontrol.adaptive.modules.*;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
-import clearcontrol.devices.lasers.LaserDeviceInterface;
 import clearcontrol.devices.lasers.devices.sim.LaserDeviceSimulator;
-import clearcontrol.devices.lasers.instructions.ChangeLaserPowerInstruction;
-import clearcontrol.devices.lasers.instructions.SwitchLaserOnOffInstruction;
-import clearcontrol.devices.lasers.instructions.SwitchLaserPowerOnOffInstruction;
 import clearcontrol.devices.optomech.filterwheels.devices.ludl.LudlFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.instructions.FilterWheelInstruction;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
-import clearcontrol.microscope.lightsheet.adaptive.instructions.AdaptationInstruction;
-import clearcontrol.microscope.lightsheet.adaptive.modules.*;
-import clearcontrol.microscope.lightsheet.component.detection.DetectionArm;
-import clearcontrol.microscope.lightsheet.component.lightsheet.LightSheet;
-import clearcontrol.microscope.lightsheet.component.lightsheet.instructions.ChangeLightSheetWidthInstruction;
-import clearcontrol.microscope.lightsheet.component.opticalswitch.LightSheetOpticalSwitch;
-import clearcontrol.microscope.lightsheet.signalgen.LightSheetSignalGeneratorDevice;
-import clearcontrol.microscope.lightsheet.simulation.LightSheetMicroscopeSimulationDevice;
-import clearcontrol.microscope.lightsheet.simulation.SimulatedLightSheetMicroscope;
-import clearcontrol.microscope.lightsheet.timelapse.LightSheetTimelapse;
+import clearcontrol.adaptive.instructions.AdaptationInstruction;
+import clearcontrol.component.detection.DetectionArm;
+import clearcontrol.component.lightsheet.LightSheet;
+import clearcontrol.component.lightsheet.instructions.ChangeLightSheetWidthInstruction;
+import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
+import clearcontrol.signalgen.LightSheetSignalGeneratorDevice;
+import clearcontrol.simulation.LightSheetMicroscopeSimulationDevice;
+import clearcontrol.simulation.SimulatedLightSheetMicroscope;
+import clearcontrol.timelapse.LightSheetTimelapse;
 import dorado.adaptive.AdaptiveZInstruction;
-import clearcontrol.microscope.lightsheet.component.lightsheet.instructions.MultiChannelInstruction;
-
-import java.util.ArrayList;
+import clearcontrol.component.lightsheet.instructions.MultiChannelInstruction;
 
 
 /**

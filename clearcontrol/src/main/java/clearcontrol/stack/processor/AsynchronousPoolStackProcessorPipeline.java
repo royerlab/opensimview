@@ -4,7 +4,7 @@ import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorBase;
 import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorPool;
 import clearcontrol.core.concurrent.asyncprocs.ProcessorInterface;
 import clearcontrol.core.device.openclose.OpenCloseDeviceInterface;
-import clearcontrol.microscope.stacks.StackRecyclerManager;
+import clearcontrol.stack.StackRecyclerManager;
 import clearcontrol.stack.StackInterface;
 
 /**

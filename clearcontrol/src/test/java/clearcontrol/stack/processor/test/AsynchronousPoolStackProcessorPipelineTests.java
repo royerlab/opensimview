@@ -1,7 +1,7 @@
 package clearcontrol.stack.processor.test;
 
 import clearcontrol.core.variable.VariableListener;
-import clearcontrol.microscope.stacks.StackRecyclerManager;
+import clearcontrol.stack.StackRecyclerManager;
 import clearcontrol.stack.ContiguousOffHeapPlanarStackFactory;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;

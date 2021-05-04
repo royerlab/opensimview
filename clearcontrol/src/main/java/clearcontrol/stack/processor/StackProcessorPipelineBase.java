@@ -2,7 +2,7 @@ package clearcontrol.stack.processor;
 
 import clearcontrol.core.device.name.NameableBase;
 import clearcontrol.core.variable.Variable;
-import clearcontrol.microscope.stacks.StackRecyclerManager;
+import clearcontrol.stack.StackRecyclerManager;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
 import coremem.recycling.RecyclerInterface;

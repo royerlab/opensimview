@@ -1,8 +1,8 @@
 package dorado.gui;
 
-import clearcontrol.microscope.gui.halcyon.MicroscopeNodeType;
-import clearcontrol.microscope.lightsheet.LightSheetMicroscope;
-import clearcontrol.microscope.lightsheet.gui.LightSheetMicroscopeGUI;
+import clearcontrol.gui.halcyon.MicroscopeNodeType;
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.gui.LightSheetMicroscopeGUI;
 import dorado.adaptive.AdaptiveZInstruction;
 import dorado.adaptive.gui.AdaptiveZSchedulerPanel;
 import javafx.stage.Stage;

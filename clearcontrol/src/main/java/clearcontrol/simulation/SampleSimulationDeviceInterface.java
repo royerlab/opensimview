@@ -3,7 +3,7 @@ package clearcontrol.simulation;
 import clearcontrol.core.device.queue.QueueInterface;
 import clearcontrol.core.device.sim.SimulationDeviceInterface;
 import clearcontrol.devices.cameras.devices.sim.StackCameraSimulationProvider;
-import clearcontrol.microscope.MicroscopeInterface;
+import clearcontrol.MicroscopeInterface;
 
 /**
  * Sample simulation device interface
