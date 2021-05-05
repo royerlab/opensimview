@@ -1,8 +1,8 @@
 package clearcontrol.stack.gui;
 
 import clearcontrol.gui.jfx.other.recycler.RecyclerPanel;
-import clearcontrol.stack.StackRecyclerManager;
 import clearcontrol.stack.StackInterface;
+import clearcontrol.stack.StackRecyclerManager;
 import clearcontrol.stack.StackRequest;
 import coremem.recycling.RecyclerInterface;
 import javafx.application.Platform;

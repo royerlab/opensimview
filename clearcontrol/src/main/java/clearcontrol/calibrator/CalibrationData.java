@@ -1,10 +1,10 @@
 package clearcontrol.calibrator;
 
-import clearcontrol.core.math.functions.PolynomialFunction;
-import clearcontrol.core.math.functions.UnivariateAffineFunction;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.component.detection.DetectionArmInterface;
 import clearcontrol.component.lightsheet.LightSheetInterface;
+import clearcontrol.core.math.functions.PolynomialFunction;
+import clearcontrol.core.math.functions.UnivariateAffineFunction;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

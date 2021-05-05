@@ -1,8 +1,8 @@
 package clearcontrol.adaptive;
 
+import clearcontrol.LightSheetMicroscope;
 import clearcontrol.adaptive.modules.*;
 import clearcontrol.core.device.task.TaskDevice;
-import clearcontrol.LightSheetMicroscope;
 import clearcontrol.state.InterpolatedAcquisitionState;
 
 /**

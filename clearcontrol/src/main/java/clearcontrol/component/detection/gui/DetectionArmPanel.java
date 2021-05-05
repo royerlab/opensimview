@@ -1,7 +1,7 @@
 package clearcontrol.component.detection.gui;
 
-import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 import clearcontrol.component.detection.DetectionArmInterface;
+import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 
 /**
  * Detection arm panel

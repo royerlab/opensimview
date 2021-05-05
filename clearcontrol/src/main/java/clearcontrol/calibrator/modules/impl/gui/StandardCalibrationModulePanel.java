@@ -1,7 +1,7 @@
 package clearcontrol.calibrator.modules.impl.gui;
 
-import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 import clearcontrol.calibrator.modules.CalibrationModuleInterface;
+import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 
 /**
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de) November

@@ -40,7 +40,7 @@ import org.dockfx.DockPos;
  * either. If dock pane A is "exclusive", then A will ignore nodes from B
  * (because A is exclusive and won't accept nodes from any other dockpane, and B
  * will ignore nodes from A because A is exclusive and won't let go of them.
- *
+ * <p>
  * If neither A or B is exclusive, Issue #24 from RobertBColton/DockFX will
  * occur.
  *

@@ -1,16 +1,16 @@
 package clearcontrol.timelapse.instructions;
 
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.LightSheetMicroscope;
-import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.instructions.LightSheetMicroscopeInstructionBase;
 import clearcontrol.processor.LightSheetFastFusionProcessor;
-import clearcontrol.state.InterpolatedAcquisitionState;
-import clearcontrol.timelapse.LightSheetTimelapse;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.sourcesink.sink.FileStackSinkInterface;
+import clearcontrol.state.InterpolatedAcquisitionState;
+import clearcontrol.timelapse.LightSheetTimelapse;
 
 /**
  * This class contains generalised methods for all AcquisitionSchedulers

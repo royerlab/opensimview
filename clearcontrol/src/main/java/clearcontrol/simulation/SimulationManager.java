@@ -1,11 +1,11 @@
 package clearcontrol.simulation;
 
+import clearcontrol.MicroscopeInterface;
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.core.device.name.ReadOnlyNameableInterface;
 import clearcontrol.core.device.sim.SimulationDeviceInterface;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
-import clearcontrol.MicroscopeInterface;
 
 import java.util.ArrayList;
 

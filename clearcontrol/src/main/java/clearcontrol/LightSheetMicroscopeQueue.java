@@ -1,8 +1,5 @@
 package clearcontrol;
 
-import clearcontrol.core.device.queue.QueueInterface;
-import clearcontrol.devices.cameras.StackCameraDeviceInterface;
-import clearcontrol.devices.cameras.StackCameraQueue;
 import clearcontrol.component.detection.DetectionArm;
 import clearcontrol.component.detection.DetectionArmInterface;
 import clearcontrol.component.detection.DetectionArmQueue;
@@ -11,6 +8,9 @@ import clearcontrol.component.lightsheet.LightSheetQueue;
 import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.component.opticalswitch.LightSheetOpticalSwitchQueue;
+import clearcontrol.core.device.queue.QueueInterface;
+import clearcontrol.devices.cameras.StackCameraDeviceInterface;
+import clearcontrol.devices.cameras.StackCameraQueue;
 import clearcontrol.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.signalgen.LightSheetSignalGeneratorQueue;
 import clearcontrol.stack.metadata.MetaDataEntryInterface;

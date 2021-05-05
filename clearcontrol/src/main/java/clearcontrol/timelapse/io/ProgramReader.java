@@ -1,11 +1,11 @@
 package clearcontrol.timelapse.io;
 
+import clearcontrol.LightSheetMicroscope;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.instructions.InstructionBase;
 import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.instructions.PropertyIOableInstructionInterface;
-import clearcontrol.LightSheetMicroscope;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -1,12 +1,12 @@
 package clearcontrol.adaptive.gui;
 
+import clearcontrol.adaptive.AdaptiveEngine;
+import clearcontrol.adaptive.modules.AdaptationModuleInterface;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableSetListener;
 import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import clearcontrol.gui.jfx.var.checkbox.VariableCheckBox;
-import clearcontrol.adaptive.AdaptiveEngine;
-import clearcontrol.adaptive.modules.AdaptationModuleInterface;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;

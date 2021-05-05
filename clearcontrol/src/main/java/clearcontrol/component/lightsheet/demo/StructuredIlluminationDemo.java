@@ -1,10 +1,10 @@
 package clearcontrol.component.lightsheet.demo;
 
+import clearcontrol.component.lightsheet.si.ClosureStructuredIlluminationPattern;
+import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 import clearcontrol.devices.signalgen.staves.IntervalStave;
 import clearcontrol.devices.signalgen.staves.StaveInterface;
 import clearcontrol.devices.signalgen.staves.SteppingFunction;
-import clearcontrol.component.lightsheet.si.ClosureStructuredIlluminationPattern;
-import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 import org.junit.Test;
 
 /**

@@ -1,9 +1,9 @@
 package clearcontrol.state;
 
-import clearcontrol.core.variable.Variable;
-import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.LightSheetMicroscopeInterface;
 import clearcontrol.LightSheetMicroscopeQueue;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.state.tables.InterpolationTables;
 
 /**

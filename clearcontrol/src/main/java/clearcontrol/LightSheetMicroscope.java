@@ -1,17 +1,17 @@
 package clearcontrol;
 
 import clearcl.ClearCLContext;
+import clearcontrol.adaptive.AdaptiveEngine;
+import clearcontrol.calibrator.CalibrationEngine;
+import clearcontrol.component.detection.DetectionArmInterface;
+import clearcontrol.component.lightsheet.LightSheetInterface;
+import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.core.concurrent.future.FutureBooleanList;
 import clearcontrol.core.device.switches.SwitchingDeviceInterface;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.adaptive.AdaptiveEngine;
-import clearcontrol.calibrator.CalibrationEngine;
-import clearcontrol.component.detection.DetectionArmInterface;
-import clearcontrol.component.lightsheet.LightSheetInterface;
-import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.interactive.InteractiveAcquisition;
 import clearcontrol.processor.LightSheetFastFusionProcessor;
 import clearcontrol.state.InterpolatedAcquisitionState;
@@ -75,19 +75,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
   public LightSheetInterface getLightSheet(int pDeviceIndex)
   {
     return getDevice(LightSheetInterface.class, pDeviceIndex);
-  }
-
-  @Override
-  public <T> void addDevice(int pDeviceIndex, T pDevice)
-  {
-    super.addDevice(pDeviceIndex, pDevice);
-
-    if (pDevice instanceof StackCameraDeviceInterface)
-    {
-      StackCameraDeviceInterface<?> lStackCameraDevice = (StackCameraDeviceInterface<?>) pDevice;
-      lStackCameraDevice.getStackVariable().sendUpdatesTo(getStackProcesssingPipeline().getInputVariable());
-    }
-
   }
 
   /**
@@ -161,17 +148,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
   public SwitchingDeviceInterface getLightSheetSwitchingDevice()
   {
     return getDevice(LightSheetOpticalSwitch.class, 0);
-  }
-
-  /**
-   * Sends stacks to null.
-   */
-  public void sendPipelineStacksToNull()
-  {
-    getPipelineStackVariable().addSetListener((pCurrentValue, pNewValue) ->
-    {
-      pNewValue.release();
-    });
   }
 
   @Override

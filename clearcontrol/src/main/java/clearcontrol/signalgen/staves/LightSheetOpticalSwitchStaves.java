@@ -1,10 +1,10 @@
 package clearcontrol.signalgen.staves;
 
+import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
+import clearcontrol.component.opticalswitch.LightSheetOpticalSwitchQueue;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.devices.signalgen.measure.Measure;
 import clearcontrol.devices.signalgen.staves.ConstantStave;
-import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
-import clearcontrol.component.opticalswitch.LightSheetOpticalSwitchQueue;
 
 /**
  * Light sheet microscope optical switch staves. These staves are used when controlling a

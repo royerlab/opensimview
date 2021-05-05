@@ -161,9 +161,8 @@ public class DockPane extends StackPane implements EventHandler<DockEvent>
      * Whether this dock indicator button is used for docking a node relative to
      * the root of the dock pane.
      *
-     * @param dockRoot
-     *          Whether this indicator button is used for docking a node
-     *          relative to the root of the dock pane.
+     * @param dockRoot Whether this indicator button is used for docking a node
+     *                 relative to the root of the dock pane.
      */
     public final void setDockRoot(boolean dockRoot)
     {
@@ -173,8 +172,7 @@ public class DockPane extends StackPane implements EventHandler<DockEvent>
     /**
      * The docking position indicated by this button.
      *
-     * @param dockPos
-     *          The docking position indicated by this button.
+     * @param dockPos The docking position indicated by this button.
      */
     public final void setDockPos(DockPos dockPos)
     {
@@ -196,7 +194,7 @@ public class DockPane extends StackPane implements EventHandler<DockEvent>
      * the root of the dock pane.
      *
      * @return Whether this indicator button is used for docking a node relative
-     *         to the root of the dock pane.
+     * to the root of the dock pane.
      */
     public final boolean isDockRoot()
     {
@@ -331,8 +329,7 @@ public class DockPane extends StackPane implements EventHandler<DockEvent>
   /**
    * Enables/disables exclusive mode.
    *
-   * @param exclusive
-   *          true for exclusive mode, and false otherwise.
+   * @param exclusive true for exclusive mode, and false otherwise.
    */
   public void setExclusive(boolean exclusive)
   {
@@ -344,7 +341,7 @@ public class DockPane extends StackPane implements EventHandler<DockEvent>
    * indicator overlay for this dock pane.
    *
    * @return The Timeline used to animate the docking area indicator in the dock
-   *         indicator overlay for this dock pane.
+   * indicator overlay for this dock pane.
    */
   public final Timeline getDockAreaStrokeTimeline()
   {
@@ -398,9 +395,8 @@ public class DockPane extends StackPane implements EventHandler<DockEvent>
      * Creates a default dock node event handler that will help this dock pane
      * track the current docking area.
      *
-     * @param node
-     *          The node that is to listen for docking events and report to the
-     *          encapsulating docking pane.
+     * @param node The node that is to listen for docking events and report to the
+     *             encapsulating docking pane.
      */
     public DockNodeEventHandler(Node node)
     {
@@ -419,12 +415,9 @@ public class DockPane extends StackPane implements EventHandler<DockEvent>
    * the sibling in the layout. This is used to relatively position the dock
    * nodes to other nodes given their preferred size.
    *
-   * @param node
-   *          The node that is to be docked into this dock pane.
-   * @param dockPos
-   *          The docking position of the node relative to the sibling.
-   * @param sibling
-   *          The sibling of this node in the layout.
+   * @param node    The node that is to be docked into this dock pane.
+   * @param dockPos The docking position of the node relative to the sibling.
+   * @param sibling The sibling of this node in the layout.
    */
   void dock(Node node, DockPos dockPos, Node sibling)
   {
@@ -599,10 +592,8 @@ public class DockPane extends StackPane implements EventHandler<DockEvent>
    * the root in the layout. This is used to relatively position the dock nodes
    * to other nodes given their preferred size.
    *
-   * @param node
-   *          The node that is to be docked into this dock pane.
-   * @param dockPos
-   *          The docking position of the node relative to the sibling.
+   * @param node    The node that is to be docked into this dock pane.
+   * @param dockPos The docking position of the node relative to the sibling.
    */
   void dock(Node node, DockPos dockPos)
   {
@@ -612,8 +603,7 @@ public class DockPane extends StackPane implements EventHandler<DockEvent>
   /**
    * Detach the node from this dock pane removing it from the layout.
    *
-   * @param node
-   *          The node that is to be removed from this dock pane.
+   * @param node The node that is to be removed from this dock pane.
    */
   void undock(DockNode node)
   {

@@ -1,11 +1,11 @@
 package clearcontrol.timelapse.gui.demo;
 
 import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
+import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
 import clearcontrol.timelapse.TimelapseBase;
 import clearcontrol.timelapse.TimelapseInterface;
 import clearcontrol.timelapse.gui.TimelapseToolbar;
-import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
-import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

@@ -1,12 +1,12 @@
 package clearcontrol.signalgen.staves;
 
+import clearcontrol.component.detection.DetectionArmQueue;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.math.functions.UnivariateAffineFunction;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.devices.signalgen.measure.Measure;
 import clearcontrol.devices.signalgen.staves.ConstantStave;
-import clearcontrol.component.detection.DetectionArmQueue;
 
 /**
  * Detection arm staves

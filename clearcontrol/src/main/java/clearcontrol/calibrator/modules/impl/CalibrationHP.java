@@ -1,8 +1,5 @@
 package clearcontrol.calibrator.modules.impl;
 
-import clearcontrol.core.variable.Variable;
-import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.calibrator.CalibrationEngine;
 import clearcontrol.calibrator.modules.CalibrationModuleInterface;
@@ -10,6 +7,9 @@ import clearcontrol.calibrator.modules.CalibrationPerLightSheetBase;
 import clearcontrol.calibrator.utils.ImageAnalysisUtils;
 import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.configurationstate.ConfigurationState;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.core.variable.bounded.BoundedVariable;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
 import clearcontrol.stack.OffHeapPlanarStack;
 import gnu.trove.list.array.TDoubleArrayList;
 import org.apache.commons.collections4.map.MultiKeyMap;

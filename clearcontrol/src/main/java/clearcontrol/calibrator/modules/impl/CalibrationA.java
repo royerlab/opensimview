@@ -1,11 +1,5 @@
 package clearcontrol.calibrator.modules.impl;
 
-import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
-import clearcontrol.core.math.argmax.SmartArgMaxFinder;
-import clearcontrol.core.math.functions.UnivariateAffineFunction;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.calibrator.CalibrationEngine;
 import clearcontrol.calibrator.modules.CalibrationModuleInterface;
@@ -14,6 +8,12 @@ import clearcontrol.calibrator.utils.ImageAnalysisUtils;
 import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.configurationstate.ConfigurationState;
 import clearcontrol.configurationstate.HasStateDescriptionPerLightSheet;
+import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
+import clearcontrol.core.math.argmax.SmartArgMaxFinder;
+import clearcontrol.core.math.functions.UnivariateAffineFunction;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.core.variable.bounded.BoundedVariable;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
 import gnu.trove.list.array.TDoubleArrayList;

@@ -1,9 +1,9 @@
 package clearcontrol.adaptive.test;
 
+import clearcontrol.MicroscopeInterface;
 import clearcontrol.core.device.NameableWithChangeListener;
 import clearcontrol.core.device.queue.QueueInterface;
 import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.MicroscopeInterface;
 import clearcontrol.state.AcquisitionStateInterface;
 
 import java.util.concurrent.TimeUnit;

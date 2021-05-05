@@ -1,15 +1,6 @@
 package clearcontrol.calibrator.modules.impl;
 
 import clearcl.util.ElapsedTime;
-import clearcontrol.core.configuration.MachineConfiguration;
-import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
-import clearcontrol.core.math.argmax.methods.ModeArgMaxFinder;
-import clearcontrol.core.math.functions.UnivariateAffineFunction;
-import clearcontrol.core.math.regression.linear.TheilSenEstimator;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface;
-import clearcontrol.ip.iqm.DCTS2D;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.calibrator.CalibrationEngine;
 import clearcontrol.calibrator.modules.CalibrationModuleInterface;
@@ -19,9 +10,18 @@ import clearcontrol.component.detection.DetectionArmInterface;
 import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.configurationstate.ConfigurationState;
 import clearcontrol.configurationstate.HasStateDescriptionPerLightSheet;
-import clearcontrol.state.InterpolatedAcquisitionState;
+import clearcontrol.core.configuration.MachineConfiguration;
+import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
+import clearcontrol.core.math.argmax.methods.ModeArgMaxFinder;
+import clearcontrol.core.math.functions.UnivariateAffineFunction;
+import clearcontrol.core.math.regression.linear.TheilSenEstimator;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.core.variable.bounded.BoundedVariable;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface;
+import clearcontrol.ip.iqm.DCTS2D;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
+import clearcontrol.state.InterpolatedAcquisitionState;
 import gnu.trove.list.array.TDoubleArrayList;
 import org.apache.commons.collections4.map.MultiKeyMap;
 

@@ -1,8 +1,5 @@
 package clearcontrol.calibrator.modules.impl;
 
-import clearcontrol.core.math.functions.UnivariateAffineFunction;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.calibrator.CalibrationEngine;
 import clearcontrol.calibrator.modules.CalibrationBase;
@@ -11,6 +8,9 @@ import clearcontrol.calibrator.utils.ImageAnalysisUtils;
 import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.configurationstate.ConfigurationState;
 import clearcontrol.configurationstate.HasStateDescriptionPerLightSheet;
+import clearcontrol.core.math.functions.UnivariateAffineFunction;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.stack.OffHeapPlanarStack;
 import gnu.trove.list.array.TDoubleArrayList;
 

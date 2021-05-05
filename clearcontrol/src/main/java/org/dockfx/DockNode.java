@@ -174,15 +174,12 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Creates a default DockNode with a default title bar and layout.
    *
-   * @param contents
-   *          The contents of the dock node which may be a tree or another scene
-   *          graph node.
-   * @param title
-   *          The caption title of this dock node which maintains bidirectional
-   *          state with the title bar and stage.
-   * @param graphic
-   *          The caption graphic of this dock node which maintains
-   *          bidirectional state with the title bar and stage.
+   * @param contents The contents of the dock node which may be a tree or another scene
+   *                 graph node.
+   * @param title    The caption title of this dock node which maintains bidirectional
+   *                 state with the title bar and stage.
+   * @param graphic  The caption graphic of this dock node which maintains
+   *                 bidirectional state with the title bar and stage.
    */
   public DockNode(Node contents, String title, Node graphic)
   {
@@ -192,12 +189,10 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Creates a default DockNode with a default title bar and layout.
    *
-   * @param contents
-   *          The contents of the dock node which may be a tree or another scene
-   *          graph node.
-   * @param title
-   *          The caption title of this dock node which maintains bidirectional
-   *          state with the title bar and stage.
+   * @param contents The contents of the dock node which may be a tree or another scene
+   *                 graph node.
+   * @param title    The caption title of this dock node which maintains bidirectional
+   *                 state with the title bar and stage.
    */
   public DockNode(Node contents, String title)
   {
@@ -207,9 +202,8 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Creates a default DockNode with a default title bar and layout.
    *
-   * @param contents
-   *          The contents of the dock node which may be a tree or another scene
-   *          graph node.
+   * @param contents The contents of the dock node which may be a tree or another scene
+   *                 graph node.
    */
   public DockNode(Node contents)
   {
@@ -217,18 +211,14 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   }
 
   /**
-   *
    * Creates a default DockNode with contents loaded from FXMLFile at provided
    * path.
    *
-   * @param FXMLPath
-   *          path to fxml file.
-   * @param title
-   *          The caption title of this dock node which maintains bidirectional
-   *          state with the title bar and stage.
-   * @param graphic
-   *          The caption title of this dock node which maintains bidirectional
-   *          state with the title bar and stage.
+   * @param FXMLPath path to fxml file.
+   * @param title    The caption title of this dock node which maintains bidirectional
+   *                 state with the title bar and stage.
+   * @param graphic  The caption title of this dock node which maintains bidirectional
+   *                 state with the title bar and stage.
    */
   public DockNode(String FXMLPath, String title, Node graphic)
   {
@@ -240,11 +230,9 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
    * Creates a default DockNode with contents loaded from FXMLFile at provided
    * path.
    *
-   * @param FXMLPath
-   *          path to fxml file.
-   * @param title
-   *          The caption title of this dock node which maintains bidirectional
-   *          state with the title bar and stage.
+   * @param FXMLPath path to fxml file.
+   * @param title    The caption title of this dock node which maintains bidirectional
+   *                 state with the title bar and stage.
    */
   public DockNode(String FXMLPath, String title)
   {
@@ -255,8 +243,7 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
    * Creates a default DockNode with contents loaded from FXMLFile at provided
    * path with default title bar.
    *
-   * @param FXMLPath
-   *          path to fxml file.
+   * @param FXMLPath path to fxml file.
    */
   public DockNode(String FXMLPath)
   {
@@ -266,10 +253,9 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Loads Node from fxml file located at FXMLPath and returns it.
    *
-   * @param FXMLPath
-   *          Path to fxml file.
+   * @param FXMLPath Path to fxml file.
    * @return Node loaded from fxml file or StackPane with Label with error
-   *         message.
+   * message.
    */
   private static FXMLLoader loadNode(String FXMLPath)
   {
@@ -288,15 +274,12 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Sets DockNodes contents, title and title bar graphic
    *
-   * @param contents
-   *          The contents of the dock node which may be a tree or another scene
-   *          graph node.
-   * @param title
-   *          The caption title of this dock node which maintains bidirectional
-   *          state with the title bar and stage.
-   * @param graphic
-   *          The caption title of this dock node which maintains bidirectional
-   *          state with the title bar and stage.
+   * @param contents The contents of the dock node which may be a tree or another scene
+   *                 graph node.
+   * @param title    The caption title of this dock node which maintains bidirectional
+   *                 state with the title bar and stage.
+   * @param graphic  The caption title of this dock node which maintains bidirectional
+   *                 state with the title bar and stage.
    */
   private void initializeDockNode(Node contents, String title, Node graphic, DockFXViewController controller)
   {
@@ -324,8 +307,7 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
    * The stage style that will be used when the dock node is floating. This must
    * be set prior to setting the dock node to floating.
    *
-   * @param stageStyle
-   *          The stage style that will be used when the node is floating.
+   * @param stageStyle The stage style that will be used when the node is floating.
    */
   public void setStageStyle(StageStyle stageStyle)
   {
@@ -335,8 +317,7 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Changes the contents of the dock node.
    *
-   * @param contents
-   *          The new contents of this dock node.
+   * @param contents The new contents of this dock node.
    */
   public void setContents(Node contents)
   {
@@ -348,9 +329,8 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
    * Changes the title bar in the layout of this dock node. This can be used to
    * remove the dock title bar from the dock node by passing null.
    *
-   * @param dockTitleBar
-   *          null The new title bar of this dock node, can be set null
-   *          indicating no title bar is used.
+   * @param dockTitleBar null The new title bar of this dock node, can be set null
+   *                     indicating no title bar is used.
    */
   public void setDockTitleBar(DockTitleBar dockTitleBar)
   {
@@ -374,8 +354,7 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Whether the node is currently maximized.
    *
-   * @param maximized
-   *          Whether the node is currently maximized.
+   * @param maximized Whether the node is currently maximized.
    */
   public final void setMaximized(boolean maximized)
   {
@@ -385,14 +364,11 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Whether the node is currently floating.
    *
-   * @param floating
-   *          Whether the node is currently floating.
-   * @param translation
-   *          null The offset of the node after being set floating. Used for
-   *          aligning it with its layout bounds inside the dock pane when it
-   *          becomes detached. Can be null indicating no translation.
-   * @param newDockPane
-   *          the parent Dock Pane to associate with if not already set
+   * @param floating    Whether the node is currently floating.
+   * @param translation null The offset of the node after being set floating. Used for
+   *                    aligning it with its layout bounds inside the dock pane when it
+   *                    becomes detached. Can be null indicating no translation.
+   * @param newDockPane the parent Dock Pane to associate with if not already set
    */
   public void setFloating(boolean floating, Point2D translation, DockPane newDockPane)
   {
@@ -553,8 +529,7 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Whether the node is currently floating.
    *
-   * @param floating
-   *          Whether the node is currently floating.
+   * @param floating Whether the node is currently floating.
    */
   public void setFloating(boolean floating)
   {
@@ -1038,12 +1013,9 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Dock this node into a dock pane.
    *
-   * @param dockPane
-   *          The dock pane to dock this node into.
-   * @param dockPos
-   *          The docking position relative to the sibling of the dock pane.
-   * @param sibling
-   *          The sibling node to dock this node relative to.
+   * @param dockPane The dock pane to dock this node into.
+   * @param dockPos  The docking position relative to the sibling of the dock pane.
+   * @param sibling  The sibling node to dock this node relative to.
    */
   public void dock(DockPane dockPane, DockPos dockPos, Node sibling)
   {
@@ -1056,10 +1028,8 @@ public class DockNode extends VBox implements EventHandler<MouseEvent>
   /**
    * Dock this node into a dock pane.
    *
-   * @param dockPane
-   *          The dock pane to dock this node into.
-   * @param dockPos
-   *          The docking position relative to the sibling of the dock pane.
+   * @param dockPane The dock pane to dock this node into.
+   * @param dockPos  The docking position relative to the sibling of the dock pane.
    */
   public void dock(DockPane dockPane, DockPos dockPos)
   {

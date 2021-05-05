@@ -1,22 +1,21 @@
 package dorado;
 
 import clearcl.ClearCLContext;
-import clearcontrol.adaptive.modules.*;
+import clearcontrol.component.detection.DetectionArm;
+import clearcontrol.component.lightsheet.LightSheet;
+import clearcontrol.component.lightsheet.instructions.ChangeLightSheetWidthInstruction;
+import clearcontrol.component.lightsheet.instructions.MultiChannelInstruction;
+import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
 import clearcontrol.devices.lasers.devices.sim.LaserDeviceSimulator;
 import clearcontrol.devices.optomech.filterwheels.devices.ludl.LudlFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.instructions.FilterWheelInstruction;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
-import clearcontrol.component.detection.DetectionArm;
-import clearcontrol.component.lightsheet.LightSheet;
-import clearcontrol.component.lightsheet.instructions.ChangeLightSheetWidthInstruction;
-import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.simulation.SimulatedLightSheetMicroscope;
 import clearcontrol.timelapse.LightSheetTimelapse;
-import clearcontrol.component.lightsheet.instructions.MultiChannelInstruction;
 
 
 /**
@@ -29,35 +28,24 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
 
   /**
    * Instantiates an Dorado microscope
-   * 
-   * @param pStackFusionContext
-   *          ClearCL context for stack fusion
-   * @param pMaxStackProcessingQueueLength
-   *          max stack processing queue length
-   * @param pThreadPoolSize
-   *          thread pool size
+   *
+   * @param pStackFusionContext            ClearCL context for stack fusion
+   * @param pMaxStackProcessingQueueLength max stack processing queue length
+   * @param pThreadPoolSize                thread pool size
    */
-  public DoradoMicroscope(ClearCLContext pStackFusionContext,
-                          int pMaxStackProcessingQueueLength,
-                          int pThreadPoolSize)
+  public DoradoMicroscope(ClearCLContext pStackFusionContext, int pMaxStackProcessingQueueLength, int pThreadPoolSize)
   {
-    super("Dorado",
-          pStackFusionContext,
-          pMaxStackProcessingQueueLength,
-          pThreadPoolSize);
+    super("Dorado", pStackFusionContext, pMaxStackProcessingQueueLength, pThreadPoolSize);
 
   }
 
   /**
    * Assembles the microscope
-   * 
-   * @param pNumberOfDetectionArms
-   *          number of detection arms
-   * @param pNumberOfLightSheets
-   *          number of lightsheets
+   *
+   * @param pNumberOfDetectionArms number of detection arms
+   * @param pNumberOfLightSheets   number of lightsheets
    */
-  public void addRealHardwareDevices(int pNumberOfDetectionArms,
-                                     int pNumberOfLightSheets, boolean pUseStages)
+  public void addRealHardwareDevices(int pNumberOfDetectionArms, int pNumberOfLightSheets, boolean pUseStages)
   {
     long lDefaultStackWidth = 2048;
     long lDefaultStackHeight = 2048;
@@ -69,10 +57,10 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
 
     // Setting up lasers:
     {
-      addDevice(0,new LaserDeviceSimulator("405",0,405, 100));
-      addDevice(1,new LaserDeviceSimulator("488",0,488, 100));
-      addDevice(1,new LaserDeviceSimulator("561",0,561, 100));
-      addDevice(2,new LaserDeviceSimulator("637",0,637, 100));
+      addDevice(0, new LaserDeviceSimulator("405", 0, 405, 100));
+      addDevice(1, new LaserDeviceSimulator("488", 0, 488, 100));
+      addDevice(1, new LaserDeviceSimulator("561", 0, 561, 100));
+      addDevice(2, new LaserDeviceSimulator("637", 0, 637, 100));
     }
 
     // Setting up cameras and filterwheels:
@@ -80,8 +68,7 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
     {
       for (int c = 0; c < pNumberOfDetectionArms; c++)
       {
-        StackCameraDeviceInterface<?> lCamera =
-                                              HamStackCamera.buildWithExternalTriggering(c);
+        StackCameraDeviceInterface<?> lCamera = HamStackCamera.buildWithExternalTriggering(c);
 
         lCamera.getStackWidthVariable().set(lDefaultStackWidth);
         lCamera.getStackHeightVariable().set(lDefaultStackHeight);
@@ -96,9 +83,9 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
         LudlFilterWheelDevice lFilterWheel = new LudlFilterWheelDevice(c);
         addDevice(c, lFilterWheel);
 
-        for(int i=0; i<lFilterWheel.getValidPositions().length; i++)
+        for (int i = 0; i < lFilterWheel.getValidPositions().length; i++)
         {
-          FilterWheelInstruction lFilterWheelInstruction = new FilterWheelInstruction(lFilterWheel,i);
+          FilterWheelInstruction lFilterWheelInstruction = new FilterWheelInstruction(lFilterWheel, i);
           addDevice(c, lFilterWheelInstruction);
         }
 
@@ -110,11 +97,8 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
     // Adding signal Generator:
     LightSheetSignalGeneratorDevice lLSSignalGenerator;
     {
-      NIRIOSignalGenerator lNIRIOSignalGenerator =
-                                                 new NIRIOSignalGenerator();
-      lLSSignalGenerator =
-                         LightSheetSignalGeneratorDevice.wrap(lNIRIOSignalGenerator,
-                                                              true);
+      NIRIOSignalGenerator lNIRIOSignalGenerator = new NIRIOSignalGenerator();
+      lLSSignalGenerator = LightSheetSignalGeneratorDevice.wrap(lNIRIOSignalGenerator, true);
       // addDevice(0, lNIRIOSignalGenerator);
       addDevice(0, lLSSignalGenerator);
     }
@@ -135,10 +119,7 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
 
       for (int l = 0; l < pNumberOfLightSheets; l++)
       {
-        final LightSheet lLightSheet =
-                                     new LightSheet("I" + l,
-                                                    9.4,
-                                                    getNumberOfLaserLines());
+        final LightSheet lLightSheet = new LightSheet("I" + l, 9.4, getNumberOfLaserLines());
         addDevice(l, lLightSheet);
       }
     }
@@ -149,25 +130,19 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
       for (int l = 0; l < pNumberOfLightSheets; l++)
         for (int c = 0; c < pNumberOfDetectionArms; c++)
         {
-          StackCameraDeviceInterface<?> lCamera =
-                                                getDevice(StackCameraDeviceInterface.class,
-                                                          c);
+          StackCameraDeviceInterface<?> lCamera = getDevice(StackCameraDeviceInterface.class, c);
           LightSheet lLightSheet = getDevice(LightSheet.class, l);
 
-          lCamera.getExposureInSecondsVariable()
-                 .sendUpdatesTo(lLightSheet.getEffectiveExposureInSecondsVariable());
+          lCamera.getExposureInSecondsVariable().sendUpdatesTo(lLightSheet.getEffectiveExposureInSecondsVariable());
 
-          lCamera.getStackHeightVariable()
-                 .sendUpdatesTo(lLightSheet.getImageHeightVariable());
+          lCamera.getStackHeightVariable().sendUpdatesTo(lLightSheet.getImageHeightVariable());
 
         }
     }
 
     // Setting up lightsheets selector
     {
-      LightSheetOpticalSwitch lLightSheetOpticalSwitch =
-                                                       new LightSheetOpticalSwitch("OpticalSwitch",
-                                                                                   pNumberOfLightSheets);
+      LightSheetOpticalSwitch lLightSheetOpticalSwitch = new LightSheetOpticalSwitch("OpticalSwitch", pNumberOfLightSheets);
 
       addDevice(0, lLightSheetOpticalSwitch);
     }
@@ -175,17 +150,15 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
   }
 
   @Override
-  public void addSimulatedDevices(boolean pDummySimulation,
-                                  boolean pXYZRStage,
-                                  boolean pSharedLightSheetControl,
-                                  LightSheetMicroscopeSimulationDevice pSimulatorDevice)
+  public void addSimulatedDevices(boolean pDummySimulation, boolean pXYZRStage, boolean pSharedLightSheetControl, LightSheetMicroscopeSimulationDevice pSimulatorDevice)
   {
     super.addSimulatedDevices(pDummySimulation, pXYZRStage, pSharedLightSheetControl, pSimulatorDevice);
 
   }
 
   @Override
-  public void addStandardDevices(int pNumberOfControlPlanes) {
+  public void addStandardDevices(int pNumberOfControlPlanes)
+  {
     super.addStandardDevices(pNumberOfControlPlanes);
 
     LightSheetTimelapse timelapse = getTimelapse();

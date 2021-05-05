@@ -13,11 +13,11 @@ dependencies {
 }
 
 repositories
-{
-    mavenCentral()
-    jcenter()
-    maven {url "http://maven.imagej.net/content/repositories/releases/"}
-}
+        {
+            mavenCentral()
+            jcenter()
+            maven { url "http://maven.imagej.net/content/repositories/releases/" }
+        }
 
 application {
     // Define the main class for the application.

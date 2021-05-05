@@ -1,9 +1,9 @@
 package clearcontrol.processor.gui.demo;
 
-import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.component.detection.DetectionArm;
 import clearcontrol.component.lightsheet.LightSheet;
+import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.processor.LightSheetFastFusionProcessor;
 import clearcontrol.processor.gui.LightSheetFastFusionProcessorPanel;
 import javafx.application.Application;

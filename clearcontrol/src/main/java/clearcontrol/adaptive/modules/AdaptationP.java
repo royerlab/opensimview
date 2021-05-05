@@ -1,14 +1,14 @@
 package clearcontrol.adaptive.modules;
 
-import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.calibrator.utils.ImageAnalysisUtils;
 import clearcontrol.component.detection.DetectionArmInterface;
 import clearcontrol.component.lightsheet.LightSheetInterface;
-import clearcontrol.state.InterpolatedAcquisitionState;
+import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.metadata.MetaDataChannel;
+import clearcontrol.state.InterpolatedAcquisitionState;
 import gnu.trove.list.array.TDoubleArrayList;
 
 import java.util.ArrayList;

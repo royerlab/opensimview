@@ -1,11 +1,11 @@
 package clearcontrol.state.tables;
 
+import clearcontrol.LightSheetDOF;
 import clearcontrol.core.device.change.ChangeListeningBase;
 import clearcontrol.core.math.interpolation.AbstractInterpolationTable;
 import clearcontrol.core.math.interpolation.LinearInterpolationTable;
 import clearcontrol.core.math.interpolation.Row;
 import clearcontrol.core.math.interpolation.SplineInterpolationTable;
-import clearcontrol.LightSheetDOF;
 
 import java.util.ArrayList;
 

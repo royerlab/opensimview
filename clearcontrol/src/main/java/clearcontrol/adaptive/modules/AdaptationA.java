@@ -1,17 +1,17 @@
 package clearcontrol.adaptive.modules;
 
+import clearcontrol.LightSheetDOF;
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.core.math.argmax.ArgMaxFinder1DInterface;
 import clearcontrol.core.math.argmax.methods.ModeArgMaxFinder;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
 import clearcontrol.ip.iqm.DCTS2D;
-import clearcontrol.LightSheetDOF;
-import clearcontrol.LightSheetMicroscope;
-import clearcontrol.LightSheetMicroscopeQueue;
-import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.metadata.MetaDataChannel;
+import clearcontrol.state.InterpolatedAcquisitionState;
 import gnu.trove.list.array.TDoubleArrayList;
 
 import java.util.Arrays;

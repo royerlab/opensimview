@@ -7,11 +7,9 @@ import clearcontrol.core.device.queue.QueueDeviceInterface;
 import clearcontrol.core.device.queue.QueueInterface;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.stages.StageDeviceInterface;
-import clearcontrol.state.AcquisitionStateManager;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
-import clearcontrol.stack.processor.StackProcessingPipelineInterface;
-import clearcontrol.stack.processor.StackProcessorInterface;
+import clearcontrol.state.AcquisitionStateManager;
 import coremem.recycling.RecyclerInterface;
 
 import java.util.ArrayList;
@@ -223,51 +221,25 @@ public interface MicroscopeInterface<Q extends QueueInterface> extends NameableI
   public long lastAcquiredStacksTimeStampInNS();
 
   /**
-   * Returns the stack processing pipeline
-   *
-   * @return stack processing pipeline
-   */
-  StackProcessingPipelineInterface getStackProcesssingPipeline();
-
-  /**
-   * Adds a given stack processor;
-   *
-   * @param pStackProcessor                  stack processor
-   * @param pRecyclerName                    recycler name (from stack recycler manager)
-   * @param pMaximumNumberOfLiveObjects      max num of live objects
-   * @param pMaximumNumberOfAvailableObjects max num of available objects
-   */
-  public void addStackProcessor(StackProcessorInterface pStackProcessor, String pRecyclerName, int pMaximumNumberOfLiveObjects, int pMaximumNumberOfAvailableObjects);
-
-  /**
-   * Removes a given stack processor;
-   *
-   * @param pStackProcessor stack processor
-   */
-  void removeStackProcessor(StackProcessorInterface pStackProcessor);
-
-  /**
-   * Returns pieline index of given index.
-   *
-   * @param pProcessorIndex processor index
-   * @return processing pipeline
-   */
-  StackProcessorInterface getStackProcessor(int pProcessorIndex);
-
-  /**
-   * Returns Stack Variable for given stack camera index
-   *
-   * @return Stack Variable
-   */
-  public Variable<StackInterface> getPipelineStackVariable();
-
-  /**
-   * Returns Stack Variable for given stack camera index
+   * Returns Camera Stack Variable for given stack camera index
    *
    * @param pIndex stack camera index
    * @return Stack Variable
    */
   public Variable<StackInterface> getCameraStackVariable(int pIndex);
+
+  /**
+   * Returns Terminator Stack Variable for given stack camera index
+   *
+   * @param pIndex stack camera index
+   * @return Stack Variable
+   */
+  public Variable<StackInterface> getTerminatorStackVariable(int pIndex);
+
+  /**
+   * Resets Terminator Stack Variables so that stacks get released.
+   */
+  public void resetTerminatorStackVariables();
 
   /**
    * Returns the size in nanometer (anisotropic XY) of a pixel. this is the

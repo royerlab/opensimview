@@ -1,9 +1,9 @@
 package clearcontrol.adaptive.modules;
 
+import clearcontrol.adaptive.AdaptiveEngine;
 import clearcontrol.core.device.name.NameableBase;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
-import clearcontrol.adaptive.AdaptiveEngine;
 import clearcontrol.state.AcquisitionStateInterface;
 
 import java.util.ArrayList;

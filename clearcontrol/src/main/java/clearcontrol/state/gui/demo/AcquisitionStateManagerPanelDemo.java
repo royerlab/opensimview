@@ -1,13 +1,13 @@
 package clearcontrol.state.gui.demo;
 
-import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.component.detection.DetectionArm;
 import clearcontrol.component.lightsheet.LightSheet;
+import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
+import clearcontrol.state.AcquisitionStateManager;
 import clearcontrol.state.ControlPlaneLayout;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.gui.AcquisitionStateManagerPanel;
-import clearcontrol.state.AcquisitionStateManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

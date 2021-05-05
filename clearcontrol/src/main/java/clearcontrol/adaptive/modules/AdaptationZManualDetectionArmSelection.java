@@ -1,9 +1,9 @@
 package clearcontrol.adaptive.modules;
 
-import clearcontrol.core.variable.Variable;
-import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.configurationstate.ConfigurationState;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.state.InterpolatedAcquisitionState;
 
 /**

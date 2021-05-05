@@ -1,9 +1,9 @@
 package clearcontrol.stack;
 
 import clearcontrol.stack.metadata.MetaDataAcquisitionType;
-import clearcontrol.state.AcquisitionType;
 import clearcontrol.stack.metadata.MetaDataEntryInterface;
 import clearcontrol.stack.metadata.StackMetaData;
+import clearcontrol.state.AcquisitionType;
 
 /**
  * Basic stack meta data entries

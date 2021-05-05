@@ -1,9 +1,9 @@
 package clearcontrol.state;
 
+import clearcontrol.MicroscopeInterface;
 import clearcontrol.core.device.NameableWithChangeListener;
 import clearcontrol.core.device.queue.QueueInterface;
 import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.MicroscopeInterface;
 
 /**
  * Base class providing common fields and methods for all acquisition state

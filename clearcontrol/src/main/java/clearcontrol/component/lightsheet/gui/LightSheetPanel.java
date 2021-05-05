@@ -1,8 +1,8 @@
 package clearcontrol.component.lightsheet.gui;
 
+import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 import clearcontrol.gui.jfx.var.onoffarray.OnOffArrayPane;
-import clearcontrol.component.lightsheet.LightSheetInterface;
 
 /**
  * Light sheet panel

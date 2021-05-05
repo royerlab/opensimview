@@ -1,15 +1,15 @@
 package clearcontrol.calibrator.gui;
 
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.calibrator.CalibrationEngine;
+import clearcontrol.calibrator.modules.CalibrationModuleInterface;
+import clearcontrol.configurationstate.gui.ConfigurationStatePanel;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import clearcontrol.gui.jfx.var.checkbox.VariableCheckBox;
 import clearcontrol.gui.jfx.var.onoffarray.OnOffArrayPane;
 import clearcontrol.gui.video.video2d.Stack2DDisplay;
-import clearcontrol.LightSheetMicroscope;
-import clearcontrol.calibrator.CalibrationEngine;
-import clearcontrol.calibrator.modules.CalibrationModuleInterface;
-import clearcontrol.configurationstate.gui.ConfigurationStatePanel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

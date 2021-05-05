@@ -1,9 +1,9 @@
 package clearcontrol.adaptive.test;
 
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.adaptive.modules.AdaptationModuleInterface;
 import clearcontrol.adaptive.modules.NDIteratorAdaptationModule;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.util.NDIterator;
 
 import java.util.Arrays;

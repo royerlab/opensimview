@@ -1,7 +1,7 @@
 package clearcontrol.adaptive.gui;
 
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsolePanel;
 import clearcontrol.adaptive.AdaptiveEngine;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsolePanel;
 
 /**
  * Adaptor Panel

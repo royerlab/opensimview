@@ -1,8 +1,8 @@
 package clearcontrol.adaptive;
 
-import clearcontrol.core.variable.Variable;
 import clearcontrol.MicroscopeInterface;
 import clearcontrol.adaptive.modules.AdaptationModuleInterface;
+import clearcontrol.core.variable.Variable;
 import clearcontrol.state.AcquisitionStateInterface;
 
 import java.util.ArrayList;

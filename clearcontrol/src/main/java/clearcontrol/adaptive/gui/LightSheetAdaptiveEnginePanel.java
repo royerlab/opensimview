@@ -1,7 +1,6 @@
 package clearcontrol.adaptive.gui;
 
 import clearcontrol.adaptive.AdaptiveEngine;
-import clearcontrol.adaptive.gui.AdaptiveEnginePanel;
 
 /**
  * Adaptor Panel

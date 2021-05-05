@@ -1,7 +1,7 @@
 package clearcontrol.calibrator.modules;
 
-import clearcontrol.core.device.name.ReadOnlyNameableInterface;
 import clearcontrol.configurationstate.HasConfigurationState;
+import clearcontrol.core.device.name.ReadOnlyNameableInterface;
 
 /**
  * Calibration module interface

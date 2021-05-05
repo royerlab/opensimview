@@ -1,17 +1,17 @@
 package clearcontrol.signalgen;
 
-import clearcontrol.core.device.queue.QueueInterface;
-import clearcontrol.core.log.LoggingFeature;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.devices.signalgen.SignalGeneratorQueue;
-import clearcontrol.devices.signalgen.measure.Measure;
-import clearcontrol.devices.signalgen.score.ScoreInterface;
 import clearcontrol.component.detection.DetectionArm;
 import clearcontrol.component.detection.DetectionArmQueue;
 import clearcontrol.component.lightsheet.LightSheet;
 import clearcontrol.component.lightsheet.LightSheetQueue;
 import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.component.opticalswitch.LightSheetOpticalSwitchQueue;
+import clearcontrol.core.device.queue.QueueInterface;
+import clearcontrol.core.log.LoggingFeature;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.devices.signalgen.SignalGeneratorQueue;
+import clearcontrol.devices.signalgen.measure.Measure;
+import clearcontrol.devices.signalgen.score.ScoreInterface;
 import clearcontrol.signalgen.staves.DetectionArmStaves;
 import clearcontrol.signalgen.staves.LightSheetOpticalSwitchStaves;
 import clearcontrol.signalgen.staves.LightSheetStaves;

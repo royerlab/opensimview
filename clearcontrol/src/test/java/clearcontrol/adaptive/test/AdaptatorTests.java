@@ -1,7 +1,7 @@
 package clearcontrol.adaptive.test;
 
-import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.adaptive.AdaptiveEngine;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;

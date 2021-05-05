@@ -63,8 +63,8 @@ public class TurbojpegLibrary
      * chrominance component for every 2x2 block of pixels in the source image.
      */
     TJSAMP_420(2), // / Grayscale. The JPEG or YUV image will contain no chrominance
-  // components.
-  TJSAMP_GRAY(3),
+    // components.
+    TJSAMP_GRAY(3),
     /**
      * 4:4:0 chrominance subsampling. The JPEG or YUV image will contain one<br>
      * chrominance component for every 1x2 block of pixels in the source image.

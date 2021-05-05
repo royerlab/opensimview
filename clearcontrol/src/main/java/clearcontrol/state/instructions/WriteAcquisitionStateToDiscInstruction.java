@@ -1,9 +1,9 @@
 package clearcontrol.state.instructions;
 
-import clearcontrol.core.variable.Variable;
-import clearcontrol.instructions.PropertyIOableInstructionInterface;
 import clearcontrol.LightSheetMicroscope;
+import clearcontrol.core.variable.Variable;
 import clearcontrol.instructions.LightSheetMicroscopeInstructionBase;
+import clearcontrol.instructions.PropertyIOableInstructionInterface;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.io.InterpolatedAcquisitionStateWriter;
 import clearcontrol.timelapse.LightSheetTimelapse;

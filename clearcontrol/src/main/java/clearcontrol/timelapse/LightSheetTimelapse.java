@@ -1,10 +1,10 @@
 package clearcontrol.timelapse;
 
+import clearcontrol.LightSheetMicroscope;
 import clearcontrol.core.concurrent.timing.ElapsedTime;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.LightSheetMicroscope;
 import clearcontrol.processor.LightSheetFastFusionEngine;
 import clearcontrol.processor.LightSheetFastFusionProcessor;
 import clearcontrol.timelapse.io.ProgramWriter;

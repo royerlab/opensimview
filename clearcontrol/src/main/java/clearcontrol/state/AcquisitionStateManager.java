@@ -1,10 +1,10 @@
 package clearcontrol.state;
 
+import clearcontrol.MicroscopeInterface;
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.core.device.name.ReadOnlyNameableInterface;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
-import clearcontrol.MicroscopeInterface;
 
 import java.util.Collections;
 import java.util.List;

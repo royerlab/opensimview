@@ -1,10 +1,10 @@
 package clearcontrol.state.instructions;
 
+import clearcontrol.LightSheetMicroscope;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.instructions.PropertyIOableInstructionInterface;
-import clearcontrol.LightSheetMicroscope;
 import clearcontrol.instructions.LightSheetMicroscopeInstructionBase;
+import clearcontrol.instructions.PropertyIOableInstructionInterface;
 
 /**
  * ChangeExposureTimeInstruction

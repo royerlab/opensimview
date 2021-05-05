@@ -1,9 +1,9 @@
 package clearcontrol.simulation;
 
-import clearcontrol.devices.stages.StageDeviceInterface;
-import clearcontrol.MicroscopeInterface;
 import clearcontrol.LightSheetMicroscopeInterface;
 import clearcontrol.LightSheetMicroscopeQueue;
+import clearcontrol.MicroscopeInterface;
+import clearcontrol.devices.stages.StageDeviceInterface;
 import simbryo.synthoscopy.microscope.lightsheet.LightSheetMicroscopeSimulator;
 import simbryo.synthoscopy.microscope.parameters.StageParameter;
 

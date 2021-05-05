@@ -1,9 +1,6 @@
 package clearcontrol.stack;
 
 import clearcontrol.core.device.VirtualDevice;
-import clearcontrol.stack.ContiguousOffHeapPlanarStackFactory;
-import clearcontrol.stack.StackInterface;
-import clearcontrol.stack.StackRequest;
 import coremem.recycling.BasicRecycler;
 import coremem.recycling.RecyclerInterface;
 

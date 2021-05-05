@@ -1,12 +1,12 @@
 package clearcontrol.gui.halcyon;
 
+import clearcontrol.MicroscopeInterface;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.name.NameableInterface;
 import clearcontrol.core.log.LoggingFeature;
+import clearcontrol.gui.MicroscopeGUI;
 import clearcontrol.gui.video.video2d.Stack2DDisplay;
 import clearcontrol.gui.video.video3d.Stack3DDisplay;
-import clearcontrol.MicroscopeInterface;
-import clearcontrol.gui.MicroscopeGUI;
 import clearcontrol.scripting.engine.ScriptingEngine;
 import clearcontrol.scripting.gui.ScriptingWindow;
 import halcyon.HalcyonFrame;

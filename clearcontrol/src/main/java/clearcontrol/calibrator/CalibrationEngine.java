@@ -1,15 +1,15 @@
 package clearcontrol.calibrator;
 
-import clearcontrol.core.configuration.MachineConfiguration;
-import clearcontrol.core.device.task.TaskDevice;
-import clearcontrol.core.log.LoggingFeature;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.calibrator.modules.CalibrationModuleInterface;
 import clearcontrol.calibrator.modules.impl.*;
 import clearcontrol.component.detection.DetectionArmInterface;
 import clearcontrol.component.lightsheet.LightSheetInterface;
+import clearcontrol.core.configuration.MachineConfiguration;
+import clearcontrol.core.device.task.TaskDevice;
+import clearcontrol.core.log.LoggingFeature;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface;
 import clearcontrol.scripting.engine.ScriptingEngine;
 import org.ejml.simple.SimpleMatrix;
 

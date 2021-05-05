@@ -1,5 +1,7 @@
 package clearcontrol.adaptive;
 
+import clearcontrol.MicroscopeInterface;
+import clearcontrol.adaptive.modules.AdaptationModuleInterface;
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.core.concurrent.executors.ClearControlExecutors;
 import clearcontrol.core.concurrent.thread.ThreadSleep;
@@ -9,8 +11,6 @@ import clearcontrol.core.device.task.TaskDevice;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface;
-import clearcontrol.MicroscopeInterface;
-import clearcontrol.adaptive.modules.AdaptationModuleInterface;
 import clearcontrol.state.AcquisitionStateInterface;
 import clearcontrol.state.AcquisitionStateManager;
 

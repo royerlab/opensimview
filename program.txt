@@ -1,1 +1,1 @@
-Adaptation: Change light sheet width::Light_sheet_width=[0.45] 
+Acquisition: Sequential::

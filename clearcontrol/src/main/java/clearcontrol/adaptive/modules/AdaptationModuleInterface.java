@@ -1,9 +1,9 @@
 package clearcontrol.adaptive.modules;
 
+import clearcontrol.adaptive.AdaptiveEngine;
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.core.device.name.NameableInterface;
 import clearcontrol.core.variable.Variable;
-import clearcontrol.adaptive.AdaptiveEngine;
 import clearcontrol.state.AcquisitionStateInterface;
 
 import java.util.function.Function;

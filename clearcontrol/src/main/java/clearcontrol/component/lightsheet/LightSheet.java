@@ -1,5 +1,6 @@
 package clearcontrol.component.lightsheet;
 
+import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.QueueableVirtualDevice;
@@ -8,7 +9,6 @@ import clearcontrol.core.math.functions.UnivariateAffineFunction;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableSetListener;
 import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 
 import java.util.concurrent.Future;

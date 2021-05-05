@@ -1,17 +1,17 @@
 package clearcontrol.timelapse.instructions;
 
-import clearcontrol.core.log.LoggingFeature;
-import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
+import clearcontrol.core.log.LoggingFeature;
+import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.processor.MetaDataFusion;
 import clearcontrol.stack.MetaDataView;
-import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.stack.metadata.MetaDataAcquisitionType;
-import clearcontrol.state.AcquisitionType;
 import clearcontrol.stack.metadata.MetaDataChannel;
 import clearcontrol.stack.metadata.MetaDataOrdinals;
 import clearcontrol.stack.metadata.StackMetaData;
+import clearcontrol.state.AcquisitionType;
+import clearcontrol.state.InterpolatedAcquisitionState;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;

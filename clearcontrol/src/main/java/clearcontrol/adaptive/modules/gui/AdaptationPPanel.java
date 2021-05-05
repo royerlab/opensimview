@@ -1,7 +1,7 @@
 package clearcontrol.adaptive.modules.gui;
 
-import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 import clearcontrol.adaptive.modules.AdaptationP;
+import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 
 /**
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de) November

@@ -1,8 +1,8 @@
 package clearcontrol.component.lightsheet;
 
+import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.bounded.BoundedVariable;
-import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 
 /**
  * Lighthsheet parameter interface

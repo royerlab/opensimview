@@ -1,19 +1,17 @@
 package dorado.main;
 
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
 import clearcl.ClearCL;
 import clearcl.ClearCLContext;
 import clearcl.ClearCLDevice;
 import clearcl.backend.ClearCLBackends;
+import clearcontrol.LightSheetMicroscope;
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.log.LoggingFeature;
-import clearcontrol.LightSheetMicroscope;
 import clearcontrol.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.simulation.SimulationUtils;
 import dorado.DoradoMicroscope;
+import dorado.gui.DoradoGui;
 import dorado.icon.SplashScreen;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -21,13 +19,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import dorado.gui.DoradoGui;
 import javafx.stage.StageStyle;
+
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Dorado main class
@@ -55,11 +53,13 @@ public class DoradoMain extends Application implements LoggingFeature
     return instance;
   }
 
-  public DoradoMain() {
+  public DoradoMain()
+  {
     super();
   }
 
-  public DoradoMain(boolean headless) {
+  public DoradoMain(boolean headless)
+  {
     headless = true;
   }
 
@@ -73,24 +73,24 @@ public class DoradoMain extends Application implements LoggingFeature
   private static Alert sAlert;
   private static Optional<ButtonType> sResult;
 
-  static final MachineConfiguration
-      sMachineConfiguration =
-      MachineConfiguration.get();
+  static final MachineConfiguration sMachineConfiguration = MachineConfiguration.get();
 
   public static void main(String[] args)
   {
     launch(args);
   }
 
-  @Override public void start(Stage pPrimaryStage)
+  @Override
+  public void start(Stage pPrimaryStage)
   {
     instance = this;
-    if (headless) {
+    if (headless)
+    {
       return;
     }
 
     boolean l2DDisplay = true;
-    boolean l3DDisplay = true;
+    boolean l3DDisplay = false;
 
     BorderPane lPane = new BorderPane();
 
@@ -120,35 +120,24 @@ public class DoradoMain extends Application implements LoggingFeature
     sAlert.setHeaderText("Simulation or Real ?");
     sAlert.setContentText("Choose whether you want to start in real or simulation mode");
 
-    sAlert.getButtonTypes()
-          .setAll(lButtonReal,
-                  lButtonSimulation,
-                  lButtonCancel);
+    sAlert.getButtonTypes().setAll(lButtonReal, lButtonSimulation, lButtonCancel);
 
-    Platform.runLater(() -> {
+    Platform.runLater(() ->
+    {
       sResult = sAlert.showAndWait();
 
       pPrimaryStage.show();
       lSplashStage.hide();
 
-      Runnable lRunnable = () -> {
+      Runnable lRunnable = () ->
+      {
         if (sResult.get() == lButtonSimulation)
         {
-          startDorado(true,
-                     pPrimaryStage,
-                     l2DDisplay,
-                     l3DDisplay,
-                     false);
-        }
-        else if (sResult.get() == lButtonReal)
+          startDorado(true, pPrimaryStage, l2DDisplay, l3DDisplay, false);
+        } else if (sResult.get() == lButtonReal)
         {
-          startDorado(false,
-                     pPrimaryStage,
-                     l2DDisplay,
-                     l3DDisplay,
-                     true);
-        }
-        else if (sResult.get() == lButtonCancel)
+          startDorado(false, pPrimaryStage, l2DDisplay, l3DDisplay, true);
+        } else if (sResult.get() == lButtonCancel)
         {
           Platform.runLater(() -> pPrimaryStage.hide());
         }
@@ -169,11 +158,7 @@ public class DoradoMain extends Application implements LoggingFeature
    * @param p2DDisplay    true: use 2D displays
    * @param p3DDisplay    true: use 3D displays
    */
-  public DoradoMicroscope startDorado(boolean pSimulation,
-                                     Stage pPrimaryStage,
-                                     boolean p2DDisplay,
-                                     boolean p3DDisplay,
-                                     boolean pUseStages)
+  public DoradoMicroscope startDorado(boolean pSimulation, Stage pPrimaryStage, boolean p2DDisplay, boolean p3DDisplay, boolean pUseStages)
   {
     int pNumberOfDetectionArms = 2;
     int pNumberOfLightSheets = 2;
@@ -185,57 +170,26 @@ public class DoradoMain extends Application implements LoggingFeature
     try (ClearCL lClearCL = new ClearCL(ClearCLBackends.getBestBackend()))
     {
       for (ClearCLDevice lClearCLDevice : lClearCL.getAllDevices())
-        info("OpenCl devices available: %s \n",
-             lClearCLDevice.getName());
+        info("OpenCl devices available: %s \n", lClearCLDevice.getName());
 
-      ClearCLContext
-          lStackFusionContext =
-          lClearCL.getDeviceByName(sMachineConfiguration.getStringProperty(
-              "clearcl.device.fusion",
-              "")).createContext();
+      ClearCLContext lStackFusionContext = lClearCL.getDeviceByName(sMachineConfiguration.getStringProperty("clearcl.device.fusion", "")).createContext();
 
-      info("Using device %s for stack fusion \n",
-           lStackFusionContext.getDevice());
+      info("Using device %s for stack fusion \n", lStackFusionContext.getDevice());
 
-      DoradoMicroscope
-              lDoradoMicroscope =
-          new DoradoMicroscope(lStackFusionContext,
-                              lMaxStackProcessingQueueLength,
-                              lThreadPoolSize);
+      DoradoMicroscope lDoradoMicroscope = new DoradoMicroscope(lStackFusionContext, lMaxStackProcessingQueueLength, lThreadPoolSize);
       mLightSheetMicroscope = lDoradoMicroscope;
       if (pSimulation)
       {
-        ClearCLContext
-            lSimulationContext =
-            lClearCL.getDeviceByName(sMachineConfiguration.getStringProperty(
-                "clearcl.device.simulation",
-                "")).createContext();
+        ClearCLContext lSimulationContext = lClearCL.getDeviceByName(sMachineConfiguration.getStringProperty("clearcl.device.simulation", "")).createContext();
 
-        info("Using device %s for simulation (Simbryo) \n",
-             lSimulationContext.getDevice());
+        info("Using device %s for simulation (Simbryo) \n", lSimulationContext.getDevice());
 
-        LightSheetMicroscopeSimulationDevice
-            lSimulatorDevice =
-            SimulationUtils.getSimulatorDevice(lSimulationContext,
-                                               pNumberOfDetectionArms,
-                                               pNumberOfLightSheets,
-                                               2048,
-                                               11,
-                                               320,
-                                               320,
-                                               320,
-                                               false);
+        LightSheetMicroscopeSimulationDevice lSimulatorDevice = SimulationUtils.getSimulatorDevice(lSimulationContext, pNumberOfDetectionArms, pNumberOfLightSheets, 2048, 11, 320, 320, 320, false);
 
-        lDoradoMicroscope.addSimulatedDevices(false,
-                                             false,
-                                             true,
-                                             lSimulatorDevice);
-      }
-      else
+        lDoradoMicroscope.addSimulatedDevices(false, false, true, lSimulatorDevice);
+      } else
       {
-        lDoradoMicroscope.addRealHardwareDevices(pNumberOfDetectionArms,
-                                                pNumberOfLightSheets,
-                                                pUseStages);
+        lDoradoMicroscope.addRealHardwareDevices(pNumberOfDetectionArms, pNumberOfLightSheets, pUseStages);
       }
       lDoradoMicroscope.addStandardDevices(lNumberOfControlPlanes);
 
@@ -256,11 +210,7 @@ public class DoradoMain extends Application implements LoggingFeature
             DoradoGui lDoradoGui;
 
             info("Setting up Dorado GUI...");
-            lDoradoGui =
-                new DoradoGui(lDoradoMicroscope,
-                             pPrimaryStage,
-                             p2DDisplay,
-                             p3DDisplay);
+            lDoradoGui = new DoradoGui(lDoradoMicroscope, pPrimaryStage, p2DDisplay, p3DDisplay);
             lDoradoGui.setup();
             info("Opening Dorado GUI...");
             lDoradoGui.open();
@@ -278,17 +228,13 @@ public class DoradoMain extends Application implements LoggingFeature
             lDoradoMicroscope.stop();
             info("Closing microscope devices...");
             lDoradoMicroscope.close();
-           }
-         else {
+          } else
+          {
             mClearCL = lClearCL;
             return lDoradoMicroscope;
           }
-        }
-        else
-          severe("Not all microscope devices started!");
-      }
-      else
-        severe("Not all microscope devices opened!");
+        } else severe("Not all microscope devices started!");
+      } else severe("Not all microscope devices opened!");
 
       ThreadSleep.sleep(100, TimeUnit.MILLISECONDS);
     }

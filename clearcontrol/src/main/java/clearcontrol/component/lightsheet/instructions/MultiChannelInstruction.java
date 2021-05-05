@@ -1,8 +1,8 @@
 package clearcontrol.component.lightsheet.instructions;
 
+import clearcontrol.LightSheetMicroscope;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
-import clearcontrol.LightSheetMicroscope;
 import clearcontrol.instructions.LightSheetMicroscopeInstructionBase;
 
 import java.util.ArrayList;

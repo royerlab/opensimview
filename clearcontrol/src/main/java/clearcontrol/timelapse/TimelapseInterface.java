@@ -5,8 +5,8 @@ import clearcontrol.core.device.task.IsRunningTaskInterface;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.gui.jfx.var.combo.enums.TimeUnitEnum;
-import clearcontrol.timelapse.timer.TimelapseTimerInterface;
 import clearcontrol.stack.sourcesink.sink.FileStackSinkInterface;
+import clearcontrol.timelapse.timer.TimelapseTimerInterface;
 
 import java.io.File;
 import java.time.LocalDateTime;

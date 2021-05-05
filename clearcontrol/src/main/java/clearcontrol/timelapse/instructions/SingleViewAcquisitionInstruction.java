@@ -1,8 +1,8 @@
 package clearcontrol.timelapse.instructions;
 
+import clearcontrol.LightSheetMicroscope;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.LightSheetMicroscope;
 import clearcontrol.stack.StackInterface;
 
 /**

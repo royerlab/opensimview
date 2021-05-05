@@ -1,20 +1,20 @@
 package clearcontrol.adaptive.gui;
 
-import clearcontrol.core.device.name.ReadOnlyNameableInterface;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.core.variable.VariableSetListener;
-import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
-import clearcontrol.adaptive.AdaptiveEngine;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.adaptive.AdaptationStateEngine;
+import clearcontrol.adaptive.AdaptiveEngine;
 import clearcontrol.adaptive.controlplanestate.HasControlPlaneState;
 import clearcontrol.adaptive.controlplanestate.gui.ControlPlaneStatePanel;
 import clearcontrol.calibrator.CalibrationEngine;
 import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.configurationstate.CanBeActive;
 import clearcontrol.configurationstate.gui.ConfigurationStatePanel;
+import clearcontrol.core.device.name.ReadOnlyNameableInterface;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.core.variable.VariableSetListener;
 import clearcontrol.gui.VariableLabel;
+import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

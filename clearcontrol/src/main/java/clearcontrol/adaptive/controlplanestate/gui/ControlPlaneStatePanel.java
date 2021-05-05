@@ -1,10 +1,10 @@
 package clearcontrol.adaptive.controlplanestate.gui;
 
-import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import clearcontrol.adaptive.controlplanestate.ControlPlaneStateListener;
 import clearcontrol.adaptive.controlplanestate.HasControlPlaneState;
 import clearcontrol.configurationstate.ConfigurationState;
 import clearcontrol.gui.VariableLabel;
+import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import javafx.scene.control.Label;
 
 /**

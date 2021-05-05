@@ -1,9 +1,9 @@
 package clearcontrol.configurationstate.gui;
 
-import clearcontrol.core.device.name.ReadOnlyNameableInterface;
-import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import clearcontrol.configurationstate.*;
+import clearcontrol.core.device.name.ReadOnlyNameableInterface;
 import clearcontrol.gui.VariableLabel;
+import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 

@@ -1,12 +1,12 @@
 package clearcontrol.component.lightsheet;
 
+import clearcontrol.component.lightsheet.si.ClosureStructuredIlluminationPattern;
+import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 import clearcontrol.core.device.queue.QueueInterface;
 import clearcontrol.core.device.queue.VariableQueueBase;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.devices.signalgen.staves.SteppingFunction;
-import clearcontrol.component.lightsheet.si.ClosureStructuredIlluminationPattern;
-import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 
 /**
  * lightsheet queue

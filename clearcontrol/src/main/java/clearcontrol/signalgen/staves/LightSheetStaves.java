@@ -1,5 +1,8 @@
 package clearcontrol.signalgen.staves;
 
+import clearcontrol.component.lightsheet.LightSheet;
+import clearcontrol.component.lightsheet.LightSheetQueue;
+import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.math.functions.UnivariateAffineFunction;
@@ -7,9 +10,6 @@ import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.devices.signalgen.measure.Measure;
 import clearcontrol.devices.signalgen.staves.*;
-import clearcontrol.component.lightsheet.LightSheet;
-import clearcontrol.component.lightsheet.LightSheetQueue;
-import clearcontrol.component.lightsheet.si.StructuredIlluminationPatternInterface;
 
 import java.util.concurrent.TimeUnit;
 

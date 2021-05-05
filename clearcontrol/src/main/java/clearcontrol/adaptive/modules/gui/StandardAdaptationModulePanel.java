@@ -1,7 +1,7 @@
 package clearcontrol.adaptive.modules.gui;
 
-import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 import clearcontrol.adaptive.modules.StandardAdaptationModule;
+import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 
 /**
  * Standard adaptation module panel

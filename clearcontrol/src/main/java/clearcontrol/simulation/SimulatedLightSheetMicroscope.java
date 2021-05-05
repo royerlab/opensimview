@@ -1,6 +1,13 @@
 package clearcontrol.simulation;
 
 import clearcl.ClearCLContext;
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.adaptive.AdaptationStateEngine;
+import clearcontrol.calibrator.CalibrationEngine;
+import clearcontrol.component.detection.DetectionArm;
+import clearcontrol.component.lightsheet.LightSheet;
+import clearcontrol.component.lightsheet.instructions.*;
+import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.cameras.devices.sim.StackCameraDeviceSimulator;
 import clearcontrol.devices.cameras.devices.sim.StackCameraSimulationProvider;
@@ -19,28 +26,19 @@ import clearcontrol.devices.signalgen.devices.sim.SignalGeneratorSimulatorDevice
 import clearcontrol.devices.stages.StageType;
 import clearcontrol.devices.stages.devices.sim.StageDeviceSimulator;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.LightSheetMicroscope;
-import clearcontrol.adaptive.AdaptationStateEngine;
-import clearcontrol.calibrator.CalibrationEngine;
-import clearcontrol.component.detection.DetectionArm;
-import clearcontrol.component.lightsheet.LightSheet;
-import clearcontrol.component.lightsheet.instructions.*;
-import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
-import clearcontrol.timelapse.instructions.InterleavedAcquisitionInstruction;
-
-import clearcontrol.timelapse.instructions.SequentialAcquisitionInstruction;
-import clearcontrol.timelapse.instructions.SingleViewAcquisitionInstruction;
-
 import clearcontrol.signalgen.LightSheetSignalGeneratorDevice;
+import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
+import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
+import clearcontrol.state.AcquisitionStateManager;
 import clearcontrol.state.ControlPlaneLayout;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.LightSheetAcquisitionStateInterface;
 import clearcontrol.state.instructions.*;
 import clearcontrol.timelapse.LightSheetTimelapse;
-import clearcontrol.state.AcquisitionStateManager;
 import clearcontrol.timelapse.TimelapseInterface;
-import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
-import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
+import clearcontrol.timelapse.instructions.InterleavedAcquisitionInstruction;
+import clearcontrol.timelapse.instructions.SequentialAcquisitionInstruction;
+import clearcontrol.timelapse.instructions.SingleViewAcquisitionInstruction;
 
 import java.util.ArrayList;
 

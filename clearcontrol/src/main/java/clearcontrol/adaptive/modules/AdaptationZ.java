@@ -1,11 +1,11 @@
 package clearcontrol.adaptive.modules;
 
-import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.LightSheetDOF;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.configurationstate.ConfigurationState;
-import clearcontrol.state.InterpolatedAcquisitionState;
+import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.stack.metadata.MetaDataChannel;
+import clearcontrol.state.InterpolatedAcquisitionState;
 import gnu.trove.list.array.TDoubleArrayList;
 
 import java.util.concurrent.Future;

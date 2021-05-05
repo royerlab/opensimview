@@ -1,5 +1,6 @@
 package clearcontrol.interactive.gui;
 
+import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.core.device.switches.gui.SwitchingDevicePanel;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
@@ -8,7 +9,6 @@ import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import clearcontrol.gui.jfx.var.lcd.VariableLCD;
 import clearcontrol.gui.jfx.var.textfield.NumberVariableTextField;
 import clearcontrol.gui.jfx.var.togglebutton.VariableToggleButton;
-import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.interactive.InteractiveAcquisition;
 import clearcontrol.interactive.InteractiveAcquisitionModes;
 import eu.hansolo.enzo.lcd.Lcd;

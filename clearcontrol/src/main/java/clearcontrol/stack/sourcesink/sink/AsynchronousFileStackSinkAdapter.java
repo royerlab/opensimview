@@ -5,6 +5,7 @@ import clearcontrol.core.variable.Variable;
 import clearcontrol.stack.StackInterface;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,10 +14,10 @@ import java.util.concurrent.TimeUnit;
  *
  * @author royer
  */
-public class AsynchronousStackSinkAdapter implements StackSinkInterface
+public class AsynchronousFileStackSinkAdapter implements FileStackSinkInterface
 {
 
-  private StackSinkInterface mStackSink;
+  private FileStackSinkInterface mStackSink;
 
   private AsynchronousProcessorBase<Pair<String, StackInterface>, StackInterface> mAsynchronousConversionProcessor;
 
@@ -29,9 +30,9 @@ public class AsynchronousStackSinkAdapter implements StackSinkInterface
    * @param pMaxQueueSize max queue size
    * @return wrapped sink
    */
-  public static AsynchronousStackSinkAdapter wrap(StackSinkInterface pStackSink, final int pMaxQueueSize)
+  public static AsynchronousFileStackSinkAdapter wrap(FileStackSinkInterface pStackSink, final int pMaxQueueSize)
   {
-    return new AsynchronousStackSinkAdapter(pStackSink, pMaxQueueSize);
+    return new AsynchronousFileStackSinkAdapter(pStackSink, pMaxQueueSize);
   }
 
   /**
@@ -41,7 +42,7 @@ public class AsynchronousStackSinkAdapter implements StackSinkInterface
    * @param pStackSink    sink to wrap
    * @param pMaxQueueSize max queue size
    */
-  public AsynchronousStackSinkAdapter(final StackSinkInterface pStackSink, final int pMaxQueueSize)
+  public AsynchronousFileStackSinkAdapter(final FileStackSinkInterface pStackSink, final int pMaxQueueSize)
   {
     super();
     mStackSink = pStackSink;
@@ -96,7 +97,7 @@ public class AsynchronousStackSinkAdapter implements StackSinkInterface
   }
 
   /**
-   * Waits for this asynchronous sink adapter to pas all pending stacks to the
+   * Waits for this asynchronous sink adapter to pass all pending stacks to the
    * delegated sink.
    *
    * @param pTimeOut  time out
@@ -129,4 +130,23 @@ public class AsynchronousStackSinkAdapter implements StackSinkInterface
     mFinishedProcessingStackVariable = pVariable;
   }
 
+  @Override
+  public void setLocation(File pRootFolder, String pDataSetName)
+  {
+    mStackSink.setLocation(pRootFolder, pDataSetName);
+  }
+
+  @Override
+  public File getLocation()
+  {
+    return mStackSink.getLocation();
+  }
+
+  @Override
+  public void close() throws Exception
+  {
+    waitToFinish(5, TimeUnit.MINUTES);
+    stop();
+    mStackSink.close();
+  }
 }

@@ -2,7 +2,6 @@ package clearcontrol.stack;
 
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
-import clearcontrol.stack.StackInterface;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

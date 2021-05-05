@@ -22,8 +22,6 @@ import java.util.Properties;
  */
 
 /**
- *
- *
  * @author royer
  */
 public class MachineConfiguration implements LoggingFeature
@@ -94,8 +92,7 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns true if the properties contain a given key
    *
-   * @param pKey
-   *          key
+   * @param pKey key
    * @return true if contains key
    */
   public boolean containsKey(String pKey)
@@ -107,10 +104,8 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns a string property for a given key
    *
-   * @param pKey
-   *          key
-   * @param pDefaultValue
-   *          default string property
+   * @param pKey          key
+   * @param pDefaultValue default string property
    * @return string property
    */
   public String getStringProperty(String pKey, String pDefaultValue)
@@ -128,10 +123,8 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns an integer property for a given key
    *
-   * @param pKey
-   *          key
-   * @param pDefaultValue
-   *          default integer property
+   * @param pKey          key
+   * @param pDefaultValue default integer property
    * @return interger property
    */
   public Integer getIntegerProperty(String pKey, Integer pDefaultValue)
@@ -150,10 +143,8 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns a long property for a given key
    *
-   * @param pKey
-   *          key
-   * @param pDefaultValue
-   *          default long property
+   * @param pKey          key
+   * @param pDefaultValue default long property
    * @return long property
    */
   public Long getLongProperty(String pKey, Long pDefaultValue)
@@ -172,10 +163,8 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns double property for a given key
    *
-   * @param pKey
-   *          key
-   * @param pDefaultValue
-   *          default double value
+   * @param pKey          key
+   * @param pDefaultValue default double value
    * @return double property
    */
   public Double getDoubleProperty(String pKey, Double pDefaultValue)
@@ -196,10 +185,8 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns boolean proprty for a given key
    *
-   * @param pKey
-   *          key
-   * @param pDefaultValue
-   *          default boolean value
+   * @param pKey          key
+   * @param pDefaultValue default boolean value
    * @return boolean property
    */
   public boolean getBooleanProperty(String pKey, Boolean pDefaultValue)
@@ -220,10 +207,8 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns file property for a given key
    *
-   * @param pKey
-   *          key
-   * @param pDefaultFile
-   *          default file
+   * @param pKey         key
+   * @param pDefaultFile default file
    * @return file property
    */
   public File getFileProperty(String pKey, File pDefaultFile)
@@ -244,12 +229,9 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns serial device port for a given device name and device index
    *
-   * @param pDeviceName
-   *          device name
-   * @param pDeviceIndex
-   *          device index
-   * @param pDefaultPort
-   *          default port
+   * @param pDeviceName  device name
+   * @param pDeviceIndex device index
+   * @param pDefaultPort default port
    * @return serial device port
    */
   public String getSerialDevicePort(String pDeviceName, int pDeviceIndex, String pDefaultPort)
@@ -263,12 +245,9 @@ public class MachineConfiguration implements LoggingFeature
    * Returns a networ device host name and port for a given device name and
    * index
    *
-   * @param pDeviceName
-   *          device name
-   * @param pDeviceIndex
-   *          device index
-   * @param pDefaultHostNameAndPort
-   *          default host name amd port
+   * @param pDeviceName             device name
+   * @param pDeviceIndex            device index
+   * @param pDefaultHostNameAndPort default host name amd port
    * @return hostname and port
    */
   public String[] getNetworkDeviceHostnameAndPort(String pDeviceName, int pDeviceIndex, String pDefaultHostNameAndPort)
@@ -281,10 +260,8 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns IO device port for given device name
    *
-   * @param pDeviceName
-   *          device name
-   * @param pDefaultPort
-   *          default IO port
+   * @param pDeviceName  device name
+   * @param pDefaultPort default IO port
    * @return IO device port
    */
   public Integer getIODevicePort(String pDeviceName, Integer pDefaultPort)
@@ -297,10 +274,8 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns true if the given device is present
    *
-   * @param pDeviceName
-   *          device name
-   * @param pDeviceIndex
-   *          device index
+   * @param pDeviceName  device name
+   * @param pDeviceIndex device index
    * @return true if device present
    */
   public boolean getIsDevicePresent(String pDeviceName, int pDeviceIndex)
@@ -313,8 +288,7 @@ public class MachineConfiguration implements LoggingFeature
    * Returns a list of values given a prefix key. Keys have the format:
    * prefix.0, prefix.1, prefix.2, ... prefix.n
    *
-   * @param pPrefix
-   *          prefix
+   * @param pPrefix prefix
    * @return list of values (strings)
    */
   public ArrayList<String> getList(String pPrefix)
@@ -334,8 +308,7 @@ public class MachineConfiguration implements LoggingFeature
    * Returns a folder within the clearcontrol folder (.clearcontrol). The folder
    * is created if it does not exist.
    *
-   * @param pFolderName
-   *          folder name
+   * @param pFolderName folder name
    * @return folder
    */
   public File getFolder(String pFolderName)
@@ -358,8 +331,7 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns the file for persisting a variable with given name
    *
-   * @param pVariableName
-   *          variable name
+   * @param pVariableName variable name
    * @return file
    */
   public File getPersistentVariableFile(String pVariableName)
@@ -370,8 +342,7 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Returns a univariate affine function given a function name
    *
-   * @param pFunctionName
-   *          function name
+   * @param pFunctionName function name
    * @return affine function
    */
   public UnivariateAffineFunction getUnivariateAffineFunction(String pFunctionName)
@@ -408,11 +379,8 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Sets the bounds for a given variable.
    *
-   * @param pBoundsName
-   *          bounds name
-   * @param pVariable
-   *          variable
-   *
+   * @param pBoundsName bounds name
+   * @param pVariable   variable
    */
   @SuppressWarnings("unchecked")
   public <T extends Number, F extends UnivariateFunction> void getBoundsForVariable(String pBoundsName, BoundedVariable<T> pVariable)
@@ -423,14 +391,10 @@ public class MachineConfiguration implements LoggingFeature
   /**
    * Sets the bounds for a given variable.
    *
-   * @param pBoundsName
-   *          bounds name
-   * @param pVariable
-   *          variable
-   * @param pDefaultMin
-   *          default min
-   * @param pDefaultNax
-   *          default max
+   * @param pBoundsName bounds name
+   * @param pVariable   variable
+   * @param pDefaultMin default min
+   * @param pDefaultNax default max
    */
   public <T extends Number, F extends UnivariateFunction> void getBoundsForVariable(String pBoundsName, BoundedVariable<T> pVariable, T pDefaultMin, T pDefaultNax)
   {

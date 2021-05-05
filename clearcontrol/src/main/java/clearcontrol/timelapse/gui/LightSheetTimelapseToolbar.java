@@ -1,15 +1,15 @@
 package clearcontrol.timelapse.gui;
 
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.MicroscopeInterface;
+import clearcontrol.adaptive.AdaptiveEngine;
+import clearcontrol.configurationstate.gui.ConfigurationStatePanel;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.halcyon.MicroscopeNodeType;
 import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.MicroscopeInterface;
-import clearcontrol.adaptive.AdaptiveEngine;
-import clearcontrol.gui.halcyon.MicroscopeNodeType;
-import clearcontrol.LightSheetMicroscope;
-import clearcontrol.configurationstate.gui.ConfigurationStatePanel;
 import clearcontrol.timelapse.LightSheetTimelapse;
 import clearcontrol.timelapse.io.ProgramReader;
 import clearcontrol.timelapse.io.ProgramWriter;

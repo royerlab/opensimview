@@ -1,12 +1,12 @@
 package clearcontrol.state.gui;
 
+import clearcontrol.LightSheetMicroscopeInterface;
 import clearcontrol.gui.jfx.custom.singlechecklist.SingleCheckCell;
 import clearcontrol.gui.jfx.custom.singlechecklist.SingleCheckCellManager;
 import clearcontrol.gui.jfx.custom.singlechecklist.SingleCheckListView;
-import clearcontrol.LightSheetMicroscopeInterface;
-import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.AcquisitionStateInterface;
 import clearcontrol.state.AcquisitionStateManager;
+import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.gui.jfx.AcquisitionStateManagerPanelBase;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

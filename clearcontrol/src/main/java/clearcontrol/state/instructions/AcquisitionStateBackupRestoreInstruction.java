@@ -1,9 +1,9 @@
 package clearcontrol.state.instructions;
 
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.MicroscopeBase;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.MicroscopeBase;
-import clearcontrol.LightSheetMicroscope;
 import clearcontrol.instructions.LightSheetMicroscopeInstructionBase;
 import clearcontrol.state.AcquisitionStateInterface;
 

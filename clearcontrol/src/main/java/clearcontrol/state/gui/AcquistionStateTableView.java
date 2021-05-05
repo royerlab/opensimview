@@ -1,9 +1,9 @@
 package clearcontrol.state.gui;
 
+import clearcontrol.LightSheetDOF;
 import clearcontrol.gui.jfx.custom.tableview.DoubleRow;
 import clearcontrol.gui.jfx.custom.tableview.DoubleTableView;
 import clearcontrol.gui.jfx.custom.tableview.EditableTableCellHandler;
-import clearcontrol.LightSheetDOF;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

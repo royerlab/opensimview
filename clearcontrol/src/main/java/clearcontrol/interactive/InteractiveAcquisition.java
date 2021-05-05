@@ -1,5 +1,11 @@
 package clearcontrol.interactive;
 
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.LightSheetMicroscopeInterface;
+import clearcontrol.LightSheetMicroscopeQueue;
+import clearcontrol.component.detection.DetectionArmInterface;
+import clearcontrol.component.lightsheet.LightSheet;
+import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.core.device.change.ChangeListener;
 import clearcontrol.core.device.task.PeriodicLoopTaskDevice;
@@ -8,20 +14,14 @@ import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableSetListener;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
-import clearcontrol.LightSheetMicroscope;
-import clearcontrol.LightSheetMicroscopeInterface;
-import clearcontrol.LightSheetMicroscopeQueue;
-import clearcontrol.component.detection.DetectionArmInterface;
-import clearcontrol.component.lightsheet.LightSheet;
-import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.stack.MetaDataView;
 import clearcontrol.stack.MetaDataViewFlags;
-import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.stack.metadata.MetaDataAcquisitionType;
+import clearcontrol.stack.metadata.StackMetaData;
 import clearcontrol.state.AcquisitionStateInterface;
 import clearcontrol.state.AcquisitionStateManager;
 import clearcontrol.state.AcquisitionType;
-import clearcontrol.stack.metadata.StackMetaData;
+import clearcontrol.state.InterpolatedAcquisitionState;
 
 import java.util.concurrent.TimeUnit;
 
@@ -64,7 +64,7 @@ public class InteractiveAcquisition extends PeriodicLoopTaskDevice implements Lo
   @SuppressWarnings("unchecked")
   public InteractiveAcquisition(String pDeviceName, LightSheetMicroscope pLightSheetMicroscope)
   {
-    super(pDeviceName, 1, TimeUnit.SECONDS);
+    super(pDeviceName, 0, TimeUnit.MILLISECONDS);
     mLightSheetMicroscope = pLightSheetMicroscope;
     mAcquisitionStateManager = (AcquisitionStateManager<InterpolatedAcquisitionState>) pLightSheetMicroscope.getAcquisitionStateManager();
 
@@ -420,6 +420,7 @@ public class InteractiveAcquisition extends PeriodicLoopTaskDevice implements Lo
     }
 
     info("Starting 2D Acquisition...");
+    mLightSheetMicroscope.resetTerminatorStackVariables();
     setCurrentAcquisitionMode(InteractiveAcquisitionModes.Acquisition2D);
     mAcquisitionCounterVariable.set(0L);
     mUpdate = true;

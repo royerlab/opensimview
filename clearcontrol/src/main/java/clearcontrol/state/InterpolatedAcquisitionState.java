@@ -1,14 +1,14 @@
 package clearcontrol.state;
 
+import clearcontrol.LightSheetDOF;
+import clearcontrol.LightSheetMicroscopeInterface;
+import clearcontrol.LightSheetMicroscopeQueue;
+import clearcontrol.component.detection.DetectionArmInterface;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableSetListener;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.devices.stages.StageDeviceInterface;
-import clearcontrol.LightSheetDOF;
-import clearcontrol.LightSheetMicroscopeInterface;
-import clearcontrol.LightSheetMicroscopeQueue;
-import clearcontrol.component.detection.DetectionArmInterface;
 import clearcontrol.state.tables.InterpolationTables;
 
 import java.util.concurrent.TimeUnit;

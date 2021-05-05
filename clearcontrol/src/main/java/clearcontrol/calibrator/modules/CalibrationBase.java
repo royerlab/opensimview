@@ -1,7 +1,5 @@
 package clearcontrol.calibrator.modules;
 
-import clearcontrol.core.device.name.ReadOnlyNameableInterface;
-import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.calibrator.CalibrationEngine;
 import clearcontrol.component.detection.DetectionArmInterface;
@@ -9,6 +7,8 @@ import clearcontrol.component.lightsheet.LightSheetInterface;
 import clearcontrol.configurationstate.ConfigurationState;
 import clearcontrol.configurationstate.ConfigurationStateChangeListener;
 import clearcontrol.configurationstate.HasConfigurationState;
+import clearcontrol.core.device.name.ReadOnlyNameableInterface;
+import clearcontrol.core.log.LoggingFeature;
 
 import java.util.ArrayList;
 

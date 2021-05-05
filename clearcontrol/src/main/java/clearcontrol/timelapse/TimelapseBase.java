@@ -1,22 +1,23 @@
 package clearcontrol.timelapse;
 
-import clearcl.util.ElapsedTime;
+import clearcontrol.MicroscopeInterface;
+import clearcontrol.adaptive.AdaptiveEngine;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.task.LoopTaskDevice;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.VariableSetListener;
 import clearcontrol.core.variable.bounded.BoundedVariable;
+import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.gui.jfx.var.combo.enums.TimeUnitEnum;
-import clearcontrol.MicroscopeInterface;
-import clearcontrol.adaptive.AdaptiveEngine;
-import clearcontrol.state.AcquisitionStateInterface;
-import clearcontrol.timelapse.timer.TimelapseTimerInterface;
-import clearcontrol.timelapse.timer.fixed.FixedIntervalTimelapseTimer;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.metadata.MetaDataChannel;
 import clearcontrol.stack.sourcesink.StackSinkSourceInterface;
+import clearcontrol.stack.sourcesink.sink.AsynchronousFileStackSinkAdapter;
 import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
 import clearcontrol.stack.sourcesink.sink.FileStackSinkInterface;
+import clearcontrol.state.AcquisitionStateInterface;
+import clearcontrol.timelapse.timer.TimelapseTimerInterface;
+import clearcontrol.timelapse.timer.fixed.FixedIntervalTimelapseTimer;
 
 import java.io.File;
 import java.time.Duration;
@@ -63,7 +64,7 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
 
   private final Variable<Class<? extends FileStackSinkInterface>> mCurrentFileStackSinkTypeVariable = new Variable<>("CurrentFileStackSinkTypeVariable", CompressedStackSink.class);
 
-  private final Variable<FileStackSinkInterface> mCurrentFileStackSinkVariable = new Variable<>("CurrentFileStackSink", null);
+  private final Variable<AsynchronousFileStackSinkAdapter> mCurrentFileStackSinkVariable = new Variable<>("CurrentFileStackSink", null);
 
   private final Variable<File> mRootFolderVariable = new Variable<>("RootFolder", null);
 
@@ -76,6 +77,8 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
   private final BoundedVariable<Integer> mMinAdaptiveEngineStepsVariable = new BoundedVariable<Integer>("MinAdaptiveEngineSteps", 1, 1, Integer.MAX_VALUE, 1);
 
   private final BoundedVariable<Integer> mMaxAdaptiveEngineStepsVariable = new BoundedVariable<Integer>("MaxAdaptiveEngineSteps", 2, 1, Integer.MAX_VALUE, 1);
+
+  private final Variable<StackInterface> mStackToSaveVariable = new Variable<>("StackToSaveVariable", null);
 
   private final VariableSetListener<StackInterface> mStackListener;
 
@@ -100,21 +103,23 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
 
     mStackListener = (o, n) ->
     {
-      Variable<FileStackSinkInterface> lStackSinkVariable = getCurrentFileStackSinkVariable();
+      Variable<AsynchronousFileStackSinkAdapter> lStackSinkVariable = getCurrentFileStackSinkVariable();
       if (getSaveStacksVariable().get() && lStackSinkVariable != null && n != null
       /*&& n.getMetaData()
           .getValue(MetaDataAcquisitionType.AcquisitionType) == AcquisitionType.TimeLapse*/)
       {
-        info("Appending new stack %s to the file sink %s", n, lStackSinkVariable);
+        info("Received new stack %s and appending it to the file sink %s", n, lStackSinkVariable);
 
         String lChannelInMetaData = n.getMetaData().getValue(MetaDataChannel.Channel);
 
         final String lChannel = lChannelInMetaData != null ? lChannelInMetaData : StackSinkSourceInterface.cDefaultChannel;
 
-        ElapsedTime.measureForceOutput("TimeLapse stack saving", () -> lStackSinkVariable.get().appendStack(lChannel, n));
-
+        lStackSinkVariable.get().appendStack(lChannel, n);
+        n.release();
       }
     };
+
+    mStackToSaveVariable.addSetListener(mStackListener);
 
     getMaxAdaptiveEngineStepsVariable().addSetListener((o, n) ->
     {
@@ -219,25 +224,42 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
         setupFileSink();
       }
 
-      // This is where we actually start the loop, and we make sure to listen to
-      // changes
+      // Start async sink:
+      if (getCurrentFileStackSinkVariable().get() != null) getCurrentFileStackSinkVariable().get().start();
 
-      /*Variable<StackInterface> lPipelineStackVariable = null;
-      if (mMicroscope != null)
+      // Connecting stack cameras to stack sink:
+      for (int c = 0; c < mMicroscope.getNumberOfDevices(StackCameraDeviceInterface.class); c++)
       {
-        lPipelineStackVariable =
-                               mMicroscope.getPipelineStackVariable();
-        lPipelineStackVariable.addSetListener(mStackListener);
-      }*/
+        Variable<StackInterface> lStackVariable = mMicroscope.getTerminatorStackVariable(c);
+        lStackVariable.sendUpdatesToInstead(mStackToSaveVariable);
+      }
+
 
       initAdaptiveEngine();
 
       super.run();
-      /*
-      if (mMicroscope != null)
-        lPipelineStackVariable.removeSetListener(mStackListener);
-      */
-      getCurrentFileStackSinkVariable().set((FileStackSinkInterface) null);
+
+      // Disconnecting stack cameras to stack sink:
+      for (int c = 0; c < mMicroscope.getNumberOfDevices(StackCameraDeviceInterface.class); c++)
+      {
+        Variable<StackInterface> lStackVariable = mMicroscope.getCameraStackVariable(c);
+        lStackVariable.doNotSendUpdatesTo(mStackToSaveVariable);
+      }
+
+      // Stop async sink:
+      if (getCurrentFileStackSinkVariable().get() != null)
+      {
+        try
+        {
+          getCurrentFileStackSinkVariable().get().close();
+        } catch (Exception e)
+        {
+          e.printStackTrace();
+        }
+      }
+
+      getCurrentFileStackSinkVariable().set((AsynchronousFileStackSinkAdapter) null);
+
     } catch (InstantiationException e)
     {
       severe("Cannot instanciate class %s (%s)", mCurrentFileStackSinkTypeVariable.get(), e.getMessage());
@@ -313,11 +335,13 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
 
     FileStackSinkInterface lStackSink = getCurrentFileStackSinkTypeVariable().get().newInstance();
 
+    AsynchronousFileStackSinkAdapter lAsyncStackSink = AsynchronousFileStackSinkAdapter.wrap(lStackSink, 64);
+
     if (getDataSetNamePostfixVariable().get() == null) getDataSetNamePostfixVariable().set("");
 
     String lNowDateTimeString = sDateTimeFormatter.format(LocalDateTime.now());
 
-    lStackSink.setLocation(mRootFolderVariable.get(), lNowDateTimeString + "-" + getDataSetNamePostfixVariable().get());
+    lAsyncStackSink.setLocation(mRootFolderVariable.get(), lNowDateTimeString + "-" + getDataSetNamePostfixVariable().get());
 
     if (getCurrentFileStackSinkVariable().get() != null) try
     {
@@ -328,7 +352,7 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
       e.printStackTrace();
     }
 
-    getCurrentFileStackSinkVariable().set(lStackSink);
+    getCurrentFileStackSinkVariable().set(lAsyncStackSink);
   }
 
   @SuppressWarnings({"unchecked"})
@@ -474,7 +498,7 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
   }
 
   @Override
-  public Variable<FileStackSinkInterface> getCurrentFileStackSinkVariable()
+  public Variable<AsynchronousFileStackSinkAdapter> getCurrentFileStackSinkVariable()
   {
     return mCurrentFileStackSinkVariable;
   }

@@ -69,8 +69,7 @@ public class DockTitleBar extends HBox implements EventHandler<MouseEvent>
   /**
    * Creates a default DockTitleBar with captions and dragging behavior.
    *
-   * @param dockNode
-   *          The docking node that requires a title bar.
+   * @param dockNode The docking node that requires a title bar.
    */
   public DockTitleBar(DockNode dockNode)
   {
@@ -188,7 +187,7 @@ public class DockTitleBar extends HBox implements EventHandler<MouseEvent>
    * The button used for closing this title bar and its associated dock node.
    *
    * @return The button used for closing this title bar and its associated dock
-   *         node.
+   * node.
    */
   public final Button getCloseButton()
   {
@@ -200,7 +199,7 @@ public class DockTitleBar extends HBox implements EventHandler<MouseEvent>
    * its associated dock node.
    *
    * @return The button used for detaching, maximizing, or restoring this title
-   *         bar and its associated dock node.
+   * bar and its associated dock node.
    */
   public final Button getStateButton()
   {
@@ -211,7 +210,7 @@ public class DockTitleBar extends HBox implements EventHandler<MouseEvent>
    * The button used for minimizing this title bar and its associated dock node.
    *
    * @return The button used for minimizing this title bar and its associated
-   *         dock node.
+   * dock node.
    */
   public final Button getMinimizeButton()
   {
@@ -262,10 +261,8 @@ public class DockTitleBar extends HBox implements EventHandler<MouseEvent>
     /**
      * Creates a default DockTitleBar with captions and dragging behavior.
      *
-     * @param node
-     *          The node that was chosen as the event target.
-     * @param dragNode
-     *          The node that was last event target.
+     * @param node     The node that was chosen as the event target.
+     * @param dragNode The node that was last event target.
      */
     public abstract void run(Node node, Node dragNode);
 
@@ -295,13 +292,10 @@ public class DockTitleBar extends HBox implements EventHandler<MouseEvent>
    * if one is cached. If an event target is not found fire the explicit dock
    * event on the stage root if one is provided.
    *
-   * @param location
-   *          The location of the dock event in screen coordinates.
-   * @param eventTask
-   *          The event task to be run when the event target is found.
-   * @param explicit
-   *          The explicit event to be fired on the stage root when no event
-   *          target is found.
+   * @param location  The location of the dock event in screen coordinates.
+   * @param eventTask The event task to be run when the event target is found.
+   * @param explicit  The explicit event to be fired on the stage root when no event
+   *                  target is found.
    */
   private void pickEventTarget(Point2D location, EventTask eventTask, Event explicit)
   {

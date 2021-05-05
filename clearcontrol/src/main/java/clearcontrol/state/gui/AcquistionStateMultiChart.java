@@ -1,7 +1,7 @@
 package clearcontrol.state.gui;
 
-import clearcontrol.gui.jfx.custom.multichart.MultiChart;
 import clearcontrol.LightSheetDOF;
+import clearcontrol.gui.jfx.custom.multichart.MultiChart;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.LineChart;

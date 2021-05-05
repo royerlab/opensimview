@@ -1,10 +1,10 @@
 package clearcontrol.adaptive.gui.demo;
 
-import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
 import clearcontrol.adaptive.AdaptiveEngine;
 import clearcontrol.adaptive.gui.AdaptiveEnginePanel;
 import clearcontrol.adaptive.test.AdaptationTestModule;
 import clearcontrol.adaptive.test.TestState;
+import clearcontrol.gui.jfx.custom.visualconsole.VisualConsoleInterface.ChartType;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
