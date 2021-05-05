@@ -161,9 +161,9 @@ public class Stack2DDisplay extends VirtualDevice implements StackDisplayInterfa
           if (mVideoWindow.isVisible())
           {
             makeCopyOfReceivedStack(pStack);
+            forwardStack(pStack);
             displayStack(mReceivedStackCopy, false);
-          }
-          forwardStack(pStack);
+          } else forwardStack(pStack);
         } catch (FreedException e)
         {
           System.err.println(this.getClass().getSimpleName() + ": Underlying ressource has been freed while processing last stack");
@@ -358,7 +358,7 @@ public class Stack2DDisplay extends VirtualDevice implements StackDisplayInterfa
       pStack.release();
       return;
     }
-    mOutputStackVariable.set(pStack);
+    if (mOutputStackVariable != null) mOutputStackVariable.set(pStack);
   }
 
   @Override

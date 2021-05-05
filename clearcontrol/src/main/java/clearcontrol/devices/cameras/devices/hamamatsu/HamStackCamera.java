@@ -201,7 +201,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
       long lLengthInUINT16 = lContiguousMemory.getSizeInBytes() / 2;
       for (long i = 0; i < lLengthInUINT16; i++)
       {
-        int value = lContiguousMemory.getCharAligned(i);
+        int value = (0xFFFF & lContiguousMemory.getCharAligned(i));
         char lValue = (char) (Math.max(cZeroLevel, value) - cZeroLevel);
         lContiguousMemory.setCharAligned(i, lValue);
       }

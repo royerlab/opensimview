@@ -73,20 +73,11 @@ public class LightSheetTimelapse extends TimelapseBase implements TimelapseInter
   public boolean programStep()
   {
 
-    if (getStopSignalVariable().get())
-    {
-      return false;
-    }
-
     try
     {
-      //LightSheetFastFusionProcessor
-      //    lLightSheetFastFusionProcessor =
-      //    mLightSheetMicroscope.getDevice(LightSheetFastFusionProcessor.class, 0);
       info("Executing timepoint: " + getTimePointCounterVariable().get());
 
       mLightSheetMicroscope.useRecycler("3DTimelapse", cMinimumNumberOfAvailableStacks, cMaximumNumberOfAvailableStacks, cMaximumNumberOfLiveStacks);
-
 
       InstructionInterface lNextInstructionToRun = mCurrentProgram.get(mInstructionIndexVariable.get());
 
@@ -108,10 +99,18 @@ public class LightSheetTimelapse extends TimelapseBase implements TimelapseInter
       mInstructionIndexVariable.set(mInstructionIndexVariable.get() + 1);
       if (mInstructionIndexVariable.get() > mCurrentProgram.size() - 1)
       {
+        // At this point teh program loop has finished... we will restart a loop.
         mInstructionIndexVariable.set(0);
         info("Finished time point:" + getTimePointCounterVariable());
         getTimePointCounterVariable().increment();
-        return true;
+        if (getStopSignalVariable().get())
+        {
+          return false;
+        } else
+        {
+          waitForNextTimePoint();
+          return true;
+        }
       }
 
     } catch (Throwable e)

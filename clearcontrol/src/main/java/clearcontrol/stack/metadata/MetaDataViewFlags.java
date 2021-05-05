@@ -1,6 +1,4 @@
-package clearcontrol.stack;
-
-import clearcontrol.stack.metadata.MetaDataEntryInterface;
+package clearcontrol.stack.metadata;
 
 /**
  * Basic stack meta data entries

@@ -5,11 +5,7 @@ import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.processor.MetaDataFusion;
-import clearcontrol.stack.MetaDataView;
-import clearcontrol.stack.metadata.MetaDataAcquisitionType;
-import clearcontrol.stack.metadata.MetaDataChannel;
-import clearcontrol.stack.metadata.MetaDataOrdinals;
-import clearcontrol.stack.metadata.StackMetaData;
+import clearcontrol.stack.metadata.*;
 import clearcontrol.state.AcquisitionType;
 import clearcontrol.state.InterpolatedAcquisitionState;
 

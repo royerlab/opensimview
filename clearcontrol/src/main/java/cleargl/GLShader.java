@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class GLShader implements GLInterface, GLCloseable
 {
@@ -24,7 +23,7 @@ public class GLShader implements GLInterface, GLCloseable
   private final GLShaderType mShaderType;
   private final String mShaderSource;
   private final String mShaderSourcePath;
-  private Path mShaderBasePath;
+  //private Path mShaderBasePath;
   private final Class<?> mShaderSourceRootClass;
   private HashMap<String, String> mParameters;
 
@@ -47,6 +46,7 @@ public class GLShader implements GLInterface, GLCloseable
       return Paths.get(p.toURI());
     } catch (URISyntaxException | FileSystemNotFoundException e)
     {
+      e.printStackTrace();
       try
       {
         final URI uri = p.toURI();
@@ -56,7 +56,7 @@ public class GLShader implements GLInterface, GLCloseable
         return Paths.get(p.toURI());
       } catch (URISyntaxException | FileSystemAlreadyExistsException | IOException ee)
       {
-
+        ee.printStackTrace();
       }
 
     }
@@ -75,7 +75,7 @@ public class GLShader implements GLInterface, GLCloseable
     mShaderSourceRootClass = pRootClass;
     mParameters = new HashMap<>();
     Path p = getPath(pRootClass.getResource(pResourceName));
-    mShaderBasePath = p.getParent();
+    //mShaderBasePath = p.getParent();
 
     // preprocess shader
     final String shaderSourceProcessed = preprocessShader(mShaderSource);
@@ -97,8 +97,8 @@ public class GLShader implements GLInterface, GLCloseable
     mShaderSourceRootClass = pRootClass;
     mParameters = params;
 
-    Path p = getPath(pRootClass.getResource(pResourceName));
-    mShaderBasePath = p.getParent();
+    //Path p = getPath(pRootClass.getResource(pResourceName));
+    //mShaderBasePath = p.getParent();
 
     // preprocess shader
     final String shaderSourceProcessed = preprocessShader(mShaderSource);
@@ -118,7 +118,7 @@ public class GLShader implements GLInterface, GLCloseable
     mShaderSourceRootClass = null;
     mShaderSourcePath = null;
     mParameters = new HashMap<>();
-    mShaderBasePath = null;
+    //mShaderBasePath = null;
 
     // preprocess shader
     final String shaderSourceProcessed = preprocessShader(mShaderSource);
@@ -135,10 +135,10 @@ public class GLShader implements GLInterface, GLCloseable
     mGL.getGL3().glDeleteShader(mShaderId);
   }
 
-  public void setShaderBasePath(final Path path)
-  {
-    mShaderBasePath = path;
-  }
+//  public void setShaderBasePath(final Path path)
+//  {
+//    mShaderBasePath = path;
+//  }
 
   public void recompile(final GL pGL)
   {
@@ -178,24 +178,24 @@ public class GLShader implements GLInterface, GLCloseable
     }
 
     // find includes
-    startPos = 0;
-    endPos = 0;
-    while ((startPos = effectiveSource.indexOf("%include <")) != -1)
-    {
-      endPos = effectiveSource.indexOf(">", startPos);
-      final String includeFileName = effectiveSource.substring(startPos + "%include <".length(), endPos);
-      String includeSource = "";
-
-      try
-      {
-        includeSource = Files.lines(mShaderBasePath.resolve(includeFileName)).parallel().filter(line -> !line.startsWith("//")).map(String::trim).collect(Collectors.joining());
-      } catch (final IOException e)
-      {
-        e.printStackTrace();
-      }
-
-      effectiveSource = effectiveSource.substring(0, startPos) + "\n// included from " + includeFileName + "\n" + includeSource + "\n// end include\n" + effectiveSource.substring(endPos + ">".length());
-    }
+//    startPos = 0;
+//    endPos = 0;
+//    while ((startPos = effectiveSource.indexOf("%include <")) != -1)
+//    {
+//      endPos = effectiveSource.indexOf(">", startPos);
+//      final String includeFileName = effectiveSource.substring(startPos + "%include <".length(), endPos);
+//      String includeSource = "";
+//
+//      try
+//      {
+//        includeSource = Files.lines(mShaderBasePath.resolve(includeFileName)).parallel().filter(line -> !line.startsWith("//")).map(String::trim).collect(Collectors.joining());
+//      } catch (final IOException e)
+//      {
+//        e.printStackTrace();
+//      }
+//
+//      effectiveSource = effectiveSource.substring(0, startPos) + "\n// included from " + includeFileName + "\n" + includeSource + "\n// end include\n" + effectiveSource.substring(endPos + ">".length());
+//    }
 
     return effectiveSource;
   }

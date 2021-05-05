@@ -3,7 +3,6 @@ package clearcontrol.devices.lasers.gui;
 import clearcontrol.core.physics.WavelengthToRGB;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
-import clearcontrol.devices.lasers.gui.icon.LaserIcon;
 import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
 import clearcontrol.gui.jfx.custom.rbg.RadialBargraph;
 import clearcontrol.gui.jfx.custom.rbg.RadialBargraphBuilder;
@@ -17,7 +16,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -231,35 +229,6 @@ public class LaserDevicePanel extends HBox
     // ---------------------------------------------------------------
     int lRow = 0;
     grid = new CustomGridPane();
-    Label lLabel = new Label("*The tools on the left are deprecated and just kept for legacy. Future laser control comes here (under development):");
-    lLabel.setTextFill(Color.web("#DD0000"));
-    lLabel.setWrapText(true);
-    lLabel.setMaxWidth(150);
-    grid.add(lLabel, 0, lRow);
-    lRow++;
-
-    Button lLaserOffButton = new Button("Turn laser OFF");
-    lLaserOffButton.setGraphic(new LaserIcon(50, 50));
-    lLaserOffButton.setMaxWidth(Double.MAX_VALUE);
-    lLaserOffButton.setOnAction((e) ->
-    {
-      mLaserDeviceInterface.setLaserOn(false);
-      mLaserDeviceInterface.setLaserPowerOn(false);
-      mLaserDeviceInterface.setTargetPowerInPercent(0);
-    });
-    grid.add(lLaserOffButton, 0, lRow);
-    lRow++;
-
-    Button lLaserOnButton = new Button("Turn laser on");
-    lLaserOnButton.setGraphic(new LaserIcon(50, 50));
-    lLaserOnButton.setMaxWidth(Double.MAX_VALUE);
-    lLaserOnButton.setOnAction((e) ->
-    {
-      mLaserDeviceInterface.setLaserOn(true);
-      mLaserDeviceInterface.setLaserPowerOn(true);
-    });
-    grid.add(lLaserOnButton, 0, lRow);
-    lRow++;
 
     /*
     Variable<Number>
@@ -267,7 +236,7 @@ public class LaserDevicePanel extends HBox
     lVariable.addSetListener((o,n)->{
       mLaserDeviceInterface.getTargetPowerInMilliWattVariable().set(n);
     });
-    
+
     
     
     

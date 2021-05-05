@@ -18,7 +18,9 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import coremem.ContiguousMemoryInterface;
 import coremem.enums.NativeTypeEnum;
+import coremem.offheap.OffHeapMemory;
 import coremem.util.Size;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -119,9 +121,9 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
           }
 
           final long lSizeInBytes = pStack.getSizeInBytes();
-          final long lWidth = pStack.getWidth();
-          final long lHeight = pStack.getHeight();
-          final long lDepth = pStack.getDepth();
+          long lWidth = pStack.getWidth();
+          long lHeight = pStack.getHeight();
+          long lDepth = pStack.getDepth();
 
           final NativeTypeEnum lNativeTypeEnum = mClearVolumeRenderer.getNativeType();
           final long lBytesPerVoxel = Size.of(lNativeTypeEnum);
@@ -136,7 +138,7 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
             return null;
           }
 
-          final ContiguousMemoryInterface lContiguousMemory = pStack.getContiguousMemory();
+          ContiguousMemoryInterface lContiguousMemory = pStack.getContiguousMemory();
 
           if (lContiguousMemory.isFree())
           {
@@ -167,6 +169,14 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
             lVoxelDepth = 1.0 / lDepth;
             warning("No voxel depth provided, using 1.0 instead.");
 
+          }
+
+          if (lContiguousMemory.getSizeInBytes()>2147483000)
+          {
+            // we need to downscale the image! ideally along x and y!
+            lContiguousMemory = downscale(lContiguousMemory, lWidth, lHeight, lDepth);
+            lWidth /=2;
+            lHeight /=2;
           }
 
           mClearVolumeRenderer.setVolumeDataBuffer(lChannel, lContiguousMemory, lWidth, lHeight, lDepth, lVoxelWidth, lVoxelHeight, lVoxelDepth);
@@ -214,6 +224,8 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
     mWaitForLastChannel = new Variable<Boolean>("WaitForLastChannel", false);
 
   }
+
+
 
   private ReentrantLock mAdjustmentRunning = new ReentrantLock();
   private boolean mManualVisualisationAdjustment = false;
@@ -402,5 +414,46 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
       ClearGLVolumeRenderer lClearGLVolumeRenderer = (ClearGLVolumeRenderer) mClearVolumeRenderer;
       return lClearGLVolumeRenderer.getClearGLWindow();
     } else return null;
+  }
+
+
+
+  private ContiguousMemoryInterface downscale(ContiguousMemoryInterface pSource, long swidth, long sheight, long sdepth)
+  {
+    long dwidth = swidth /2;
+    long dheight = sheight /2;
+    long ddepth = sdepth;
+
+    // allocate new array
+    ContiguousMemoryInterface lDest = OffHeapMemory.allocateBytes(pSource.getSizeInBytes()/4);
+
+    long lDestIndex = 0;
+    for(int dz=0; dz<ddepth; dz++)
+    {
+      final int sz = dz;
+      for(int dy=0; dy<dheight; dy++)
+      {
+        final int sy = dy*2;
+        for (int dx = 0; dx < dwidth; dx++)
+        {
+          int sx = dx * 2;
+
+          long lSrcIndex = sx+swidth*sy+swidth*sheight*sz;
+
+          final int lValue1 = 0xFFFF & pSource.getCharAligned(lSrcIndex);
+          final int lValue2 = 0xFFFF & pSource.getCharAligned(lSrcIndex+1);
+          final int lValue3 = 0xFFFF & pSource.getCharAligned(lSrcIndex+swidth);
+          final int lValue4 = 0xFFFF & pSource.getCharAligned(lSrcIndex+1+swidth);
+
+          final char lValue =  (char)((lValue1+lValue2+lValue3+lValue4)/4);
+
+          lDest.setCharAligned(lDestIndex, lValue);
+          lDestIndex++;
+        }
+      }
+    }
+
+    return lDest;
+
   }
 }

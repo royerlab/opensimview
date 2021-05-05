@@ -55,6 +55,7 @@ public class AsynchronousFileStackSinkAdapter implements FileStackSinkInterface
         String lChannel = pPair.getLeft();
         StackInterface lStack = pPair.getRight();
         mStackSink.appendStack(lChannel, lStack);
+        lStack.release();
         if (mFinishedProcessingStackVariable != null)
         {
           mFinishedProcessingStackVariable.set(lStack);

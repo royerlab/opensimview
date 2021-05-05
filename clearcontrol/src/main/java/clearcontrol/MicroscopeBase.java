@@ -495,8 +495,6 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
           @Override
           public void setEvent(StackInterface pCurrentValue, StackInterface pNewValue)
           {
-                                                                     /*System.out.println("Received: "
-                                                                                        + pNewValue);/**/
             lStacksReceivedLatches[fi].countDown();
             if (pNewValue == null) return;
             StackMetaData lMetaData = pNewValue.getMetaData();

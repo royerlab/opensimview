@@ -90,7 +90,7 @@ public class DoradoMain extends Application implements LoggingFeature
     }
 
     boolean l2DDisplay = true;
-    boolean l3DDisplay = false;
+    boolean l3DDisplay = true;
 
     BorderPane lPane = new BorderPane();
 

@@ -10,7 +10,6 @@ import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.gui.jfx.var.combo.enums.TimeUnitEnum;
 import clearcontrol.stack.StackInterface;
-import clearcontrol.stack.metadata.MetaDataChannel;
 import clearcontrol.stack.sourcesink.StackSinkSourceInterface;
 import clearcontrol.stack.sourcesink.sink.AsynchronousFileStackSinkAdapter;
 import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
@@ -25,6 +24,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
+import static clearcontrol.stack.metadata.MetaDataView.getCxLyString;
 
 /**
  * Base implementation providing common fields and methods for all Timelapse
@@ -110,12 +111,12 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
       {
         info("Received new stack %s and appending it to the file sink %s", n, lStackSinkVariable);
 
-        String lChannelInMetaData = n.getMetaData().getValue(MetaDataChannel.Channel);
+        String lChannelInMetaData = getCxLyString(n.getMetaData());
 
         final String lChannel = lChannelInMetaData != null ? lChannelInMetaData : StackSinkSourceInterface.cDefaultChannel;
 
         lStackSinkVariable.get().appendStack(lChannel, n);
-        n.release();
+
       }
     };
 
@@ -224,8 +225,6 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
         setupFileSink();
       }
 
-      // Start async sink:
-      if (getCurrentFileStackSinkVariable().get() != null) getCurrentFileStackSinkVariable().get().start();
 
       // Connecting stack cameras to stack sink:
       for (int c = 0; c < mMicroscope.getNumberOfDevices(StackCameraDeviceInterface.class); c++)
@@ -246,19 +245,19 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
         lStackVariable.doNotSendUpdatesTo(mStackToSaveVariable);
       }
 
-      // Stop async sink:
-      if (getCurrentFileStackSinkVariable().get() != null)
-      {
-        try
-        {
-          getCurrentFileStackSinkVariable().get().close();
-        } catch (Exception e)
-        {
-          e.printStackTrace();
-        }
-      }
+//      // Stop async sink:
+//      if (getCurrentFileStackSinkVariable().get() != null)
+//      {
+//        try
+//        {
+//          getCurrentFileStackSinkVariable().get().close();
+//        } catch (Exception e)
+//        {
+//          e.printStackTrace();
+//        }
+//      }
 
-      getCurrentFileStackSinkVariable().set((AsynchronousFileStackSinkAdapter) null);
+      //getCurrentFileStackSinkVariable().set((AsynchronousFileStackSinkAdapter) null);
 
     } catch (InstantiationException e)
     {
@@ -305,15 +304,18 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
       if (getEnforceMaxDateTimeVariable().get() && getMaxDateTimeVariable().get() != null)
         if (checkMaxDateTime()) return false;
 
-      TimelapseTimerInterface lTimelapseTimer = getTimelapseTimerVariable().get();
+      runAdaptiveEngine(getTimelapseTimerVariable().get());
 
-      runAdaptiveEngine(lTimelapseTimer);
-
-      lTimelapseTimer.waitToAcquire(1, TimeUnit.DAYS);
-      lTimelapseTimer.notifyAcquisition();
     }
 
     return true;
+  }
+
+  public void waitForNextTimePoint()
+  {
+    TimelapseTimerInterface lTimelapseTimer = getTimelapseTimerVariable().get();
+    lTimelapseTimer.waitToAcquire(1, TimeUnit.DAYS);
+    lTimelapseTimer.notifyAcquisition();
   }
 
   protected void setupFileSink() throws InstantiationException, IllegalAccessException
@@ -336,21 +338,13 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
     FileStackSinkInterface lStackSink = getCurrentFileStackSinkTypeVariable().get().newInstance();
 
     AsynchronousFileStackSinkAdapter lAsyncStackSink = AsynchronousFileStackSinkAdapter.wrap(lStackSink, 64);
+    lAsyncStackSink.start();
 
     if (getDataSetNamePostfixVariable().get() == null) getDataSetNamePostfixVariable().set("");
 
     String lNowDateTimeString = sDateTimeFormatter.format(LocalDateTime.now());
 
     lAsyncStackSink.setLocation(mRootFolderVariable.get(), lNowDateTimeString + "-" + getDataSetNamePostfixVariable().get());
-
-    if (getCurrentFileStackSinkVariable().get() != null) try
-    {
-      getCurrentFileStackSinkVariable().get().close();
-    } catch (Exception e)
-    {
-      severe("Error occured while closing stack sink: %s", e);
-      e.printStackTrace();
-    }
 
     getCurrentFileStackSinkVariable().set(lAsyncStackSink);
   }

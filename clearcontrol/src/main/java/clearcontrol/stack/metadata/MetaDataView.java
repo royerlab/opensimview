@@ -1,8 +1,5 @@
-package clearcontrol.stack;
+package clearcontrol.stack.metadata;
 
-import clearcontrol.stack.metadata.MetaDataAcquisitionType;
-import clearcontrol.stack.metadata.MetaDataEntryInterface;
-import clearcontrol.stack.metadata.StackMetaData;
 import clearcontrol.state.AcquisitionType;
 
 /**

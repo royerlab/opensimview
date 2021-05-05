@@ -5,11 +5,7 @@ import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.processor.MetaDataFusion;
-import clearcontrol.stack.MetaDataView;
-import clearcontrol.stack.metadata.MetaDataAcquisitionType;
-import clearcontrol.stack.metadata.MetaDataChannel;
-import clearcontrol.stack.metadata.MetaDataOrdinals;
-import clearcontrol.stack.metadata.StackMetaData;
+import clearcontrol.stack.metadata.*;
 import clearcontrol.state.AcquisitionType;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.LightSheetAcquisitionStateInterface;
@@ -97,9 +93,10 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
           }
         }
 
+        mTimeStampBeforeImaging = System.nanoTime();
+
         try
         {
-          mTimeStampBeforeImaging = System.nanoTime();
           getLightSheetMicroscope().playQueueAndWait(lQueueForView, mTimelapse.getTimeOut(), TimeUnit.SECONDS);
         } catch (InterruptedException e)
         {
@@ -115,15 +112,8 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
           return false;
         }
 
-//        // store results in a DataContainer
-//        for (int d = 0; d < getLightSheetMicroscope().getNumberOfDetectionArms(); d++)
-//        {
-//          if (isCameraOn(d))
-//          {
-//            StackInterface lStack = getLightSheetMicroscope().getCameraStackVariable(d).get();
-//            putStackInContainer("C" + d + "L" + l, lStack, lContainer);
-//          }
-//        }
+//        getLightSheetMicroscope().playQueue(lQueueForView);
+
       }
     }
 
