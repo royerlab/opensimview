@@ -36,7 +36,7 @@ public class ChangeLaserPowerInstruction extends InstructionBase implements Inst
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     laserDevice.getTargetPowerInMilliWattVariable().set(laserPowerInMilliwatt.get());
     return true;

@@ -24,7 +24,7 @@ public class FilterWheelInstruction extends InstructionBase implements Instructi
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     mFilterWheelDevice.setPosition(mPosition);
     return true;

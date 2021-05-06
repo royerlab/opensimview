@@ -84,9 +84,9 @@ public class FutureBooleanList implements Future<Boolean>, LoggingFeature
       {
         try
         {
-          //info("Waiting for %s ...",mFutureMap.get(lFuture).trim());
+          info("Waiting for %s ...",mFutureMap.get(lFuture).trim());
           if (!lFuture.get(pTimeout, pUnit)) return Boolean.FALSE;
-          //info("Done waiting for %s.",mFutureMap.get(lFuture).trim());
+          info("Done waiting for %s.",mFutureMap.get(lFuture).trim());
         } catch (TimeoutException e)
         {
           warning("Timeout caused by: %s \n", mFutureMap.get(lFuture).trim());

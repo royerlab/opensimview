@@ -42,7 +42,7 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     mCurrentState = (InterpolatedAcquisitionState) getLightSheetMicroscope().getAcquisitionStateManager().getCurrentState();
 
@@ -91,6 +91,7 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
         try
         {
           getLightSheetMicroscope().playQueueAndWait(lQueueForView, mTimelapse.getTimeOut(), TimeUnit.SECONDS);
+          info("DONE with getLightSheetMicroscope().playQueueAndWait(...)");
         } catch (InterruptedException e)
         {
           e.printStackTrace();

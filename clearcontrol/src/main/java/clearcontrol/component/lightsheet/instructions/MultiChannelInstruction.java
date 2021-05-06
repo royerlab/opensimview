@@ -36,7 +36,7 @@ public class MultiChannelInstruction extends LightSheetMicroscopeInstructionBase
   int mTimePointCount = -1;
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
 
     ArrayList<LaserDeviceInterface> lLaserList = getLightSheetMicroscope().getDevices(LaserDeviceInterface.class);

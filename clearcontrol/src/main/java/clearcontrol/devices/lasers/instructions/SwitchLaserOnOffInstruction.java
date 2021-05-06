@@ -29,7 +29,7 @@ public class SwitchLaserOnOffInstruction extends InstructionBase implements Inst
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     mLaserDevice.setLaserOn(mTurnOn);
     mLaserDevice.getLaserOnVariable().set(mTurnOn);

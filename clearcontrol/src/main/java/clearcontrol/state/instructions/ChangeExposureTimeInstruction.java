@@ -29,7 +29,7 @@ public class ChangeExposureTimeInstruction extends LightSheetMicroscopeInstructi
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     getLightSheetMicroscope().getAcquisitionStateManager().getCurrentState().getExposureInSecondsVariable().set(mExposureTimeInSecondsVariable.get());
     return true;

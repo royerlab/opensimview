@@ -25,7 +25,7 @@ public interface InstructionInterface extends NameableInterface
    * @param pTimePoint
    * @return success
    */
-  boolean enqueue(long pTimePoint);
+  boolean execute(long pTimePoint);
 
   /**
    * All instruction should be able to duplicate themselfes to allow building up a

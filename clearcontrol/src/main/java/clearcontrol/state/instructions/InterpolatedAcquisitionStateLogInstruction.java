@@ -35,7 +35,7 @@ public class InterpolatedAcquisitionStateLogInstruction extends LightSheetMicros
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     LightSheetTimelapse lTimelapse = (LightSheetTimelapse) getLightSheetMicroscope().getDevice(LightSheetTimelapse.class, 0);
 

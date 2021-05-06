@@ -74,7 +74,7 @@ public class GLShader implements GLInterface, GLCloseable
     mShaderSourcePath = pResourceName;
     mShaderSourceRootClass = pRootClass;
     mParameters = new HashMap<>();
-    Path p = getPath(pRootClass.getResource(pResourceName));
+    //Path p = getPath(pRootClass.getResource(pResourceName));
     //mShaderBasePath = p.getParent();
 
     // preprocess shader

@@ -38,7 +38,7 @@ public class InterleavedAcquisitionInstruction extends AbstractAcquistionInstruc
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     mCurrentState = (InterpolatedAcquisitionState) getLightSheetMicroscope().getAcquisitionStateManager().getCurrentState();
 

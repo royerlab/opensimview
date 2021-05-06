@@ -40,7 +40,7 @@ public class AcquisitionStateBackupRestoreInstruction extends LightSheetMicrosco
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     if (mBackup)
     {

@@ -39,7 +39,7 @@ public class ReadAcquisitionStateFromDiscInstruction extends LightSheetMicroscop
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
 
     LightSheetTimelapse lTimelapse = (LightSheetTimelapse) getLightSheetMicroscope().getDevice(LightSheetTimelapse.class, 0);

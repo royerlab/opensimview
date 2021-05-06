@@ -91,7 +91,7 @@ public class LightSheetTimelapse extends TimelapseBase implements TimelapseInter
       info("Starting " + lNextInstructionToRun);
       double duration = ElapsedTime.measure("instructions execution", () ->
       {
-        lNextInstructionToRun.enqueue(getTimePointCounterVariable().get());
+        lNextInstructionToRun.execute(getTimePointCounterVariable().get());
       });
       info("Finished " + lNextInstructionToRun + "in " + duration + " ms");
 

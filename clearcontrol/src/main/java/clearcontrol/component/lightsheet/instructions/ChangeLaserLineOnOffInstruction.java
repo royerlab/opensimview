@@ -34,7 +34,7 @@ public class ChangeLaserLineOnOffInstruction extends LightSheetMicroscopeInstruc
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     InterpolatedAcquisitionState lState = (InterpolatedAcquisitionState) getLightSheetMicroscope().getDevice(AcquisitionStateManager.class, 0).getCurrentState();
 

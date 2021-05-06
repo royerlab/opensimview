@@ -29,7 +29,7 @@ public class AcquisitionStateResetInstruction extends LightSheetMicroscopeInstru
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     InterpolatedAcquisitionState lAcquisitionState = (InterpolatedAcquisitionState) getLightSheetMicroscope().getAcquisitionStateManager().getCurrentState();
 

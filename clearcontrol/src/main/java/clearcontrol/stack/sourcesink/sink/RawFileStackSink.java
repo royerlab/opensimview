@@ -61,7 +61,6 @@ public class RawFileStackSink extends FileStackBase implements FileStackInterfac
       setStackRequest(pChannel, lNextFreeStackIndex.get(), StackRequest.buildFrom(pStack));
       lNextFreeStackIndex.incrementAndGet();
 
-      info("Finished writing stack: "+ pStack + " to raw file stack sink");
       return true;
     } catch (final Throwable e)
     {
@@ -92,6 +91,8 @@ public class RawFileStackSink extends FileStackBase implements FileStackInterfac
 
     lBinnaryFileChannel.force(false);
     lBinnaryFileChannel.close();
+    
+    info("Finished writing stack: "+ pStack + " to raw file stack sink");
   }
 
   protected void writeIndexFileEntry(long pIndex, String pChannel, final StackInterface pStack) throws IOException

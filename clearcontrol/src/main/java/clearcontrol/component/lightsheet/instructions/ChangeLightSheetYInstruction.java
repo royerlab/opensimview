@@ -35,7 +35,7 @@ public class ChangeLightSheetYInstruction extends LightSheetMicroscopeInstructio
   }
 
   @Override
-  public boolean enqueue(long pTimePoint)
+  public boolean execute(long pTimePoint)
   {
     InterpolatedAcquisitionState lState = (InterpolatedAcquisitionState) getLightSheetMicroscope().getDevice(AcquisitionStateManager.class, 0).getCurrentState();
     for (int cpi = 0; cpi < lState.getNumberOfControlPlanes(); cpi++)

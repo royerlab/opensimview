@@ -93,7 +93,7 @@ public class ProgramReader implements LoggingFeature
           }
 
           @Override
-          public boolean enqueue(long pTimePoint)
+          public boolean execute(long pTimePoint)
           {
             return false;
           }

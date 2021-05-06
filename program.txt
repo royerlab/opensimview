@@ -1,1 +1,8 @@
+Adaptation: Change laser line on/off state::Laser_index=[1] 
+Filter wheel: Set filter of LudlFilterWheel1 to 488 (525/50)::
+Filter wheel: Set filter of LudlFilterWheel0 to 488 (525/50) ::
+Acquisition: Sequential::
+Adaptation: Change laser line on/off state::Laser_index=[2] 
+Filter wheel: Set filter of LudlFilterWheel1 to 561 (610/75)::
+Filter wheel: Set filter of LudlFilterWheel0 to 561 (610/75)::
 Acquisition: Sequential::
