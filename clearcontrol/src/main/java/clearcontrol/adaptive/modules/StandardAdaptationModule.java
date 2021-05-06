@@ -132,7 +132,8 @@ public abstract class StandardAdaptationModule extends NDIteratorAdaptationModul
         }
       }
 
-      lLightsheetMicroscope.useRecycler("adaptation", 1, 4, 4);
+      lLightsheetMicroscope.useRecycler("adaptation", 1, 32, 32);
+      lLightsheetMicroscope.resetTerminatorStackVariables();
       final Boolean lPlayQueueAndWait = lLightsheetMicroscope.playQueueAndWaitForStacks(pQueue, 10 + pQueue.getQueueLength(), TimeUnit.SECONDS);
 
       if (!lPlayQueueAndWait)

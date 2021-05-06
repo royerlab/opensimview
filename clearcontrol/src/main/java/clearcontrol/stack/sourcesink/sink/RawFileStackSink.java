@@ -1,5 +1,6 @@
 package clearcontrol.stack.sourcesink.sink;
 
+import clearcontrol.core.concurrent.timing.ElapsedTime;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.units.OrderOfMagnitude;
 import clearcontrol.stack.StackInterface;
@@ -51,7 +52,19 @@ public class RawFileStackSink extends FileStackBase implements FileStackInterfac
     {
       AtomicLong lNextFreeStackIndex = getIndexForChannel(pChannel);
 
-      writeStackData(lNextFreeStackIndex.get(), pChannel, pStack);
+      // Saving stack data:
+      final double lElapsedTimeInMilliseconds = ElapsedTime.measure("writeStackData", () ->
+      {
+        try
+        {
+          writeStackData(lNextFreeStackIndex.get(), pChannel, pStack);
+        } catch (IOException e)
+        {
+          e.printStackTrace();
+        }
+      });
+      info("Saving took %.2f milliseconds for stack %s", lElapsedTimeInMilliseconds, pStack);
+
       writeIndexFileEntry(lNextFreeStackIndex.get(), pChannel, pStack);
       writeMetaDataFileEntry(pChannel, pStack);
 
