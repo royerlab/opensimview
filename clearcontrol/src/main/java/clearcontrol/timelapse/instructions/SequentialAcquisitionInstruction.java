@@ -80,16 +80,9 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
             lMetaData.addEntry(MetaDataView.Camera, c);
             lMetaData.addEntry(MetaDataView.LightSheet, l);
 
-            if (isFused())
-            {
-              lMetaData.addEntry(MetaDataFusion.RequestFullFusion, true);
+            String lCxLyString = MetaDataView.getCxLyString(lMetaData);
+            lMetaData.addEntry(MetaDataChannel.Channel, lCxLyString);
 
-              lMetaData.addEntry(MetaDataChannel.Channel, "sequential");
-            } else
-            {
-              String lCxLyString = MetaDataView.getCxLyString(lMetaData);
-              lMetaData.addEntry(MetaDataChannel.Channel, lCxLyString);
-            }
           }
         }
 

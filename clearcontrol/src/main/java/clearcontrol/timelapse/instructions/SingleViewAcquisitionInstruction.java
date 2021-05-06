@@ -40,11 +40,6 @@ public class SingleViewAcquisitionInstruction extends SequentialAcquisitionInstr
     return mCameraIndex == pCameraIndex;
   }
 
-  protected boolean isFused()
-  {
-    return true;
-  }
-
   public int getLightSheetIndex()
   {
     return mLightSheetIndex;
@@ -55,11 +50,6 @@ public class SingleViewAcquisitionInstruction extends SequentialAcquisitionInstr
     return mCameraIndex;
   }
 
-  @Override
-  public StackInterface getLastAcquiredStack()
-  {
-    return mLastAcquiredStack;
-  }
 
   @Override
   public SingleViewAcquisitionInstruction copy()
