@@ -10,6 +10,7 @@ import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.gui.jfx.var.combo.enums.TimeUnitEnum;
 import clearcontrol.stack.StackInterface;
+import clearcontrol.stack.metadata.MetaDataChannel;
 import clearcontrol.stack.sourcesink.StackSinkSourceInterface;
 import clearcontrol.stack.sourcesink.sink.AsynchronousFileStackSinkAdapter;
 import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
@@ -111,7 +112,7 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
       {
         info("Received new stack %s and appending it to the file sink %s", n, lStackSinkVariable);
 
-        String lChannelInMetaData = getCxLyString(n.getMetaData());
+        String lChannelInMetaData = n.getMetaData().getValue(MetaDataChannel.Channel);
 
         final String lChannel = lChannelInMetaData != null ? lChannelInMetaData : StackSinkSourceInterface.cDefaultChannel;
 

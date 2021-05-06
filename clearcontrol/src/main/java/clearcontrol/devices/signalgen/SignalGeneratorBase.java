@@ -2,6 +2,7 @@ package clearcontrol.devices.signalgen;
 
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.core.device.VirtualDevice;
+import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.signalgen.measure.MeasureInterface;
 import clearcontrol.devices.signalgen.measure.TransitionMeasure;
@@ -14,7 +15,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author royer
  */
-public abstract class SignalGeneratorBase extends VirtualDevice implements SignalGeneratorInterface, AsynchronousExecutorFeature
+public abstract class SignalGeneratorBase extends VirtualDevice implements SignalGeneratorInterface,
+                                                                           AsynchronousExecutorFeature,
+                                                                           LoggingFeature
 {
 
   protected final Variable<Boolean> mTriggerVariable = new Variable<Boolean>("Trigger", false);
@@ -73,11 +76,13 @@ public abstract class SignalGeneratorBase extends VirtualDevice implements Signa
   {
     final Callable<Boolean> lCall = () ->
     {
+      final ScoreInterface lQueuedScore = pSignalGeneratorRealTimeQueue.getQueuedScore();
       final Thread lCurrentThread = Thread.currentThread();
       final int lCurrentThreadPriority = lCurrentThread.getPriority();
       lCurrentThread.setPriority(Thread.MAX_PRIORITY);
       mIsPlaying = true;
-      final boolean lPlayed = playScore(pSignalGeneratorRealTimeQueue.getQueuedScore());
+      final boolean lPlayed = playScore(lQueuedScore);
+      info("Finished playing signal generator queue of duration: "+lQueuedScore.getDuration(TimeUnit.MILLISECONDS));
       mIsPlaying = false;
       lCurrentThread.setPriority(lCurrentThreadPriority);
       return lPlayed;

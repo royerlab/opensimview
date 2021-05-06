@@ -1,5 +1,6 @@
 package clearcontrol.stack.sourcesink.sink;
 
+import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.units.OrderOfMagnitude;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
@@ -22,7 +23,10 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author royer
  */
-public class RawFileStackSink extends FileStackBase implements FileStackInterface, FileStackSinkInterface, AutoCloseable
+public class RawFileStackSink extends FileStackBase implements FileStackInterface,
+                                                               FileStackSinkInterface,
+                                                               AutoCloseable,
+                                                               LoggingFeature
 {
 
   private final AtomicLong mFirstTimePointAbsoluteNanoSeconds = new AtomicLong();
@@ -56,6 +60,8 @@ public class RawFileStackSink extends FileStackBase implements FileStackInterfac
 
       setStackRequest(pChannel, lNextFreeStackIndex.get(), StackRequest.buildFrom(pStack));
       lNextFreeStackIndex.incrementAndGet();
+
+      info("Finished writing stack: "+ pStack + " to raw file stack sink");
       return true;
     } catch (final Throwable e)
     {

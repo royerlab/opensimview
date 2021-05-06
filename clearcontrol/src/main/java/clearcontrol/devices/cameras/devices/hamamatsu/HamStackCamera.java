@@ -1,6 +1,9 @@
 package clearcontrol.devices.cameras.devices.hamamatsu;
 
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
+import clearcontrol.core.concurrent.timing.ElapsedTime;
+import clearcontrol.core.concurrent.timing.ExecuteMinDuration;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.openclose.OpenCloseDeviceInterface;
 import clearcontrol.core.log.LoggingFeature;
@@ -26,7 +29,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author royer
  */
-public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> implements StackCameraDeviceInterface<HamStackCameraQueue>, OpenCloseDeviceInterface, LoggingFeature, AsynchronousExecutorFeature
+public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> implements StackCameraDeviceInterface<HamStackCameraQueue>,
+                                                                                          OpenCloseDeviceInterface, LoggingFeature, AsynchronousExecutorFeature
 {
 
   private static final char cZeroLevel = 100;
@@ -197,14 +201,15 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
       lAcquiredStack.getMetaData().setIndex(getCurrentIndexVariable().get());
 
       // Remove zero level:
+
+
       ContiguousMemoryInterface lContiguousMemory = lAcquiredStack.getContiguousMemory();
-      long lLengthInUINT16 = lContiguousMemory.getSizeInBytes() / 2;
-      for (long i = 0; i < lLengthInUINT16; i++)
-      {
-        int value = (0xFFFF & lContiguousMemory.getCharAligned(i));
-        char lValue = (char) (Math.max(cZeroLevel, value) - cZeroLevel);
-        lContiguousMemory.setCharAligned(i, lValue);
-      }
+
+      final double
+          lElapsedTimeInMilliseconds =
+          ElapsedTime.measure("removeZeroLevel",
+                              () -> removeZeroLevel(lContiguousMemory));
+      info("Zero-level removal took %.2f milliseconds", lElapsedTimeInMilliseconds);
 
       getStackVariable().setAsync(lAcquiredStack);
       return true;
@@ -213,6 +218,17 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
     final Future<Boolean> lFuture = executeAsynchronously(lCallable);
 
     return lFuture;
+  }
+
+  private void removeZeroLevel(ContiguousMemoryInterface lContiguousMemory)
+  {
+    long lLengthInUINT16 = lContiguousMemory.getSizeInBytes() / 2;
+    for (long i = 0; i < lLengthInUINT16; i++)
+    {
+      int value = (0xFFFF & lContiguousMemory.getCharAligned(i));
+      char lValue = (char) (Math.max(cZeroLevel, value) - cZeroLevel);
+      lContiguousMemory.setCharAligned(i, lValue);
+    }
   }
 
   @Override
