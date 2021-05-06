@@ -1,8 +1,8 @@
-package clearcontrol.signalgen.gui.demo;
+package clearcontrol.devices.signalgen.gui.jfx.demo;
 
 import clearcontrol.devices.signalgen.devices.sim.SignalGeneratorSimulatorDevice;
-import clearcontrol.signalgen.LightSheetSignalGeneratorDevice;
-import clearcontrol.signalgen.gui.LightSheetSignalGeneratorPanel;
+import clearcontrol.devices.signalgen.LightSheetSignalGeneratorDevice;
+import clearcontrol.devices.signalgen.gui.jfx.LightSheetSignalGeneratorPanel;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

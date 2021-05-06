@@ -1,4 +1,4 @@
-package clearcontrol.signalgen;
+package clearcontrol.devices.signalgen;
 
 import clearcontrol.component.detection.DetectionArm;
 import clearcontrol.component.detection.DetectionArmQueue;
@@ -9,12 +9,11 @@ import clearcontrol.component.opticalswitch.LightSheetOpticalSwitchQueue;
 import clearcontrol.core.device.queue.QueueInterface;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
-import clearcontrol.devices.signalgen.SignalGeneratorQueue;
 import clearcontrol.devices.signalgen.measure.Measure;
 import clearcontrol.devices.signalgen.score.ScoreInterface;
-import clearcontrol.signalgen.staves.DetectionArmStaves;
-import clearcontrol.signalgen.staves.LightSheetOpticalSwitchStaves;
-import clearcontrol.signalgen.staves.LightSheetStaves;
+import clearcontrol.devices.signalgen.staves.staves.DetectionArmStaves;
+import clearcontrol.devices.signalgen.staves.staves.LightSheetOpticalSwitchStaves;
+import clearcontrol.devices.signalgen.staves.staves.LightSheetStaves;
 
 import java.util.ArrayList;
 import java.util.Map;

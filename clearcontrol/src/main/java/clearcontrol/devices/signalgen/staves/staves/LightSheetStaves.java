@@ -1,4 +1,4 @@
-package clearcontrol.signalgen.staves;
+package clearcontrol.devices.signalgen.staves.staves;
 
 import clearcontrol.component.lightsheet.LightSheet;
 import clearcontrol.component.lightsheet.LightSheetQueue;
@@ -25,7 +25,8 @@ public class LightSheetStaves implements LoggingFeature
 
   private LightSheetQueue mLightSheetQueue;
 
-  private final BoundedVariable<Double> mLineExposureInMicrosecondsVariable = new BoundedVariable<Double>("LineExposureInMicroseconds", 10.0);
+  private final BoundedVariable<Double> mLineExposureInMicrosecondsVariable =
+      new BoundedVariable<Double>("LineExposureInMicroseconds", 9.744);
 
   private BezierStave mBeforeExposureYStave, mBeforeExposureZStave;
 

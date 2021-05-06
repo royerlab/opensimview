@@ -1,4 +1,4 @@
-package clearcontrol.signalgen.staves;
+package clearcontrol.devices.signalgen.staves.staves;
 
 import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.component.opticalswitch.LightSheetOpticalSwitchQueue;

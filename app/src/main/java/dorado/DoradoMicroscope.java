@@ -12,7 +12,7 @@ import clearcontrol.devices.lasers.devices.sim.LaserDeviceSimulator;
 import clearcontrol.devices.optomech.filterwheels.devices.ludl.LudlFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.instructions.FilterWheelInstruction;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
-import clearcontrol.signalgen.LightSheetSignalGeneratorDevice;
+import clearcontrol.devices.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.simulation.SimulatedLightSheetMicroscope;
 import clearcontrol.timelapse.LightSheetTimelapse;

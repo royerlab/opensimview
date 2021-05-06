@@ -1,11 +1,9 @@
-package clearcontrol.signalgen;
+package clearcontrol.devices.signalgen;
 
 import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.core.device.queue.QueueDeviceInterface;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
-import clearcontrol.devices.signalgen.SignalGeneratorInterface;
-import clearcontrol.devices.signalgen.SignalGeneratorQueue;
 
 import java.util.concurrent.Future;
 

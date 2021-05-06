@@ -1,4 +1,4 @@
-package clearcontrol.signalgen.staves;
+package clearcontrol.devices.signalgen.staves.staves;
 
 import clearcontrol.component.detection.DetectionArmQueue;
 import clearcontrol.core.configuration.MachineConfiguration;

@@ -26,7 +26,7 @@ import clearcontrol.devices.signalgen.devices.sim.SignalGeneratorSimulatorDevice
 import clearcontrol.devices.stages.StageType;
 import clearcontrol.devices.stages.devices.sim.StageDeviceSimulator;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.signalgen.LightSheetSignalGeneratorDevice;
+import clearcontrol.devices.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
 import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
 import clearcontrol.state.AcquisitionStateManager;

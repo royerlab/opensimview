@@ -166,7 +166,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
     }
   }
 
-  ;
 
   @Override
   public int getCameraWidth(int pCameraDeviceIndex)
@@ -176,7 +175,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
     return lStackWidthVariable.get().intValue();
   }
 
-  ;
 
   @Override
   public int getCameraHeight(int pCameraDeviceIndex)
@@ -186,7 +184,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
     return lStackHeightVariable.get().intValue();
   }
 
-  ;
 
   @Override
   public void setExposure(double pExposureInSeconds)
@@ -199,7 +196,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
       lLightSheet.getEffectiveExposureInSecondsVariable().set(pExposureInSeconds);
   }
 
-  ;
 
   @Override
   public double getExposure(int pCameraDeviceIndex)
@@ -210,7 +206,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
     return lExposureInSeconds;
   }
 
-  ;
 
   @Override
   public void setLO(int pLaserIndex, boolean pLaserOnOff)
@@ -218,7 +213,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
     getDevice(LaserDeviceInterface.class, pLaserIndex).getLaserOnVariable().set(pLaserOnOff);
   }
 
-  ;
 
   @Override
   public boolean getLO(int pLaserIndex)
@@ -231,8 +225,6 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
   {
     getDevice(LaserDeviceInterface.class, pLaserIndex).getTargetPowerInMilliWattVariable().set(pLaserPowerInmW);
   }
-
-  ;
 
   @Override
   public double getLP(int pLaserIndex)
