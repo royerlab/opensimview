@@ -41,8 +41,6 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
   private Object mLock = new Object();
 
-  private DcamImageSequence mSequence;
-
   static
   {
     if (!DcamLibrary.initialize()) LoggingFeature.getLoggerStatic().severe("Could not initialize Dcam library.");
@@ -154,8 +152,8 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
       long lKeptPlanesDepth = countKeptPlanes(pQueue.getVariableQueue(pQueue.getKeepPlaneVariable()));
 
-      if (mSequence == null || mSequence.getWidth() != lWidth || mSequence.getHeight() != lHeight || mSequence.getDepth() != lAcquiredPlanesDepth)
-        mSequence = new DcamImageSequence(mDcamDevice, 2, lWidth, lHeight, lAcquiredPlanesDepth);
+      //if (mSequence == null || mSequence.getWidth() != lWidth || mSequence.getHeight() != lHeight || mSequence.getDepth() != lAcquiredPlanesDepth)
+      //  mSequence = new DcamImageSequence(mDcamDevice, 2, lWidth, lHeight, lAcquiredPlanesDepth);
 
       final Future<Boolean> lFuture = acquisition(pQueue, lExposureInSeconds, lWidth, lHeight, lAcquiredPlanesDepth, lKeptPlanesDepth);
 
@@ -166,43 +164,48 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
   private Future<Boolean> acquisition(HamStackCameraQueue pQueue, double lExposureInSeconds, long pWidth, long pHeight, long pAcquiredPlanesDepth, long pKeptPlanesDepth)
   {
-
-    Future<Boolean> lAcquisitionResult = mDcamSequenceAcquisition.acquireSequenceAsync(lExposureInSeconds, mSequence);
-
-    Callable<Boolean> lCallable = () ->
+    Callable<Boolean> lAcquistionCallable = () ->
     {
 
-      StackInterface lAcquiredStack;
+      DcamImageSequence lSequence = new DcamImageSequence(mDcamDevice, 2, pWidth, pHeight, pAcquiredPlanesDepth);
+      Future<Boolean> lAcquisitionResultFuture = mDcamSequenceAcquisition.acquireSequenceAsync(lExposureInSeconds, lSequence);
+      Boolean lAcquisitionResult = lAcquisitionResultFuture.get();
 
-      if (lAcquisitionResult == null && pAcquiredPlanesDepth == 0)
+      Callable<Boolean> lSequenceProcessingCallable = () ->
       {
-        lAcquiredStack = new EmptyStack();
+        StackInterface lAcquiredStack;
+
+        if (lAcquisitionResult == null && pAcquiredPlanesDepth == 0)
+        {
+          lAcquiredStack = new EmptyStack();
+        }
+        else
+        {
+          StackRequest lRecyclerRequest = StackRequest.build(pWidth, pHeight, pKeptPlanesDepth);
+          lAcquiredStack = getStackRecycler().getOrWait(cWaitTime, TimeUnit.MILLISECONDS, lRecyclerRequest);
+          if (lAcquiredStack == null) return false;
+          ArrayList<Boolean> lKeepPlaneList = pQueue.getVariableQueue(pQueue.getKeepPlaneVariable());
+          lSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
+        }
+
+        lAcquiredStack.setMetaData(pQueue.getMetaDataVariable().get().clone());
+
+        lAcquiredStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
+        lAcquiredStack.getMetaData().setIndex(getCurrentIndexVariable().get());
+
+        getStackVariable().setAsync(lAcquiredStack);
+
         return true;
-      } else
-      {
-        Boolean lResult = lAcquisitionResult.get();
-        if (!lResult) return false;
+      };
 
-        StackRequest lRecyclerRequest = StackRequest.build(pWidth, pHeight, pKeptPlanesDepth);
-        lAcquiredStack = getStackRecycler().getOrWait(cWaitTime, TimeUnit.MILLISECONDS, lRecyclerRequest);
+      // Process stack if available:
+      if (lAcquisitionResult)
+        executeAsynchronously(lSequenceProcessingCallable);
 
-        if (lAcquiredStack == null) return false;
-
-        ArrayList<Boolean> lKeepPlaneList = pQueue.getVariableQueue(pQueue.getKeepPlaneVariable());
-
-        mSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
-      }
-
-      lAcquiredStack.setMetaData(pQueue.getMetaDataVariable().get().clone());
-
-      lAcquiredStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
-      lAcquiredStack.getMetaData().setIndex(getCurrentIndexVariable().get());
-
-      getStackVariable().setAsync(lAcquiredStack);
-      return true;
+      return lAcquisitionResult;
     };
 
-    final Future<Boolean> lFuture = executeAsynchronously(lCallable);
+    final Future<Boolean> lFuture = executeAsynchronously(lAcquistionCallable);
 
     return lFuture;
   }
