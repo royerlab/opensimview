@@ -176,15 +176,11 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
             lContiguousMemory = downscale(lContiguousMemory, lWidth, lHeight, lDepth);
             lWidth /= 2;
             lHeight /= 2;
+            lVoxelWidth *= 2;
+            lVoxelHeight *= 2;
           }
 
           mClearVolumeRenderer.setVolumeDataBuffer(lChannel, lContiguousMemory, lWidth, lHeight, lDepth, lVoxelWidth, lVoxelHeight, lVoxelDepth);
-
-          // FIXME
-          /*
-          pStack.getVoxelSizeInRealUnits(0),
-          pStack.getVoxelSizeInRealUnits(1),
-          pStack.getVoxelSizeInRealUnits(2)); /**/
 
           if (mWaitForLastChannel.get() && ((lChannel + 1) % mClearVolumeRenderer.getNumberOfRenderLayers()) == 0)
           {
