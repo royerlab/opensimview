@@ -54,14 +54,12 @@ public class NIRIOSignalGenerator extends SignalGeneratorBase implements SignalG
     lCurrentThread.setPriority(Thread.MAX_PRIORITY);
     mTriggerVariable.set(true);
 
-    prependTransitionMeasure(pScore, getTransitionDurationInNanosecondsVariable().get()
-        , TimeUnit.NANOSECONDS);
+    prependTransitionMeasure(pScore, getTransitionDurationInNanosecondsVariable().get(), TimeUnit.NANOSECONDS);
 
     NIRIOScoreCompiler.compile(mNIRIOCompiledScore, pScore);
 
     System.out.println("Start playing score...");
-    boolean lPlayed =
-        mDirettore.play(mNIRIOCompiledScore.getDeltaTimeBuffer().getContiguousMemory().getBridJPointer(Integer.class), mNIRIOCompiledScore.getNumberOfTimePointsBuffer().getContiguousMemory().getBridJPointer(Integer.class), mNIRIOCompiledScore.getSyncBuffer().getContiguousMemory().getBridJPointer(Integer.class), toIntExact(mNIRIOCompiledScore.getNumberOfMeasures()), mNIRIOCompiledScore.getScoreBuffer().getContiguousMemory().getBridJPointer(Short.class));
+    boolean lPlayed = mDirettore.play(mNIRIOCompiledScore.getDeltaTimeBuffer().getContiguousMemory().getBridJPointer(Integer.class), mNIRIOCompiledScore.getNumberOfTimePointsBuffer().getContiguousMemory().getBridJPointer(Integer.class), mNIRIOCompiledScore.getSyncBuffer().getContiguousMemory().getBridJPointer(Integer.class), toIntExact(mNIRIOCompiledScore.getNumberOfMeasures()), mNIRIOCompiledScore.getScoreBuffer().getContiguousMemory().getBridJPointer(Short.class));
     System.out.println("Stop playing score...");
 
     lCurrentThread.setPriority(lCurrentThreadPriority);

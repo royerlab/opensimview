@@ -23,10 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author royer
  */
-public class RawFileStackSink extends FileStackBase implements FileStackInterface,
-                                                               FileStackSinkInterface,
-                                                               AutoCloseable,
-                                                               LoggingFeature
+public class RawFileStackSink extends FileStackBase implements FileStackInterface, FileStackSinkInterface, AutoCloseable, LoggingFeature
 {
 
   private final AtomicLong mFirstTimePointAbsoluteNanoSeconds = new AtomicLong();
@@ -82,7 +79,7 @@ public class RawFileStackSink extends FileStackBase implements FileStackInterfac
 
   protected void writeStackData(long pIndex, String pChannel, final StackInterface pStack) throws IOException
   {
-    String lFileName = String.format(StackSinkSourceInterface.cFormat, pIndex);
+    String lFileName = String.format(StackSinkSourceInterface.cRawFormat, pIndex);
     File lFile = new File(getChannelFolder(pChannel), lFileName);
     FileChannel lBinnaryFileChannel = getFileChannel(lFile, false);
     FragmentedMemoryInterface lFragmentedMemory = pStack.getFragmentedMemory();
@@ -91,8 +88,8 @@ public class RawFileStackSink extends FileStackBase implements FileStackInterfac
 
     lBinnaryFileChannel.force(false);
     lBinnaryFileChannel.close();
-    
-    info("Finished writing stack: "+ pStack + " to raw file stack sink");
+
+    info("Finished writing stack: " + pStack + " to raw file stack sink");
   }
 
   protected void writeIndexFileEntry(long pIndex, String pChannel, final StackInterface pStack) throws IOException

@@ -1,10 +1,8 @@
 package clearcontrol.stack.sourcesink.sink;
 
 import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorBase;
-import clearcontrol.core.concurrent.timing.ElapsedTime;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.stack.StackInterface;
-import coremem.ContiguousMemoryInterface;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
@@ -57,15 +55,6 @@ public class AsynchronousFileStackSinkAdapter implements FileStackSinkInterface
         String lChannel = pPair.getLeft();
         StackInterface lStack = pPair.getRight();
         mStackSink.appendStack(lChannel, lStack);
-
-        // Remove zero level:
-        ContiguousMemoryInterface lContiguousMemory = lStack.getContiguousMemory();
-        final double
-            lElapsedTimeInMilliseconds =
-            ElapsedTime.measure("removeZeroLevel",
-                                () -> removeZeroLevel(lContiguousMemory));
-        info("Zero-level removal took %.2f milliseconds", lElapsedTimeInMilliseconds);
-
         lStack.release();
         if (mFinishedProcessingStackVariable != null)
         {
@@ -162,16 +151,5 @@ public class AsynchronousFileStackSinkAdapter implements FileStackSinkInterface
     mStackSink.close();
   }
 
-  private static final char cZeroLevel = 100;
 
-  private static void removeZeroLevel(ContiguousMemoryInterface lContiguousMemory)
-  {
-    long lLengthInUINT16 = lContiguousMemory.getSizeInBytes() / 2;
-    for (long i = 0; i < lLengthInUINT16; i++)
-    {
-      int value = (0xFFFF & lContiguousMemory.getCharAligned(i));
-      char lValue = (char) (Math.max(cZeroLevel, value) - cZeroLevel);
-      lContiguousMemory.setCharAligned(i, lValue);
-    }
-  }
 }

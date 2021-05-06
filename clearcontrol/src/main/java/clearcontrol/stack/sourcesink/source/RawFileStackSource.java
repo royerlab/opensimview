@@ -76,7 +76,7 @@ public class RawFileStackSource extends FileStackBase implements FileStackSource
 
       final StackInterface lStack = mStackRecycler.getOrWait(pTime, pTimeUnit, lStackRequest);
 
-      String lFileName = String.format(StackSinkSourceInterface.cFormat, pStackIndex);
+      String lFileName = String.format(StackSinkSourceInterface.cRawFormat, pStackIndex);
       File lFile = new File(getChannelFolder(pChannel), lFileName);
 
       if (!lFile.exists()) return null;

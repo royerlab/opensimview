@@ -31,7 +31,7 @@ public class CompressedStackSink extends RawFileStackSink
 
   protected void writeStackData(long pIndex, String pChannel, final StackInterface pStack) throws IOException
   {
-    String lFileName = String.format(StackSinkSourceInterface.cFormat, pIndex);
+    String lFileName = String.format(StackSinkSourceInterface.cCompressedFormat, pIndex);
     File lFile = new File(getChannelFolder(pChannel), lFileName);
     FileChannel lBinaryFileChannel = getFileChannel(lFile, false);
     ContiguousMemoryInterface lContiguousMemory = pStack.getContiguousMemory();
@@ -48,7 +48,7 @@ public class CompressedStackSink extends RawFileStackSink
     lBinaryFileChannel.force(false);
     lBinaryFileChannel.close();
 
-    info("Finished writing stack: "+ pStack + " to compressed file stack sink");
+    info("Finished writing stack: " + pStack + " to compressed file stack sink");
   }
 
 

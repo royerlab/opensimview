@@ -3,7 +3,6 @@ package clearcontrol.timelapse.instructions;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.stack.StackInterface;
 
 /**
  * This instructions acquires a single image stack for a defined camera and light sheet.

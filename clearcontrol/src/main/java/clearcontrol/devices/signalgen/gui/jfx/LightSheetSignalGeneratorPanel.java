@@ -1,7 +1,7 @@
 package clearcontrol.devices.signalgen.gui.jfx;
 
-import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 import clearcontrol.devices.signalgen.LightSheetSignalGeneratorDevice;
+import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 import javafx.scene.control.CheckBox;
 
 /**

@@ -27,19 +27,19 @@ public interface StackSinkSourceInterface
   public static final String cDefaultFileExtension = ".raw";
 
   /**
-   * Filename suffix for stacks written to files using sqeazy
+   * Filename suffix for stacks written to files using blosc compression
    */
-  public static final String cSqeazyFileExtension = ".sqy";
-
-  /**
-   * Filename suffix for stacks written to files using sqeazy in HDF5 format
-   */
-  public static final String cSqeazyHDF5FileExtension = ".h5";
+  public static final String cCompressedFileExtension = ".craw";
 
   /**
    * Format used to write the stacks filenames
    */
-  public static final String cFormat = cBasename + cDefaultFileExtension;
+  public static final String cRawFormat = cBasename + cDefaultFileExtension;
+
+  /**
+   * Format used to write the stacks filenames
+   */
+  public static final String cCompressedFormat = cBasename + cCompressedFileExtension;
 
   /**
    * Returns the list of available channels for this source or sink

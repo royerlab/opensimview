@@ -4,6 +4,8 @@ import clearcontrol.core.device.VirtualDevice;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.cameras.devices.sim.StackCameraDeviceSimulator;
+import clearcontrol.stack.StackInterface;
+import coremem.ContiguousMemoryInterface;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -149,4 +151,17 @@ public abstract class CameraDeviceBase extends VirtualDevice implements CameraDe
     return mTriggerVariable;
   }
 
+  private static final int cZeroLevel = 100;
+
+  protected static void removeZeroLevel(StackInterface pStack)
+  {
+    ContiguousMemoryInterface lContiguousMemory = pStack.getContiguousMemory();
+    long lVolume = pStack.getVolume();
+    for (long i = 0; i < lVolume; i++)
+    {
+      int value = (0xFFFF & lContiguousMemory.getCharAligned(i));
+      char lValue = (char) (Math.max(cZeroLevel, value) - cZeroLevel);
+      lContiguousMemory.setCharAligned(i, lValue);
+    }
+  }
 }

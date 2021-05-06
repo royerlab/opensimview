@@ -46,7 +46,7 @@ public class CompressedStackSource extends RawFileStackSource
 
       final StackInterface lStack = mStackRecycler.getOrWait(pTime, pTimeUnit, lStackRequest);
 
-      String lFileName = String.format(StackSinkSourceInterface.cFormat, pStackIndex);
+      String lFileName = String.format(StackSinkSourceInterface.cCompressedFormat, pStackIndex);
       File lFile = new File(getChannelFolder(pChannel), lFileName);
 
       if (!lFile.exists()) return null;

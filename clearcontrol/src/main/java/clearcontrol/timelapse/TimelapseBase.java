@@ -26,8 +26,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import static clearcontrol.stack.metadata.MetaDataView.getCxLyString;
-
 /**
  * Base implementation providing common fields and methods for all Timelapse
  * implementations ? extends FileStackSinkInterface

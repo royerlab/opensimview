@@ -15,9 +15,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author royer
  */
-public abstract class SignalGeneratorBase extends VirtualDevice implements SignalGeneratorInterface,
-                                                                           AsynchronousExecutorFeature,
-                                                                           LoggingFeature
+public abstract class SignalGeneratorBase extends VirtualDevice implements SignalGeneratorInterface, AsynchronousExecutorFeature, LoggingFeature
 {
 
   protected final Variable<Boolean> mTriggerVariable = new Variable<Boolean>("Trigger", false);
@@ -82,7 +80,7 @@ public abstract class SignalGeneratorBase extends VirtualDevice implements Signa
       lCurrentThread.setPriority(Thread.MAX_PRIORITY);
       mIsPlaying = true;
       final boolean lPlayed = playScore(lQueuedScore);
-      info("Finished playing signal generator queue of duration: "+lQueuedScore.getDuration(TimeUnit.MILLISECONDS));
+      info("Finished playing signal generator queue of duration: " + lQueuedScore.getDuration(TimeUnit.MILLISECONDS));
       mIsPlaying = false;
       lCurrentThread.setPriority(lCurrentThreadPriority);
       return lPlayed;

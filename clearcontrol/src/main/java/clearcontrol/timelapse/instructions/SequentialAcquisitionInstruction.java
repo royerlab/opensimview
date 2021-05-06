@@ -4,7 +4,6 @@ import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.instructions.InstructionInterface;
-import clearcontrol.processor.MetaDataFusion;
 import clearcontrol.stack.metadata.*;
 import clearcontrol.state.AcquisitionType;
 import clearcontrol.state.InterpolatedAcquisitionState;

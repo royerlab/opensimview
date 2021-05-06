@@ -1,9 +1,7 @@
 package clearcontrol.devices.cameras.devices.hamamatsu;
 
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
-import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.core.concurrent.timing.ElapsedTime;
-import clearcontrol.core.concurrent.timing.ExecuteMinDuration;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.openclose.OpenCloseDeviceInterface;
 import clearcontrol.core.log.LoggingFeature;
@@ -15,7 +13,6 @@ import clearcontrol.devices.cameras.TriggerTypeInterface;
 import clearcontrol.stack.EmptyStack;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
-import coremem.ContiguousMemoryInterface;
 import dcamj2.DcamDevice;
 import dcamj2.DcamLibrary;
 import dcamj2.DcamSequenceAcquisition;
@@ -29,8 +26,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author royer
  */
-public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> implements StackCameraDeviceInterface<HamStackCameraQueue>,
-                                                                                          OpenCloseDeviceInterface, LoggingFeature, AsynchronousExecutorFeature
+public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> implements StackCameraDeviceInterface<HamStackCameraQueue>, OpenCloseDeviceInterface, LoggingFeature, AsynchronousExecutorFeature
 {
 
   private static final long cWaitTime = 1000;
@@ -178,8 +174,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
         if (lAcquisitionResult == null && pAcquiredPlanesDepth == 0)
         {
           lAcquiredStack = new EmptyStack();
-        }
-        else
+        } else
         {
           StackRequest lRecyclerRequest = StackRequest.build(pWidth, pHeight, pKeptPlanesDepth);
           lAcquiredStack = getStackRecycler().getOrWait(cWaitTime, TimeUnit.MILLISECONDS, lRecyclerRequest);
@@ -188,8 +183,12 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
           lSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
         }
 
-        lAcquiredStack.setMetaData(pQueue.getMetaDataVariable().get().clone());
+        // Remove zero level:
+        final double lElapsedTimeInMilliseconds = ElapsedTime.measure("removeZeroLevel", () -> removeZeroLevel(lAcquiredStack));
+        info("Zero-level removal took %.2f milliseconds", lElapsedTimeInMilliseconds);
 
+        // SDet metadata:
+        lAcquiredStack.setMetaData(pQueue.getMetaDataVariable().get().clone());
         lAcquiredStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
         lAcquiredStack.getMetaData().setIndex(getCurrentIndexVariable().get());
 
@@ -199,8 +198,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
       };
 
       // Process stack if available:
-      if (lAcquisitionResult)
-        executeAsynchronously(lSequenceProcessingCallable);
+      if (lAcquisitionResult) executeAsynchronously(lSequenceProcessingCallable);
 
       return lAcquisitionResult;
     };
@@ -209,7 +207,6 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
     return lFuture;
   }
-
 
 
   @Override

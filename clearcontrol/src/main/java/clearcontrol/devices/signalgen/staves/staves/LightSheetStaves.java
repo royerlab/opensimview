@@ -25,8 +25,7 @@ public class LightSheetStaves implements LoggingFeature
 
   private LightSheetQueue mLightSheetQueue;
 
-  private final BoundedVariable<Double> mLineExposureInMicrosecondsVariable =
-      new BoundedVariable<Double>("LineExposureInMicroseconds", 9.744);
+  private final BoundedVariable<Double> mLineExposureInMicrosecondsVariable = new BoundedVariable<Double>("LineExposureInMicroseconds", 9.744);
 
   private BezierStave mBeforeExposureYStave, mBeforeExposureZStave;
 

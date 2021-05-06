@@ -1,13 +1,13 @@
 package clearcontrol.component.lightsheet.demo;
 
 import clearcontrol.component.lightsheet.LightSheet;
+import clearcontrol.devices.signalgen.LightSheetSignalGeneratorDevice;
+import clearcontrol.devices.signalgen.LightSheetSignalGeneratorQueue;
 import clearcontrol.devices.signalgen.SignalGeneratorInterface;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
 import clearcontrol.devices.signalgen.devices.sim.SignalGeneratorSimulatorDevice;
 import clearcontrol.devices.signalgen.gui.swing.score.ScoreVisualizerJFrame;
 import clearcontrol.devices.signalgen.score.ScoreInterface;
-import clearcontrol.devices.signalgen.LightSheetSignalGeneratorDevice;
-import clearcontrol.devices.signalgen.LightSheetSignalGeneratorQueue;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
