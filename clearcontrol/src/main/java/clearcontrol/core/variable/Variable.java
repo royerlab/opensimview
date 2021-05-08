@@ -25,7 +25,7 @@ public class Variable<O> extends VariableBase<O> implements VariableSyncInterfac
 
   static
   {
-    sAsyncExecutor = ClearControlExecutors.getOrCreateThreadPoolExecutor(Variable.class, Thread.NORM_PRIORITY, 1, Runtime.getRuntime().availableProcessors() / 2, Integer.MAX_VALUE);
+    sAsyncExecutor = ClearControlExecutors.getOrCreateThreadPoolExecutor(Variable.class, Thread.NORM_PRIORITY, 4, Runtime.getRuntime().availableProcessors() / 2, Integer.MAX_VALUE);
   }
 
   // That where we store the value:

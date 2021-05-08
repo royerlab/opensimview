@@ -1,7 +1,9 @@
 package clearcontrol.devices.cameras.devices.hamamatsu;
 
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
+import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.core.concurrent.timing.ElapsedTime;
+import clearcontrol.core.concurrent.timing.ExecuteMinDuration;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.openclose.OpenCloseDeviceInterface;
 import clearcontrol.core.log.LoggingFeature;
@@ -13,10 +15,14 @@ import clearcontrol.devices.cameras.TriggerTypeInterface;
 import clearcontrol.stack.EmptyStack;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
+import coremem.ContiguousMemoryInterface;
+import coremem.recycling.BasicRecycler;
 import dcamj2.DcamDevice;
 import dcamj2.DcamLibrary;
 import dcamj2.DcamSequenceAcquisition;
 import dcamj2.imgseq.DcamImageSequence;
+import dcamj2.imgseq.DcamImageSequenceFactory;
+import dcamj2.imgseq.DcamImageSequenceRequest;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -26,16 +32,21 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author royer
  */
-public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> implements StackCameraDeviceInterface<HamStackCameraQueue>, OpenCloseDeviceInterface, LoggingFeature, AsynchronousExecutorFeature
+public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> implements StackCameraDeviceInterface<HamStackCameraQueue>,
+                                                                                          OpenCloseDeviceInterface, LoggingFeature, AsynchronousExecutorFeature
 {
+
+  private static final char cZeroLevel = 100;
 
   private static final long cWaitTime = 1000;
 
   private final DcamDevice mDcamDevice;
 
   private final DcamSequenceAcquisition mDcamSequenceAcquisition;
+  private final BasicRecycler<DcamImageSequence, DcamImageSequenceRequest> mSequenceRecycler;
 
   private Object mLock = new Object();
+
 
   static
   {
@@ -81,6 +92,9 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
     mTemplateQueue.setStackCamera(this);
 
     mDcamDevice = pDcamDevice;
+
+    mSequenceRecycler = new BasicRecycler<DcamImageSequence, DcamImageSequenceRequest>(new DcamImageSequenceFactory(), 40);
+
     mDcamSequenceAcquisition = new DcamSequenceAcquisition(mDcamDevice);
   }
 
@@ -160,54 +174,36 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
   private Future<Boolean> acquisition(HamStackCameraQueue pQueue, double lExposureInSeconds, long pWidth, long pHeight, long pAcquiredPlanesDepth, long pKeptPlanesDepth)
   {
-    Callable<Boolean> lAcquistionCallable = () ->
+    final DcamImageSequenceRequest lSequenceRequest = DcamImageSequenceRequest.build(mDcamDevice,2, pWidth, pHeight, pAcquiredPlanesDepth, true);
+    final DcamImageSequence lSequence = mSequenceRecycler.getOrWait(cWaitTime, TimeUnit.MILLISECONDS, lSequenceRequest);
+
+    //DcamImageSequence lSequence = new DcamImageSequence(mDcamDevice, 2, pWidth, pHeight, pAcquiredPlanesDepth);
+
+    Callable<Boolean> lCallable = () ->
     {
+      StackRequest lRecyclerRequest = StackRequest.build(pWidth, pHeight, pKeptPlanesDepth);
+      StackInterface lAcquiredStack = getStackRecycler().getOrWait(cWaitTime, TimeUnit.MILLISECONDS, lRecyclerRequest);
 
-      DcamImageSequence lSequence = new DcamImageSequence(mDcamDevice, 2, pWidth, pHeight, pAcquiredPlanesDepth);
-      Future<Boolean> lAcquisitionResultFuture = mDcamSequenceAcquisition.acquireSequenceAsync(lExposureInSeconds, lSequence);
-      Boolean lAcquisitionResult = lAcquisitionResultFuture.get();
+      if (lAcquiredStack == null) return false;
 
-      Callable<Boolean> lSequenceProcessingCallable = () ->
-      {
-        StackInterface lAcquiredStack;
+      ArrayList<Boolean> lKeepPlaneList = pQueue.getVariableQueue(pQueue.getKeepPlaneVariable());
 
-        if (lAcquisitionResult == null && pAcquiredPlanesDepth == 0)
-        {
-          lAcquiredStack = new EmptyStack();
-        } else
-        {
-          StackRequest lRecyclerRequest = StackRequest.build(pWidth, pHeight, pKeptPlanesDepth);
-          lAcquiredStack = getStackRecycler().getOrWait(cWaitTime, TimeUnit.MILLISECONDS, lRecyclerRequest);
-          if (lAcquiredStack == null) return false;
-          ArrayList<Boolean> lKeepPlaneList = pQueue.getVariableQueue(pQueue.getKeepPlaneVariable());
-          lSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
-        }
+      lSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
+      lSequence.release();
 
-        // Remove zero level:
-        final double lElapsedTimeInMilliseconds = ElapsedTime.measure("removeZeroLevel", () -> removeZeroLevel(lAcquiredStack));
-        info("Zero-level removal took %.2f milliseconds", lElapsedTimeInMilliseconds);
+      lAcquiredStack.setMetaData(pQueue.getMetaDataVariable().get().clone());
 
-        // SDet metadata:
-        lAcquiredStack.setMetaData(pQueue.getMetaDataVariable().get().clone());
-        lAcquiredStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
-        lAcquiredStack.getMetaData().setIndex(getCurrentIndexVariable().get());
+      lAcquiredStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
+      lAcquiredStack.getMetaData().setIndex(getCurrentIndexVariable().get());
 
-        getStackVariable().setAsync(lAcquiredStack);
-
-        return true;
-      };
-
-      // Process stack if available:
-      if (lAcquisitionResult) executeAsynchronously(lSequenceProcessingCallable);
-
-      return lAcquisitionResult;
+      getStackVariable().setAsync(lAcquiredStack);
+      return true;
     };
 
-    final Future<Boolean> lFuture = executeAsynchronously(lAcquistionCallable);
+    Future<Boolean> lAcquisitionResult = mDcamSequenceAcquisition.acquireSequenceAsync(lExposureInSeconds, lSequence, lCallable);
 
-    return lFuture;
+    return lAcquisitionResult;
   }
-
 
   @Override
   public void reopen()

@@ -61,7 +61,7 @@ public class DcamJDemo
     for (int i = 0; i < 15; i++)
     {
       System.out.println("Acquiring single image: #" + i);
-      assertTrue(lDcamSequenceAcquisition.acquireSequenceAsync(0.01, 100.0, lSequence1).get());
+      assertTrue(lDcamSequenceAcquisition.acquireSequenceAsync(0.01, 100.0, lSequence1, null).get());
     }
 
     lDcamDevice.close();
@@ -103,13 +103,13 @@ public class DcamJDemo
     System.out.println("FIRST SEQUENCE");
     DcamImageSequence lSequence1 = new DcamImageSequence(lDcamDevice, 2, lWidth, lHeight, lDepth);
 
-    assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence1));
+    assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence1, null));
 
     System.out.println("SECOND SEQUENCE");
     DcamImageSequence lSequence2 = new DcamImageSequence(lDcamDevice, 2, lWidth / 2, lHeight / 2, lDepth / 2);
     lDcamSequenceAcquisition.mDebug = true;
 
-    assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence2));
+    assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence2, null));
 
     lDcamDevice.close();
 
@@ -162,8 +162,8 @@ public class DcamJDemo
     lDcamSequenceAcquisition1.mDebug = true;
 
 
-    Future<Boolean> lFuture0 = lDcamSequenceAcquisition0.acquireSequenceAsync(0.01, lSequence0);
-    Future<Boolean> lFuture1 = lDcamSequenceAcquisition1.acquireSequenceAsync(0.01, lSequence1);
+    Future<Boolean> lFuture0 = lDcamSequenceAcquisition0.acquireSequenceAsync(0.01, lSequence0, null);
+    Future<Boolean> lFuture1 = lDcamSequenceAcquisition1.acquireSequenceAsync(0.01, lSequence1, null);
 
     assertTrue(lFuture0.get());
     assertTrue(lFuture1.get());
@@ -207,7 +207,7 @@ public class DcamJDemo
 
     DcamImageSequence lSequence = new DcamImageSequence(lDcamDevice, 2, lWidth, lHeight, lDepth);
 
-    assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence));
+    assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence, null));
 
     lDcamDevice.close();
 
@@ -248,7 +248,7 @@ public class DcamJDemo
 
       System.out.println(lSequence);
 
-      assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence));
+      assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence, null));
 
     }
 
@@ -301,7 +301,7 @@ public class DcamJDemo
 
       System.out.println(lSequence);
 
-      assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence));
+      assertTrue(lDcamSequenceAcquisition.acquireSequence(0.01, lSequence, null));
 
       // we are supposed to do something here with the image sequence, and then
       // release it..

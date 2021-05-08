@@ -35,7 +35,7 @@ public class CompressedBuffer extends ContiguousBuffer
 
   public CompressedBuffer(ContiguousMemoryInterface pCompressedMemory)
   {
-    this(pCompressedMemory, "zstd", 3, -1);
+    this(pCompressedMemory, "lz4", 3, -1);
   }
 
   /**
