@@ -184,7 +184,7 @@ public class DoradoMain extends Application implements LoggingFeature
 
         info("Using device %s for simulation (Simbryo) \n", lSimulationContext.getDevice());
 
-        LightSheetMicroscopeSimulationDevice lSimulatorDevice = SimulationUtils.getSimulatorDevice(lSimulationContext, pNumberOfDetectionArms, pNumberOfLightSheets, 2048, 11, 320, 320, 320, false);
+        LightSheetMicroscopeSimulationDevice lSimulatorDevice = SimulationUtils.getSimulatorDevice(lSimulationContext, pNumberOfDetectionArms, pNumberOfLightSheets, 2048, 11, 512, 512, 512, false);
 
         lDoradoMicroscope.addSimulatedDevices(false, false, true, lSimulatorDevice);
       } else

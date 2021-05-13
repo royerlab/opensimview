@@ -51,6 +51,13 @@ public class LightSheetMicroscopeGUI extends MicroscopeGUI
   {
     super(pLightSheetMicroscope, LSMNodeType.values(), pPrimaryStage, p2DDisplay, p3DDisplay);
 
+    for (int c = 0; c < pLightSheetMicroscope.getNumberOfDetectionArms(); c++)
+      for (int i = 0; i < pLightSheetMicroscope.getNumberOfLightSheets(); i++)
+      {
+        String lChannel = "C" + c + "L" + i;
+        add3DDisplayChannel(lChannel);
+      }
+
     addPanelMappingEntry(LightSheetInterface.class, LightSheetPanel.class, LSMNodeType.LightSheet);
 
     addPanelMappingEntry(DetectionArmInterface.class, DetectionArmPanel.class, LSMNodeType.DetectionArm);

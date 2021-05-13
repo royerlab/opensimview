@@ -29,7 +29,7 @@ public class DcamDevice extends DcamBase implements AutoCloseable
   // properties cache:
   private volatile double mExposure = -1;
   private volatile boolean mDefectCorrectionMode = false;
-  private volatile long mWidth=-1, mHeight=-1, mX=-1, mY=-1;
+  private volatile long mWidth = -1, mHeight = -1, mX = -1, mY = -1;
 
 
   /**
@@ -175,9 +175,8 @@ public class DcamDevice extends DcamBase implements AutoCloseable
    */
   public void setExposure(final double pExposure)
   {
-    if (mExposure != pExposure)
-      mExposure = pExposure;
-      getProperties().setDoublePropertyValue(DCAMIDPROP.DCAM_IDPROP_EXPOSURETIME, pExposure);
+    if (mExposure != pExposure) mExposure = pExposure;
+    getProperties().setDoublePropertyValue(DCAMIDPROP.DCAM_IDPROP_EXPOSURETIME, pExposure);
 
   }
 
@@ -212,7 +211,7 @@ public class DcamDevice extends DcamBase implements AutoCloseable
     final long lWidth = adjustWidthHeight(pCenteredWidth, 4);
     final long lHeight = adjustWidthHeight(pCenteredHeight, 4);
 
-    if (lWidth!=mWidth || lHeight!=mHeight)
+    if (lWidth != mWidth || lHeight != mHeight)
     {
       mWidth = lWidth;
       mHeight = lHeight;
@@ -442,9 +441,8 @@ public class DcamDevice extends DcamBase implements AutoCloseable
    */
   public void setDefectCorectionMode(final boolean pDefectCorrections)
   {
-    if (mDefectCorrectionMode != pDefectCorrections)
-      mDefectCorrectionMode = pDefectCorrections;
-      getProperties().setModePropertyValue(DCAMIDPROP.DCAM_IDPROP_DEFECTCORRECT_MODE, pDefectCorrections ? DCAMPROPMODEVALUE.DCAMPROP_MODE__ON : DCAMPROPMODEVALUE.DCAMPROP_MODE__OFF);
+    if (mDefectCorrectionMode != pDefectCorrections) mDefectCorrectionMode = pDefectCorrections;
+    getProperties().setModePropertyValue(DCAMIDPROP.DCAM_IDPROP_DEFECTCORRECT_MODE, pDefectCorrections ? DCAMPROPMODEVALUE.DCAMPROP_MODE__ON : DCAMPROPMODEVALUE.DCAMPROP_MODE__OFF);
   }
 
   /**

@@ -232,7 +232,6 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
         lStackVariable.sendUpdatesToInstead(mStackToSaveVariable);
       }
 
-
       initAdaptiveEngine();
 
       super.run();
@@ -240,23 +239,9 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
       // Disconnecting stack cameras to stack sink:
       for (int c = 0; c < mMicroscope.getNumberOfDevices(StackCameraDeviceInterface.class); c++)
       {
-        Variable<StackInterface> lStackVariable = mMicroscope.getCameraStackVariable(c);
+        Variable<StackInterface> lStackVariable = mMicroscope.getTerminatorStackVariable(c);
         lStackVariable.doNotSendUpdatesTo(mStackToSaveVariable);
       }
-
-//      // Stop async sink:
-//      if (getCurrentFileStackSinkVariable().get() != null)
-//      {
-//        try
-//        {
-//          getCurrentFileStackSinkVariable().get().close();
-//        } catch (Exception e)
-//        {
-//          e.printStackTrace();
-//        }
-//      }
-
-      //getCurrentFileStackSinkVariable().set((AsynchronousFileStackSinkAdapter) null);
 
     } catch (InstantiationException e)
     {

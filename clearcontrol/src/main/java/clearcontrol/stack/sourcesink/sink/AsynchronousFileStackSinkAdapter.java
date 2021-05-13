@@ -3,10 +3,12 @@ package clearcontrol.stack.sourcesink.sink;
 import clearcontrol.core.concurrent.asyncprocs.AsynchronousProcessorBase;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.stack.StackInterface;
+import clearcontrol.stack.metadata.MetaDataView;
 import coremem.ContiguousMemoryInterface;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class AsynchronousFileStackSinkAdapter implements FileStackSinkInterface
 {
 
+  private final ConcurrentHashMap.KeySetView<String, Boolean> mStackKeySet;
   private FileStackSinkInterface mStackSink;
 
   private AsynchronousProcessorBase<Pair<String, StackInterface>, StackInterface> mAsynchronousConversionProcessor;
@@ -49,19 +52,30 @@ public class AsynchronousFileStackSinkAdapter implements FileStackSinkInterface
     super();
     mStackSink = pStackSink;
 
+    mStackKeySet = ConcurrentHashMap.newKeySet();
+
     mAsynchronousConversionProcessor = new AsynchronousProcessorBase<Pair<String, StackInterface>, StackInterface>("AsynchronousStackSinkAdapter", pMaxQueueSize)
     {
       @Override
       public StackInterface process(final Pair<String, StackInterface> pPair)
       {
         String lChannel = pPair.getLeft();
-        StackInterface lStack = pPair.getRight();
-        removeZeroLevel(lStack.getContiguousMemory());
-        mStackSink.appendStack(lChannel, lStack);
-        lStack.release();
-        if (mFinishedProcessingStackVariable != null)
+        long lTimePointns = pPair.getRight().getMetaData().getTimeStampInNanoseconds();
+        String lCameraLightSheet = MetaDataView.getCxLyString(pPair.getRight().getMetaData());
+        String lKey = lChannel + lCameraLightSheet + lTimePointns;
+
+        // We make sure to filter duplicates
+        if (!mStackKeySet.contains(lKey))
         {
-          mFinishedProcessingStackVariable.set(lStack);
+          mStackKeySet.add(lKey);
+          StackInterface lStack = pPair.getRight();
+          removeZeroLevel(lStack.getContiguousMemory());
+          mStackSink.appendStack(lChannel, lStack);
+          lStack.release();
+          if (mFinishedProcessingStackVariable != null)
+          {
+            mFinishedProcessingStackVariable.set(lStack);
+          }
         }
         return null;
       }

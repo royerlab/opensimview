@@ -101,7 +101,7 @@ public class Stack2DDisplay extends VirtualDevice implements StackDisplayInterfa
       @Override
       public void mouseDragged(MouseEvent pMouseEvent)
       {
-        if (pMouseEvent.isAltDown() && pMouseEvent.isButtonDown(1))
+        if (pMouseEvent.isButtonDown(1))
         {
           final double nx = ((double) pMouseEvent.getX()) / mVideoWindow.getWindowWidth();
           mStackSliceNormalizedIndex.set(nx);
@@ -358,7 +358,7 @@ public class Stack2DDisplay extends VirtualDevice implements StackDisplayInterfa
       pStack.release();
       return;
     }
-    if (mOutputStackVariable != null) mOutputStackVariable.set(pStack);
+    if (mOutputStackVariable != null) mOutputStackVariable.setAsync(pStack);
   }
 
   @Override

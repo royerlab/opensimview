@@ -21,6 +21,7 @@ public class CompressedBuffer extends ContiguousBuffer
   public static long cMaxBufferSize = 2147483600 - Overhead;
   private String mCodecName;
   private int mCompressionLevel, mNumThreads;
+  private long mUncompressedBytes = 0, mCompressedBytes = 0;
 
   /**
    * Constructs a Compressed buffer that behaves like a ContiguousBuffer, except that data can be compressed before being written to it.
@@ -36,6 +37,13 @@ public class CompressedBuffer extends ContiguousBuffer
   public CompressedBuffer(ContiguousMemoryInterface pCompressedMemory)
   {
     this(pCompressedMemory, "lz4", 3, -1);
+  }
+
+  public void rewind()
+  {
+    super.rewind();
+    mCompressedBytes = 0;
+    mUncompressedBytes = 0;
   }
 
   /**
@@ -86,5 +94,14 @@ public class CompressedBuffer extends ContiguousBuffer
     long lCompressedBufferLength = IBloscDll.blosc_compress_ctx(mCompressionLevel, Shuffle.BIT_SHUFFLE, new NativeLong(PrimitiveSizes.SHORT_FIELD_SIZE), new NativeLong(pContiguousMemory.getSizeInBytes()), JNAInterop.getJNAPointer(pContiguousMemory), JNAInterop.getJNAPointer(getRemainingContiguousMemory()), new NativeLong(Math.min(remainingBytes(), lMaxCompressedSize)), mCodecName, new NativeLong(0), mNumThreads);
 
     skipBytes(lCompressedBufferLength);
+
+    mCompressedBytes += lCompressedBufferLength;
+    mUncompressedBytes += pContiguousMemory.getSizeInBytes();
+  }
+
+
+  public double getCompressionRatio()
+  {
+    return ((double) mCompressedBytes) / mUncompressedBytes;
   }
 }

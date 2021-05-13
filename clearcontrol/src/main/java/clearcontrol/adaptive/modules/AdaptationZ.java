@@ -1,10 +1,14 @@
 package clearcontrol.adaptive.modules;
 
 import clearcontrol.LightSheetDOF;
+import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.configurationstate.ConfigurationState;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.stack.metadata.MetaDataChannel;
+import clearcontrol.stack.metadata.MetaDataView;
+import clearcontrol.stack.metadata.MetaDataViewFlags;
+import clearcontrol.stack.metadata.StackMetaData;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import gnu.trove.list.array.TDoubleArrayList;
 
@@ -57,7 +61,8 @@ public class AdaptationZ extends StandardAdaptationPerLightSheetModule implement
 
     InterpolatedAcquisitionState lAcquisitionState = getAdaptiveEngine().getAcquisitionStateVariable().get();
 
-    LightSheetMicroscopeQueue lQueue = (LightSheetMicroscopeQueue) getAdaptiveEngine().getMicroscope().requestQueue();
+    LightSheetMicroscope lLightSheetMicroscope = (LightSheetMicroscope) getAdaptiveEngine().getMicroscope();
+    LightSheetMicroscopeQueue lQueue = lLightSheetMicroscope.requestQueue();
 
     lQueue.clearQueue();
 
@@ -95,7 +100,15 @@ public class AdaptationZ extends StandardAdaptationPerLightSheetModule implement
 
     lQueue.finalizeQueue();
 
-    lQueue.addMetaDataEntry(MetaDataChannel.Channel, "NoDisplay");
+    // Setting metadata:
+    for (int lCameraIndex = 0; lCameraIndex < lLightSheetMicroscope.getNumberOfDetectionArms(); lCameraIndex++)
+    {
+      StackMetaData lMetaData = lQueue.getCameraDeviceQueue(lCameraIndex).getMetaDataVariable().get();
+
+      lMetaData.addEntry(MetaDataView.Camera, lCameraIndex);
+      lMetaData.addEntry(MetaDataViewFlags.getLightSheet(lLightSheetIndex), true);
+      lMetaData.addEntry(MetaDataChannel.Channel, String.format("AutoPilot_Z_P%d_C%d_L%d", lControlPlaneIndex, lCameraIndex, lLightSheetIndex));
+    }
 
     Future<?> result = findBestDOFValue(lControlPlaneIndex, lLightSheetIndex, lQueue, lAcquisitionState, lDZList);
 

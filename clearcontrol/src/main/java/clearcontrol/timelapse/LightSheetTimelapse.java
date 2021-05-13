@@ -81,6 +81,9 @@ public class LightSheetTimelapse extends TimelapseBase implements TimelapseInter
 
       InstructionInterface lNextInstructionToRun = mCurrentProgram.get(mInstructionIndexVariable.get());
 
+      // We stop if the program is empty:
+      if (lNextInstructionToRun == null) return false;
+
       // if the instruction wasn't initialized yet, initialize it now!
       if (!mInitializedInstructionsList.contains(lNextInstructionToRun))
       {

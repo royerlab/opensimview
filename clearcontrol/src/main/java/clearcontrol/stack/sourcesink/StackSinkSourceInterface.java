@@ -29,7 +29,7 @@ public interface StackSinkSourceInterface
   /**
    * Filename suffix for stacks written to files using blosc compression
    */
-  public static final String cCompressedFileExtension = ".craw";
+  public static final String cCompressedFileExtension = ".blc";
 
   /**
    * Format used to write the stacks filenames

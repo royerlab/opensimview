@@ -206,9 +206,8 @@ public class DcamSequenceAcquisition extends DcamBase
       //format("Releasing buffers \n");
       //mDcamDevice.getBufferControl().releaseBuffers();
 
-      if (pCallable != null)
-        mSingleThreadExecutorForCallable.submit(pCallable);
-        //return pCallable.call();
+      if (pCallable != null) mSingleThreadExecutorForCallable.submit(pCallable);
+      //return pCallable.call();
 
       return true;
     } catch (InterruptedException e)

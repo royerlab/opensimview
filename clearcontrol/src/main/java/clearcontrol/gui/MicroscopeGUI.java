@@ -8,6 +8,7 @@ import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.core.concurrent.timing.WaitingInterface;
 import clearcontrol.core.device.VirtualDevice;
+import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.gui.CameraDevicePanel;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
@@ -30,6 +31,7 @@ import clearcontrol.scripting.lang.groovy.GroovyScripting;
 import clearcontrol.scripting.lang.jython.JythonScripting;
 import clearcontrol.simulation.SimulationManager;
 import clearcontrol.simulation.gui.SimulationManagerPanel;
+import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRecyclerManager;
 import clearcontrol.stack.gui.StackRecyclerManagerPanel;
 import halcyon.HalcyonFrame;
@@ -55,10 +57,12 @@ public class MicroscopeGUI extends VirtualDevice implements AsynchronousExecutor
 
   private final ArrayList<ScriptingEngine> mScriptingEngineList = new ArrayList<>();
 
+  private ArrayList<Variable<StackInterface>> mStack2DTo3DDispatchVariableList = new ArrayList<>();
   private ArrayList<Stack2DDisplay> mStack2DDisplayList = new ArrayList<>();
   private ArrayList<Stack3DDisplay> mStack3DDisplayList = new ArrayList<>();
 
   private final boolean m2DDisplay, m3DDisplay;
+  private final ArrayList<String> m3DDisplayChannels;
   private HalcyonGUIGenerator mHalcyonGUIGenerator;
   private Stage mPrimaryStage;
   private HalcyonFrame mHalcyonFrame;
@@ -80,6 +84,7 @@ public class MicroscopeGUI extends VirtualDevice implements AsynchronousExecutor
     mPrimaryStage = pPrimaryStage;
     m2DDisplay = p2DDisplay;
     m3DDisplay = p3DDisplay;
+    m3DDisplayChannels = new ArrayList<>();
 
     ArrayList<HalcyonNodeType> lNodeTypeList = new ArrayList<>();
     for (HalcyonNodeType lNode : MicroscopeNodeType.values())
@@ -113,6 +118,11 @@ public class MicroscopeGUI extends VirtualDevice implements AsynchronousExecutor
     mMicroscope.addDevice(0, lSimulationManager);
 
     initializeConcurentExecutor();
+  }
+
+  public void add3DDisplayChannel(String pChannel)
+  {
+    m3DDisplayChannels.add(pChannel);
   }
 
   /**
@@ -258,15 +268,23 @@ public class MicroscopeGUI extends VirtualDevice implements AsynchronousExecutor
         lStack2DDisplay.setVisible(false);
         mStack2DDisplayList.add(lStack2DDisplay);
         getMicroscope().addDevice(c, lStack2DDisplay);
-      }
-      if (m3DDisplay)
-      {
-        final Stack3DDisplay lStack3DDisplay = new Stack3DDisplay(String.format("Video 3D for camera %d", c), cDefaultWindowWidth, cDefaultWindowHeight, 1, 8);
-        lStack3DDisplay.getVisibleVariable().set(false);
-        mStack3DDisplayList.add(lStack3DDisplay);
-        getMicroscope().addDevice(c, lStack3DDisplay);
+
+        mStack2DTo3DDispatchVariableList.add(new Variable<StackInterface>("DispatchFrom2d_Camera" + c));
       }
     }
+
+    if (m3DDisplay)
+    {
+      int i = 0;
+      for (String lChannel : m3DDisplayChannels)
+      {
+        final Stack3DDisplay lStack3DDisplay = new Stack3DDisplay(String.format("Video 3D for channel %s", lChannel), lChannel, cDefaultWindowWidth, cDefaultWindowHeight, 1, 8);
+        lStack3DDisplay.getVisibleVariable().set(false);
+        mStack3DDisplayList.add(lStack3DDisplay);
+        getMicroscope().addDevice(i++, lStack3DDisplay);
+      }
+    }
+
   }
 
   private void setupHalcyonWindow()
@@ -358,15 +376,24 @@ public class MicroscopeGUI extends VirtualDevice implements AsynchronousExecutor
         Stack2DDisplay lStack2dDisplay = mStack2DDisplayList.get(c);
         mMicroscope.getCameraStackVariable(c).sendUpdatesTo(lStack2dDisplay.getInputStackVariable());
 
-        if (pConnect3D)
+        if (pConnect3D) lStack2dDisplay.setOutputStackVariable(mStack2DTo3DDispatchVariableList.get(c));
+        else lStack2dDisplay.setOutputStackVariable(mMicroscope.getTerminatorStackVariable(c));
+      }
+
+      if (pConnect3D) for (Stack3DDisplay lStack3DDisplay : mStack3DDisplayList)
+      {
+        for (Variable<StackInterface> lVariable : mStack2DTo3DDispatchVariableList)
         {
-          Stack3DDisplay lStack3DDisplay = mStack3DDisplayList.get(c);
-          lStack2dDisplay.setOutputStackVariable(lStack3DDisplay.getInputStackVariable());
-          lStack3DDisplay.setOutputStackVariable(mMicroscope.getTerminatorStackVariable(c));
-        } else
-        {
-          lStack2dDisplay.setOutputStackVariable(mMicroscope.getTerminatorStackVariable(c));
+          lVariable.sendUpdatesTo(lStack3DDisplay.getInputStackVariable());
         }
+
+        for (int c = 0; c < lNumberOfCameras; c++)
+        {
+          String lChannelFilter = lStack3DDisplay.getChannelFilter();
+          if (lChannelFilter.contains("C" + c))
+            lStack3DDisplay.setOutputStackVariable(mMicroscope.getTerminatorStackVariable(c));
+        }
+
       }
     }
   }
@@ -381,7 +408,6 @@ public class MicroscopeGUI extends VirtualDevice implements AsynchronousExecutor
   {
     Stack2DDisplay lStack2dDisplay = mStack2DDisplayList.get(p2DDisplayIndex);
     mMicroscope.getCameraStackVariable(pCameraIndex).doNotSendUpdatesTo(lStack2dDisplay.getInputStackVariable());
-
   }
 
   /**

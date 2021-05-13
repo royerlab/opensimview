@@ -1,9 +1,6 @@
 package clearcontrol.devices.cameras.devices.hamamatsu;
 
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
-import clearcontrol.core.concurrent.thread.ThreadSleep;
-import clearcontrol.core.concurrent.timing.ElapsedTime;
-import clearcontrol.core.concurrent.timing.ExecuteMinDuration;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.openclose.OpenCloseDeviceInterface;
 import clearcontrol.core.log.LoggingFeature;
@@ -12,10 +9,8 @@ import clearcontrol.devices.cameras.StackCameraDeviceBase;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.StandardTriggerType;
 import clearcontrol.devices.cameras.TriggerTypeInterface;
-import clearcontrol.stack.EmptyStack;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
-import coremem.ContiguousMemoryInterface;
 import coremem.recycling.BasicRecycler;
 import dcamj2.DcamDevice;
 import dcamj2.DcamLibrary;
@@ -32,8 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author royer
  */
-public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> implements StackCameraDeviceInterface<HamStackCameraQueue>,
-                                                                                          OpenCloseDeviceInterface, LoggingFeature, AsynchronousExecutorFeature
+public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> implements StackCameraDeviceInterface<HamStackCameraQueue>, OpenCloseDeviceInterface, LoggingFeature, AsynchronousExecutorFeature
 {
 
   private static final char cZeroLevel = 100;
@@ -174,7 +168,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
   private Future<Boolean> acquisition(HamStackCameraQueue pQueue, double lExposureInSeconds, long pWidth, long pHeight, long pAcquiredPlanesDepth, long pKeptPlanesDepth)
   {
-    final DcamImageSequenceRequest lSequenceRequest = DcamImageSequenceRequest.build(mDcamDevice,2, pWidth, pHeight, pAcquiredPlanesDepth, true);
+    final DcamImageSequenceRequest lSequenceRequest = DcamImageSequenceRequest.build(mDcamDevice, 2, pWidth, pHeight, pAcquiredPlanesDepth, true);
     final DcamImageSequence lSequence = mSequenceRecycler.getOrWait(cWaitTime, TimeUnit.MILLISECONDS, lSequenceRequest);
 
     //DcamImageSequence lSequence = new DcamImageSequence(mDcamDevice, 2, pWidth, pHeight, pAcquiredPlanesDepth);

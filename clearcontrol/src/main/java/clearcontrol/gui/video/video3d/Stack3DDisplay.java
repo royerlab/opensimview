@@ -8,6 +8,7 @@ import clearcontrol.gui.video.util.MinMaxControlDialog;
 import clearcontrol.gui.video.util.WindowControl;
 import clearcontrol.stack.EmptyStack;
 import clearcontrol.stack.StackInterface;
+import clearcontrol.stack.metadata.MetaDataChannel;
 import clearcontrol.stack.metadata.MetaDataOrdinals;
 import cleargl.ClearGLWindow;
 import clearvolume.renderer.ClearVolumeRendererInterface;
@@ -22,9 +23,6 @@ import coremem.offheap.OffHeapMemory;
 import coremem.util.Size;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static java.lang.Math.*;
 
 public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterface
 {
@@ -40,15 +38,17 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
 
   private volatile Variable<Boolean> mVisibleVariable;
   private volatile Variable<Boolean> mWaitForLastChannel;
+  private String mChannelFilter;
 
   public Stack3DDisplay(final String pWindowName)
   {
-    this(pWindowName, 512, 512, 1, cDefaultDisplayQueueLength);
+    this(pWindowName, "", 512, 512, 1, cDefaultDisplayQueueLength);
   }
 
-  public Stack3DDisplay(final String pWindowName, final int pWindowWidth, final int pWindowHeight, final int pNumberOfLayers, final int pUpdaterQueueLength)
+  public Stack3DDisplay(final String pWindowName, final String pChannelFilter, final int pWindowWidth, final int pWindowHeight, final int pNumberOfLayers, final int pUpdaterQueueLength)
   {
     super(pWindowName);
+    mChannelFilter = pChannelFilter;
 
     NativeTypeEnum lNativeTypeEnum = NativeTypeEnum.UnsignedShort;
 
@@ -79,14 +79,7 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
         {
           switch (pE.getKeyCode())
           {
-            case KeyEvent.VK_F:
-              mManualVisualisationAdjustment = false;
-              break;
-            case KeyEvent.VK_G:
-              mManualVisualisationAdjustment = true;
-              break;
             case KeyEvent.VK_V:
-              mManualVisualisationAdjustment = true;
               MinMaxControlDialog.showDialog(mClearVolumeRenderer);
               break;
           }
@@ -113,9 +106,16 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
         {
           // info("received stack: " + pStack);
 
+          if (!pStack.getMetaData().getValue(MetaDataChannel.Channel).contains(mChannelFilter))
+          {
+            forwardStack(pStack);
+            return null;
+          }
+
           if (pStack.getMetaData().hasValue("NoDisplay"))
           {
             info("Received stack with NoDisplay metadata value");
+            forwardStack(pStack);
             return null;
           }
 
@@ -187,7 +187,6 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
             mClearVolumeRenderer.waitToFinishAllDataBufferCopy(cTimeOutForBufferCopy, TimeUnit.SECONDS);/**/
           } else mClearVolumeRenderer.waitToFinishDataBufferCopy(lChannel, cTimeOutForBufferCopy, TimeUnit.SECONDS);/**/
 
-          adjustVisualisation(pStack);
 
         }
 
@@ -207,7 +206,6 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
       {
         if (!mAsynchronousDisplayUpdater.passOrFail(pNewStack))
         {
-          adjustVisualisation(pNewStack);
           forwardStack(pNewStack);
         }
 
@@ -220,97 +218,15 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
 
   }
 
-
-  private ReentrantLock mAdjustmentRunning = new ReentrantLock();
-  private boolean mManualVisualisationAdjustment = false;
-
-  private void adjustVisualisation(StackInterface pStack)
+  public String getChannelFilter()
   {
-    if (mManualVisualisationAdjustment)
-    {
-      return;
-    }
-    if (mAdjustmentRunning.isLocked())
-    {
-      return;
-    }
-    mAdjustmentRunning.lock();
-    {
-      fastMinMaxSampling(pStack.getContiguousMemory(), pStack.getDataType(), pStack.getWidth(), pStack.getHeight(), pStack.getDepth());
-
-      this.mClearVolumeRenderer.setTransferFunctionRangeMin(mSampledMinIntensity);
-      this.mClearVolumeRenderer.setTransferFunctionRangeMax(mSampledMaxIntensity);
-    }
-    mAdjustmentRunning.unlock();
+    return mChannelFilter;
   }
 
-  double mSampledMinIntensity;
-  double mSampledMaxIntensity;
-
-  public void fastMinMaxSampling(final ContiguousMemoryInterface pMemory, NativeTypeEnum pNativeTypeEnum, long pBufferWidth, long pBufferHeight, long pBufferDepth)
-  {
-    if (pMemory.isFree()) return;
-
-    final long lLength = min(pBufferWidth * pBufferHeight * pBufferDepth, pMemory.getSizeInBytes() / Size.of(pNativeTypeEnum));
-    final long lStep = 1 + round(0.001 * lLength);
-    final int lStartPixel = (int) round(random() * lStep);
-
-    double lMin = Double.POSITIVE_INFINITY;
-    double lMax = Double.NEGATIVE_INFINITY;
-
-    if (pNativeTypeEnum == NativeTypeEnum.UnsignedByte) for (int i = lStartPixel; i < lLength; i += lStep)
-    {
-      final double lValue = (0xFF & pMemory.getByteAligned(i)) / 255d;
-      lMin = min(lMin, lValue);
-      lMax = max(lMax, lValue);
-    }
-    else if (pNativeTypeEnum == NativeTypeEnum.UnsignedShort) for (int i = lStartPixel; i < lLength; i += lStep)
-    {
-      final double lValue = (0xFFFF & pMemory.getCharAligned(i)) / 65535d;
-      lMin = min(lMin, lValue);
-      lMax = max(lMax, lValue);
-    }
-    else if (pNativeTypeEnum == NativeTypeEnum.UnsignedInt) for (int i = lStartPixel; i < lLength; i += lStep)
-    {
-      final double lValue = (0xFFFFFFFF & pMemory.getIntAligned(i)) / 4294967296d;
-      lMin = min(lMin, lValue);
-      lMax = max(lMax, lValue);
-    }
-    else if (pNativeTypeEnum == NativeTypeEnum.Float) for (int i = lStartPixel; i < lLength; i += lStep)
-    {
-      final float lFloatAligned = pMemory.getFloatAligned(i);
-      lMin = min(lMin, lFloatAligned);
-      lMax = max(lMax, lFloatAligned);
-    }
-    else if (pNativeTypeEnum == NativeTypeEnum.Double) for (int i = lStartPixel; i < lLength; i += lStep)
-    {
-      final double lDoubleAligned = pMemory.getDoubleAligned(i);
-      lMin = min(lMin, lDoubleAligned);
-      lMax = max(lMax, lDoubleAligned);
-    }
-
-    if (Math.abs(this.mSampledMaxIntensity) < 0.0001 && Math.abs(this.mSampledMinIntensity) < 0.0001)
-    {
-      mSampledMinIntensity = lMin;
-      mSampledMaxIntensity = lMax;
-    }
-
-    if (!Double.isFinite(this.mSampledMinIntensity)) this.mSampledMinIntensity = 0;
-
-    if (!Double.isFinite(this.mSampledMaxIntensity)) this.mSampledMaxIntensity = 1;
-
-    this.mSampledMinIntensity = (0.9) * this.mSampledMinIntensity + 0.1 * lMin;
-    this.mSampledMaxIntensity = (0.9) * this.mSampledMaxIntensity + 0.1 * lMax;
-
-    // System.out.println("mSampledMinIntensity=" +
-    // mSampledMinIntensity);
-    // System.out.println("mSampledMaxIntensity=" +
-    // mSampledMaxIntensity);
-  }
 
   private void forwardStack(final StackInterface pNewStack)
   {
-    if (mOutputStackVariable != null) mOutputStackVariable.set(pNewStack);
+    if (mOutputStackVariable != null) mOutputStackVariable.setAsync(pNewStack);
     else if (!pNewStack.isReleased()) pNewStack.release();
   }
 
@@ -449,4 +365,6 @@ public class Stack3DDisplay extends VirtualDevice implements StackDisplayInterfa
     return lDest;
 
   }
+
+
 }
