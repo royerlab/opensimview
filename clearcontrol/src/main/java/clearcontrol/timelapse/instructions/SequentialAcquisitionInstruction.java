@@ -91,15 +91,7 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
         {
           getLightSheetMicroscope().playQueueAndWait(lQueueForView, mTimelapse.getTimeOut(), TimeUnit.SECONDS);
           info("DONE with getLightSheetMicroscope().playQueueAndWait(...)");
-        } catch (InterruptedException e)
-        {
-          e.printStackTrace();
-          return false;
-        } catch (ExecutionException e)
-        {
-          e.printStackTrace();
-          return false;
-        } catch (TimeoutException e)
+        } catch (Throwable e)
         {
           e.printStackTrace();
           return false;

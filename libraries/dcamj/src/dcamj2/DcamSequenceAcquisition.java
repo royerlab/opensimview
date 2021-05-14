@@ -91,6 +91,11 @@ public class DcamSequenceAcquisition extends DcamBase
       /*if (mDcamDevice.isBusy())
         mDcamDevice.stop();/**/
 
+      if (pImageSequence == null)
+      {
+        throw new RuntimeException("Critical Error: Image Sequence is null!");
+      }
+
       if (pImageSequence.getDepth() == 0)
       {
         println("WARNING: acquiring empty stack");

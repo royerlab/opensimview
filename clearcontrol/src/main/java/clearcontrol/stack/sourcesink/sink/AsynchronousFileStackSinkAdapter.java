@@ -60,9 +60,40 @@ public class AsynchronousFileStackSinkAdapter implements FileStackSinkInterface
       public StackInterface process(final Pair<String, StackInterface> pPair)
       {
         String lChannel = pPair.getLeft();
-        long lTimePointns = pPair.getRight().getMetaData().getTimeStampInNanoseconds();
-        String lCameraLightSheet = MetaDataView.getCxLyString(pPair.getRight().getMetaData());
-        String lKey = lChannel + lCameraLightSheet + lTimePointns;
+
+        String lKey = "";
+
+        lKey += lChannel;
+
+        try
+        {
+          Long lTimePointns = pPair.getRight().getMetaData().getTimeStampInNanoseconds();
+          lKey += lTimePointns;
+        }
+        catch(Throwable t)
+        {
+          t.printStackTrace();
+        }
+
+        try
+        {
+          Long lIndex = pPair.getRight().getMetaData().getIndex();
+          lKey += lIndex;
+        }
+        catch(Throwable t)
+        {
+          t.printStackTrace();
+        }
+
+        try
+        {
+          String lView = MetaDataView.getCxLyString(pPair.getRight().getMetaData());;
+          lKey += lView;
+        }
+        catch(Throwable t)
+        {
+          t.printStackTrace();
+        }
 
         // We make sure to filter duplicates
         if (!mStackKeySet.contains(lKey))

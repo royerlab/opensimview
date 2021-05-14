@@ -32,7 +32,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
   private static final char cZeroLevel = 100;
 
-  private static final long cWaitTime = 1000;
+  private static final long cWaitTime = 3000;
 
   private final DcamDevice mDcamDevice;
 
@@ -87,7 +87,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
     mDcamDevice = pDcamDevice;
 
-    mSequenceRecycler = new BasicRecycler<DcamImageSequence, DcamImageSequenceRequest>(new DcamImageSequenceFactory(), 40);
+    mSequenceRecycler = new BasicRecycler<DcamImageSequence, DcamImageSequenceRequest>(new DcamImageSequenceFactory(), 64);
 
     mDcamSequenceAcquisition = new DcamSequenceAcquisition(mDcamDevice);
   }
