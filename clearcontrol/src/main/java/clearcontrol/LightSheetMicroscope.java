@@ -12,11 +12,12 @@ import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.lasers.LaserDeviceInterface;
 import clearcontrol.instructions.InstructionInterface;
+import clearcontrol.instructions.SkipInstruction;
 import clearcontrol.interactive.InteractiveAcquisition;
 import clearcontrol.processor.LightSheetFastFusionProcessor;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.instructions.ChangeExposureTimeInstruction;
-import clearcontrol.timelapse.LightSheetTimelapse;
+import clearcontrol.timelapse.Timelapse;
 import clearcontrol.timelapse.TimelapseInterface;
 
 import java.util.ArrayList;
@@ -117,14 +118,15 @@ public class LightSheetMicroscope extends MicroscopeBase<LightSheetMicroscope, L
    */
   public TimelapseInterface addTimelapse()
   {
-    TimelapseInterface lTimelapseInterface = new LightSheetTimelapse(this);
+    TimelapseInterface lTimelapseInterface = new Timelapse(this);
+    addDevice(0, new SkipInstruction(this, lTimelapseInterface));
     addDevice(0, lTimelapseInterface);
     return lTimelapseInterface;
   }
 
-  public LightSheetTimelapse getTimelapse()
+  public Timelapse getTimelapse()
   {
-    return getDevice(LightSheetTimelapse.class, 0);
+    return getDevice(Timelapse.class, 0);
   }
 
   /**

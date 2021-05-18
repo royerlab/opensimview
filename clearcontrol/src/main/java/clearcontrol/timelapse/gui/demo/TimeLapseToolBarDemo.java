@@ -3,9 +3,9 @@ package clearcontrol.timelapse.gui.demo;
 import clearcontrol.core.concurrent.thread.ThreadSleep;
 import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
 import clearcontrol.stack.sourcesink.sink.RawFileStackSink;
-import clearcontrol.timelapse.TimelapseBase;
+import clearcontrol.timelapse.Timelapse;
 import clearcontrol.timelapse.TimelapseInterface;
-import clearcontrol.timelapse.gui.TimelapseToolbar;
+import clearcontrol.timelapse.gui.TimelapseToolbarBasics;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -32,7 +32,7 @@ public class TimeLapseToolBarDemo extends Application
     stage.setTitle(this.getClass().getSimpleName());
     // scene.setFill(Color.BLACK);
 
-    TimelapseInterface lTimelapse = new TimelapseBase(null)
+    TimelapseInterface lTimelapse = new Timelapse(null)
     {
 
       @Override
@@ -48,7 +48,7 @@ public class TimeLapseToolBarDemo extends Application
     lTimelapse.addFileStackSinkType(RawFileStackSink.class);
     lTimelapse.addFileStackSinkType(CompressedStackSink.class);
 
-    TimelapseToolbar lTimelapseToolbar = new TimelapseToolbar(lTimelapse);
+    TimelapseToolbarBasics lTimelapseToolbar = new TimelapseToolbarBasics(lTimelapse);
 
     root.getChildren().add(lTimelapseToolbar);
 

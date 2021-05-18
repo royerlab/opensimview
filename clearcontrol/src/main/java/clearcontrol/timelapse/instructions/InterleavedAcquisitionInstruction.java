@@ -34,7 +34,6 @@ public class InterleavedAcquisitionInstruction extends AbstractAcquistionInstruc
   public InterleavedAcquisitionInstruction(LightSheetMicroscope pLightSheetMicroscope)
   {
     super("Acquisition: Interleaved", pLightSheetMicroscope);
-    mChannelName.set("interleaved");
   }
 
   @Override

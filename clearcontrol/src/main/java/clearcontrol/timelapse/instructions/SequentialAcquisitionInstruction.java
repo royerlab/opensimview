@@ -3,7 +3,9 @@ package clearcontrol.timelapse.instructions;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.core.log.LoggingFeature;
+import clearcontrol.core.variable.Variable;
 import clearcontrol.instructions.InstructionInterface;
+import clearcontrol.instructions.PropertyIOableInstructionInterface;
 import clearcontrol.stack.metadata.*;
 import clearcontrol.state.AcquisitionType;
 import clearcontrol.state.InterpolatedAcquisitionState;
@@ -23,21 +25,17 @@ import java.util.concurrent.TimeoutException;
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de) February
  * 2018
  */
-public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruction implements InstructionInterface, LoggingFeature
+public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruction implements InstructionInterface, PropertyIOableInstructionInterface, LoggingFeature
 {
-
-  /**
-   * INstanciates a virtual device with a given name
-   */
-  public SequentialAcquisitionInstruction(LightSheetMicroscope pLightSheetMicroscope)
-  {
-    super("Acquisition: Sequential", pLightSheetMicroscope);
-    mChannelName.set("sequential");
-  }
 
   public SequentialAcquisitionInstruction(String pName, LightSheetMicroscope pLightSheetMicroscope)
   {
     super(pName, pLightSheetMicroscope);
+  }
+
+  public SequentialAcquisitionInstruction(LightSheetMicroscope pLightSheetMicroscope)
+  {
+    this("Acquisition: Sequential", pLightSheetMicroscope);
   }
 
   @Override
@@ -182,5 +180,12 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
   public SequentialAcquisitionInstruction copy()
   {
     return new SequentialAcquisitionInstruction(getLightSheetMicroscope());
+  }
+
+  @Override
+  public Variable[] getProperties()
+  {
+    Variable[] lVariables = new Variable[0];
+    return lVariables;
   }
 }

@@ -3,14 +3,12 @@ package clearcontrol.timelapse.instructions;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.core.log.LoggingFeature;
-import clearcontrol.core.variable.Variable;
 import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.instructions.LightSheetMicroscopeInstructionBase;
 import clearcontrol.processor.LightSheetFastFusionProcessor;
-import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.sourcesink.sink.FileStackSinkInterface;
 import clearcontrol.state.InterpolatedAcquisitionState;
-import clearcontrol.timelapse.LightSheetTimelapse;
+import clearcontrol.timelapse.Timelapse;
 
 /**
  * This class contains generalised methods for all AcquisitionSchedulers
@@ -21,12 +19,6 @@ import clearcontrol.timelapse.LightSheetTimelapse;
  */
 public abstract class AbstractAcquistionInstruction extends LightSheetMicroscopeInstructionBase implements InstructionInterface, LoggingFeature
 {
-
-  protected String mImageKeyToSave = "fused";
-  protected Variable<String> mChannelName = new Variable<String>("Dataset name for saving", "default");
-
-  protected StackInterface mLastFusedStack;
-  protected StackInterface mLastAcquiredStack;
 
   /**
    * INstanciates a virtual device with a given name
@@ -39,7 +31,7 @@ public abstract class AbstractAcquistionInstruction extends LightSheetMicroscope
   }
 
   protected InterpolatedAcquisitionState mCurrentState;
-  protected LightSheetTimelapse mTimelapse;
+  protected Timelapse mTimelapse;
   protected Long mTimeStampBeforeImaging = 0L;
 
   @Override
@@ -47,7 +39,7 @@ public abstract class AbstractAcquistionInstruction extends LightSheetMicroscope
   {
 
     mCurrentState = (InterpolatedAcquisitionState) getLightSheetMicroscope().getAcquisitionStateManager().getCurrentState();
-    mTimelapse = getLightSheetMicroscope().getDevice(LightSheetTimelapse.class, 0);
+    mTimelapse = getLightSheetMicroscope().getDevice(Timelapse.class, 0);
 
     LightSheetFastFusionProcessor lProcessor = getLightSheetMicroscope().getDevice(LightSheetFastFusionProcessor.class, 0);
     if (lProcessor != null)

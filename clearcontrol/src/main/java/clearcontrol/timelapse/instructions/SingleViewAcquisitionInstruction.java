@@ -25,8 +25,6 @@ public class SingleViewAcquisitionInstruction extends SequentialAcquisitionInstr
     mCameraIndex = pCameraIndex;
     mLightSheetIndex = pLightSheetIndex;
 
-    mImageKeyToSave = "C" + pCameraIndex + "L" + pLightSheetIndex;
-    mChannelName.set(mImageKeyToSave);
   }
 
   protected boolean isLightSheetOn(int pLightIndex)

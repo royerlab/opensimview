@@ -1,10 +1,12 @@
 package clearcontrol.timelapse;
 
+import clearcontrol.MicroscopeInterface;
 import clearcontrol.core.device.startstop.StartStopSignalVariablesInterface;
 import clearcontrol.core.device.task.IsRunningTaskInterface;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.gui.jfx.var.combo.enums.TimeUnitEnum;
+import clearcontrol.instructions.InstructionInterface;
 import clearcontrol.stack.sourcesink.sink.FileStackSinkInterface;
 import clearcontrol.timelapse.timer.TimelapseTimerInterface;
 
@@ -22,6 +24,11 @@ public interface TimelapseInterface extends StartStopSignalVariablesInterface, I
 {
 
   /**
+   * Returns corresponding microscope
+   */
+  MicroscopeInterface<?> getMicroscope();
+
+  /**
    * Starts timelapse
    */
   void startTimelapse();
@@ -35,6 +42,16 @@ public interface TimelapseInterface extends StartStopSignalVariablesInterface, I
    * Executed one step of the program. Returns true if one time point of the program is completed (all instructions executed, starting again from beginning)
    */
   boolean programStep();
+
+  /**
+   * Returns current program
+   */
+  public ArrayList<InstructionInterface> getCurrentProgram();
+
+  /**
+   * Returns instruction index variable
+   */
+  public Variable<Integer> getInstructionIndexVariable();
 
   /**
    * Adds a file stack sink type to use to save a time-lapse
@@ -187,5 +204,12 @@ public interface TimelapseInterface extends StartStopSignalVariablesInterface, I
    * @return File (directory of the dataset)
    */
   File getWorkingDirectory();
+
+  /**
+   * Returns the list of available instructions
+   *
+   * @return available instructions
+   */
+  public ArrayList<InstructionInterface> getListOfAvailableInstructions(String... pMustContainStrings);
 
 }

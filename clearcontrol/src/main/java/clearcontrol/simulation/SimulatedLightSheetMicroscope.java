@@ -34,7 +34,7 @@ import clearcontrol.state.ControlPlaneLayout;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.LightSheetAcquisitionStateInterface;
 import clearcontrol.state.instructions.*;
-import clearcontrol.timelapse.LightSheetTimelapse;
+import clearcontrol.timelapse.Timelapse;
 import clearcontrol.timelapse.TimelapseInterface;
 import clearcontrol.timelapse.instructions.InterleavedAcquisitionInstruction;
 import clearcontrol.timelapse.instructions.SequentialAcquisitionInstruction;
@@ -237,7 +237,7 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
 
   public void addDefaultProgram()
   {
-    LightSheetTimelapse lTimelapse = getTimelapse();
+    Timelapse lTimelapse = getTimelapse();
     if (lTimelapse == null)
     {
       warning("Cannot add default program, because timelapse wasn't initialized yet");

@@ -1,312 +1,489 @@
 package clearcontrol.timelapse.gui;
 
+import clearcontrol.LightSheetMicroscope;
+import clearcontrol.MicroscopeInterface;
+import clearcontrol.adaptive.AdaptiveEngine;
+import clearcontrol.configurationstate.gui.ConfigurationStatePanel;
+import clearcontrol.core.configuration.MachineConfiguration;
+import clearcontrol.core.log.LoggingFeature;
+import clearcontrol.core.variable.Variable;
+import clearcontrol.gui.halcyon.MicroscopeNodeType;
 import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;
-import clearcontrol.gui.jfx.var.checkbox.VariableCheckBox;
-import clearcontrol.gui.jfx.var.combo.ClassComboBoxVariable;
-import clearcontrol.gui.jfx.var.combo.EnumComboBoxVariable;
-import clearcontrol.gui.jfx.var.combo.enums.TimeUnitEnum;
-import clearcontrol.gui.jfx.var.datetime.DateTimePickerVariable;
-import clearcontrol.gui.jfx.var.file.VariableFileChooser;
-import clearcontrol.gui.jfx.var.lcd.VariableLCD;
-import clearcontrol.gui.jfx.var.textfield.NumberVariableTextField;
-import clearcontrol.gui.jfx.var.textfield.StringVariableTextField;
+import clearcontrol.instructions.InstructionInterface;
+import clearcontrol.timelapse.Timelapse;
 import clearcontrol.timelapse.TimelapseInterface;
-import eu.hansolo.enzo.lcd.Lcd;
-import eu.hansolo.enzo.lcd.LcdBuilder;
-import eu.hansolo.enzo.simpleindicator.SimpleIndicator;
-import eu.hansolo.enzo.simpleindicator.SimpleIndicator.IndicatorStyle;
-import javafx.geometry.HPos;
+import clearcontrol.timelapse.io.ProgramReader;
+import clearcontrol.timelapse.io.ProgramWriter;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TitledPane;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 
 /**
- * Timelapse toolbar
+ * Lightsheet Timelapse toolbar
  *
  * @author royer
  */
-public class TimelapseToolbar extends CustomGridPane
+public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingFeature
 {
-  TimelapseInterface mTimelapseInterface;
+  private TimelapseInterface mTimelapse = null;
+
+  ScrollPane mPropertiesScrollPane;
+  ListView<InstructionInterface> mCurrentProgramScheduleListView;
+
+  private File mProgramTemplateDirectory = MachineConfiguration.get().getFolder("ProgramTemplates");
 
   /**
-   * Instanciates a timelapse toolbar.
+   * Instanciates a lightsheet timelapse toolbar.
    *
-   * @param pTimelapseInterface timelapse device
+   * @param pTimelapse timelapse device
    */
-  public TimelapseToolbar(TimelapseInterface pTimelapseInterface)
+  public TimelapseToolbar(Timelapse pTimelapse)
   {
-    mTimelapseInterface = pTimelapseInterface;
-    setPrefSize(500, 300);
+    super(pTimelapse);
+    mTimelapse = pTimelapse;
 
-    mRow = 0;
+    this.setAlignment(Pos.TOP_LEFT);
 
+    setPrefSize(400, 200);
+
+    int[] lPercent = new int[]{10, 40, 40, 10};
+    for (int i = 0; i < lPercent.length; i++)
     {
-      SimpleIndicator lAcquisitionStateIndicator = new SimpleIndicator();
-      lAcquisitionStateIndicator.indicatorStyleProperty().set(IndicatorStyle.RED);
-      pTimelapseInterface.getIsRunningVariable().addSetListener((o, n) ->
-      {
-        lAcquisitionStateIndicator.onProperty().set(n);
-      });
-
-      lAcquisitionStateIndicator.setMinSize(50, 50);
-
-      Button lStartTimelapse = new Button("Start Timelapse");
-      lStartTimelapse.setAlignment(Pos.CENTER);
-      lStartTimelapse.setMaxWidth(Double.MAX_VALUE);
-      GridPane.setColumnSpan(lStartTimelapse, 2);
-      lStartTimelapse.setOnAction((e) ->
-      {
-        pTimelapseInterface.startTimelapse();
-
-      });
-
-      Button lStopTimelapse = new Button("Stop Timelapse");
-      lStopTimelapse.setAlignment(Pos.CENTER);
-      lStopTimelapse.setMaxWidth(Double.MAX_VALUE);
-      GridPane.setColumnSpan(lStopTimelapse, 2);
-      lStopTimelapse.setOnAction((e) ->
-      {
-        pTimelapseInterface.stopTimelapse();
-      });
-
-      Lcd lTimeLapseLcdDisplay = LcdBuilder.create()
-              // .prefWidth(480)
-              // .prefHeight(192)
-              .styleClass(Lcd.STYLE_CLASS_WHITE).backgroundVisible(true).value(0).minValue(0).maxValue(Double.MAX_VALUE).foregroundShadowVisible(true).crystalOverlayVisible(false).title("time points").titleVisible(false).batteryVisible(false).signalVisible(false).alarmVisible(false).unit("tp").unitVisible(true).decimals(0)
-
-              .minMeasuredValueDecimals(2).minMeasuredValueVisible(false).maxMeasuredValueDecimals(2).maxMeasuredValueVisible(false).formerValueVisible(false).threshold(26).thresholdVisible(false).trendVisible(false).trend(Lcd.Trend.RISING).numberSystemVisible(true).lowerRightTextVisible(false).valueFont(Lcd.LcdFont.LCD).animated(false).build();
-
-      VariableLCD<Long> lVariableLCD = new VariableLCD<Long>(lTimeLapseLcdDisplay, pTimelapseInterface.getTimePointCounterVariable());
-
-      GridPane.setRowSpan(lAcquisitionStateIndicator, 2);
-      GridPane.setColumnSpan(lStartTimelapse, 2);
-      GridPane.setColumnSpan(lStopTimelapse, 2);
-      GridPane.setHalignment(lVariableLCD, HPos.CENTER);
-      GridPane.setColumnSpan(lVariableLCD, 1);
-      GridPane.setRowSpan(lVariableLCD, 2);
-
-      add(lAcquisitionStateIndicator, 0, mRow);
-      add(lVariableLCD, 3, mRow);
-      add(lStartTimelapse, 1, mRow++);
-      add(lStopTimelapse, 1, mRow++);
-
+      ColumnConstraints lColumnConstraints = new ColumnConstraints();
+      lColumnConstraints.setPercentWidth(lPercent[i]);
+      getColumnConstraints().add(lColumnConstraints);
     }
 
-    addSeparator();
-
     {
-      NumberVariableTextField<Long> lIntervalField = new NumberVariableTextField<Long>("Interval:", pTimelapseInterface.getTimelapseTimerVariable().get().getAcquisitionIntervalVariable(), 0L, Long.MAX_VALUE, 1L);
-
-      EnumComboBoxVariable<TimeUnitEnum> lIntervalTimeUnitBox = new EnumComboBoxVariable<TimeUnitEnum>(pTimelapseInterface.getTimelapseTimerVariable().get().getAcquisitionIntervalUnitVariable(), TimeUnitEnum.values());
-
-      GridPane.setColumnSpan(lIntervalField.getLabel(), 1);
-      GridPane.setColumnSpan(lIntervalField.getTextField(), 1);
-      GridPane.setColumnSpan(lIntervalTimeUnitBox, 1);
-
-      add(lIntervalField.getLabel(), 1, mRow);
-      add(lIntervalField.getTextField(), 2, mRow);
-      add(lIntervalTimeUnitBox, 3, mRow);
+      Separator lSeparator = new Separator();
+      lSeparator.setOrientation(Orientation.HORIZONTAL);
+      GridPane.setColumnSpan(lSeparator, 4);
+      add(lSeparator, 0, mRow);
       mRow++;
     }
 
     {
+      int lRow = 0;
+      CustomGridPane lSchedulerChecklistGridPane = new CustomGridPane();
 
-      VariableCheckBox lLimitNumberOfTimePointsCheckBox = new VariableCheckBox("", pTimelapseInterface.getEnforceMaxNumberOfTimePointsVariable());
-
-      NumberVariableTextField<Long> lMaxNumberOfTimePointsField = new NumberVariableTextField<Long>("Max timepoints:", pTimelapseInterface.getMaxNumberOfTimePointsVariable(), 0L, Long.MAX_VALUE, 1L);
-
-      GridPane.setHalignment(lLimitNumberOfTimePointsCheckBox.getCheckBox(), HPos.RIGHT);
-      GridPane.setColumnSpan(lLimitNumberOfTimePointsCheckBox.getCheckBox(), 1);
-      GridPane.setColumnSpan(lMaxNumberOfTimePointsField.getLabel(), 1);
-      GridPane.setColumnSpan(lMaxNumberOfTimePointsField.getTextField(), 2);
-
-      add(lLimitNumberOfTimePointsCheckBox.getCheckBox(), 0, mRow);
-      add(lMaxNumberOfTimePointsField.getLabel(), 1, mRow);
-      add(lMaxNumberOfTimePointsField.getTextField(), 2, mRow);
-      mRow++;
-    }
-
-    {
-      VariableFileChooser lRootFolderChooser = new VariableFileChooser("Folder:", pTimelapseInterface.getRootFolderVariable(), true);
-
-      GridPane.setColumnSpan(lRootFolderChooser.getLabel(), 1);
-      GridPane.setColumnSpan(lRootFolderChooser.getTextField(), 2);
-      GridPane.setColumnSpan(lRootFolderChooser.getButton(), 1);
-
-      add(lRootFolderChooser.getLabel(), 0, mRow);
-      add(lRootFolderChooser.getTextField(), 1, mRow);
-      add(lRootFolderChooser.getButton(), 3, mRow);
-      mRow++;
-    }
-
-    {
-
-      StringVariableTextField lPostFixTextField = new StringVariableTextField("Name:", pTimelapseInterface.getDataSetNamePostfixVariable());
-
-      ClassComboBoxVariable lStackSinkComboBox = new ClassComboBoxVariable(pTimelapseInterface.getCurrentFileStackSinkTypeVariable(), pTimelapseInterface.getFileStackSinkTypeList(), 100);
-
-      GridPane.setColumnSpan(lPostFixTextField.getLabel(), 1);
-      GridPane.setColumnSpan(lPostFixTextField.getTextField(), 2);
-      GridPane.setColumnSpan(lStackSinkComboBox, 1);
-
-      add(lPostFixTextField.getLabel(), 0, mRow);
-      add(lPostFixTextField.getTextField(), 1, mRow);
-      add(lStackSinkComboBox, 3, mRow);
-
-      mRow++;
-    }
-
-    {
-
-      VariableCheckBox lSaveStacksCheckBox = new VariableCheckBox("Save stacks", pTimelapseInterface.getSaveStacksVariable());
-
-      GridPane.setColumnSpan(lSaveStacksCheckBox.getLabel(), 1);
-      GridPane.setHalignment(lSaveStacksCheckBox.getCheckBox(), HPos.RIGHT);
-
-      add(lSaveStacksCheckBox.getCheckBox(), 0, mRow);
-      add(lSaveStacksCheckBox.getLabel(), 1, mRow);
-
-      mRow++;
-    }
-
-  }
-
-  public CustomGridPane buildAdvancedOptionsGripPane()
-  {
-    CustomGridPane lAdvancedOptionsGridPane = new CustomGridPane();
-
-    {
-      NumberVariableTextField<Long> lActualIntervalField = new NumberVariableTextField<Long>("Actual Interval:", mTimelapseInterface.getTimelapseTimerVariable().get().getActualAcquisitionIntervalVariable(), 0L, Long.MAX_VALUE, 1L);
-
-      EnumComboBoxVariable<TimeUnitEnum> lActualIntervalTimeUnitBox = new EnumComboBoxVariable<TimeUnitEnum>(mTimelapseInterface.getTimelapseTimerVariable().get().getActualAcquisitionIntervalUnitVariable(), TimeUnitEnum.values());
-
-      lActualIntervalField.getTextField().setEditable(false);
-
-      GridPane.setColumnSpan(lActualIntervalField.getLabel(), 1);
-      GridPane.setColumnSpan(lActualIntervalField.getTextField(), 1);
-      GridPane.setColumnSpan(lActualIntervalTimeUnitBox, 1);
-
-      lAdvancedOptionsGridPane.add(lActualIntervalField.getLabel(), 1, mRow);
-      lAdvancedOptionsGridPane.add(lActualIntervalField.getTextField(), 2, mRow);
-      lAdvancedOptionsGridPane.add(lActualIntervalTimeUnitBox, 3, mRow);
-      mRow++;
-    }
-
-    //lAdvancedOptionsGridPane.addSeparator();
-
-    {
-      VariableCheckBox lLimitTimelapseDurationCheckBox = new VariableCheckBox("", mTimelapseInterface.getEnforceMaxDurationVariable());
-
-      NumberVariableTextField<Long> lMaxDurationField = new NumberVariableTextField<Long>("Max Duration:", mTimelapseInterface.getMaxDurationVariable(), 0L, Long.MAX_VALUE, 1L);
-
-      EnumComboBoxVariable<TimeUnitEnum> lMaxDurationTimeUnitBox = new EnumComboBoxVariable<TimeUnitEnum>(mTimelapseInterface.getMaxDurationUnitVariable(), TimeUnitEnum.values());
-
-      GridPane.setHalignment(lLimitTimelapseDurationCheckBox.getCheckBox(), HPos.RIGHT);
-      GridPane.setColumnSpan(lLimitTimelapseDurationCheckBox.getCheckBox(), 1);
-      GridPane.setColumnSpan(lMaxDurationField.getLabel(), 1);
-      GridPane.setColumnSpan(lMaxDurationField.getTextField(), 1);
-      GridPane.setColumnSpan(lMaxDurationTimeUnitBox, 1);
-
-      lAdvancedOptionsGridPane.add(lLimitTimelapseDurationCheckBox.getCheckBox(), 0, mRow);
-      lAdvancedOptionsGridPane.add(lMaxDurationField.getLabel(), 1, mRow);
-      lAdvancedOptionsGridPane.add(lMaxDurationField.getTextField(), 2, mRow);
-      lAdvancedOptionsGridPane.add(lMaxDurationTimeUnitBox, 3, mRow);
-      mRow++;
-    }
-
-    {
-
-      Label lStartDateTimeLabel = new Label("Start:");
-
-      DateTimePickerVariable lTimelapseStartDeadline = new DateTimePickerVariable(mTimelapseInterface.getStartDateTimeVariable());
-      lTimelapseStartDeadline.setEditable(false);
-      lTimelapseStartDeadline.getEditor().setEditable(false);
-      lTimelapseStartDeadline.setDisable(true);
-      lTimelapseStartDeadline.setStyle("-fx-opacity: 1;");
-
-      GridPane.setColumnSpan(lStartDateTimeLabel, 1);
-      GridPane.setColumnSpan(lTimelapseStartDeadline, 2);
-
-      lAdvancedOptionsGridPane.add(lStartDateTimeLabel, 1, mRow);
-      lAdvancedOptionsGridPane.add(lTimelapseStartDeadline, 2, mRow);
-      mRow++;
-    }
-
-    {
-      VariableCheckBox lEnforceMaxDateTimeCheckBox = new VariableCheckBox("", mTimelapseInterface.getEnforceMaxDateTimeVariable());
-
-      Label lStopDateTimeLabel = new Label("Stop:");
-
-      DateTimePickerVariable lTimelapseStopDeadline = new DateTimePickerVariable(mTimelapseInterface.getMaxDateTimeVariable());
-
-      GridPane.setHalignment(lEnforceMaxDateTimeCheckBox.getCheckBox(), HPos.RIGHT);
-      GridPane.setColumnSpan(lEnforceMaxDateTimeCheckBox.getCheckBox(), 1);
-      GridPane.setColumnSpan(lStopDateTimeLabel, 1);
-      GridPane.setColumnSpan(lTimelapseStopDeadline, 2);
-
-      lAdvancedOptionsGridPane.add(lEnforceMaxDateTimeCheckBox.getCheckBox(), 0, mRow);
-      lAdvancedOptionsGridPane.add(lStopDateTimeLabel, 1, mRow);
-      lAdvancedOptionsGridPane.add(lTimelapseStopDeadline, 2, mRow);
-      mRow++;
-    }
-
-    //lAdvancedOptionsGridPane.addSeparator();
-
-    //lAdvancedOptionsGridPane.addSeparator();
-
-    {
-      VariableCheckBox lAutoPilotCheckBox = new VariableCheckBox("AutoPilot", mTimelapseInterface.getAdaptiveEngineOnVariable());
-
-      GridPane.setHalignment(lAutoPilotCheckBox.getCheckBox(), HPos.RIGHT);
-      GridPane.setColumnSpan(lAutoPilotCheckBox.getLabel(), 1);
-      GridPane.setColumnSpan(lAutoPilotCheckBox.getCheckBox(), 1);
-
-      GridPane.setColumnSpan(lAutoPilotCheckBox.getLabel(), 3);
-      lAdvancedOptionsGridPane.add(lAutoPilotCheckBox.getCheckBox(), 0, mRow);
-      lAdvancedOptionsGridPane.add(lAutoPilotCheckBox.getLabel(), 1, mRow);
-
-      mRow++;
-    }
-
-    {
-      NumberVariableTextField<Integer> lMinStepsTextField = new NumberVariableTextField<>("Min & max steps per tp:", mTimelapseInterface.getMinAdaptiveEngineStepsVariable());
-
-      NumberVariableTextField<Integer> lMaxStepsTextField = new NumberVariableTextField<>("", mTimelapseInterface.getMaxAdaptiveEngineStepsVariable());
-
-      lMinStepsTextField.getTextField().setPrefWidth(50);
-      lMaxStepsTextField.getTextField().setPrefWidth(50);
-
-      GridPane.setHalignment(lMinStepsTextField.getLabel(), HPos.RIGHT);
-
-      HBox lHBox = new HBox(lMinStepsTextField.getTextField(), new Label("    "), lMaxStepsTextField.getTextField());
-
-      GridPane.setColumnSpan(lHBox, 2);
-      GridPane.setHgrow(lHBox, Priority.ALWAYS);
-
-      GridPane.setHalignment(lHBox, HPos.CENTER);
-
-      lAdvancedOptionsGridPane.add(lMinStepsTextField.getLabel(), 1, mRow);
-      lAdvancedOptionsGridPane.add(lHBox, 2, mRow);
-
-      mRow++;
-    }
-
-    {
-
-      TitledPane lTitledPane = new TitledPane("Advanced options", lAdvancedOptionsGridPane);
+      TitledPane lTitledPane = new TitledPane("Schedule", lSchedulerChecklistGridPane);
       lTitledPane.setAnimated(false);
-      lTitledPane.setExpanded(false);
+      lTitledPane.setExpanded(true);
       GridPane.setColumnSpan(lTitledPane, 4);
       add(lTitledPane, 0, mRow);
       mRow++;
 
+      {
+        Label lLabel = new Label("Current program");
+        lSchedulerChecklistGridPane.add(lLabel, 0, lRow);
+        lRow++;
+      }
+
+      ArrayList<InstructionInterface> lSchedulerList = pTimelapse.getCurrentProgram();
+      mCurrentProgramScheduleListView = new ListView<InstructionInterface>();
+      mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+      refreshPropertiesScrollPane();
+      mCurrentProgramScheduleListView.setMinHeight(300);
+      mCurrentProgramScheduleListView.setMinWidth(450);
+
+      mCurrentProgramScheduleListView.setOnMouseClicked(new EventHandler<MouseEvent>()
+      {
+        @Override
+        public void handle(MouseEvent mouseEvent)
+        {
+          /**
+           * Dirty hack: Use Java reflections to discover a matching panel TODO:
+           * find a better way of doing this, without reflections
+           */
+          if (mouseEvent.getClickCount() > 0)
+          {
+            refreshPropertiesScrollPane();
+          }
+        }
+      });
+
+      lSchedulerChecklistGridPane.add(mCurrentProgramScheduleListView, 0, lRow, 1, 9);
+
+      {
+        Button lMoveUpButton = new Button("^");
+        lMoveUpButton.setTooltip(new Tooltip("Move up"));
+        lMoveUpButton.setMinWidth(35);
+        lMoveUpButton.setMinHeight(35);
+        lMoveUpButton.setOnAction((e) ->
+        {
+          int i = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
+          if (i > 0)
+          {
+            InstructionInterface lInstructionInterface = lSchedulerList.get(i);
+            lSchedulerList.remove(i);
+            lSchedulerList.add(i - 1, lInstructionInterface);
+            mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+            refreshPropertiesScrollPane();
+          }
+        });
+        lSchedulerChecklistGridPane.add(lMoveUpButton, 1, lRow);
+        lRow++;
+      }
+
+      {
+        Button lMoveDownButton = new Button("v");
+        lMoveDownButton.setTooltip(new Tooltip("Move down"));
+        lMoveDownButton.setMinWidth(35);
+        lMoveDownButton.setMinHeight(35);
+        lMoveDownButton.setOnAction((e) ->
+        {
+          int count = 0;
+          int i = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
+          if (i >= 0 && i < lSchedulerList.size() - 1)
+          {
+            InstructionInterface lInstructionInterface = lSchedulerList.get(i);
+            lSchedulerList.remove(i);
+            lSchedulerList.add(i + 1, lInstructionInterface);
+            mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+            refreshPropertiesScrollPane();
+          }
+        });
+        lSchedulerChecklistGridPane.add(lMoveDownButton, 1, lRow);
+        lRow++;
+      }
+
+      {
+        Button lMinusButton = new Button("-");
+        lMinusButton.setTooltip(new Tooltip("Remove"));
+        lMinusButton.setMinWidth(35);
+        lMinusButton.setMinHeight(35);
+        lMinusButton.setOnAction((e) ->
+        {
+          int count = 0;
+          int lSelectedIndex = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
+          for (int i : mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndices().sorted())
+          {
+            lSchedulerList.remove(i - count);
+            count++;
+          }
+          mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+          mCurrentProgramScheduleListView.getSelectionModel().select(lSelectedIndex);
+          refreshPropertiesScrollPane();
+        });
+        GridPane.setValignment(lMinusButton, VPos.BOTTOM);
+        lSchedulerChecklistGridPane.add(lMinusButton, 1, lRow);
+        lRow++;
+      }
+
+      {
+        Button lUnselectButton = new Button("[]");
+        lUnselectButton.setTooltip(new Tooltip("Unselect"));
+        lUnselectButton.setMinWidth(35);
+        lUnselectButton.setMinHeight(35);
+        lUnselectButton.setOnAction((e) ->
+        {
+          mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+          mCurrentProgramScheduleListView.getSelectionModel().select(-1);
+          refreshPropertiesScrollPane();
+        });
+        GridPane.setValignment(lUnselectButton, VPos.BOTTOM);
+        lSchedulerChecklistGridPane.add(lUnselectButton, 1, lRow);
+        lRow++;
+      }
+
+      {
+        Button lCloneButton = new Button("++");
+        lCloneButton.setTooltip(new Tooltip("Clone"));
+        lCloneButton.setMinWidth(35);
+        lCloneButton.setMinHeight(35);
+        lCloneButton.setOnAction((e) ->
+        {
+          int lSelectedIndex = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
+          if (lSelectedIndex > -1)
+          {
+            lSchedulerList.add(lSelectedIndex, lSchedulerList.get(lSelectedIndex).copy());
+          }
+          mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+          refreshPropertiesScrollPane();
+        });
+        GridPane.setValignment(lCloneButton, VPos.BOTTOM);
+        lSchedulerChecklistGridPane.add(lCloneButton, 1, lRow);
+        lRow++;
+      }
+
+      lRow = 10;
+      {
+        ComboBox lExistingScheduleTemplates;
+        {
+          // load
+          lExistingScheduleTemplates = new ComboBox(listExistingSchedulerTemplateFiles());
+          lSchedulerChecklistGridPane.add(lExistingScheduleTemplates, 0, lRow);
+
+          Button lLoadScheduleTemplateBytton = new Button("Load");
+          lLoadScheduleTemplateBytton.setMaxWidth(Double.MAX_VALUE);
+          lLoadScheduleTemplateBytton.setOnAction((e) ->
+          {
+            try
+            {
+              mTimelapse.getCurrentProgram().clear();
+              new ProgramReader(lSchedulerList, (LightSheetMicroscope) mTimelapse.getMicroscope(), getFile(lExistingScheduleTemplates.getValue().toString())).read();
+              mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+              refreshPropertiesScrollPane();
+            } catch (Exception e1)
+            {
+              e1.printStackTrace();
+            }
+          });
+
+          lSchedulerChecklistGridPane.add(lLoadScheduleTemplateBytton, 1, lRow, 2, 1);
+          lRow++;
+
+        }
+
+        {
+          // save
+          Variable<String> lFileNameVariable = new Variable<String>("filename", "Program");
+
+          TextField lFileNameTextField = new TextField(lFileNameVariable.get());
+          lFileNameTextField.setMaxWidth(Double.MAX_VALUE);
+          lFileNameTextField.textProperty().addListener((obs, o, n) ->
+          {
+            String lName = n.trim();
+            if (!lName.isEmpty()) lFileNameVariable.set(lName);
+          });
+          lSchedulerChecklistGridPane.add(lFileNameTextField, 0, lRow);
+
+          Button lSaveProgramButton = new Button("Save");
+          lSaveProgramButton.setAlignment(Pos.CENTER);
+          lSaveProgramButton.setMaxWidth(Double.MAX_VALUE);
+          lSaveProgramButton.setOnAction((e) ->
+          {
+            try
+            {
+              new ProgramWriter(mTimelapse.getCurrentProgram(), getFile(lFileNameVariable.get())).write();
+              lExistingScheduleTemplates.setItems(listExistingSchedulerTemplateFiles());
+            } catch (Exception e1)
+            {
+              e1.printStackTrace();
+            }
+          });
+          GridPane.setColumnSpan(lSaveProgramButton, 1);
+          lSchedulerChecklistGridPane.add(lSaveProgramButton, 1, lRow, 2, 1);
+          lRow++;
+        }
+
+      }
+
+      String[] lFilters = {"Acquisition:", "Adaptation:", "Adaptive optics:", "Filter wheel:", "Fusion:",
+
+              "IO:", "Laser:", "Memory:", "Post-processing:", "Smart:",
+
+              "Timing:", "Visualisation:"};
+
+      Node[] lIcons = {MicroscopeNodeType.Acquisition.getIcon(), MicroscopeNodeType.AdaptiveOptics.getIcon(), MicroscopeNodeType.AdaptiveOptics.getIcon(), MicroscopeNodeType.FilterWheel.getIcon(), MicroscopeNodeType.Scripting.getIcon(),
+
+              MicroscopeNodeType.Laser.getIcon(), MicroscopeNodeType.Scripting.getIcon(), MicroscopeNodeType.Scripting.getIcon(), MicroscopeNodeType.Scripting.getIcon(), MicroscopeNodeType.Scripting.getIcon(),
+
+              MicroscopeNodeType.Scripting.getIcon(), MicroscopeNodeType.StackDisplay3D.getIcon()};
+
+      lRow = 0;
+      // properties panel
+      {
+
+        Label lLabel = new Label("Properties");
+        lSchedulerChecklistGridPane.add(lLabel, 2, lRow, 2, 1);
+        lRow++;
+
+        mPropertiesScrollPane = new ScrollPane();
+        mPropertiesScrollPane.setMinHeight(150);
+        mPropertiesScrollPane.setMaxHeight(150);
+        mPropertiesScrollPane.setMaxHeight(450);
+        lSchedulerChecklistGridPane.add(mPropertiesScrollPane, 2, lRow, 2, 5);
+        lRow++;
+
+      }
+
+      lRow = 7;
+      {
+        Label lLabel = new Label("Add instruction");
+        lSchedulerChecklistGridPane.add(lLabel, 2, lRow, 2, 1);
+        lRow++;
+
+        TreeItem<String> rootItem = buildInstructionTree(mTimelapse, lFilters, "", lIcons);
+        TreeView<String> tree = new TreeView<String>(rootItem);
+
+        Label lSearchLabel = new Label("Search");
+        lSchedulerChecklistGridPane.add(lSearchLabel, 2, lRow);
+
+        TextField lSearchField = new TextField();
+        lSchedulerChecklistGridPane.add(lSearchField, 3, lRow);
+        lSchedulerChecklistGridPane.setOnKeyReleased((e) ->
+        {
+          info("keyreleased");
+          tree.setRoot(buildInstructionTree(mTimelapse, lFilters, lSearchField.getText(), lIcons));
+        });
+        lRow++;
+
+        tree.setMinHeight(150);
+        tree.setMinWidth(450);
+
+        tree.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+          @Override
+          public void handle(MouseEvent mouseEvent)
+          {
+            if (mouseEvent.getClickCount() == 2)
+            {
+              TreeItem<String> item = tree.getSelectionModel().getSelectedItem();
+              System.out.println("Selected Text : " + item.getValue());
+              if (item.getParent() != null && item.getParent().getValue().compareTo("Instructions") != 0)
+              {
+                int lSelectedIndexInMainList = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
+                if (lSelectedIndexInMainList < 0) lSelectedIndexInMainList = lSchedulerList.size();
+                lSchedulerList.add(lSelectedIndexInMainList, mTimelapse.getListOfAvailableInstructions(item.getParent().getValue() + ":" + item.getValue()).get(0).copy());
+                mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+                if (mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex() > -1)
+                {
+                  mCurrentProgramScheduleListView.getSelectionModel().select(mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex() - 1);
+                }
+                refreshPropertiesScrollPane();
+              }
+            }
+          }
+        });
+
+        StackPane lStackPane = new StackPane();
+        lStackPane.getChildren().add(tree);
+
+        lSchedulerChecklistGridPane.add(lStackPane, 2, lRow, 2, 1);
+        // lRow+=5;
+
+      }
+
     }
-    return lAdvancedOptionsGridPane;
+
+    CustomGridPane lAdvancedOptionsGridPane = buildAdvancedOptionsGripPane();
+
+    int lRow = lAdvancedOptionsGridPane.getLastUsedRow();
+
+    {
+      MicroscopeInterface lMicroscopeInterface = mTimelapse.getMicroscope();
+      AdaptiveEngine lAdaptiveEngine = (AdaptiveEngine) lMicroscopeInterface.getDevice(AdaptiveEngine.class, 0);
+
+      if (lAdaptiveEngine != null)
+      {
+        int lNumberOfLightSheets = 1;
+        if (lMicroscopeInterface instanceof LightSheetMicroscope)
+        {
+          lNumberOfLightSheets = ((LightSheetMicroscope) lMicroscopeInterface).getNumberOfLightSheets();
+        }
+
+        ConfigurationStatePanel lConfigurationStatePanel = new ConfigurationStatePanel(lAdaptiveEngine.getModuleList(), lNumberOfLightSheets);
+
+        TitledPane lTitledPane = new TitledPane("Adaptation state", lConfigurationStatePanel);
+        lTitledPane.setAnimated(false);
+        lTitledPane.setExpanded(false);
+        GridPane.setColumnSpan(lTitledPane, 4);
+        add(lTitledPane, 0, mRow);
+        mRow++;
+      }
+    }
+
+  }
+
+  private void refreshPropertiesScrollPane()
+  {
+    ArrayList<InstructionInterface> lSchedulerList = mTimelapse.getCurrentProgram();
+    if (mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex() > -1)
+    {
+      InstructionInterface lInstruction = lSchedulerList.get(mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex());
+      System.out.println("Selected: " + lSchedulerList.get(mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex()));
+      try
+      {
+        Class<?> lInstructionClass = lInstruction.getClass();
+        String lInstructionClassName = lInstructionClass.getSimpleName();
+        String lInstructionPanelClassName = lInstructionClass.getPackage().getName() + ".gui." + lInstructionClassName + "Panel";
+        info("Searching for class %s as panel for calibration module %s \n", lInstructionPanelClassName, lInstructionClassName);
+        Class<?> lClass = Class.forName(lInstructionPanelClassName);
+        Constructor<?> lConstructor = lClass.getConstructor(lInstruction.getClass());
+        Node lPanel = (Node) lConstructor.newInstance(lInstruction);
+
+        mPropertiesScrollPane.setContent(lPanel);
+      } catch (ClassNotFoundException e)
+      {
+        warning("Cannot find panel for module %s \n", lInstruction.getClass().getSimpleName());
+        // e.printStackTrace();
+        mPropertiesScrollPane.setContent(null);
+      } catch (Throwable e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private TreeItem<String> buildInstructionTree(TimelapseInterface pTimelapse, String[] lFilters, String pSearchFilter, Node[] lIcons)
+  {
+    TreeItem<String> rootItem = new TreeItem<String>("Instructions", MicroscopeNodeType.Other.getIcon());
+    rootItem.setExpanded(true);
+    for (int i = 0; i < lFilters.length; i++)
+    {
+      ArrayList<InstructionInterface> lAvailableSchedulersList = pTimelapse.getListOfAvailableInstructions(lFilters[i], pSearchFilter);
+      if (lAvailableSchedulersList.size() > 0)
+      {
+
+        TreeItem<String> item = new TreeItem<String>(lFilters[i].replace(":", ""), lIcons[i]);
+        item.setExpanded(pSearchFilter.length() > 0);
+        rootItem.getChildren().add(item);
+
+        for (InstructionInterface lInstructionInterface : lAvailableSchedulersList)
+        {
+          TreeItem<String> schedulerItem = new TreeItem<String>(lInstructionInterface.getName().replace(lFilters[i], ""));
+          item.getChildren().add(schedulerItem);
+        }
+      }
+    }
+    return rootItem;
+  }
+
+  private ObservableList<String> listExistingSchedulerTemplateFiles()
+  {
+    ArrayList<String> filenames = getScheduleTemplateNames();
+    ObservableList<String> list = FXCollections.observableArrayList(filenames);
+    return list;
+  }
+
+  private File getFile(String pName)
+  {
+    return new File(mProgramTemplateDirectory, pName + ".txt");
+  }
+
+  ArrayList<String> mExistingTemplateFileList = new ArrayList<String>();
+
+  private ArrayList<String> getScheduleTemplateNames()
+  {
+    File folder = mProgramTemplateDirectory;
+
+    mExistingTemplateFileList.clear();
+    for (File file : folder.listFiles())
+    {
+      if (!file.isDirectory() && file.getAbsolutePath().endsWith(".txt"))
+      {
+        String fileName = file.getName();
+        fileName = fileName.substring(0, fileName.length() - 4);
+
+        mExistingTemplateFileList.add(fileName);
+      }
+    }
+
+    return mExistingTemplateFileList;
   }
 
 }

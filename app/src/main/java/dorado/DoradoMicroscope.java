@@ -4,7 +4,6 @@ import clearcl.ClearCLContext;
 import clearcontrol.component.detection.DetectionArm;
 import clearcontrol.component.lightsheet.LightSheet;
 import clearcontrol.component.lightsheet.instructions.ChangeLightSheetWidthInstruction;
-import clearcontrol.component.lightsheet.instructions.MultiChannelInstruction;
 import clearcontrol.component.opticalswitch.LightSheetOpticalSwitch;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
@@ -15,7 +14,7 @@ import clearcontrol.devices.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
 import clearcontrol.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.simulation.SimulatedLightSheetMicroscope;
-import clearcontrol.timelapse.LightSheetTimelapse;
+import clearcontrol.timelapse.Timelapse;
 
 
 /**
@@ -161,13 +160,8 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
   {
     super.addStandardDevices(pNumberOfControlPlanes);
 
-    LightSheetTimelapse timelapse = getTimelapse();
-    timelapse.getListOfActivatedSchedulers().add(0, new ChangeLightSheetWidthInstruction(this, 0.45));
-
-    {
-      MultiChannelInstruction lMultiChannelInstruction = new MultiChannelInstruction(this);
-      addDevice(0, lMultiChannelInstruction);
-    }
+    Timelapse timelapse = getTimelapse();
+    timelapse.getListOfAvailableInstructions().add(0, new ChangeLightSheetWidthInstruction(this, 0.45));
 
   }
 

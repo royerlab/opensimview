@@ -22,8 +22,8 @@ import clearcontrol.processor.LightSheetFastFusionProcessor;
 import clearcontrol.processor.gui.LightSheetFastFusionProcessorPanel;
 import clearcontrol.state.AcquisitionStateManager;
 import clearcontrol.state.gui.AcquisitionStateManagerPanel;
-import clearcontrol.timelapse.LightSheetTimelapse;
-import clearcontrol.timelapse.gui.LightSheetTimelapseToolbar;
+import clearcontrol.timelapse.Timelapse;
+import clearcontrol.timelapse.gui.TimelapseToolbar;
 import clearcontrol.timelapse.gui.TimelapsePanel;
 import clearcontrol.timelapse.timer.TimelapseTimerInterface;
 import javafx.stage.Stage;
@@ -74,7 +74,7 @@ public class LightSheetMicroscopeGUI extends MicroscopeGUI
 
     addPanelMappingEntry(CalibrationEngine.class, CalibrationEnginePanel.class, MicroscopeNodeType.Acquisition);
 
-    addToolbarMappingEntry(LightSheetTimelapse.class, LightSheetTimelapseToolbar.class);
+    addToolbarMappingEntry(Timelapse.class, TimelapseToolbar.class);
 
     addPanelMappingEntry(AdaptiveEngine.class, LightSheetAdaptiveEnginePanel.class, MicroscopeNodeType.Acquisition);
 

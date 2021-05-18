@@ -1,4 +1,4 @@
-package clearcontrol.instructions.implementations.gui;
+package clearcontrol.devices.lasers.instructions.gui;
 
 import clearcontrol.devices.lasers.instructions.ChangeLaserPowerInstruction;
 import clearcontrol.gui.jfx.custom.gridpane.CustomGridPane;

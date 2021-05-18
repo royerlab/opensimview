@@ -2,6 +2,7 @@ package clearcontrol.timelapse;
 
 import clearcontrol.MicroscopeInterface;
 import clearcontrol.adaptive.AdaptiveEngine;
+import clearcontrol.core.concurrent.timing.ElapsedTime;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.task.LoopTaskDevice;
 import clearcontrol.core.variable.Variable;
@@ -9,6 +10,9 @@ import clearcontrol.core.variable.VariableSetListener;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.gui.jfx.var.combo.enums.TimeUnitEnum;
+import clearcontrol.instructions.InstructionInterface;
+import clearcontrol.processor.LightSheetFastFusionEngine;
+import clearcontrol.processor.LightSheetFastFusionProcessor;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.metadata.MetaDataChannel;
 import clearcontrol.stack.sourcesink.StackSinkSourceInterface;
@@ -16,6 +20,7 @@ import clearcontrol.stack.sourcesink.sink.AsynchronousFileStackSinkAdapter;
 import clearcontrol.stack.sourcesink.sink.CompressedStackSink;
 import clearcontrol.stack.sourcesink.sink.FileStackSinkInterface;
 import clearcontrol.state.AcquisitionStateInterface;
+import clearcontrol.timelapse.io.ProgramWriter;
 import clearcontrol.timelapse.timer.TimelapseTimerInterface;
 import clearcontrol.timelapse.timer.fixed.FixedIntervalTimelapseTimer;
 
@@ -24,16 +29,20 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Base implementation providing common fields and methods for all Timelapse
- * implementations ? extends FileStackSinkInterface
+ * Timelapse implementations ? extends FileStackSinkInterface
  *
  * @author royer
  */
-public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseInterface
+public class Timelapse extends LoopTaskDevice implements TimelapseInterface
 {
+  private static final int cMinimumNumberOfAvailableStacks = 16;
+  private static final int cMaximumNumberOfAvailableStacks = 16;
+  private static final int cMaximumNumberOfLiveStacks = 16;
+
   private static final DateTimeFormatter sDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss-SS");
 
   private final MicroscopeInterface<?> mMicroscope;
@@ -82,16 +91,25 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
 
   private final VariableSetListener<StackInterface> mStackListener;
 
+  protected ArrayList<InstructionInterface> mCurrentProgram = new ArrayList<InstructionInterface>();
+
+  private Variable<Integer> mInstructionIndexVariable = new Variable<Integer>("instructions index", 0);
+
+  ArrayList<InstructionInterface> mInitializedInstructionsList;
+
+
   /**
    * Instantiates a timelapse with a given timelapse timer
    *
    * @param pMicroscope     microscope
    * @param pTimelapseTimer timelapse timer
    */
-  public TimelapseBase(MicroscopeInterface<?> pMicroscope, TimelapseTimerInterface pTimelapseTimer)
+  public Timelapse(MicroscopeInterface<?> pMicroscope, TimelapseTimerInterface pTimelapseTimer)
   {
     super("Timelapse");
     mMicroscope = pMicroscope;
+
+    getMaxNumberOfTimePointsVariable().set(999999L);
 
     getTimelapseTimerVariable().set(pTimelapseTimer);
 
@@ -139,10 +157,11 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
    *
    * @param pMicroscope microscope
    */
-  public TimelapseBase(MicroscopeInterface<?> pMicroscope)
+  public Timelapse(MicroscopeInterface<?> pMicroscope)
   {
     this(pMicroscope, new FixedIntervalTimelapseTimer());
   }
+
 
   /**
    * Returns the parent microscope
@@ -191,7 +210,23 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
     }
 
     getStartSignalVariable().setEdgeAsync(false, true);
+
+
+    File lProgramFile = new File(getWorkingDirectory(), "program.txt");
+    ProgramWriter writer = new ProgramWriter(mCurrentProgram, lProgramFile);
+    writer.write();
+
+    mInitializedInstructionsList = new ArrayList<InstructionInterface>();
+
+    LightSheetFastFusionProcessor lLightSheetFastFusionProcessor = mMicroscope.getDevice(LightSheetFastFusionProcessor.class, 0);
+    LightSheetFastFusionEngine lLightSheetFastFusionEngine = lLightSheetFastFusionProcessor.getEngine();
+    if (lLightSheetFastFusionEngine != null)
+    {
+      lLightSheetFastFusionEngine.reset(true);
+    }
+    mInstructionIndexVariable.set(0);
   }
+
 
   @Override
   public void stopTimelapse()
@@ -401,7 +436,74 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
   }
 
   @Override
-  public abstract boolean programStep();
+  public boolean programStep()
+  {
+
+    try
+    {
+      info("Executing instruction: " + getInstructionIndexVariable().get());
+
+      mMicroscope.useRecycler("3DTimelapse", cMinimumNumberOfAvailableStacks, cMaximumNumberOfAvailableStacks, cMaximumNumberOfLiveStacks);
+
+      InstructionInterface lNextInstructionToRun = mCurrentProgram.get(mInstructionIndexVariable.get());
+
+      // We stop if the program is empty:
+      if (lNextInstructionToRun == null) return false;
+
+      // if the instruction wasn't initialized yet, initialize it now!
+      if (!mInitializedInstructionsList.contains(lNextInstructionToRun))
+      {
+        lNextInstructionToRun.initialize();
+        mInitializedInstructionsList.add(lNextInstructionToRun);
+      }
+
+      info("Starting " + lNextInstructionToRun);
+      double duration = ElapsedTime.measure("instructions execution", () ->
+      {
+        lNextInstructionToRun.execute(getTimePointCounterVariable().get());
+      });
+      info("Finished " + lNextInstructionToRun + " in " + duration + " ms");
+
+      // Determine the next instruction
+      mInstructionIndexVariable.set(mInstructionIndexVariable.get() + 1);
+      if (mInstructionIndexVariable.get() > mCurrentProgram.size() - 1)
+      {
+        // At this point the program loop has finished... we will restart a loop.
+        mInstructionIndexVariable.set(0);
+        info("Finished time point:" + getTimePointCounterVariable());
+        getTimePointCounterVariable().increment();
+        if (getStopSignalVariable().get())
+        {
+          return false;
+        } else
+        {
+          waitForNextTimePoint();
+          info("Starting time point:" + getTimePointCounterVariable());
+          return true;
+        }
+
+
+      }
+
+    } catch (Throwable e)
+    {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
+
+  @Override
+  public Variable<Integer> getInstructionIndexVariable()
+  {
+    return mInstructionIndexVariable;
+  }
+
+  @Override
+  public ArrayList<InstructionInterface> getCurrentProgram()
+  {
+    return mCurrentProgram;
+  }
 
   @Override
   public Variable<Boolean> getAdaptiveEngineOnVariable()
@@ -519,6 +621,45 @@ public abstract class TimelapseBase extends LoopTaskDevice implements TimelapseI
       return null;
     }
     return mCurrentFileStackSinkVariable.get().getLocation();
+  }
+
+  public ArrayList<InstructionInterface> getListOfAvailableInstructions(String... pMustContainStrings)
+  {
+    ArrayList<InstructionInterface> lListOfAvailabeSchedulers = new ArrayList<>();
+    for (InstructionInterface lScheduler : mMicroscope.getDevices(InstructionInterface.class))
+    {
+      boolean lNamePatternMatches = true;
+      for (String part : pMustContainStrings)
+      {
+        if (!lScheduler.toString().toLowerCase().contains(part.toLowerCase()))
+        {
+          lNamePatternMatches = false;
+          break;
+        }
+      }
+      if (lNamePatternMatches)
+      {
+        lListOfAvailabeSchedulers.add(lScheduler);
+      }
+    }
+
+    lListOfAvailabeSchedulers.sort(new Comparator<InstructionInterface>()
+    {
+      @Override
+      public int compare(InstructionInterface o1, InstructionInterface o2)
+      {
+        return o1.getName().compareTo(o2.getName());
+      }
+    });
+
+    return lListOfAvailabeSchedulers;
+  }
+
+  private static final long cTimeOut = 1000;
+
+  public long getTimeOut()
+  {
+    return cTimeOut;
   }
 
 }

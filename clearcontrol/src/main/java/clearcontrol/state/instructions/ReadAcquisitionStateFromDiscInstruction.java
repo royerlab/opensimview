@@ -6,7 +6,7 @@ import clearcontrol.instructions.LightSheetMicroscopeInstructionBase;
 import clearcontrol.instructions.PropertyIOableInstructionInterface;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.io.InterpolatedAcquisitionStateReader;
-import clearcontrol.timelapse.LightSheetTimelapse;
+import clearcontrol.timelapse.Timelapse;
 
 import java.io.File;
 
@@ -42,7 +42,7 @@ public class ReadAcquisitionStateFromDiscInstruction extends LightSheetMicroscop
   public boolean execute(long pTimePoint)
   {
 
-    LightSheetTimelapse lTimelapse = (LightSheetTimelapse) getLightSheetMicroscope().getDevice(LightSheetTimelapse.class, 0);
+    Timelapse lTimelapse = (Timelapse) getLightSheetMicroscope().getDevice(Timelapse.class, 0);
 
     InterpolatedAcquisitionState lState = (InterpolatedAcquisitionState) (getLightSheetMicroscope().getAcquisitionStateManager().getCurrentState());
 
