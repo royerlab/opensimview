@@ -122,18 +122,22 @@ public class Timelapse extends LoopTaskDevice implements TimelapseInterface
     mStackListener = (o, n) ->
     {
       Variable<AsynchronousFileStackSinkAdapter> lStackSinkVariable = getCurrentFileStackSinkVariable();
-      if (getSaveStacksVariable().get() && lStackSinkVariable != null && n != null
-      /*&& n.getMetaData()
-          .getValue(MetaDataAcquisitionType.AcquisitionType) == AcquisitionType.TimeLapse*/)
+      if (lStackSinkVariable != null && n != null)
       {
-        info("Received new stack %s and appending it to the file sink %s", n, lStackSinkVariable);
+        if (getSaveStacksVariable().get())
+        {
+          info("Received new stack %s and appending it to the file sink %s", n, lStackSinkVariable);
 
-        String lChannelInMetaData = n.getMetaData().getValue(MetaDataChannel.Channel);
+          String lChannelInMetaData = n.getMetaData().getValue(MetaDataChannel.Channel);
 
-        final String lChannel = lChannelInMetaData != null ? lChannelInMetaData : StackSinkSourceInterface.cDefaultChannel;
+          final String lChannel = lChannelInMetaData != null ? lChannelInMetaData : StackSinkSourceInterface.cDefaultChannel;
 
-        lStackSinkVariable.get().appendStack(lChannel, n);
-
+          lStackSinkVariable.get().appendStack(lChannel, n);
+        }
+        else
+        {
+          getMicroscope().getCleanupStackVariable().setAsync(n);
+        }
       }
     };
 

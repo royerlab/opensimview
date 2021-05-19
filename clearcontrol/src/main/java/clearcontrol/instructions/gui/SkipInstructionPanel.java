@@ -7,7 +7,8 @@ public class SkipInstructionPanel extends CustomGridPane
 {
   public SkipInstructionPanel(SkipInstruction pInstruction)
   {
-    addIntegerField(pInstruction.getSkipPeriod(), 0);
-    addIntegerField(pInstruction.getNumberOfInstructionsToSkip(), 1);
+    addCheckbox(pInstruction.getInvertedVariable(), 0);
+    addIntegerField(pInstruction.getSkipPeriodVariable(), 1);
+    addIntegerField(pInstruction.getNumberOfInstructionsToSkipVariable(), 2);
   }
 }

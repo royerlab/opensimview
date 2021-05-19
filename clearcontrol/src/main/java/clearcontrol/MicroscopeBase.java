@@ -382,6 +382,12 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   }
 
   @Override
+  public CleanupStackVariable getCleanupStackVariable()
+  {
+    return mCleanupStackVariable;
+  }
+
+  @Override
   public void useRecycler(final String pName, final int pMinimumNumberOfAvailableStacks, final int pMaximumNumberOfAvailableObjects, final int pMaximumNumberOfLiveObjects)
   {
     int lNumberOfStackCameraDevices = getNumberOfDevices(StackCameraDeviceInterface.class);

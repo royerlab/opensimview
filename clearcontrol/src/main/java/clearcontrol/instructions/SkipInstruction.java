@@ -12,7 +12,8 @@ import clearcontrol.timelapse.instructions.AbstractAcquistionInstruction;
  */
 public class SkipInstruction extends AbstractAcquistionInstruction implements InstructionInterface, PropertyIOableInstructionInterface, LoggingFeature
 {
-  private final BoundedVariable<Integer> mSkipPeriod;
+  private final Variable<Boolean> mInvertedVariable;
+  private final BoundedVariable<Integer> mSkipPeriodVariable;
   private final BoundedVariable<Integer> mNumberOfInstructionsToSkipVariable;
   private TimelapseInterface mTimeLapse;
 
@@ -20,15 +21,17 @@ public class SkipInstruction extends AbstractAcquistionInstruction implements In
   {
     super("Smart: Skip instruction", pLightSheetMicroscope);
     mTimeLapse = pTimeLapse;
-    mSkipPeriod = new BoundedVariable<>("Skipping period", -1, -1, 100000);
+    mInvertedVariable = new Variable<>("Inverted Skipping", true);
+    mSkipPeriodVariable = new BoundedVariable<>("Skipping period", -1, -1, 100000);
     mNumberOfInstructionsToSkipVariable = new BoundedVariable<>("Number of instructions to skip", 0, 0, 1000);
   }
 
   @Override
   public boolean execute(long pTimePoint)
   {
-    int lSkipPeriod = mSkipPeriod.get();
-    if (lSkipPeriod>0 && pTimePoint % lSkipPeriod == 0)
+    boolean inverted = mInvertedVariable.get();
+    int lSkipPeriod = mSkipPeriodVariable.get();
+    if (lSkipPeriod>0 && ( inverted ^ (pTimePoint % lSkipPeriod == 0)))
     {
 
       int lCurrentProgramIndex = mTimeLapse.getInstructionIndexVariable().get();
@@ -47,12 +50,17 @@ public class SkipInstruction extends AbstractAcquistionInstruction implements In
     return new SkipInstruction(getLightSheetMicroscope(), mTimeLapse);
   }
 
-  public BoundedVariable<Integer> getSkipPeriod()
+  public Variable<Boolean> getInvertedVariable()
   {
-    return mSkipPeriod;
+    return mInvertedVariable;
   }
 
-  public BoundedVariable<Integer> getNumberOfInstructionsToSkip()
+  public BoundedVariable<Integer> getSkipPeriodVariable()
+  {
+    return mSkipPeriodVariable;
+  }
+
+  public BoundedVariable<Integer> getNumberOfInstructionsToSkipVariable()
   {
     return mNumberOfInstructionsToSkipVariable;
   }
@@ -61,7 +69,7 @@ public class SkipInstruction extends AbstractAcquistionInstruction implements In
   @Override
   public Variable[] getProperties()
   {
-    Variable[] lVariables = new Variable[]{mSkipPeriod, mNumberOfInstructionsToSkipVariable};
+    Variable[] lVariables = new Variable[]{mInvertedVariable, mSkipPeriodVariable, mNumberOfInstructionsToSkipVariable};
     return lVariables;
   }
 }

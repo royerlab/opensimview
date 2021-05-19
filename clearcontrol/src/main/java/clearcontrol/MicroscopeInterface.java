@@ -7,6 +7,7 @@ import clearcontrol.core.device.queue.QueueDeviceInterface;
 import clearcontrol.core.device.queue.QueueInterface;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.devices.stages.StageDeviceInterface;
+import clearcontrol.stack.CleanupStackVariable;
 import clearcontrol.stack.StackInterface;
 import clearcontrol.stack.StackRequest;
 import clearcontrol.state.AcquisitionStateManager;
@@ -235,6 +236,14 @@ public interface MicroscopeInterface<Q extends QueueInterface> extends NameableI
    * @return Stack Variable
    */
   public Variable<StackInterface> getTerminatorStackVariable(int pIndex);
+
+
+  /**
+   * Returns Cleanup Stack Variable
+   *
+   * @return Stack Variable
+   */
+  public CleanupStackVariable getCleanupStackVariable();
 
   /**
    * Resets Terminator Stack Variables so that stacks get released.
