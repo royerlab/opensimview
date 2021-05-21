@@ -12,9 +12,7 @@ import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.LightSheetAcquisitionStateInterface;
 
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * This instructions acquires an image stack per camera per light sheet. The image stacks
@@ -27,6 +25,8 @@ import java.util.concurrent.TimeoutException;
  */
 public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruction implements InstructionInterface, PropertyIOableInstructionInterface, LoggingFeature
 {
+
+  private Variable<String> mChannelNameVariable = new Variable<String>("Acquisition Channel");
 
   public SequentialAcquisitionInstruction(String pName, LightSheetMicroscope pLightSheetMicroscope)
   {
@@ -77,8 +77,12 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
             lMetaData.addEntry(MetaDataView.Camera, c);
             lMetaData.addEntry(MetaDataView.LightSheet, l);
 
+            String lChannel = mChannelNameVariable.get().toUpperCase().trim();
             String lCxLyString = MetaDataView.getCxLyString(lMetaData);
-            lMetaData.addEntry(MetaDataChannel.Channel, lCxLyString);
+            if (lChannel.isEmpty())
+              lMetaData.addEntry(MetaDataChannel.Channel, lCxLyString);
+            else
+              lMetaData.addEntry(MetaDataChannel.Channel, lChannel+"-"+lCxLyString);
 
           }
         }
@@ -175,6 +179,12 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
   {
     return mCurrentState.getLightSheetOnOffVariable(pLightIndex).get();
   }
+
+  public Variable<String> getChannelNameVariable()
+  {
+    return mChannelNameVariable;
+  }
+
 
   @Override
   public SequentialAcquisitionInstruction copy()
