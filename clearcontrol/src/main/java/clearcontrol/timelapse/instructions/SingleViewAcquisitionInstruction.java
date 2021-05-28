@@ -18,13 +18,14 @@ public class SingleViewAcquisitionInstruction extends SequentialAcquisitionInstr
 {
   int mCameraIndex;
   int mLightSheetIndex;
+  String mChannelName;
 
-  public SingleViewAcquisitionInstruction(int pCameraIndex, int pLightSheetIndex, LightSheetMicroscope pLightSheetMicroscope)
+  public SingleViewAcquisitionInstruction(int pCameraIndex, int pLightSheetIndex, LightSheetMicroscope pLightSheetMicroscope, String pChannelName)
   {
-    super("Acquisition: Single view C" + pCameraIndex + "L" + pLightSheetIndex, pLightSheetMicroscope);
+    super("Acquisition: Single view C" + pCameraIndex + "L" + pLightSheetIndex, pLightSheetMicroscope, pChannelName);
     mCameraIndex = pCameraIndex;
     mLightSheetIndex = pLightSheetIndex;
-
+    mChannelName = pChannelName;
   }
 
   protected boolean isLightSheetOn(int pLightIndex)
@@ -51,6 +52,6 @@ public class SingleViewAcquisitionInstruction extends SequentialAcquisitionInstr
   @Override
   public SingleViewAcquisitionInstruction copy()
   {
-    return new SingleViewAcquisitionInstruction(mCameraIndex, mLightSheetIndex, getLightSheetMicroscope());
+    return new SingleViewAcquisitionInstruction(mCameraIndex, mLightSheetIndex, getLightSheetMicroscope(), mChannelName);
   }
 }

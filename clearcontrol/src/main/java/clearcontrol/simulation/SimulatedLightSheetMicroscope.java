@@ -310,29 +310,16 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
 
       // ------------------------------------------------------------------------
       // Sequential imaging
-      addDevice(0, new SequentialAcquisitionInstruction(this));
+      addDevice(0, new SequentialAcquisitionInstruction(this, "default"));
 
     }
-
-    String[] lOpticPrefusedStackKeys = new String[getNumberOfDetectionArms()];
-    String[] lInterleavedStackKeys = new String[getNumberOfDetectionArms()];
-    String[] lInterleavedWaistStackKeys = new String[getNumberOfDetectionArms()];
-    String[] lHybridInterleavedOpticsPrefusedStackKeys = new String[getNumberOfDetectionArms()];
-    String[] lSequentialStackKeys = new String[getNumberOfDetectionArms() * getNumberOfLightSheets()];
 
     for (int c = 0; c < getNumberOfDetectionArms(); c++)
     {
       for (int l = 0; l < getNumberOfLightSheets(); l++)
       {
-        addDevice(0, new SingleViewAcquisitionInstruction(c, l, this));
-        lSequentialStackKeys[c * getNumberOfLightSheets() + l] = "C" + c + "L" + l;
+        addDevice(0, new SingleViewAcquisitionInstruction(c, l, this, "C" + c + "L" + l));
       }
-      lOpticPrefusedStackKeys[c] = "C" + c + "opticsprefused";
-      lInterleavedStackKeys[c] = "C" + c + "interleaved";
-      lHybridInterleavedOpticsPrefusedStackKeys[c] = "hybrid_interleaved_opticsprefused";
-      lInterleavedWaistStackKeys[c] = "C" + c + "interleaved_waist";
-
-
     }
 
 

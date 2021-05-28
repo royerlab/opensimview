@@ -26,16 +26,17 @@ import java.util.concurrent.TimeUnit;
 public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruction implements InstructionInterface, PropertyIOableInstructionInterface, LoggingFeature
 {
 
-  private Variable<String> mChannelNameVariable = new Variable<String>("Acquisition Channel");
+  private Variable<String> mChannelNameVariable;
 
-  public SequentialAcquisitionInstruction(String pName, LightSheetMicroscope pLightSheetMicroscope)
+  public SequentialAcquisitionInstruction(String pName, LightSheetMicroscope pLightSheetMicroscope, String pChannelName )
   {
     super(pName, pLightSheetMicroscope);
+    mChannelNameVariable = new Variable<String>("Acquisition Channel", pChannelName);
   }
 
-  public SequentialAcquisitionInstruction(LightSheetMicroscope pLightSheetMicroscope)
+  public SequentialAcquisitionInstruction(LightSheetMicroscope pLightSheetMicroscope, String pChannelName)
   {
-    this("Acquisition: Sequential", pLightSheetMicroscope);
+    this("Acquisition: Sequential", pLightSheetMicroscope, pChannelName);
   }
 
   @Override
@@ -189,13 +190,13 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
   @Override
   public SequentialAcquisitionInstruction copy()
   {
-    return new SequentialAcquisitionInstruction(getLightSheetMicroscope());
+    return new SequentialAcquisitionInstruction(getLightSheetMicroscope(), getChannelNameVariable().get());
   }
 
   @Override
   public Variable[] getProperties()
   {
-    Variable[] lVariables = new Variable[]{mChannelNameVariable};
+    Variable[] lVariables = new Variable[]{getChannelNameVariable()};
     return lVariables;
   }
 }
