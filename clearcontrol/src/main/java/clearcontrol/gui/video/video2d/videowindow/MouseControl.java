@@ -30,9 +30,6 @@ class MouseControl extends MouseAdapter implements MouseListener
   public void mouseDragged(final MouseEvent pMouseEvent)
   {
     handleGammaMinMax(pMouseEvent);
-
-    // mVideoWindow.repaint();
-
   }
 
   public void handleGammaMinMax(final MouseEvent pMouseEvent)

@@ -195,7 +195,7 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
   @Override
   public Variable[] getProperties()
   {
-    Variable[] lVariables = new Variable[0];
+    Variable[] lVariables = new Variable[]{mChannelNameVariable};
     return lVariables;
   }
 }
