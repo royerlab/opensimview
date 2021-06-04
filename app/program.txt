@@ -1,4 +1,1 @@
-Adaptation: Change laser line on/off state::Laser_index=[1] 
-Acquisition: Sequential::
-Adaptation: Change laser line on/off state::Laser_index=[2] 
-Acquisition: Sequential::
+Acquisition: Sequential::Acquisition_Channel=[default] 

@@ -184,6 +184,8 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
       lSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
       lSequence.release();
+      info("DcamImageSequence recycler: #live="+mSequenceRecycler.getNumberOfLiveObjects()+
+              ", #available="+mSequenceRecycler.getNumberOfAvailableObjects()+", #failed_reqs="+mSequenceRecycler.getNumberOfFailedRequests());
 
       lAcquiredStack.setMetaData(pQueue.getMetaDataVariable().get().clone());
 

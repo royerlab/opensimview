@@ -208,8 +208,8 @@ public class DcamSequenceAcquisition extends DcamBase
       format("Stopping acquisition \n");
       mDcamDevice.stop();
 
-      //format("Releasing buffers \n");
-      //mDcamDevice.getBufferControl().releaseBuffers();
+      format("Releasing buffers \n");
+      mDcamDevice.getBufferControl().releaseBuffers();
 
       if (pCallable != null) mSingleThreadExecutorForCallable.submit(pCallable);
       //return pCallable.call();
