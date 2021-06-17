@@ -327,8 +327,6 @@ public class Timelapse extends LoopTaskDevice implements TimelapseInterface
       if (getEnforceMaxDateTimeVariable().get() && getMaxDateTimeVariable().get() != null)
         if (checkMaxDateTime()) return false;
 
-      runAdaptiveEngine(getTimelapseTimerVariable().get());
-
     }
 
     return true;
@@ -336,6 +334,7 @@ public class Timelapse extends LoopTaskDevice implements TimelapseInterface
 
   public void waitForNextTimePoint()
   {
+    info("Waiting for next time point!");
     TimelapseTimerInterface lTimelapseTimer = getTimelapseTimerVariable().get();
     lTimelapseTimer.waitToAcquire(1, TimeUnit.DAYS);
     lTimelapseTimer.notifyAcquisition();
@@ -386,6 +385,8 @@ public class Timelapse extends LoopTaskDevice implements TimelapseInterface
   {
     if (!mAdaptiveEngineOnVariable.get()) return;
 
+    info("Running Adaptive Engine!");
+
     if (mAdaptiveEngine == null) initAdaptiveEngine();
 
     int lMinSteps = getMinAdaptiveEngineStepsVariable().get().intValue();
@@ -397,17 +398,24 @@ public class Timelapse extends LoopTaskDevice implements TimelapseInterface
 
     for (int i = 0; i < lMinSteps && lMoreStepsNeeded; i++)
     {
+      info("Running obligatory step: "+i+"/"+lMinSteps+")");
       lMoreStepsNeeded = mAdaptiveEngine.step();
     }
+    final int lNumberOfStepsToRun = (lMaxSteps - lMinSteps);
 
-    for (int i = 0; i < (lMaxSteps - lMinSteps) && lMoreStepsNeeded; i++)
+    for (int i = 0; (i < lNumberOfStepsToRun) && lMoreStepsNeeded; i++)
     {
-
       long lNextStepInMilliseconds = (long) (mAdaptiveEngine.estimateNextStepInSeconds() * 1000);
 
       if (pTimelapseTimer.enoughTimeFor(lNextStepInMilliseconds, lNextStepInMilliseconds / 10, TimeUnit.MILLISECONDS))
+      {
+        info("Enough time, running one step... ("+i+"/"+lNumberOfStepsToRun+")");
         lMoreStepsNeeded = mAdaptiveEngine.step();
-
+        if (lMoreStepsNeeded)
+          info("Adaptive: more steps needed...");
+      }
+      else
+        info("Not enough time! skipping adaptive step ! ("+i+"/"+lNumberOfStepsToRun+")");
     }
 
     if (!lMoreStepsNeeded) mAdaptiveEngine.reset();
@@ -481,6 +489,7 @@ public class Timelapse extends LoopTaskDevice implements TimelapseInterface
           return false;
         } else
         {
+          runAdaptiveEngine(getTimelapseTimerVariable().get());
           waitForNextTimePoint();
           info("Starting time point:" + getTimePointCounterVariable());
           return true;

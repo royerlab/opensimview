@@ -7,6 +7,8 @@ import dcamj2.utils.StopWatch;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static java.lang.Math.max;
+
 /**
  * Dcam sequence acquisition
  *
@@ -17,11 +19,13 @@ public class DcamSequenceAcquisition extends DcamBase
 
   DcamDevice mDcamDevice;
 
-  ExecutorService mSingleThreadExecutor = new ThreadPoolExecutor(1, 1, 1000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1));
+  ExecutorService mSingleThreadExecutor = new ThreadPoolExecutor(1, 1, 1000L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1));
 
-  ExecutorService mSingleThreadExecutorForCallable = new ThreadPoolExecutor(2, 2, 1000L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(3));
+  ExecutorService mSingleThreadExecutorForCallable = new ThreadPoolExecutor(2, 4, 1000L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(4));
 
   private final ReentrantLock mLock = new ReentrantLock();
+
+  private volatile int mTimeOutCount = 0;
 
   /**
    * Instantiates a Dcam sequence acquisition given a Dcam device
@@ -82,7 +86,7 @@ public class DcamSequenceAcquisition extends DcamBase
     {
       if (!mLock.tryLock(5, TimeUnit.SECONDS))
       {
-        println("WARNING: already locked!");
+        System.out.println("WARNING: already locked!");
         return null;
       }
 
@@ -102,17 +106,17 @@ public class DcamSequenceAcquisition extends DcamBase
         return null;
       }
 
-      println("setting ROI");
+      System.out.println("setting ROI");
       if (mDcamDevice.getWidth() != pImageSequence.getWidth() * mDcamDevice.getBinning() || mDcamDevice.getHeight() != pImageSequence.getHeight() * mDcamDevice.getBinning())
         mDcamDevice.setCenteredROI(pImageSequence.getWidth() * mDcamDevice.getBinning(), pImageSequence.getHeight() * mDcamDevice.getBinning());
 
       if (mDcamDevice.getWidth() != pImageSequence.getWidth() * mDcamDevice.getBinning() || mDcamDevice.getHeight() != pImageSequence.getHeight() * mDcamDevice.getBinning())
       {
-        println("WARNING: Can't set ROI!");
+        System.out.println("WARNING: Can't set ROI!");
         return null;
       }
 
-      format("set exposure %g seconds \n", pExposureInSeconds);
+      System.out.format("set exposure %g seconds \n", pExposureInSeconds);
       mDcamDevice.setExposure(pExposureInSeconds);
       mDcamDevice.setDefectCorectionMode(true);
 
@@ -120,24 +124,24 @@ public class DcamSequenceAcquisition extends DcamBase
       println("attach buffers");
       mDcamDevice.getBufferControl().attachExternalBuffers(pImageSequence);
 
-      format("Status before start sequence= %s for device %s \n", mDcamDevice.getStatus(), mDcamDevice);
+      System.out.format("Status before start sequence= %s for device %s \n", mDcamDevice.getStatus(), mDcamDevice);
 
-
-      //mDcamDevice.getProperties().listAllProperties();
-
-      println("start sequence... ");
-      mDcamDevice.startSequence();
-
+      // Prepare callable:
       Callable<Boolean> lCallable = () -> asyncSection(pExposureInSeconds, pTimeOutInSeconds, pImageSequence, pCallable);
 
-      return mSingleThreadExecutor.submit(lCallable);
-    } catch (InterruptedException e)
-    {
+      Future<Boolean> lAsyncSectionFuture = mSingleThreadExecutor.submit(lCallable);
 
-    } finally
-    {
+      System.out.println("start sequence... ");
+      mDcamDevice.startSequence();
+      System.out.println("AFTER startSequence");
+
       if (mLock.isHeldByCurrentThread()) mLock.unlock();
 
+      return lAsyncSectionFuture;
+
+    } catch (Throwable e)
+    {
+      e.printStackTrace();
     }
     return null;
   }
@@ -146,24 +150,28 @@ public class DcamSequenceAcquisition extends DcamBase
   {
     try
     {
-      if (!mLock.tryLock(5, TimeUnit.SECONDS)) return false;
+      int lCurrentPriority = Thread.currentThread().getPriority();
+      Thread.currentThread().setPriority(Thread.MAX_PRIORITY-1);
 
-      // timeout default value is at least one sec and 2x more than the
+      // timeout default value is at least one sec and 4x more than the
       // actual estimated acquisition time
-      int lWaitTimeoutInMilliseconds = (int) (10000 + 1000 * pImageSequence.getDepth() * pExposureInSeconds * 2);
+      int lWaitTimeoutInMilliseconds = (int) (4 * 1000 * pImageSequence.getDepth() * pExposureInSeconds);
+      lWaitTimeoutInMilliseconds = max(1000, lWaitTimeoutInMilliseconds);
       if (pTimeOutInSeconds != null && pTimeOutInSeconds * 1000 > lWaitTimeoutInMilliseconds)
       {
         lWaitTimeoutInMilliseconds = 1000 * pTimeOutInSeconds.intValue();
       }
 
-      int lCurrentPriority = Thread.currentThread().getPriority();
-      Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+      System.out.format("Status before waiting=%s for device %s \n", mDcamDevice.getStatus(), mDcamDevice);
 
-      //format("Status before waiting=%s for device %s \n", mDcamDevice.getStatus(), mDcamDevice);
-      println("!!Waiting... ");
+      System.out.println("BEFORE LOCK");
+      mLock.lock();
+      System.out.println("AFTER LOCK");
+
+      System.out.println("!!Waiting for: "+lWaitTimeoutInMilliseconds+" ms ...");
       boolean lWaitSuccess = mDcamDevice.getDcamWait().waitForEventStopped(lWaitTimeoutInMilliseconds);
       final long lAcquisitionTimeStampInNanoseconds = StopWatch.absoluteTimeInNanoseconds();
-      //format("    ...done! Last event: %s for device: %s \n", mDcamDevice.getDcamWait().getLastEvent(), mDcamDevice);
+      System.out.format("    ...done! Last event: %s for device: %s \n", mDcamDevice.getDcamWait().getLastEvent(), mDcamDevice);
 
       //format("Status after waiting=%s for device %s. \n", mDcamDevice.getStatus(), mDcamDevice);
       Thread.currentThread().setPriority(lCurrentPriority);
@@ -171,54 +179,43 @@ public class DcamSequenceAcquisition extends DcamBase
       DCAMCAP_TRANSFERINFO lTransferinfo = mDcamDevice.getTransferInfo();
 
       long lFrameCount = lTransferinfo.nFrameCount();
+      System.out.format("Success: %s with n=%d for device %s \n", lWaitSuccess, lFrameCount, mDcamDevice);
 
-      format("Success: %s with n=%d for device %s \n", lWaitSuccess, lFrameCount, mDcamDevice);
+      final long lReceivedFrameIndexInBufferList = lTransferinfo.nNewestFrameIndex();
+      System.out.format("DcamJ(Runnable): Wrote %d frames into external buffers (local frame index=%d) \n", lFrameCount, lReceivedFrameIndexInBufferList);/**/
 
       if (!lWaitSuccess)
       {
-        System.err.println("DCAMJ2: TIMEOUT!");
-
+        mTimeOutCount +=1;
+        System.err.println("DCAMJ2: TIMEOUT! (total number of occurrences: "+mTimeOutCount+" times!)");
         if (lFrameCount != pImageSequence.getDepth())
           System.err.format("DCAMJ2: WRONG NUMBER OF FRAMES: %d instead of %d \n", lFrameCount, pImageSequence.getDepth());
-
-        return false;
       }
-
-      final long lReceivedFrameIndexInBufferList = lTransferinfo.nNewestFrameIndex();
-
-      format("DcamJ(Runnable): Wrote %d frames into external buffers (local frame index=%d) \n", lFrameCount, lReceivedFrameIndexInBufferList);/**/
 
       if (lFrameCount != pImageSequence.getDepth())
       {
         format("Wrong number of images acquired! should be %d but is %d \n", pImageSequence.getDepth(), lFrameCount);
-
         System.err.format("Wrong number of images acquired! should be %d but is %d \n", pImageSequence.getDepth(), lFrameCount);
-
-        return false;
       }
 
       final boolean lReceivedStopEvent = mDcamDevice.getDcamWait().isLastEventStopped();
       final boolean lReceivedFrameReadyEvent = mDcamDevice.getDcamWait().isLastEventReady();
 
-      format("stop event: %s, ready event: %s, for device: %s\n", lReceivedStopEvent, lReceivedFrameReadyEvent, mDcamDevice);
+      System.out.format("stop event: %s, ready event: %s, for device: %s\n", lReceivedStopEvent, lReceivedFrameReadyEvent, mDcamDevice);
 
       DcamImageSequence lDcamFrame = mDcamDevice.getBufferControl().getStackDcamFrame();
       lDcamFrame.setTimeStampInNs(lAcquisitionTimeStampInNanoseconds);
 
-      format("Stopping acquisition \n");
+      System.out.format("Stopping acquisition \n");
       mDcamDevice.stop();
 
-      format("Releasing buffers \n");
+      System.out.format("Releasing buffers \n");
       mDcamDevice.getBufferControl().releaseBuffers();
 
       if (pCallable != null) mSingleThreadExecutorForCallable.submit(pCallable);
-      //return pCallable.call();
 
-      return true;
-    } catch (InterruptedException e)
-    {
-      e.printStackTrace();
-    } catch (Exception e)
+      return lWaitSuccess &&  lFrameCount == pImageSequence.getDepth();
+    } catch (Throwable e)
     {
       e.printStackTrace();
     } finally

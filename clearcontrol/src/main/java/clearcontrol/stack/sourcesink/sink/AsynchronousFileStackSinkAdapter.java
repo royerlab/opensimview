@@ -101,6 +101,7 @@ public class AsynchronousFileStackSinkAdapter implements FileStackSinkInterface
           mStackKeySet.add(lKey);
           StackInterface lStack = pPair.getRight();
           removeZeroLevel(lStack.getContiguousMemory());
+          Thread.currentThread().setPriority(Thread.MIN_PRIORITY+1);
           mStackSink.appendStack(lChannel, lStack);
           lStack.release();
           if (mFinishedProcessingStackVariable != null)

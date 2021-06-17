@@ -11,6 +11,8 @@ import org.blosc.JBlosc;
 import org.blosc.PrimitiveSizes;
 import org.blosc.Shuffle;
 
+import static java.lang.Math.abs;
+
 /**
  * CompressedBuffer.
  * Buffer that can write compressed data.
@@ -31,12 +33,24 @@ public class CompressedBuffer extends ContiguousBuffer
     super(pCompressedMemory);
     mCodecName = pCodecName;
     mCompressionLevel = pCompressionLevel;
-    mNumThreads = pNumThreads == -1 ? Runtime.getRuntime().availableProcessors() / 2 : pNumThreads;
+    if (pNumThreads<-1)
+    {
+      mNumThreads = Runtime.getRuntime().availableProcessors() / abs(pNumThreads);
+    }
+    else
+    {
+      mNumThreads = pNumThreads == -1 ? Runtime.getRuntime().availableProcessors() / 2 : pNumThreads;
+    }
+  }
+
+  public CompressedBuffer(ContiguousMemoryInterface pCompressedMemory, int pNumThreads)
+  {
+    this(pCompressedMemory, "lz4", 3, pNumThreads);
   }
 
   public CompressedBuffer(ContiguousMemoryInterface pCompressedMemory)
   {
-    this(pCompressedMemory, "lz4", 3, -1);
+    this(pCompressedMemory,-1);
   }
 
   public void rewind()
@@ -75,7 +89,7 @@ public class CompressedBuffer extends ContiguousBuffer
     long lBufferSize = pContiguousMemory.getSizeInBytes();
     if (lBufferSize > cMaxBufferSize)
     {
-      long lNumberOfChunks = (long) Math.max(2L, Math.ceil(lBufferSize / cMaxBufferSize));
+      long lNumberOfChunks = (long) Math.max(2L, Math.ceil((float)(lBufferSize) / cMaxBufferSize));
       FragmentedMemory lChunks = FragmentedMemory.split(pContiguousMemory, lNumberOfChunks);
       for (ContiguousMemoryInterface lChunk : lChunks)
       {

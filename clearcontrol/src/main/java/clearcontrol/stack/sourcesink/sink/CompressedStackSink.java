@@ -17,6 +17,7 @@ import java.nio.channels.FileChannel;
  */
 public class CompressedStackSink extends RawFileStackSink
 {
+  public static int sNumThreads = -6;
 
   private CompressedBuffer mCompressedBuffer;
 
@@ -39,7 +40,7 @@ public class CompressedStackSink extends RawFileStackSink
     long lDataLength = lContiguousMemory.getSizeInBytes();
 
     if (mCompressedBuffer == null || mCompressedBuffer.getContiguousMemory().getSizeInBytes() < lDataLength + CompressedBuffer.Overhead)
-      mCompressedBuffer = new CompressedBuffer(OffHeapMemory.allocateBytes(lDataLength + CompressedBuffer.Overhead));
+      mCompressedBuffer = new CompressedBuffer(OffHeapMemory.allocateBytes(lDataLength + CompressedBuffer.Overhead), sNumThreads);
 
     mCompressedBuffer.rewind();
     mCompressedBuffer.writeCompressedMemory(lContiguousMemory);

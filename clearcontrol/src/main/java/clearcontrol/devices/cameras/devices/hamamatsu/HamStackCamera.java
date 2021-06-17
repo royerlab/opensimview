@@ -39,7 +39,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
   private final DcamSequenceAcquisition mDcamSequenceAcquisition;
   private final BasicRecycler<DcamImageSequence, DcamImageSequenceRequest> mSequenceRecycler;
 
-  private Object mLock = new Object();
+  private final Object mLock = new Object();
 
 
   static
@@ -64,7 +64,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
    * @param pCameraDeviceIndex camera index
    * @return stack camera
    */
-  public static final HamStackCamera buildWithInternalTriggering(final int pCameraDeviceIndex)
+  public static HamStackCamera buildWithInternalTriggering(final int pCameraDeviceIndex)
   {
     return new HamStackCamera(pCameraDeviceIndex, StandardTriggerType.Internal);
   }
@@ -75,7 +75,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
    * @param pCameraDeviceIndex camera index
    * @return stack camera
    */
-  public static final HamStackCamera buildWithSoftwareTriggering(final int pCameraDeviceIndex)
+  public static HamStackCamera buildWithSoftwareTriggering(final int pCameraDeviceIndex)
   {
     return new HamStackCamera(pCameraDeviceIndex, StandardTriggerType.Software);
   }
@@ -169,6 +169,10 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
   private Future<Boolean> acquisition(HamStackCameraQueue pQueue, double lExposureInSeconds, long pWidth, long pHeight, long pAcquiredPlanesDepth, long pKeptPlanesDepth)
   {
     final DcamImageSequenceRequest lSequenceRequest = DcamImageSequenceRequest.build(mDcamDevice, 2, pWidth, pHeight, pAcquiredPlanesDepth, true);
+
+    info("DcamImageSequence recycler: #live="+mSequenceRecycler.getNumberOfLiveObjects()+
+            ", #available="+mSequenceRecycler.getNumberOfAvailableObjects()+", #failed_reqs="+mSequenceRecycler.getNumberOfFailedRequests());
+
     final DcamImageSequence lSequence = mSequenceRecycler.getOrWait(cWaitTime, TimeUnit.MILLISECONDS, lSequenceRequest);
 
     //DcamImageSequence lSequence = new DcamImageSequence(mDcamDevice, 2, pWidth, pHeight, pAcquiredPlanesDepth);
