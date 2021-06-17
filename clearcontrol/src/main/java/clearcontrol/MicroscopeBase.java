@@ -92,6 +92,8 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
 
     // We clean up stacks but keep them available for quite some time!
     mCleanupStackVariable = new CleanupStackVariable("CleanupStackVariable", 4);
+
+    resetTerminatorStackVariables();
   }
 
   @Override
@@ -388,16 +390,12 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
   }
 
   @Override
-  public void useRecycler(final String pName, final int pMinimumNumberOfAvailableStacks, final int pMaximumNumberOfAvailableObjects, final int pMaximumNumberOfLiveObjects)
+  public RecyclerInterface<StackInterface, StackRequest> useRecycler(final String pName, final int pMinimumNumberOfAvailableStacks, final int pMaximumNumberOfAvailableObjects, final int pMaximumNumberOfLiveObjects)
   {
     int lNumberOfStackCameraDevices = getNumberOfDevices(StackCameraDeviceInterface.class);
     RecyclerInterface<StackInterface, StackRequest> lRecycler = mStackRecyclerManager.getRecycler(pName, max(1, lNumberOfStackCameraDevices * pMaximumNumberOfAvailableObjects), max(1, 1 + lNumberOfStackCameraDevices * pMaximumNumberOfLiveObjects));
-
-    // for (int i = 0; i < lNumberOfStackCameraDevices; i++)
-    // getDevice(StackCameraDeviceInterface.class,
-    // i).setMinimalNumberOfAvailableStacks(pMinimumNumberOfAvailableStacks);
-
     setRecycler(lRecycler);
+    return lRecycler;
   }
 
   @Override

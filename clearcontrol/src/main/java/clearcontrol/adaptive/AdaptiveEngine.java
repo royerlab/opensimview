@@ -43,7 +43,7 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>> extends T
 
   private final Variable<Double> mCurrentAdaptationModuleVariable = new Variable<>("CurrentAdaptationModule", 0.0);
 
-  private final Variable<Double> mProgressVariable = new Variable<Double>("Progress", 0.0);
+  private final Variable<Double> mProgressVariable = new Variable<>("Progress", 0.0);
 
   private final Variable<Boolean> mConcurrentExecutionVariable = new Variable<>("ConcurrentExecution", true);
 
@@ -193,7 +193,7 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>> extends T
 
       @SuppressWarnings("unchecked") AcquisitionStateManager<S> lAcquisitionStateManager = (AcquisitionStateManager<S>) getMicroscope().getAcquisitionStateManager();
 
-      S lCurrentAcquisitionState = (S) getAcquisitionStateVariable().get();
+      S lCurrentAcquisitionState = getAcquisitionStateVariable().get();
 
       @SuppressWarnings("unchecked") S lLoggedState = (S) lCurrentAcquisitionState.duplicate("state " + getAcquisitionStateCounterVariable().get());
 
@@ -255,6 +255,33 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>> extends T
   {
     info("begin step \n");
 
+    boolean lAreAllStepsCompleted = areAllStepsCompleted();
+    boolean lAreAllTasksCompleted = areAllTasksCompleted();
+
+    info("Are all steps for all modules completed? %s \n", lAreAllStepsCompleted);
+    info("Are all tasks for all modules completed? %s \n", lAreAllTasksCompleted);
+
+    if (lAreAllStepsCompleted && lAreAllTasksCompleted)
+    {
+      info("All steps completed! \n");
+      //info("waiting for tasks to complete... \n");
+      //waitForAllTasksToComplete();
+
+      info("Log current acquisition state... \n");
+      logCurrentAcquisitionState();
+
+      info("Updating current (default) acquisition state... \n");
+      updateState(getAcquisitionStateVariable().get());
+      getAcquisitionStateCounterVariable().increment();
+
+      info("end step with false\n");
+      return false;
+    } else if (lAreAllStepsCompleted)
+    {
+      info("All steps finished! Waiting asynchronously for tasks to complete!");
+      return true;
+    }
+
     int lTotalRemainingNumberOfSteps = getTotalRemainingNumberOfSteps();
 
     info("total remaining steps: %d \n", lTotalRemainingNumberOfSteps);
@@ -287,14 +314,11 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>> extends T
 
     incrementCurrentModule(lStepSize);
 
-    boolean lAreAllStepsCompleted = areAllStepsCompleted();
-
-    info("Are all steps for all modules completed? %s \n", lAreAllStepsCompleted);
+    lAreAllStepsCompleted = areAllStepsCompleted();
 
     if (lModuleWasReady && !lAreAllStepsCompleted)
     {
       info("this module was ready but some other is not \n");
-
       info("end step with recursive call\n");
       return apply(pTimes);
     }
@@ -302,21 +326,7 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>> extends T
     double lProgress = 1.0 - ((double) getTotalRemainingNumberOfSteps()) / getTotalNumberOfSteps();
     getProgressVariable().set(lProgress);
 
-    if (lAreAllStepsCompleted)
-    {
-      info("All steps completed! \n");
-      info("waiting for tasks to complete... \n");
-      waitForAllTasksToComplete();
-
-      logCurrentAcquisitionState();
-      updateState(getAcquisitionStateVariable().get());
-      getAcquisitionStateCounterVariable().increment();
-
-      // prepareNewAcquisitionState();
-      // reset();
-      info("end step with false\n");
-      return false;
-    } else if (pTimes - 1 >= 1)
+    if (pTimes - 1 >= 1)
     {
       info("Modules are not yet ready, applying %d more time \n", (pTimes - 1));
 
@@ -423,7 +433,7 @@ public class AdaptiveEngine<S extends AcquisitionStateInterface<?, ?>> extends T
 
   private void waitForAllTasksToComplete()
   {
-    WaitingInterface.waitForStatic(() -> areAllTasksCompleted());
+    WaitingInterface.waitForStatic(this::areAllTasksCompleted);
   }
 
   private boolean areAllStepsCompleted()

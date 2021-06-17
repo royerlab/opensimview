@@ -450,6 +450,7 @@ public class InteractiveAcquisition extends PeriodicLoopTaskDevice implements Lo
     }
 
     info("Starting 3D Acquisition...");
+    mLightSheetMicroscope.resetTerminatorStackVariables();
     setCurrentAcquisitionMode(InteractiveAcquisitionModes.Acquisition3D);
     mAcquisitionCounterVariable.set(0L);
     mUpdate = true;

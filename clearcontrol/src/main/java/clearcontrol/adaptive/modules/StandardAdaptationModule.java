@@ -20,19 +20,18 @@ import clearcontrol.ip.iqm.DCTS2D;
 import clearcontrol.stack.EmptyStack;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
+import clearcontrol.stack.StackRequest;
 import clearcontrol.state.InterpolatedAcquisitionState;
 import clearcontrol.state.LightSheetAcquisitionStateInterface;
 import clearcontrol.util.NDIterator;
+import coremem.recycling.RecyclerInterface;
 import gnu.trove.list.array.TDoubleArrayList;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * ND iterator adaptation module
@@ -43,20 +42,20 @@ public abstract class StandardAdaptationModule extends NDIteratorAdaptationModul
 
 {
 
-  private final Variable<Integer> mLaserLineVariable = new Variable<Integer>("LaserLine", 0);
+  private final Variable<Integer> mLaserLineVariable = new Variable<>("LaserLine", 0);
 
-  private final Variable<Integer> mNumberOfSamplesVariable = new Variable<Integer>("NumberOfSamples");
+  private final Variable<Integer> mNumberOfSamplesVariable = new Variable<>("NumberOfSamples");
 
-  private final Variable<Double> mProbabilityThresholdVariable = new Variable<Double>("ProbabilityThreshold");
-  private final Variable<Double> mMaxCorrection = new Variable<Double>("MaxCorrection", 1.0);
+  private final Variable<Double> mProbabilityThresholdVariable = new Variable<>("ProbabilityThreshold");
+  private final Variable<Double> mMaxCorrection = new Variable<>("MaxCorrection", 1.0);
 
-  private final Variable<Double> mImageMetricThresholdVariable = new Variable<Double>("MetricThreshold");
+  private final Variable<Double> mImageMetricThresholdVariable = new Variable<>("MetricThreshold");
 
-  private final Variable<Double> mExposureInSecondsVariable = new Variable<Double>("ExposureInSeconds");
+  private final Variable<Double> mExposureInSecondsVariable = new Variable<>("ExposureInSeconds");
 
-  private final Variable<Double> mLaserPowerVariable = new Variable<Double>("LaserPower");
+  private final Variable<Double> mLaserPowerVariable = new Variable<>("LaserPower");
 
-  private HashMap<Triple<Integer, Integer, Integer>, Result> mResultsMap = new HashMap<>();
+  private ConcurrentHashMap<Triple<Integer, Integer, Integer>, Result> mResultsMap = new ConcurrentHashMap<>();
   protected LightSheetDOF mLightSheetDOF;
 
   int[][] mSelectedDetectionArms;
@@ -83,6 +82,8 @@ public abstract class StandardAdaptationModule extends NDIteratorAdaptationModul
     getImageMetricThresholdVariable().set(pImageMetricThreshold);
     getExposureInSecondsVariable().set(pExposureInSeconds);
     getLaserPowerVariable().set(pLaserPower);
+
+    initializeExecutor(1000, Runtime.getRuntime().availableProcessors()/4);
   }
 
   @Override
@@ -132,7 +133,11 @@ public abstract class StandardAdaptationModule extends NDIteratorAdaptationModul
         }
       }
 
-      lLightsheetMicroscope.useRecycler("adaptation", 1, 32, 32);
+      RecyclerInterface<StackInterface, StackRequest> lRecycler = lLightsheetMicroscope.useRecycler("adaptation", 1, 256, 256);
+      if (lRecycler.getNumberOfLiveObjects()>200)
+        // We should be rarely in this situation, if we are, then let's clear the recycler of its live objects.
+        lRecycler.clearLive();
+
       final Boolean lPlayQueueAndWait = lLightsheetMicroscope.playQueueAndWaitForStacks(pQueue, 10 + pQueue.getQueueLength(), TimeUnit.SECONDS);
 
       if (!lPlayQueueAndWait)
@@ -151,7 +156,6 @@ public abstract class StandardAdaptationModule extends NDIteratorAdaptationModul
       {
         final StackInterface lStackInterface = lLightsheetMicroscope.getCameraStackVariable(d).get();
         lStacks.add(lStackInterface.duplicate());
-
       }
 
       Runnable lRunnable = () ->
@@ -159,6 +163,8 @@ public abstract class StandardAdaptationModule extends NDIteratorAdaptationModul
 
         try
         {
+          Thread.currentThread().setPriority(Thread.MIN_PRIORITY+1);
+
           SmartArgMaxFinder lSmartArgMaxFinder = new SmartArgMaxFinder();
 
           String lInfoString = "";
