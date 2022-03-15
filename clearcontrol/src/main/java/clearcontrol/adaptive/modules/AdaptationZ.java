@@ -96,7 +96,7 @@ public class AdaptationZ extends StandardAdaptationPerLightSheetModule implement
     lQueue.addCurrentStateToQueue();
 
     lQueue.setTransitionTime(0.5);
-    lQueue.setFinalisationTime(0.001);
+    lQueue.setFinalisationTime(0.005);
 
     lQueue.finalizeQueue();
 

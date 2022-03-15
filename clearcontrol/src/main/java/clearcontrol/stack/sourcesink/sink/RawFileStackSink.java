@@ -111,15 +111,17 @@ public class RawFileStackSink extends FileStackBase implements FileStackInterfac
 
     final String lDimensionsString = Arrays.toString(lDimensions);
 
-    final FileChannel lIndexFileChannel = getFileChannel(getIndexFile(pChannel),
-
-            false);
+    final FileChannel lIndexFileChannel = getFileChannel(getIndexFile(pChannel), false);
 
     long lTimeStampInNanoseconds;
 
     if (pStack.getMetaData() != null && pStack.getMetaData().getTimeStampInNanoseconds() != null)
       lTimeStampInNanoseconds = pStack.getMetaData().getTimeStampInNanoseconds();
-    else lTimeStampInNanoseconds = System.nanoTime();
+    else
+    {
+      warning("Cannot find timestamp information for stack: " + pStack + " in metatdata: "+pStack.getMetaData());
+      lTimeStampInNanoseconds = System.nanoTime();
+    }
 
     if (pIndex == 0) mFirstTimePointAbsoluteNanoSeconds.set(lTimeStampInNanoseconds);
 

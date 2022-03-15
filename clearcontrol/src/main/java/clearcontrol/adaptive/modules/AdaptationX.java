@@ -18,9 +18,9 @@ import java.util.concurrent.Future;
 public class AdaptationX extends StandardAdaptationModule implements AdaptationModuleInterface<InterpolatedAcquisitionState>
 {
 
-  private final BoundedVariable<Double> mMinXVariable = new BoundedVariable<Double>("MinX", -1000.0);
+  private final BoundedVariable<Double> mMinXVariable = new BoundedVariable<>("MinX", -1000.0);
 
-  private final BoundedVariable<Double> mMaxXVariable = new BoundedVariable<Double>("MaxX", 1000.0);
+  private final BoundedVariable<Double> mMaxXVariable = new BoundedVariable<>("MaxX", 1000.0);
 
   /**
    * Instantiates a X focus adaptation module given the number of samples, probability
@@ -95,7 +95,7 @@ public class AdaptationX extends StandardAdaptationModule implements AdaptationM
     lQueue.addCurrentStateToQueue();
 
     lQueue.setTransitionTime(0.75);
-    lQueue.setFinalisationTime(0.001);
+    lQueue.setFinalisationTime(0.005);
 
     lQueue.finalizeQueue();
 

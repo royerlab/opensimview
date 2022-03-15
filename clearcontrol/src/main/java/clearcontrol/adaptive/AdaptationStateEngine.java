@@ -55,18 +55,18 @@ public class AdaptationStateEngine extends TaskDevice
     AdaptiveEngine<InterpolatedAcquisitionState> lAdaptiveEngine = lLightSheetMicroscope.addAdaptiveEngine(lAcquisitionState);
     lAdaptiveEngine.getRunUntilAllModulesReadyVariable().set(true);
 
-    lAdaptiveEngine.add(new AdaptationZ(9, 3, 0.95, 2e-5, 0.010, 0.02, lNumberOfLightSheets));
-    lAdaptiveEngine.add(new AdaptationZSlidingWindowDetectionArmSelection(7, 3, true, 3, 0.95, 2e-5, 0.010, 0.02));
+    lAdaptiveEngine.add(new AdaptationZ(15, 1.5, 0.95, 2e-5, 0.010, 0.02, lNumberOfLightSheets));
+    //lAdaptiveEngine.add(new AdaptationZSlidingWindowDetectionArmSelection(7, 3, true, 3, 0.95, 2e-5, 0.010, 0.02));
 
-    lAdaptiveEngine.add(new AdaptationZManualDetectionArmSelection(9, 3, 0.95, 2e-5, 0.010, 0.02, lNumberOfLightSheets, lLightSheetMicroscope));
+    //lAdaptiveEngine.add(new AdaptationZManualDetectionArmSelection(9, 3, 0.95, 2e-5, 0.010, 0.02, lNumberOfLightSheets, lLightSheetMicroscope));
 
     lAdaptiveEngine.add(new AdaptationX(11, -300, 300, 0.94, 2e-5, 0.050, 0.02));
 
-    lAdaptiveEngine.add(new AdaptationA(15, 11, 0.95, 2e-5, 0.01, 0.02));
+    //lAdaptiveEngine.add(new AdaptationA(15, 11, 0.95, 2e-5, 0.01, 0.02));
 
-    lAdaptiveEngine.add(new AdaptationP(0.5));
+    //lAdaptiveEngine.add(new AdaptationP(0.5));
 
-    lAdaptiveEngine.add(new AdaptationW(11, 0.95, 2e-5, 0.01, 0.02));
+    //lAdaptiveEngine.add(new AdaptationW(11, 0.95, 2e-5, 0.01, 0.02));
 
     lLightSheetMicroscope.addDevice(0, new AdaptationStateEngine("Microscope State", lAdaptiveEngine, lLightSheetMicroscope, lAcquisitionState));
   }

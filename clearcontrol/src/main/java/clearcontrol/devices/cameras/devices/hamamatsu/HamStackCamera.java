@@ -32,7 +32,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
   private static final char cZeroLevel = 100;
 
-  private static final long cWaitTime = 3000;
+  private static final long cWaitTime = 10000;
 
   private final DcamDevice mDcamDevice;
 
@@ -185,7 +185,7 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
       if (lAcquiredStack == null) return false;
 
       ArrayList<Boolean> lKeepPlaneList = pQueue.getVariableQueue(pQueue.getKeepPlaneVariable());
-
+      long lTimeStampInNs = lSequence.getTimeStampInNs();
       lSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
       lSequence.release();
       info("DcamImageSequence recycler: #live="+mSequenceRecycler.getNumberOfLiveObjects()+
@@ -193,8 +193,9 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
       lAcquiredStack.setMetaData(pQueue.getMetaDataVariable().get().clone());
 
-      lAcquiredStack.getMetaData().setTimeStampInNanoseconds(System.nanoTime());
+      lAcquiredStack.getMetaData().setTimeStampInNanoseconds(lTimeStampInNs);
       lAcquiredStack.getMetaData().setIndex(getCurrentIndexVariable().get());
+      getCurrentIndexVariable().increment();
 
       getStackVariable().setAsync(lAcquiredStack);
       return true;
