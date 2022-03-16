@@ -19,7 +19,7 @@ public abstract class StackBase extends FreeableBase implements StackInterface
   protected RecyclerInterface<StackInterface, StackRequest> mStackRecycler;
   protected volatile boolean mIsReleased;
 
-  protected StackMetaData mMetaData = new StackMetaData();
+  protected volatile StackMetaData mMetaData = new StackMetaData();
 
   protected NativeTypeEnum mDataType;
   protected long[] mDimensions;

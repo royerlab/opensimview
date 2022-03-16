@@ -32,7 +32,7 @@ public class AdaptationZ extends StandardAdaptationPerLightSheetModule implement
    * @param pDeltaZ               delta z parameter
    * @param pProbabilityThreshold probability threshold
    * @param pImageMetricThreshold image metric threshold
-   * @param pExposureInSeconds    expsoure in seconds
+   * @param pExposureInSeconds    exposure in seconds
    * @param pLaserPower           laser power
    */
   public AdaptationZ(int pNumberOfSamples, double pDeltaZ, double pProbabilityThreshold, double pImageMetricThreshold, double pExposureInSeconds, double pLaserPower, int pNumberOfLightSheets)

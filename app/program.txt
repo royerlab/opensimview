@@ -1,13 +1,6 @@
-Smart: Skip instruction::Inverted_Skipping=[true] Skipping_period=[20] Number_of_instructions_to_skip=[6] 
-Adaptation: Change laser line on/off state::Laser_index=[1] 
-Adaptation: Change light sheet brightness::Light_sheet_index=[0] Light_sheet_brightness=[0.15] 
-Adaptation: Change light sheet brightness::Light_sheet_index=[1] Light_sheet_brightness=[0.15] 
-Filter wheel: Set filter of LudlFilterWheel1 to 488 (525/50)::
-Filter wheel: Set filter of LudlFilterWheel0 to 488 (525/50) ::
-Acquisition: Sequential::Acquisition_Channel=[default] 
 Adaptation: Change laser line on/off state::Laser_index=[2] 
 Adaptation: Change light sheet brightness::Light_sheet_index=[0] Light_sheet_brightness=[0.2] 
 Adaptation: Change light sheet brightness::Light_sheet_index=[1] Light_sheet_brightness=[0.4] 
 Filter wheel: Set filter of LudlFilterWheel1 to 561 (610/75)::
 Filter wheel: Set filter of LudlFilterWheel0 to 561 (610/75)::
-Acquisition: Sequential::Acquisition_Channel=[default] 
+Acquisition: Sequential::Acquisition_Channel=[561] 

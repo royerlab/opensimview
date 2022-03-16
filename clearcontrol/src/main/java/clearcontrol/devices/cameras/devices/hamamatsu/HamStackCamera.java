@@ -180,12 +180,17 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
     Callable<Boolean> lCallable = () ->
     {
       StackRequest lRecyclerRequest = StackRequest.build(pWidth, pHeight, pKeptPlanesDepth);
-      StackInterface lAcquiredStack = getStackRecycler().getOrWait(cWaitTime, TimeUnit.MILLISECONDS, lRecyclerRequest);
+
+      // make sure we avoid reusing an existing stack, this is a workaround for a hard bug!
+      getStackRecycler().clearReleased();
+
+      // We want a fresh stack:
+      StackInterface lAcquiredStack = getStackRecycler().getOrWait(-1, TimeUnit.MILLISECONDS, lRecyclerRequest);
 
       if (lAcquiredStack == null) return false;
 
       ArrayList<Boolean> lKeepPlaneList = pQueue.getVariableQueue(pQueue.getKeepPlaneVariable());
-      long lTimeStampInNs = lSequence.getTimeStampInNs();
+      Long lTimeStampInNs = lSequence.getTimeStampInNs();
       lSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
       lSequence.release();
       info("DcamImageSequence recycler: #live="+mSequenceRecycler.getNumberOfLiveObjects()+

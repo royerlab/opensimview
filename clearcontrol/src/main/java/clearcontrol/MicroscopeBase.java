@@ -91,7 +91,7 @@ public abstract class MicroscopeBase<M extends MicroscopeBase<M, Q>, Q extends M
     mTerminatorStackVariableArray = new ArrayList<>();
 
     // We clean up stacks but keep them available for quite some time!
-    mCleanupStackVariable = new CleanupStackVariable("CleanupStackVariable", 4);
+    mCleanupStackVariable = new CleanupStackVariable("CleanupStackVariable", 16);
 
     resetTerminatorStackVariables();
   }
