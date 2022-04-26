@@ -216,8 +216,11 @@ public final class OffHeapMemoryAccess
    */
   public static Long getSignature(long pAddress)
   {
-    final Long lKnownSignature = cAllocatedMemoryPointersSignatures.get(pAddress);
-    return lKnownSignature;
+    synchronized (mLock)
+    {
+      final Long lKnownSignature = cAllocatedMemoryPointersSignatures.get(pAddress);
+      return lKnownSignature;
+    }
   }
 
   /**
@@ -249,7 +252,7 @@ public final class OffHeapMemoryAccess
    */
   public static final void copyFromArray(final Object pSrcArray, final long pSrcOffset, final long pAddressDest, final long pLengthInBytes) throws InvalidNativeMemoryAccessException
   {
-    synchronized (mLock)
+    //synchronized (mLock)
     {
       int lArrayBaseOffset = cUnsafe.arrayBaseOffset(pSrcArray.getClass());
 
@@ -274,7 +277,7 @@ public final class OffHeapMemoryAccess
    */
   public static final void copyToArray(final long pAddressSrc, final Object pDstArray, final long pDstOffset, final long pLengthInBytes) throws InvalidNativeMemoryAccessException
   {
-    synchronized (mLock)
+    //synchronized (mLock)
     {
       int lArrayBaseOffset = cUnsafe.arrayBaseOffset(pDstArray.getClass());
 
@@ -296,7 +299,7 @@ public final class OffHeapMemoryAccess
    */
   public static final void copyMemory(final long pAddressOrg, final long pAddressDest, final long pLengthInBytes)
   {
-    synchronized (mLock)
+    //synchronized (mLock)
     {
       cUnsafe.copyMemory(pAddressOrg, pAddressDest, pLengthInBytes);
     }
@@ -312,7 +315,7 @@ public final class OffHeapMemoryAccess
    */
   public static final void copyMemorySafely(final long pAddressOrg, final long pAddressDest, final long pLengthInBytes) throws InvalidNativeMemoryAccessException
   {
-    synchronized (mLock)
+    //synchronized (mLock)
     {
       final Long lLengthOrg = cAllocatedMemoryPointers.get(pAddressOrg);
       if (lLengthOrg == null)
@@ -341,7 +344,7 @@ public final class OffHeapMemoryAccess
    */
   public static final void fillMemory(final long pAddress, final long pLengthInBytes, final byte pValue)
   {
-    synchronized (mLock)
+    //synchronized (mLock)
     {
       cUnsafe.setMemory(pAddress, pLengthInBytes, pValue);
     }
@@ -357,7 +360,7 @@ public final class OffHeapMemoryAccess
    */
   public static final void setMemorySafely(final long pAddress, final long pLengthInBytes, final byte pValue) throws InvalidNativeMemoryAccessException
   {
-    synchronized (mLock)
+    //synchronized (mLock)
     {
       final Long lLength = cAllocatedMemoryPointers.get(pAddress);
       if (lLength == null) throw new InvalidNativeMemoryAccessException("Cannot set unallocated memory region!");

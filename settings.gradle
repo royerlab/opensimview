@@ -9,3 +9,4 @@
 
 rootProject.name = 'dorado'
 include('coremem', 'clearcontrol', 'libraries', 'app')
+

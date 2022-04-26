@@ -167,12 +167,21 @@ public class BasicRecycler<R extends RecyclableInterface<R, P>, P extends Recycl
 
     R lRecyclable;
 
-    try
+    if(pWaitTime>=0)
     {
-      lRecyclable = retrieveFromAvailableObjectsQueue();
-    } catch (final InterruptedException e)
+      // we do wait:
+      try
+      {
+        lRecyclable = retrieveFromAvailableObjectsQueue();
+      } catch (final InterruptedException e)
+      {
+        return get(pWaitForLiveObjectToComeBack, pWaitTime, pTimeUnit, pRecyclerRequest);
+      }
+    }
+    else
     {
-      return get(pWaitForLiveObjectToComeBack, pWaitTime, pTimeUnit, pRecyclerRequest);
+      // no waiting:
+      lRecyclable = null;
     }
 
     if (lRecyclable != null)
