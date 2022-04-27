@@ -1,6 +1,7 @@
 package clearcontrol.devices.cameras.devices.hamamatsu;
 
 import clearcontrol.core.concurrent.executors.AsynchronousExecutorFeature;
+import clearcontrol.core.concurrent.timing.ElapsedTime;
 import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.device.openclose.OpenCloseDeviceInterface;
 import clearcontrol.core.log.LoggingFeature;
@@ -191,7 +192,12 @@ public class HamStackCamera extends StackCameraDeviceBase<HamStackCameraQueue> i
 
       ArrayList<Boolean> lKeepPlaneList = pQueue.getVariableQueue(pQueue.getKeepPlaneVariable());
       Long lTimeStampInNs = lSequence.getTimeStampInNs();
-      lSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
+
+      ElapsedTime.measure("Consolidate acquired stack from device:"+this, () ->
+      {
+        lSequence.consolidateTo(lKeepPlaneList, lAcquiredStack.getContiguousMemory());
+      });
+
       lSequence.release();
       info("DcamImageSequence recycler: #live="+mSequenceRecycler.getNumberOfLiveObjects()+
               ", #available="+mSequenceRecycler.getNumberOfAvailableObjects()+", #failed_reqs="+mSequenceRecycler.getNumberOfFailedRequests());
