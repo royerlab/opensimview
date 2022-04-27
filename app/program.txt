@@ -1,1 +1,1 @@
-Acquisition: MultiColorInterleaved::Laser_Line_0_Power_Adjustment=[1.0] Laser_Line_1_Power_Adjustment=[2.0] 
+Acquisition: MultiColorInterleaved::Laser_Line_0_Power_Adjustment=[1.0] Laser_Line_1_Power_Adjustment=[1.0] Laser_Line_2_Power_Adjustment=[1.0] Laser_Line_3_Power_Adjustment=[1.0] 

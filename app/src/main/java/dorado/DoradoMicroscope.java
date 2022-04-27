@@ -58,8 +58,8 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
     {
       addDevice(0, new LaserDeviceSimulator("405", 0, 405, 100));
       addDevice(1, new LaserDeviceSimulator("488", 0, 488, 100));
-      addDevice(1, new LaserDeviceSimulator("561", 0, 561, 100));
-      addDevice(2, new LaserDeviceSimulator("637", 0, 637, 100));
+      addDevice(2, new LaserDeviceSimulator("561", 0, 561, 100));
+      addDevice(3, new LaserDeviceSimulator("637", 0, 637, 100));
     }
 
     // Setting up cameras and filterwheels:
