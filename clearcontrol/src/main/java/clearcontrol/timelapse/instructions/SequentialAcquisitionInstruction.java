@@ -100,8 +100,6 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
           return false;
         }
 
-//        getLightSheetMicroscope().playQueue(lQueueForView);
-
       }
     }
 
@@ -136,38 +134,23 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
     {
       mCurrentState.applyAcquisitionStateAtStackPlane(lQueue, lImageCounter);
       for (int k = 0; k < getLightSheetMicroscope().getNumberOfLightSheets(); k++)
-      {
-
         lQueue.setI(k, pLightSheetIndex == k);
-        // lQueue.setIH(k,mLightSheetMicroscope.getLightSheet(k).getHeightVariable().get().doubleValue());
-      }
 
       lQueue.addCurrentStateToQueue();
     }
-    /*
-        pCurrentState.getQueue(0,
-                               lNumberOfDetectionArms,
-                               pLightSheetIndex,
-                               pLightSheetIndex + 1,
-                               0,
-                               lNumberOfLaserLines,
-                               lNumberOfEDFSlices);
-    */
 
     // initial position
     goToInitialPosition(getLightSheetMicroscope(), lQueue, mCurrentState.getStackZLowVariable().get().doubleValue(), mCurrentState.getStackZLowVariable().get().doubleValue());
 
-    /*
-    for (int l = 0; l < mLightSheetMicroscope.getNumberOfLightSheets(); l++)
-    {
-      info("Light sheet " + l + " W: " + lQueue.getIW(l));
-    }
-    for (int l = 0; l < mLightSheetMicroscope.getNumberOfLightSheets(); l++)
-    {
-      info("Light sheet " + l + " H: " + lQueue.getIH(l));
-    }
-    */
     lQueue.addMetaDataEntry(MetaDataOrdinals.TimePoint, mTimelapse.getTimePointCounterVariable().get());
+
+    for (int c = 0; c < getLightSheetMicroscope().getNumberOfDetectionArms(); c++)
+      if (isCameraOn(c))
+        lQueue.addMetaDataEntry(MetaDataOther.getCameraExposure(c), getLightSheetMicroscope().getExposure(c));
+
+    for (int la = 0; la < getLightSheetMicroscope().getNumberOfLaserLines(); la++)
+      if (isLaserLineOn(la))
+        lQueue.addMetaDataEntry(MetaDataLaser.getLaserPower(la), getLightSheetMicroscope().getLP(la));
 
     lQueue.setTransitionTime(0.5);
     lQueue.setFinalisationTime(0.005);
@@ -176,10 +159,7 @@ public class SequentialAcquisitionInstruction extends AbstractAcquistionInstruct
     return lQueue;
   }
 
-  protected boolean isLightSheetOn(int pLightIndex)
-  {
-    return mCurrentState.getLightSheetOnOffVariable(pLightIndex).get();
-  }
+
 
   public Variable<String> getChannelNameVariable()
   {

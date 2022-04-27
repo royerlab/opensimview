@@ -37,6 +37,7 @@ import clearcontrol.state.instructions.*;
 import clearcontrol.timelapse.Timelapse;
 import clearcontrol.timelapse.TimelapseInterface;
 import clearcontrol.timelapse.instructions.InterleavedAcquisitionInstruction;
+import clearcontrol.timelapse.instructions.MultiColorInterleavedAcquisitionInstruction;
 import clearcontrol.timelapse.instructions.SequentialAcquisitionInstruction;
 import clearcontrol.timelapse.instructions.SingleViewAcquisitionInstruction;
 
@@ -300,19 +301,18 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
     // lTimelapse.addFileStackSinkType(SqeazyFileStackSink.class);
 
     // ------------------------------------------------------------------------
-    // setup multiview acquisition and fusion
-    if (multiview)
-    {
-      // ------------------------------------------------------------------------
-      // interleaved imaging
-      addDevice(0, new InterleavedAcquisitionInstruction(this));
+    // interleaved imaging
+    addDevice(0, new InterleavedAcquisitionInstruction(this));
 
 
-      // ------------------------------------------------------------------------
-      // Sequential imaging
-      addDevice(0, new SequentialAcquisitionInstruction(this, "default"));
+    // ------------------------------------------------------------------------
+    // Sequential imaging
+    addDevice(0, new MultiColorInterleavedAcquisitionInstruction(this));
 
-    }
+
+    // ------------------------------------------------------------------------
+    // Sequential imaging
+    addDevice(0, new SequentialAcquisitionInstruction(this, "default"));
 
     for (int c = 0; c < getNumberOfDetectionArms(); c++)
     {

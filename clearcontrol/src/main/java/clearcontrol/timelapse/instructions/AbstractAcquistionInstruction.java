@@ -81,4 +81,14 @@ public abstract class AbstractAcquistionInstruction extends LightSheetMicroscope
     return mCurrentState.getCameraOnOffVariable(pCameraIndex).get();
   }
 
+  protected boolean isLightSheetOn(int pLightIndex)
+  {
+    return mCurrentState.getLightSheetOnOffVariable(pLightIndex).get();
+  }
+
+  protected boolean isLaserLineOn(int pLaserLineIndex)
+  {
+    return mCurrentState.getLaserOnOffVariable(pLaserLineIndex).get();
+  }
+
 }

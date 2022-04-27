@@ -19,9 +19,6 @@ import java.util.concurrent.TimeoutException;
  * <p>
  * C0L0Z0 C0L1Z0 C0L2Z0 C0L3Z0 C0L0Z1 C0L1Z1 C0L2Z1 C0L3Z1 ...
  * <p>
- * The image stacks are stored in the DataWarehouse in a InterleavedImageDataContainer
- * with keys like CXinterleaved with X representing the camera number.
- * <p>
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de) February
  * 2018
  */
@@ -64,19 +61,19 @@ public class InterleavedAcquisitionInstruction extends AbstractAcquistionInstruc
 
     for (int lImageCounter = 0; lImageCounter < lNumberOfImagesToTake; lImageCounter++)
     {
-      // acuqire an image per light sheet + one more
-      for (int l = 0; l < getLightSheetMicroscope().getNumberOfLightSheets(); l++)
-      {
-        mCurrentState.applyAcquisitionStateAtStackPlane(lQueue, lImageCounter);
+      mCurrentState.applyAcquisitionStateAtStackPlane(lQueue, lImageCounter);
 
-        // configure light sheets accordingly
-        for (int k = 0; k < getLightSheetMicroscope().getNumberOfLightSheets(); k++)
+      // acquire an image per light sheet + one more
+      for (int l = 0; l < getLightSheetMicroscope().getNumberOfLightSheets(); l++)
+        if (isLightSheetOn(l))
         {
-          lQueue.setI(k, false);
+
+          // configure light sheets accordingly
+          for (int k = 0; k < getLightSheetMicroscope().getNumberOfLightSheets(); k++)
+            lQueue.setI(k, k==l);
+
+          lQueue.addCurrentStateToQueue();
         }
-        lQueue.setI(l, true);
-        lQueue.addCurrentStateToQueue();
-      }
     }
 
     // back to initial position
@@ -86,18 +83,19 @@ public class InterleavedAcquisitionInstruction extends AbstractAcquistionInstruc
     lQueue.setFinalisationTime(0.005);
 
     for (int c = 0; c < getLightSheetMicroscope().getNumberOfDetectionArms(); c++)
-    {
-      StackMetaData lMetaData = lQueue.getCameraDeviceQueue(c).getMetaDataVariable().get();
+      if (isCameraOn(c))
+      {
+        StackMetaData lMetaData = lQueue.getCameraDeviceQueue(c).getMetaDataVariable().get();
 
-      lMetaData.addEntry(MetaDataAcquisitionType.AcquisitionType, AcquisitionType.TimeLapseInterleaved);
-      lMetaData.addEntry(MetaDataView.Camera, c);
+        lMetaData.addEntry(MetaDataAcquisitionType.AcquisitionType, AcquisitionType.TimeLapseInterleaved);
+        lMetaData.addEntry(MetaDataView.Camera, c);
 
-      lMetaData.addEntry(MetaDataFusion.RequestFullFusion, true);
+        lMetaData.addEntry(MetaDataFusion.RequestFullFusion, true);
 
-      lMetaData.addEntry(MetaDataChannel.Channel, "interleaved");
-    }
-    lQueue.addVoxelDimMetaData(getLightSheetMicroscope(), mCurrentState.getStackZStepVariable().get().doubleValue());
-    lQueue.addMetaDataEntry(MetaDataOrdinals.TimePoint, pTimePoint);
+        lMetaData.addEntry(MetaDataChannel.Channel, "interleaved");
+      }
+      lQueue.addVoxelDimMetaData(getLightSheetMicroscope(), mCurrentState.getStackZStepVariable().get().doubleValue());
+      lQueue.addMetaDataEntry(MetaDataOrdinals.TimePoint, pTimePoint);
 
     lQueue.finalizeQueue();
 
@@ -124,16 +122,6 @@ public class InterleavedAcquisitionInstruction extends AbstractAcquistionInstruc
       System.out.print("Error while imaging");
       return false;
     }
-
-//    // Store results in the DataWarehouse
-//    InterleavedImageDataContainer lContainer = new InterleavedImageDataContainer(getLightSheetMicroscope());
-//    for (int d = 0; d < getLightSheetMicroscope().getNumberOfDetectionArms(); d++)
-//    {
-//      StackInterface lStack = getLightSheetMicroscope().getCameraStackVariable(d).get();
-//
-//      putStackInContainer("C" + d + "interleaved", lStack, lContainer);
-//    }
-//    getLightSheetMicroscope().getDataWarehouse().put("interleaved_raw_" + pTimePoint, lContainer);
 
     return true;
   }
