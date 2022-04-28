@@ -127,7 +127,7 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
 
     // Setting up trigger:
 
-    Variable<Boolean> lTrigger = new Variable<Boolean>("CameraTrigger", false);
+    Variable<Boolean> lTrigger = new Variable<>("CameraTrigger", false);
 
     ArrayList<StackCameraDeviceSimulator> lCameraList = new ArrayList<>();
 
@@ -307,7 +307,7 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
 
     // ------------------------------------------------------------------------
     // Sequential imaging
-    addDevice(0, new MultiColorInterleavedAcquisitionInstruction(this));
+    addDevice(0, new MultiColorInterleavedAcquisitionInstruction(this, "default"));
 
 
     // ------------------------------------------------------------------------

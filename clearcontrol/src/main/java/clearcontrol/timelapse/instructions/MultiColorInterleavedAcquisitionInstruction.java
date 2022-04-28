@@ -12,6 +12,8 @@ import clearcontrol.stack.metadata.*;
 import clearcontrol.state.AcquisitionType;
 import clearcontrol.state.InterpolatedAcquisitionState;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -28,18 +30,32 @@ import java.util.concurrent.TimeoutException;
 public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquistionInstruction implements InstructionInterface, PropertyIOableInstructionInterface, LoggingFeature
 {
 
-  private BoundedVariable<Double>[] mLaserPowerAdjustmentVariableArray;
+  private final Variable<String> mChannelNameVariable;
+  private final BoundedVariable<Integer>[] mPeriodVariableArray;
+  private final BoundedVariable<Integer>[] mOffsetVariableArray;
+  private final BoundedVariable<Double>[] mLaserPowerAdjustmentVariableArray;
+
 
   /**
    * Instanciates a virtual device with a given name
    */
-  public MultiColorInterleavedAcquisitionInstruction(LightSheetMicroscope pLightSheetMicroscope)
+  public MultiColorInterleavedAcquisitionInstruction(LightSheetMicroscope pLightSheetMicroscope, String pChannelName)
   {
     super("Acquisition: MultiColorInterleaved", pLightSheetMicroscope);
-    mLaserPowerAdjustmentVariableArray = new BoundedVariable[getLightSheetMicroscope().getNumberOfLaserLines()];
 
-    for (int la = 0; la < getLightSheetMicroscope().getNumberOfLaserLines(); la++)
-      mLaserPowerAdjustmentVariableArray[la] = new BoundedVariable<Double>("Laser Line "+la+" Power Adjustment", 1.0, 0.01, 10.0);
+    mChannelNameVariable = new Variable<>("Acquisition Channel", pChannelName);
+
+    int lNumberOfLaserLines = getLightSheetMicroscope().getNumberOfLaserLines();
+    mPeriodVariableArray = new BoundedVariable[lNumberOfLaserLines];
+    mOffsetVariableArray = new BoundedVariable[lNumberOfLaserLines];
+    mLaserPowerAdjustmentVariableArray = new BoundedVariable[lNumberOfLaserLines];
+
+
+    for (int la = 0; la < getLightSheetMicroscope().getNumberOfLaserLines(); la++) {
+      mPeriodVariableArray[la] = new BoundedVariable<>("Period for laser line" + la, 1, 0, 1000);
+      mOffsetVariableArray[la] = new BoundedVariable<>("Offset for laser line" + la, 0, 0, 1000);
+      mLaserPowerAdjustmentVariableArray[la] = new BoundedVariable<>("Laser Line " + la + " Power Adjustment", 1.0, 0.01, 10.0);
+    }
   }
 
   @Override
@@ -89,7 +105,7 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
             lQueue.setI(k, k == l);
 
           for (int la = 0; la < getLightSheetMicroscope().getNumberOfLaserLines(); la++)
-            if (isLaserLineOn(la))
+            if (isLaserLineOn(pTimePoint, la))
             {
 
               // configure laser lines:
@@ -119,18 +135,18 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
         lMetaData.addEntry(MetaDataAcquisitionType.AcquisitionType, AcquisitionType.TimeLapseMultiColorInterleaved);
         lMetaData.addEntry(MetaDataView.Camera, c);
 
-        String lChannelName = "C"+c;
+        StringBuilder lChannelName = new StringBuilder(mChannelNameVariable.get().toUpperCase().trim() + "-C" + c);
         for (int l = 0; l < getLightSheetMicroscope().getNumberOfLightSheets(); l++)
           if (isLightSheetOn(l))
           {
-            lChannelName += "I"+l;
+            lChannelName.append("I").append(l);
 
             for (int la = 0; la < getLightSheetMicroscope().getNumberOfLaserLines(); la++)
-              if (isLaserLineOn(la))
-                lChannelName += "L"+la;
+              if (isLaserLineOn(pTimePoint, la))
+                lChannelName.append("L").append(la);
           }
 
-        lMetaData.addEntry(MetaDataChannel.Channel, lChannelName);
+        lMetaData.addEntry(MetaDataChannel.Channel, lChannelName.toString());
       }
 
     lQueue.addVoxelDimMetaData(getLightSheetMicroscope(), mCurrentState.getStackZStepVariable().get().doubleValue());
@@ -141,7 +157,7 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
         lQueue.addMetaDataEntry(MetaDataOther.getCameraExposure(c), getLightSheetMicroscope().getExposure(c));
 
     for (int la = 0; la < getLightSheetMicroscope().getNumberOfLaserLines(); la++)
-      if (isLaserLineOn(la))
+      if (isLaserLineOn(pTimePoint, la))
         lQueue.addMetaDataEntry(MetaDataLaser.getLaserPower(la), getLightSheetMicroscope().getLP(la));
 
     lQueue.finalizeQueue();
@@ -173,23 +189,61 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
     return true;
   }
 
+  protected boolean isLaserLineOn(long pTimePointIndex, int pLaserLineIndex)
+  {
+    boolean ison = super.isLaserLineOn(pLaserLineIndex);
+    int period = mPeriodVariableArray[pLaserLineIndex].get();
+    int offset = mOffsetVariableArray[pLaserLineIndex].get();
+    return ison && ((pTimePointIndex+offset)%period)==0;
+  }
+
+  public Variable<String> getChannelNameVariable()
+  {
+    return mChannelNameVariable;
+  }
+
+  public BoundedVariable<Integer> getPeriodVariable(int pLaserLineIndex)
+  {
+    return mPeriodVariableArray[pLaserLineIndex];
+  }
+
+  public BoundedVariable<Integer> getOffsetVariable(int pLaserLineIndex)
+  {
+    return mOffsetVariableArray[pLaserLineIndex];
+  }
   public BoundedVariable<Double> getLaserPowerAdjustmentVariable(int pLaserLineIndex)
   {
     return mLaserPowerAdjustmentVariableArray[pLaserLineIndex];
   }
 
-
-
   @Override
   public MultiColorInterleavedAcquisitionInstruction copy()
   {
-    return new MultiColorInterleavedAcquisitionInstruction(getLightSheetMicroscope());
+    MultiColorInterleavedAcquisitionInstruction lInstruction = new MultiColorInterleavedAcquisitionInstruction(getLightSheetMicroscope(), getChannelNameVariable().get());
+
+    for (int la = 0; la < getLightSheetMicroscope().getNumberOfLaserLines(); la++) {
+      lInstruction.mPeriodVariableArray[la] = mPeriodVariableArray[la];
+      lInstruction.mOffsetVariableArray[la] = mOffsetVariableArray[la];
+      lInstruction.mLaserPowerAdjustmentVariableArray[la] = mLaserPowerAdjustmentVariableArray[la];
+    }
+
+    return lInstruction;
   }
 
   @Override
   public Variable[] getProperties()
   {
-    Variable[] lVariables = mLaserPowerAdjustmentVariableArray;
-    return lVariables;
+
+    ArrayList<Variable> lList = new ArrayList<>();
+    lList.add(mChannelNameVariable);
+    Collections.addAll(lList, mPeriodVariableArray);
+    Collections.addAll(lList, mOffsetVariableArray);
+    Collections.addAll(lList, mLaserPowerAdjustmentVariableArray);
+
+    int length = mPeriodVariableArray.length
+            + mOffsetVariableArray.length
+            + mLaserPowerAdjustmentVariableArray.length ;
+
+    return lList.toArray(new Variable[length]);
   }
 }
