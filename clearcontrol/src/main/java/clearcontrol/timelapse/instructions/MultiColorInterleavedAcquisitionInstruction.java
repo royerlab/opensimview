@@ -194,7 +194,7 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
     boolean ison = super.isLaserLineOn(pLaserLineIndex);
     int period = mPeriodVariableArray[pLaserLineIndex].get();
     int offset = mOffsetVariableArray[pLaserLineIndex].get();
-    return ison && ((pTimePointIndex+offset)%period)==0;
+    return ison && ((pTimePointIndex+2*period-offset)%period)==0;
   }
 
   public Variable<String> getChannelNameVariable()
