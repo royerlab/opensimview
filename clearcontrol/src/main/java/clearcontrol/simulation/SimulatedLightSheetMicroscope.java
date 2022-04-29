@@ -81,7 +81,7 @@ public class SimulatedLightSheetMicroscope extends LightSheetMicroscope
 
     // Setting up lasers:
     {
-      int[] lLaserWavelengths = new int[]{488, 594};
+      int[] lLaserWavelengths = new int[]{405, 488, 561, 594};
       ArrayList<LaserDeviceInterface> lLaserList = new ArrayList<>();
       for (int l = 0; l < lLaserWavelengths.length; l++)
       {

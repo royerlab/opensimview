@@ -10,7 +10,7 @@ public class MultiColorInterleavedAcquisitionInstructionPanel extends CustomGrid
   {
     int row = 0;
 
-    addStringField(pInstruction.getChannelNameVariable(), 0);
+    addStringField(pInstruction.getChannelNameVariable(), row++);
 
     int lNumberOfLaserLines = pInstruction.getLightSheetMicroscope().getNumberOfLaserLines();
 
