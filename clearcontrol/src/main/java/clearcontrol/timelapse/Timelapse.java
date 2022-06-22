@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 
 /**
  * Timelapse implementations ? extends FileStackSinkInterface
@@ -154,6 +155,24 @@ public class Timelapse extends LoopTaskDevice implements TimelapseInterface
       int lMax = getMaxAdaptiveEngineStepsVariable().get().intValue();
       if (n.intValue() != o.intValue() && n > lMax) getMaxAdaptiveEngineStepsVariable().setAsync(n);
     });
+
+    // Prevents invalid characters:
+    VariableSetListener<String> lDataSetNamePostfixListener = (o, n) ->
+    {
+      String lFixedString = n.replace('\\', '-');
+      lFixedString = lFixedString.replace('/','-');
+      lFixedString = lFixedString.replace(':','-');
+      lFixedString = lFixedString.replace('*','-');
+      lFixedString = lFixedString.replace('?','-');
+      lFixedString = lFixedString.replace('<','-');
+      lFixedString = lFixedString.replace('>','-');
+      lFixedString = lFixedString.replace('|','-');
+
+      if(!n.equals(lFixedString))
+        mDataSetNamePostfixVariable.set(lFixedString);
+    };
+
+    mDataSetNamePostfixVariable.addSetListener(lDataSetNamePostfixListener);
   }
 
   /**
