@@ -4,11 +4,11 @@
 
 This open access repository provides all information for building a 2 detection and 2 illumination simultaneous multiview objective:
 - [a complete parts list](../../wiki/Multiview-Lightsheet-Microscope-Parts-List)
-- [CAD drawings]()
-- control software 
-- hardware building guide
-- software setup instructions
-- image data processing pipeline with [DEXP](https://github.com/royerlab/dexp)
+- [CAD drawings](../../wiki/CAD-Drawings)
+- [control software](../../wiki/Control-Software) 
+- [hardware building guide](../../wiki/Hardware-Building-Guide)
+- [software setup instructions](../../wiki/Software-Setup-Instructions)
+- [image data processing pipeline](../../wiki/Image-Data-Processing-with-DEXP) with [DEXP](https://github.com/royerlab/dexp)
 
 This design is original but heavily influenced by the SiMView design by the [Keller Lab](https://www.janelia.org/lab/keller-lab), and in particular these two publications: 
 - [Adaptive light-sheet microscopy for long-term, high-resolution imaging in living organisms.](https://doi.org/10.1038/nbt.3708) Loic A. Royer, William C. Lemon, Raghav K. Chhetri, Yinan Wan, Michael Coleman, Eugene Myers and Philipp J. Keller. Nature Biotechnology (2016)
