@@ -1,6 +1,6 @@
 # Simultaneous MultiView Lightsheet Microscope #
 
-<img height="400" alt="Zebrafish embryo imaged with a simultaneous multiview lightsheet microscope" src="https://user-images.githubusercontent.com/1870994/200694511-778bb4c6-633c-483f-8e78-47ba3fc8b425.png"> <img height="400" alt="Simultaneous multiview lightsheet microscope" src="https://user-images.githubusercontent.com/1870994/200697163-249cf883-636f-4fff-bc5c-066486317ff5.PNG">
+<img height="300" alt="Zebrafish embryo imaged with a simultaneous multiview lightsheet microscope" src="https://user-images.githubusercontent.com/1870994/200694511-778bb4c6-633c-483f-8e78-47ba3fc8b425.png"> <img height="300" alt="Simultaneous multiview lightsheet microscope" src="https://user-images.githubusercontent.com/1870994/200697163-249cf883-636f-4fff-bc5c-066486317ff5.PNG">
 
 This open access repository provides all information for building a 2 detection and 2 illumination simultaneous multiview objective -- including a complete parts list, CAD drawings, control software, hardware building guide and software setup instructions.
 
