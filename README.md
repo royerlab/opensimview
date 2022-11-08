@@ -7,7 +7,8 @@ This open access repository provides all information for building a 2 detection 
 - [CAD drawings]()
 - control software 
 - hardware building guide
-- software setup instructions.
+- software setup instructions
+- imaeg data processing pipeline with [DEXP](https://github.com/royerlab/dexp)
 
 This design is original but heavily influenced by the SiMView design by the [Keller Lab](https://www.janelia.org/lab/keller-lab), and in particular these two publications: 
 - [Adaptive light-sheet microscopy for long-term, high-resolution imaging in living organisms.](https://doi.org/10.1038/nbt.3708) Loic A. Royer, William C. Lemon, Raghav K. Chhetri, Yinan Wan, Michael Coleman, Eugene Myers and Philipp J. Keller. Nature Biotechnology (2016)
