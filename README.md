@@ -15,4 +15,4 @@ This design is original but heavily influenced by the SiMView concept by the [Ke
 - [Quantitative high-speed imaging of entire developing embryos with simultaneous multiview light-sheet microscopy. ](https://doi.org/10.1038/nmeth.2062) Raju Tomer 1, Khaled Khairy, Fernando Amat, Philipp J Keller Nature Methods
 . 2012 
 
-D
+
