@@ -12,7 +12,7 @@ This open access repository provides all information for building a 2 detection 
 
 This design is original but heavily influenced by the SiMView concept by the [Keller Lab](https://www.janelia.org/lab/keller-lab), and in particular these two publications: 
 - [Adaptive light-sheet microscopy for long-term, high-resolution imaging in living organisms.](https://doi.org/10.1038/nbt.3708) Loic A. Royer, William C. Lemon, Raghav K. Chhetri, Yinan Wan, Michael Coleman, Eugene Myers and Philipp J. Keller. Nature Biotechnology (2016)
-- [Quantitative high-speed imaging of entire developing embryos with simultaneous multiview light-sheet microscopy. ](https://doi.org/10.1038/nmeth.2062) Raju Tomer 1, Khaled Khairy, Fernando Amat, Philipp J Keller Nature Methods
+- [Quantitative high-speed imaging of entire developing embryos with simultaneous multiview light-sheet microscopy. ](https://doi.org/10.1038/nmeth.2062) Raju Tomer 1, Khaled Khairy, Fernando Amat, Philipp J Keller. Nature Methods
 . 2012 
 
 
