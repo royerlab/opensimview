@@ -172,7 +172,16 @@ public class Direttore implements AutoCloseable
       
       */
 
+      System.out.println("Direttore: Start playing score...");
+
+      long lNanosStart = System.nanoTime();
       DirettoreLibrary.direttorePlay(mFPGAReference, pDeltaTimeInTicks, toIntExact(pDeltaTimeInTicks.getValidElements()), pNumberOfTimePointsToPlay, toIntExact(pNumberOfTimePointsToPlay.getValidElements()), pSyncControl, toIntExact(pSyncControl.getValidElements()), pNumberOfMatrices, pMatricesBuffer, toIntExact(pMatricesBuffer.getValidElements()), mPointerToSpaceLeftInQueue, mErrorOut);
+      long lNanosStop = System.nanoTime();
+
+      long lElapsedNanos = lNanosStop - lNanosStart;
+      double lElapsedTimeInMilliseconds = lElapsedNanos * 1e-6;
+
+      System.out.println("Direttore: Finished playing score in " + lElapsedTimeInMilliseconds + " ms");
 
       return true;/**/
     }

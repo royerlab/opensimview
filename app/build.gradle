@@ -8,7 +8,7 @@ plugins {
 
 dependencies {
     implementation project(':clearcontrol')
-//    implementation project(':coremem')
+    implementation project(':coremem')
     implementation project(':libraries')
 }
 

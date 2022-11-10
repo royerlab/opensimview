@@ -21,6 +21,8 @@ public enum AcquisitionType
 
   TimeLapseInterleaved,
 
+  TimeLapseMultiColorInterleaved,
+
   TimeLapseOpticallyCameraFused,
 
   TimeLapseHybridInterleavedOpticsPrefused

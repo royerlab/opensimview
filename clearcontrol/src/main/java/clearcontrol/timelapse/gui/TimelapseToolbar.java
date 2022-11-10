@@ -38,12 +38,12 @@ import java.util.ArrayList;
  */
 public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingFeature
 {
-  private TimelapseInterface mTimelapse = null;
+  private TimelapseInterface mTimelapse;
 
   ScrollPane mPropertiesScrollPane;
   ListView<InstructionInterface> mCurrentProgramScheduleListView;
 
-  private File mProgramTemplateDirectory = MachineConfiguration.get().getFolder("ProgramTemplates");
+  private final File mProgramTemplateDirectory = MachineConfiguration.get().getFolder("ProgramTemplates");
 
   /**
    * Instanciates a lightsheet timelapse toolbar.
@@ -60,10 +60,9 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
     setPrefSize(400, 200);
 
     int[] lPercent = new int[]{10, 40, 40, 10};
-    for (int i = 0; i < lPercent.length; i++)
-    {
+    for (int j : lPercent) {
       ColumnConstraints lColumnConstraints = new ColumnConstraints();
-      lColumnConstraints.setPercentWidth(lPercent[i]);
+      lColumnConstraints.setPercentWidth(j);
       getColumnConstraints().add(lColumnConstraints);
     }
 
@@ -92,26 +91,17 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
         lRow++;
       }
 
-      ArrayList<InstructionInterface> lSchedulerList = pTimelapse.getCurrentProgram();
-      mCurrentProgramScheduleListView = new ListView<InstructionInterface>();
-      mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+      ArrayList<InstructionInterface> lProgramList = pTimelapse.getCurrentProgram();
+      mCurrentProgramScheduleListView = new ListView<>();
+      mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lProgramList));
       refreshPropertiesScrollPane();
       mCurrentProgramScheduleListView.setMinHeight(300);
       mCurrentProgramScheduleListView.setMinWidth(450);
 
-      mCurrentProgramScheduleListView.setOnMouseClicked(new EventHandler<MouseEvent>()
-      {
-        @Override
-        public void handle(MouseEvent mouseEvent)
+      mCurrentProgramScheduleListView.setOnMouseClicked(mouseEvent -> {
+        if (mouseEvent.getClickCount() > 0)
         {
-          /**
-           * Dirty hack: Use Java reflections to discover a matching panel TODO:
-           * find a better way of doing this, without reflections
-           */
-          if (mouseEvent.getClickCount() > 0)
-          {
-            refreshPropertiesScrollPane();
-          }
+          refreshPropertiesScrollPane();
         }
       });
 
@@ -127,10 +117,10 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
           int i = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
           if (i > 0)
           {
-            InstructionInterface lInstructionInterface = lSchedulerList.get(i);
-            lSchedulerList.remove(i);
-            lSchedulerList.add(i - 1, lInstructionInterface);
-            mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+            InstructionInterface lInstructionInterface = lProgramList.get(i);
+            lProgramList.remove(i);
+            lProgramList.add(i - 1, lInstructionInterface);
+            mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lProgramList));
             refreshPropertiesScrollPane();
           }
         });
@@ -147,12 +137,12 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
         {
           int count = 0;
           int i = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
-          if (i >= 0 && i < lSchedulerList.size() - 1)
+          if (i >= 0 && i < lProgramList.size() - 1)
           {
-            InstructionInterface lInstructionInterface = lSchedulerList.get(i);
-            lSchedulerList.remove(i);
-            lSchedulerList.add(i + 1, lInstructionInterface);
-            mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+            InstructionInterface lInstructionInterface = lProgramList.get(i);
+            lProgramList.remove(i);
+            lProgramList.add(i + 1, lInstructionInterface);
+            mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lProgramList));
             refreshPropertiesScrollPane();
           }
         });
@@ -171,10 +161,10 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
           int lSelectedIndex = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
           for (int i : mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndices().sorted())
           {
-            lSchedulerList.remove(i - count);
+            lProgramList.remove(i - count);
             count++;
           }
-          mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+          mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lProgramList));
           mCurrentProgramScheduleListView.getSelectionModel().select(lSelectedIndex);
           refreshPropertiesScrollPane();
         });
@@ -190,7 +180,7 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
         lUnselectButton.setMinHeight(35);
         lUnselectButton.setOnAction((e) ->
         {
-          mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+          mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lProgramList));
           mCurrentProgramScheduleListView.getSelectionModel().select(-1);
           refreshPropertiesScrollPane();
         });
@@ -209,9 +199,9 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
           int lSelectedIndex = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
           if (lSelectedIndex > -1)
           {
-            lSchedulerList.add(lSelectedIndex, lSchedulerList.get(lSelectedIndex).copy());
+            lProgramList.add(lSelectedIndex, lProgramList.get(lSelectedIndex).copy());
           }
-          mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+          mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lProgramList));
           refreshPropertiesScrollPane();
         });
         GridPane.setValignment(lCloneButton, VPos.BOTTOM);
@@ -221,11 +211,11 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
 
       lRow = 10;
       {
-        ComboBox lExistingScheduleTemplates;
+        ComboBox lExistingProgramTemplates;
         {
           // load
-          lExistingScheduleTemplates = new ComboBox(listExistingSchedulerTemplateFiles());
-          lSchedulerChecklistGridPane.add(lExistingScheduleTemplates, 0, lRow);
+          lExistingProgramTemplates = new ComboBox(listExistingSchedulerTemplateFiles());
+          lSchedulerChecklistGridPane.add(lExistingProgramTemplates, 0, lRow);
 
           Button lLoadScheduleTemplateBytton = new Button("Load");
           lLoadScheduleTemplateBytton.setMaxWidth(Double.MAX_VALUE);
@@ -234,8 +224,8 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
             try
             {
               mTimelapse.getCurrentProgram().clear();
-              new ProgramReader(lSchedulerList, (LightSheetMicroscope) mTimelapse.getMicroscope(), getFile(lExistingScheduleTemplates.getValue().toString())).read();
-              mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
+              new ProgramReader(lProgramList, (LightSheetMicroscope) mTimelapse.getMicroscope(), getFile(lExistingProgramTemplates.getValue().toString())).read();
+              mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lProgramList));
               refreshPropertiesScrollPane();
             } catch (Exception e1)
             {
@@ -269,7 +259,7 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
             try
             {
               new ProgramWriter(mTimelapse.getCurrentProgram(), getFile(lFileNameVariable.get())).write();
-              lExistingScheduleTemplates.setItems(listExistingSchedulerTemplateFiles());
+              lExistingProgramTemplates.setItems(listExistingSchedulerTemplateFiles());
             } catch (Exception e1)
             {
               e1.printStackTrace();
@@ -318,7 +308,7 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
         lRow++;
 
         TreeItem<String> rootItem = buildInstructionTree(mTimelapse, lFilters, "", lIcons);
-        TreeView<String> tree = new TreeView<String>(rootItem);
+        TreeView<String> tree = new TreeView<>(rootItem);
 
         Label lSearchLabel = new Label("Search");
         lSchedulerChecklistGridPane.add(lSearchLabel, 2, lRow);
@@ -335,27 +325,22 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
         tree.setMinHeight(150);
         tree.setMinWidth(450);
 
-        tree.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-          @Override
-          public void handle(MouseEvent mouseEvent)
+        tree.setOnMouseClicked(mouseEvent -> {
+          if (mouseEvent.getClickCount() == 2)
           {
-            if (mouseEvent.getClickCount() == 2)
+            TreeItem<String> item = tree.getSelectionModel().getSelectedItem();
+            System.out.println("Selected Text : " + item.getValue());
+            if (item.getParent() != null && item.getParent().getValue().compareTo("Instructions") != 0)
             {
-              TreeItem<String> item = tree.getSelectionModel().getSelectedItem();
-              System.out.println("Selected Text : " + item.getValue());
-              if (item.getParent() != null && item.getParent().getValue().compareTo("Instructions") != 0)
+              int lSelectedIndexInMainList = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
+              if (lSelectedIndexInMainList < 0) lSelectedIndexInMainList = lProgramList.size();
+              lProgramList.add(lSelectedIndexInMainList, mTimelapse.getListOfAvailableInstructions(item.getParent().getValue() + ":" + item.getValue()).get(0).copy());
+              mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lProgramList));
+              if (mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex() > -1)
               {
-                int lSelectedIndexInMainList = mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex();
-                if (lSelectedIndexInMainList < 0) lSelectedIndexInMainList = lSchedulerList.size();
-                lSchedulerList.add(lSelectedIndexInMainList, mTimelapse.getListOfAvailableInstructions(item.getParent().getValue() + ":" + item.getValue()).get(0).copy());
-                mCurrentProgramScheduleListView.setItems(FXCollections.observableArrayList(lSchedulerList));
-                if (mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex() > -1)
-                {
-                  mCurrentProgramScheduleListView.getSelectionModel().select(mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex() - 1);
-                }
-                refreshPropertiesScrollPane();
+                mCurrentProgramScheduleListView.getSelectionModel().select(mCurrentProgramScheduleListView.getSelectionModel().getSelectedIndex() - 1);
               }
+              refreshPropertiesScrollPane();
             }
           }
         });
@@ -431,7 +416,7 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
 
   private TreeItem<String> buildInstructionTree(TimelapseInterface pTimelapse, String[] lFilters, String pSearchFilter, Node[] lIcons)
   {
-    TreeItem<String> rootItem = new TreeItem<String>("Instructions", MicroscopeNodeType.Other.getIcon());
+    TreeItem<String> rootItem = new TreeItem<>("Instructions", MicroscopeNodeType.Other.getIcon());
     rootItem.setExpanded(true);
     for (int i = 0; i < lFilters.length; i++)
     {
@@ -439,13 +424,13 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
       if (lAvailableSchedulersList.size() > 0)
       {
 
-        TreeItem<String> item = new TreeItem<String>(lFilters[i].replace(":", ""), lIcons[i]);
+        TreeItem<String> item = new TreeItem<>(lFilters[i].replace(":", ""), lIcons[i]);
         item.setExpanded(pSearchFilter.length() > 0);
         rootItem.getChildren().add(item);
 
         for (InstructionInterface lInstructionInterface : lAvailableSchedulersList)
         {
-          TreeItem<String> schedulerItem = new TreeItem<String>(lInstructionInterface.getName().replace(lFilters[i], ""));
+          TreeItem<String> schedulerItem = new TreeItem<>(lInstructionInterface.getName().replace(lFilters[i], ""));
           item.getChildren().add(schedulerItem);
         }
       }
@@ -456,8 +441,7 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
   private ObservableList<String> listExistingSchedulerTemplateFiles()
   {
     ArrayList<String> filenames = getScheduleTemplateNames();
-    ObservableList<String> list = FXCollections.observableArrayList(filenames);
-    return list;
+    return FXCollections.observableArrayList(filenames);
   }
 
   private File getFile(String pName)
@@ -465,7 +449,7 @@ public class TimelapseToolbar extends TimelapseToolbarBasics implements LoggingF
     return new File(mProgramTemplateDirectory, pName + ".txt");
   }
 
-  ArrayList<String> mExistingTemplateFileList = new ArrayList<String>();
+  ArrayList<String> mExistingTemplateFileList = new ArrayList<>();
 
   private ArrayList<String> getScheduleTemplateNames()
   {

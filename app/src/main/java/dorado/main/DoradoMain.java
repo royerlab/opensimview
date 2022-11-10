@@ -89,8 +89,8 @@ public class DoradoMain extends Application implements LoggingFeature
       return;
     }
 
-    boolean l2DDisplay = true;
-    boolean l3DDisplay = true;
+    boolean l2DDisplay = MachineConfiguration.get().getBooleanProperty("display.2d", true);
+    boolean l3DDisplay = MachineConfiguration.get().getBooleanProperty("display.3d", false);
 
     BorderPane lPane = new BorderPane();
 

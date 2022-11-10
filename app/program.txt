@@ -1,6 +1,1 @@
-Adaptation: Change laser line on/off state::Laser_index=[2] 
-Adaptation: Change light sheet brightness::Light_sheet_index=[0] Light_sheet_brightness=[0.2] 
-Adaptation: Change light sheet brightness::Light_sheet_index=[1] Light_sheet_brightness=[0.4] 
-Filter wheel: Set filter of LudlFilterWheel1 to 561 (610/75)::
-Filter wheel: Set filter of LudlFilterWheel0 to 561 (610/75)::
-Acquisition: Sequential::Acquisition_Channel=[561] 
+Acquisition: MultiColorInterleaved::Acquisition_Channel=[default] Period_for_laser_line0=[1] Period_for_laser_line1=[1] Period_for_laser_line2=[1] Period_for_laser_line3=[1] Offset_for_laser_line0=[0] Offset_for_laser_line1=[0] Offset_for_laser_line2=[0] Offset_for_laser_line3=[0] Laser_Line_0_Power_Adjustment=[1.0] Laser_Line_1_Power_Adjustment=[1.0] Laser_Line_2_Power_Adjustment=[1.0] Laser_Line_3_Power_Adjustment=[1.0] 
