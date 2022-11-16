@@ -1,4 +1,4 @@
-package multiview;
+package simview;
 
 import clearcl.ClearCLContext;
 import clearcontrol.component.detection.DetectionArm;
@@ -18,21 +18,21 @@ import clearcontrol.timelapse.Timelapse;
 
 
 /**
- * Multi-view light-sheet microscope
+ * SimView Microscope Class
  *
  * @author royer
  */
-public class MultiViewLightSheetMicroscope extends SimulatedLightSheetMicroscope
+public class SimViewMicroscope extends SimulatedLightSheetMicroscope
 {
 
   /**
-   * Instantiates an Dorado microscope
+   * Instantiates a SimView microscope
    *
    * @param pStackFusionContext            ClearCL context for stack fusion
    * @param pMaxStackProcessingQueueLength max stack processing queue length
    * @param pThreadPoolSize                thread pool size
    */
-  public MultiViewLightSheetMicroscope(ClearCLContext pStackFusionContext, int pMaxStackProcessingQueueLength, int pThreadPoolSize)
+  public SimViewMicroscope(ClearCLContext pStackFusionContext, int pMaxStackProcessingQueueLength, int pThreadPoolSize)
   {
     super("Dorado", pStackFusionContext, pMaxStackProcessingQueueLength, pThreadPoolSize);
 
@@ -87,7 +87,6 @@ public class MultiViewLightSheetMicroscope extends SimulatedLightSheetMicroscope
           FilterWheelInstruction lFilterWheelInstruction = new FilterWheelInstruction(lFilterWheel, i);
           addDevice(c, lFilterWheelInstruction);
         }
-
 
       }
     }
