@@ -1,4 +1,4 @@
-package simbryo.synthoscopy.optics.illumination.impl.lightsheet.demo;
+package simbryo.synthoscopy.demo;
 
 import clearcl.ClearCL;
 import clearcl.ClearCLContext;

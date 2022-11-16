@@ -1,4 +1,4 @@
-package simbryo.particles.viewer.two.demo;
+package simbryo.particles.viewer.demo;
 
 import org.junit.Test;
 import simbryo.particles.ParticleSystem;

@@ -1,4 +1,4 @@
-package simbryo.synthoscopy.microscope.lightsheet.drosophila.demo;
+package simbryo.synthoscopy.microscope.lightsheet.demo;
 
 import clearcl.ClearCL;
 import clearcl.ClearCLContext;

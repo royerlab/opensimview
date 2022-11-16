@@ -1,4 +1,4 @@
-package simbryo.dynamics.tissue.embryo.zoo.demo;
+package simbryo.dynamics.tissue.embryo.demo;
 
 import org.junit.Test;
 import simbryo.dynamics.tissue.embryo.zoo.Drosophila;

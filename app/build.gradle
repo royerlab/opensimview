@@ -21,7 +21,7 @@ repositories
 
 application {
     // Define the main class for the application.
-    mainClass = 'dorado.main.DoradoMain'
+    mainClass = 'multiview.main.AppMain'
 }
 
 sourceSets {

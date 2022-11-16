@@ -1,4 +1,4 @@
-package dorado;
+package multiview;
 
 import clearcl.ClearCLContext;
 import clearcontrol.component.detection.DetectionArm;
@@ -18,11 +18,11 @@ import clearcontrol.timelapse.Timelapse;
 
 
 /**
- * Dorado microscope
+ * Multi-view light-sheet microscope
  *
  * @author royer
  */
-public class DoradoMicroscope extends SimulatedLightSheetMicroscope
+public class MultiViewLightSheetMicroscope extends SimulatedLightSheetMicroscope
 {
 
   /**
@@ -32,7 +32,7 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
    * @param pMaxStackProcessingQueueLength max stack processing queue length
    * @param pThreadPoolSize                thread pool size
    */
-  public DoradoMicroscope(ClearCLContext pStackFusionContext, int pMaxStackProcessingQueueLength, int pThreadPoolSize)
+  public MultiViewLightSheetMicroscope(ClearCLContext pStackFusionContext, int pMaxStackProcessingQueueLength, int pThreadPoolSize)
   {
     super("Dorado", pStackFusionContext, pMaxStackProcessingQueueLength, pThreadPoolSize);
 
@@ -51,7 +51,7 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
 
     if (pUseStages)
     {
-      // Setup stage here...
+      // Setup stage here... if needed...
     }
 
     // Setting up lasers:

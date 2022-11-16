@@ -1,4 +1,4 @@
-package simbryo.textures.noise.demo;
+package simbryo.demo;
 
 import clearcl.ClearCL;
 import clearcl.ClearCLContext;
@@ -10,22 +10,52 @@ import clearcl.enums.ImageChannelDataType;
 import clearcl.viewer.ClearCLImageViewer;
 import org.junit.Test;
 import simbryo.textures.noise.BSplineNoise;
-import simbryo.textures.noise.FractalNoise;
 import simbryo.textures.noise.SimplexNoise;
+import simbryo.textures.noise.UniformNoise;
 
 /**
- * Fractal noise texture demos
+ * Noise Textures Demos
  *
  * @author royer
  */
-public class FractalNoiseDemos
+public class NoiseDemos
 {
 
   /**
-   * Simplex 2D fractal noise demo
+   * Simplex 3D noise demo
    */
   @Test
-  public void demoWithSimplexNoise2D()
+  public void demoUniformNoise3D()
+  {
+    ClearCLBackendInterface lBestBackend = ClearCLBackends.getBestBackend();
+    System.out.println("lBestBackend=" + lBestBackend);
+    try (ClearCL lClearCL = new ClearCL(lBestBackend))
+    {
+      ClearCLDevice lFastestGPUDevice = lClearCL.getFastestGPUDeviceForImages();
+
+      ClearCLContext lContext = lFastestGPUDevice.createContext();
+
+      UniformNoise lUniformNoise = new UniformNoise(3);
+      lUniformNoise.setScale(0.1f, 0.1f, 0.1f);
+
+      float[] lTexture = lUniformNoise.generateTexture(128, 128, 128);
+
+      ClearCLImage lClearCLImage = lContext.createSingleChannelImage(ImageChannelDataType.Float, 128, 128, 128);
+
+      lClearCLImage.readFrom(lTexture, true);
+
+      ClearCLImageViewer lView = ClearCLImageViewer.view(lClearCLImage);
+
+      lView.waitWhileShowing();
+
+    }
+  }
+
+  /**
+   * Simplex Noise 2D Demo
+   */
+  @Test
+  public void demoSimplexNoise2D()
   {
     ClearCLBackendInterface lBestBackend = ClearCLBackends.getBestBackend();
     System.out.println("lBestBackend=" + lBestBackend);
@@ -36,10 +66,9 @@ public class FractalNoiseDemos
       ClearCLContext lContext = lFastestGPUDevice.createContext();
 
       SimplexNoise lSimplexNoise = new SimplexNoise(2);
-      FractalNoise lFractalNoise = new FractalNoise(lSimplexNoise, 0.1f, 0.05f, 0.025f, 0.0125f, 0.00625f);
-      lFractalNoise.setAllScales(10);
+      lSimplexNoise.setScale(0.1f, 0.1f, 0.1f);
 
-      float[] lTexture = lFractalNoise.generateTexture(128, 128);
+      float[] lTexture = lSimplexNoise.generateTexture(128, 128);
 
       ClearCLImage lClearCLImage = lContext.createSingleChannelImage(ImageChannelDataType.Float, 128, 128);
 
@@ -54,10 +83,10 @@ public class FractalNoiseDemos
   }
 
   /**
-   * Simplex 3D fractal noise demo
+   * Simplex 3D noise demo
    */
   @Test
-  public void demoWithSimplexNoise3D()
+  public void demoSimplexNoise3D()
   {
     ClearCLBackendInterface lBestBackend = ClearCLBackends.getBestBackend();
     System.out.println("lBestBackend=" + lBestBackend);
@@ -68,10 +97,9 @@ public class FractalNoiseDemos
       ClearCLContext lContext = lFastestGPUDevice.createContext();
 
       SimplexNoise lSimplexNoise = new SimplexNoise(3);
-      FractalNoise lFractalNoise = new FractalNoise(lSimplexNoise, 0.1f, 0.05f, 0.025f, 0.0125f, 0.00625f);
-      lFractalNoise.setAllScales(10);
+      lSimplexNoise.setScale(0.1f, 0.1f, 0.1f);
 
-      float[] lTexture = lFractalNoise.generateTexture(128, 128, 128);
+      float[] lTexture = lSimplexNoise.generateTexture(128, 128, 128);
 
       ClearCLImage lClearCLImage = lContext.createSingleChannelImage(ImageChannelDataType.Float, 128, 128, 128);
 
@@ -86,41 +114,10 @@ public class FractalNoiseDemos
   }
 
   /**
-   * B-Spline 2D fractal noise demo
+   * B-Spline 2D noise demo
    */
   @Test
-  public void demoWithBSplineNoise2D()
-  {
-    ClearCLBackendInterface lBestBackend = ClearCLBackends.getBestBackend();
-    System.out.println("lBestBackend=" + lBestBackend);
-    try (ClearCL lClearCL = new ClearCL(lBestBackend))
-    {
-      ClearCLDevice lFastestGPUDevice = lClearCL.getFastestGPUDeviceForImages();
-
-      ClearCLContext lContext = lFastestGPUDevice.createContext();
-
-      BSplineNoise lBSplineNoise = new BSplineNoise(3);
-      FractalNoise lFractalNoise = new FractalNoise(lBSplineNoise, 1f, 0.5f, 0.25f, 0.125f, 0.0625f);
-
-      float[] lTexture = lFractalNoise.generateTexture(128, 128);
-
-      ClearCLImage lClearCLImage = lContext.createSingleChannelImage(ImageChannelDataType.Float, 128, 128);
-
-      lClearCLImage.readFrom(lTexture, true);
-
-      ClearCLImageViewer lView = ClearCLImageViewer.view(lClearCLImage);
-
-      lView.waitWhileShowing();
-
-    }
-
-  }
-
-  /**
-   * B-Spline 3D fractal noise demo
-   */
-  @Test
-  public void demoWithBSplineNoise3D()
+  public void demoBSplineNoise2D()
   {
     ClearCLBackendInterface lBestBackend = ClearCLBackends.getBestBackend();
     System.out.println("lBestBackend=" + lBestBackend);
@@ -131,9 +128,39 @@ public class FractalNoiseDemos
       ClearCLContext lContext = lFastestGPUDevice.createContext();
 
       BSplineNoise lBSplineNoise = new BSplineNoise(2);
-      FractalNoise lFractalNoise = new FractalNoise(lBSplineNoise, 1f, 0.5f, 0.25f, 0.125f, 0.0625f);
+      lBSplineNoise.setScale(0.1f, 0.1f, 0.1f);
 
-      float[] lTexture = lFractalNoise.generateTexture(128, 128, 128);
+      float[] lTexture = lBSplineNoise.generateTexture(128, 128);
+
+      ClearCLImage lClearCLImage = lContext.createSingleChannelImage(ImageChannelDataType.Float, 128, 128);
+
+      lClearCLImage.readFrom(lTexture, true);
+
+      ClearCLImageViewer lView = ClearCLImageViewer.view(lClearCLImage);
+
+      lView.waitWhileShowing();
+
+    }
+  }
+
+  /**
+   * B-Spline 3D noise demo
+   */
+  @Test
+  public void demoBSplineNoise3D()
+  {
+    ClearCLBackendInterface lBestBackend = ClearCLBackends.getBestBackend();
+    System.out.println("lBestBackend=" + lBestBackend);
+    try (ClearCL lClearCL = new ClearCL(lBestBackend))
+    {
+      ClearCLDevice lFastestGPUDevice = lClearCL.getFastestGPUDeviceForImages();
+
+      ClearCLContext lContext = lFastestGPUDevice.createContext();
+
+      BSplineNoise lBSplineNoise = new BSplineNoise(3);
+      lBSplineNoise.setScale(0.1f, 0.1f, 0.1f);
+
+      float[] lTexture = lBSplineNoise.generateTexture(128, 128, 128);
 
       ClearCLImage lClearCLImage = lContext.createSingleChannelImage(ImageChannelDataType.Float, 128, 128, 128);
 

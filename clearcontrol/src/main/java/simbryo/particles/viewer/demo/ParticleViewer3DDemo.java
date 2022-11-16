@@ -1,4 +1,4 @@
-package simbryo.particles.viewer.three.demo;
+package simbryo.particles.viewer.demo;
 
 import javafx.scene.paint.Color;
 import org.junit.Test;

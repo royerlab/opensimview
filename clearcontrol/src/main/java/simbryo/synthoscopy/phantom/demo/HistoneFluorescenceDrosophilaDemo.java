@@ -1,4 +1,4 @@
-package simbryo.synthoscopy.phantom.fluo.impl.drosophila.demo;
+package simbryo.synthoscopy.phantom.demo;
 
 import clearcl.ClearCL;
 import clearcl.ClearCLContext;
