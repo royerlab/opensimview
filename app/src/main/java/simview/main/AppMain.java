@@ -1,4 +1,4 @@
-package multiview.main;
+package simview.main;
 
 import clearcl.ClearCL;
 import clearcl.ClearCLContext;
@@ -10,8 +10,7 @@ import clearcontrol.core.configuration.MachineConfiguration;
 import clearcontrol.core.log.LoggingFeature;
 import clearcontrol.simulation.LightSheetMicroscopeSimulationDevice;
 import clearcontrol.simulation.SimulationUtils;
-import dorado.gui.DoradoGui;
-import dorado.icon.SplashScreen;
+import simview.icon.SplashScreen;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -22,7 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import multiview.MultiViewLightSheetMicroscope;
+import simview.SimViewMicroscope;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class AppMain extends Application implements LoggingFeature
 {
-  static multiview.main.AppMain instance = null;
+  static simview.main.AppMain instance = null;
   private boolean headless = false;
 
   public ClearCL getClearCL()
@@ -44,7 +43,7 @@ public class AppMain extends Application implements LoggingFeature
 
   private ClearCL mClearCL;
 
-  public static multiview.main.AppMain getInstance()
+  public static simview.main.AppMain getInstance()
   {
     if (instance == null)
     {
@@ -89,6 +88,7 @@ public class AppMain extends Application implements LoggingFeature
       return;
     }
 
+    // retreive configuration information about 2D and 3D displays:
     boolean l2DDisplay = MachineConfiguration.get().getBooleanProperty("display.2d", true);
     boolean l3DDisplay = MachineConfiguration.get().getBooleanProperty("display.3d", false);
 
@@ -118,7 +118,7 @@ public class AppMain extends Application implements LoggingFeature
 
     sAlert.setTitle("Dialog");
     sAlert.setHeaderText("Simulation or Real ?");
-    sAlert.setContentText("Choose whether you want to start in real or simulation mode");
+    sAlert.setContentText("Choose whether you want to start in real or simulated hatrdware mode");
 
     sAlert.getButtonTypes().setAll(lButtonReal, lButtonSimulation, lButtonCancel);
 
@@ -143,7 +143,7 @@ public class AppMain extends Application implements LoggingFeature
         }
       };
 
-      Thread lThread = new Thread(lRunnable, "StartDorado");
+      Thread lThread = new Thread(lRunnable, "StartSimView");
       lThread.setDaemon(true);
       lThread.start();
     });
@@ -158,7 +158,7 @@ public class AppMain extends Application implements LoggingFeature
    * @param p2DDisplay    true: use 2D displays
    * @param p3DDisplay    true: use 3D displays
    */
-  public MultiViewLightSheetMicroscope startDorado(boolean pSimulation, Stage pPrimaryStage, boolean p2DDisplay, boolean p3DDisplay, boolean pUseStages)
+  public SimViewMicroscope startDorado(boolean pSimulation, Stage pPrimaryStage, boolean p2DDisplay, boolean p3DDisplay, boolean pUseStages)
   {
     int pNumberOfDetectionArms = 2;
     int pNumberOfLightSheets = 2;
@@ -176,8 +176,8 @@ public class AppMain extends Application implements LoggingFeature
 
       info("Using device %s for stack fusion \n", lStackFusionContext.getDevice());
 
-      MultiViewLightSheetMicroscope lMultiViewLightSheetMicroscope = new MultiViewLightSheetMicroscope(lStackFusionContext, lMaxStackProcessingQueueLength, lThreadPoolSize);
-      mLightSheetMicroscope = lMultiViewLightSheetMicroscope;
+      SimViewMicroscope lSimViewMicroscope = new SimViewMicroscope(lStackFusionContext, lMaxStackProcessingQueueLength, lThreadPoolSize);
+      mLightSheetMicroscope = lSimViewMicroscope;
       if (pSimulation)
       {
         ClearCLContext lSimulationContext = lClearCL.getDeviceByName(sMachineConfiguration.getStringProperty("clearcl.device.simulation", "")).createContext();
@@ -186,12 +186,12 @@ public class AppMain extends Application implements LoggingFeature
 
         LightSheetMicroscopeSimulationDevice lSimulatorDevice = SimulationUtils.getSimulatorDevice(lSimulationContext, pNumberOfDetectionArms, pNumberOfLightSheets, 2048, 11, 512, 512, 512, false);
 
-        lMultiViewLightSheetMicroscope.addSimulatedDevices(false, false, true, lSimulatorDevice);
+        lSimViewMicroscope.addSimulatedDevices(false, false, true, lSimulatorDevice);
       } else
       {
-        lMultiViewLightSheetMicroscope.addRealHardwareDevices(pNumberOfDetectionArms, pNumberOfLightSheets, pUseStages);
+        lSimViewMicroscope.addRealHardwareDevices(pNumberOfDetectionArms, pNumberOfLightSheets, pUseStages);
       }
-      lMultiViewLightSheetMicroscope.addStandardDevices(lNumberOfControlPlanes);
+      lSimViewMicroscope.addStandardDevices(lNumberOfControlPlanes);
 
       //EDFImagingEngine
       //    lDepthOfFocusImagingEngine =
@@ -200,38 +200,38 @@ public class AppMain extends Application implements LoggingFeature
 
 
       info("Opening microscope devices...");
-      if (lMultiViewLightSheetMicroscope.open())
+      if (lSimViewMicroscope.open())
       {
         info("Starting microscope devices...");
-        if (lMultiViewLightSheetMicroscope.start())
+        if (lSimViewMicroscope.start())
         {
           if (pPrimaryStage != null)
           {
-            DoradoGui lDoradoGui;
+            dorado.gui.SimViewGui lSimViewGui;
 
             info("Setting up Dorado GUI...");
-            lDoradoGui = new DoradoGui(lMultiViewLightSheetMicroscope, pPrimaryStage, p2DDisplay, p3DDisplay);
-            lDoradoGui.setup();
+            lSimViewGui = new dorado.gui.SimViewGui(lSimViewMicroscope, pPrimaryStage, p2DDisplay, p3DDisplay);
+            lSimViewGui.setup();
             info("Opening Dorado GUI...");
-            lDoradoGui.open();
+            lSimViewGui.open();
 
-            lDoradoGui.waitForVisible(true, 1L, TimeUnit.MINUTES);
+            lSimViewGui.waitForVisible(true, 1L, TimeUnit.MINUTES);
 
-            lDoradoGui.connectGUI();
-            lDoradoGui.waitForVisible(false, null, null);
+            lSimViewGui.connectGUI();
+            lSimViewGui.waitForVisible(false, null, null);
 
-            lDoradoGui.disconnectGUI();
+            lSimViewGui.disconnectGUI();
             info("Closing Dorado GUI...");
-            lDoradoGui.close();
+            lSimViewGui.close();
 
             info("Stopping microscope devices...");
-            lMultiViewLightSheetMicroscope.stop();
+            lSimViewMicroscope.stop();
             info("Closing microscope devices...");
-            lMultiViewLightSheetMicroscope.close();
+            lSimViewMicroscope.close();
           } else
           {
             mClearCL = lClearCL;
-            return lMultiViewLightSheetMicroscope;
+            return lSimViewMicroscope;
           }
         } else severe("Not all microscope devices started!");
       } else severe("Not all microscope devices opened!");
