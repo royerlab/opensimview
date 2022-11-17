@@ -21,7 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import simview.SimViewMicroscope;
+import simview.SiMViewMicroscope;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -34,23 +34,8 @@ import java.util.concurrent.TimeUnit;
 public class AppMain extends Application implements LoggingFeature
 {
   static simview.main.AppMain instance = null;
-  private boolean headless = false;
-
-  public ClearCL getClearCL()
-  {
-    return mClearCL;
-  }
 
   private ClearCL mClearCL;
-
-  public static simview.main.AppMain getInstance()
-  {
-    if (instance == null)
-    {
-      launch();
-    }
-    return instance;
-  }
 
   public AppMain()
   {
@@ -83,6 +68,7 @@ public class AppMain extends Application implements LoggingFeature
   public void start(Stage pPrimaryStage)
   {
     instance = this;
+    boolean headless = false;
     if (headless)
     {
       return;
@@ -101,7 +87,7 @@ public class AppMain extends Application implements LoggingFeature
 
     lPane.setCenter(lSplashScreen);
 
-    Scene lScene = new Scene(lPane, 1539, 770, Color.WHITE);
+    Scene lScene = new Scene(lPane, 2048, 1151, Color.WHITE);
     lScene.setFill(Color.TRANSPARENT);
     Stage lSplashStage = new Stage();
     lSplashStage.setScene(lScene);
@@ -139,7 +125,7 @@ public class AppMain extends Application implements LoggingFeature
           startDorado(false, pPrimaryStage, l2DDisplay, l3DDisplay, true);
         } else if (sResult.get() == lButtonCancel)
         {
-          Platform.runLater(() -> pPrimaryStage.hide());
+          Platform.runLater(pPrimaryStage::hide);
         }
       };
 
@@ -158,7 +144,7 @@ public class AppMain extends Application implements LoggingFeature
    * @param p2DDisplay    true: use 2D displays
    * @param p3DDisplay    true: use 3D displays
    */
-  public SimViewMicroscope startDorado(boolean pSimulation, Stage pPrimaryStage, boolean p2DDisplay, boolean p3DDisplay, boolean pUseStages)
+  public SiMViewMicroscope startDorado(boolean pSimulation, Stage pPrimaryStage, boolean p2DDisplay, boolean p3DDisplay, boolean pUseStages)
   {
     int pNumberOfDetectionArms = 2;
     int pNumberOfLightSheets = 2;
@@ -172,22 +158,56 @@ public class AppMain extends Application implements LoggingFeature
       for (ClearCLDevice lClearCLDevice : lClearCL.getAllDevices())
         info("OpenCl devices available: %s \n", lClearCLDevice.getName());
 
-      ClearCLContext lStackFusionContext = lClearCL.getDeviceByName(sMachineConfiguration.getStringProperty("clearcl.device.fusion", "")).createContext();
 
+      // Preparing context for Live Fusion (Live fusion is rarely used these days...)
+      ClearCLContext lStackFusionContext;
+      String lStackFusionDeviceName = sMachineConfiguration.getStringProperty("clearcl.device.fusion", "");
+      ClearCLDevice lFusionDevice = lClearCL.getDeviceByName(lStackFusionDeviceName);
+      if (lFusionDevice != null)
+      {
+        lStackFusionContext = lFusionDevice.createContext();
+      }
+      else
+      {
+        lStackFusionContext = lClearCL.getBestGPUDevice().createContext();
+      }
       info("Using device %s for stack fusion \n", lStackFusionContext.getDevice());
 
-      SimViewMicroscope lSimViewMicroscope = new SimViewMicroscope(lStackFusionContext, lMaxStackProcessingQueueLength, lThreadPoolSize);
+
+
+      SiMViewMicroscope lSimViewMicroscope = new SiMViewMicroscope(lStackFusionContext, lMaxStackProcessingQueueLength, lThreadPoolSize);
+
+
       mLightSheetMicroscope = lSimViewMicroscope;
       if (pSimulation)
       {
-        ClearCLContext lSimulationContext = lClearCL.getDeviceByName(sMachineConfiguration.getStringProperty("clearcl.device.simulation", "")).createContext();
+        // When in simulation mode we want to override the machine configuration to the 'default':
+        sMachineConfiguration.clearProperties("device.lsm.", ".f");
+        sMachineConfiguration.clearProperties("device.lsm.", ".bounds");
 
+        ClearCLContext lSimulationContext;
+        String lSimulationDeviceName = sMachineConfiguration.getStringProperty("clearcl.device.simulation", "");
+        ClearCLDevice lSimulationDevice = lClearCL.getDeviceByName(lSimulationDeviceName);
+        if (lSimulationDevice != null)
+        {
+          lSimulationContext = lSimulationDevice.createContext();
+        }
+        else
+        {
+          lSimulationContext = lClearCL.getBestGPUDevice().createContext();
+        }
         info("Using device %s for simulation (Simbryo) \n", lSimulationContext.getDevice());
 
-        LightSheetMicroscopeSimulationDevice lSimulatorDevice = SimulationUtils.getSimulatorDevice(lSimulationContext, pNumberOfDetectionArms, pNumberOfLightSheets, 2048, 11, 512, 512, 512, false);
+        int lDivisionTime = MachineConfiguration.get().getIntegerProperty("simulation.embryo.nbdivisions", 11);
+        int lOpticsSimPrecision =  MachineConfiguration.get().getIntegerProperty("simulation.optics.precision", 512);
+        boolean lUniformFluorescence =  MachineConfiguration.get().getBooleanProperty("simulation.uniform", false);
+
+        LightSheetMicroscopeSimulationDevice lSimulatorDevice = SimulationUtils.getSimulatorDevice(lSimulationContext, pNumberOfDetectionArms, pNumberOfLightSheets, 2048, lDivisionTime, lOpticsSimPrecision, lOpticsSimPrecision, lOpticsSimPrecision, lUniformFluorescence);
 
         lSimViewMicroscope.addSimulatedDevices(false, false, true, lSimulatorDevice);
-      } else
+
+      }
+      else
       {
         lSimViewMicroscope.addRealHardwareDevices(pNumberOfDetectionArms, pNumberOfLightSheets, pUseStages);
       }

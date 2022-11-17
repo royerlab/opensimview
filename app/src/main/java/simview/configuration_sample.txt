@@ -7,6 +7,10 @@ lookandfeel = metal
 clearcl.device.simulation = TITAN
 clearcl.device.fusion = TITAN
 
+# Parameters for simulator:
+simulation.embryo.nbdivisions = 11
+simulation.optics.precision = 512
+
 # This is the root folder where datasets will be saved:
 timelapse.rootfolder = D:\
 

@@ -22,7 +22,7 @@ import clearcontrol.timelapse.Timelapse;
  *
  * @author royer
  */
-public class SimViewMicroscope extends SimulatedLightSheetMicroscope
+public class SiMViewMicroscope extends SimulatedLightSheetMicroscope
 {
 
   /**
@@ -32,7 +32,7 @@ public class SimViewMicroscope extends SimulatedLightSheetMicroscope
    * @param pMaxStackProcessingQueueLength max stack processing queue length
    * @param pThreadPoolSize                thread pool size
    */
-  public SimViewMicroscope(ClearCLContext pStackFusionContext, int pMaxStackProcessingQueueLength, int pThreadPoolSize)
+  public SiMViewMicroscope(ClearCLContext pStackFusionContext, int pMaxStackProcessingQueueLength, int pThreadPoolSize)
   {
     super("Dorado", pStackFusionContext, pMaxStackProcessingQueueLength, pThreadPoolSize);
 
@@ -63,33 +63,31 @@ public class SimViewMicroscope extends SimulatedLightSheetMicroscope
     }
 
     // Setting up cameras and filterwheels:
-    if (true)
+    for (int c = 0; c < pNumberOfDetectionArms; c++)
     {
-      for (int c = 0; c < pNumberOfDetectionArms; c++)
+      StackCameraDeviceInterface<?> lCamera = HamStackCamera.buildWithExternalTriggering(c);
+
+      lCamera.getStackWidthVariable().set(lDefaultStackWidth);
+      lCamera.getStackHeightVariable().set(lDefaultStackHeight);
+      lCamera.getExposureInSecondsVariable().set(0.020);
+
+      // lCamera.getStackVariable().addSetListener((o,n)->
+      // {System.out.println("camera output:"+n);} );
+
+      addDevice(c, lCamera);
+
+
+      LudlFilterWheelDevice lFilterWheel = new LudlFilterWheelDevice(c);
+      addDevice(c, lFilterWheel);
+
+      for (int i = 0; i < lFilterWheel.getValidPositions().length; i++)
       {
-        StackCameraDeviceInterface<?> lCamera = HamStackCamera.buildWithExternalTriggering(c);
-
-        lCamera.getStackWidthVariable().set(lDefaultStackWidth);
-        lCamera.getStackHeightVariable().set(lDefaultStackHeight);
-        lCamera.getExposureInSecondsVariable().set(0.020);
-
-        // lCamera.getStackVariable().addSetListener((o,n)->
-        // {System.out.println("camera output:"+n);} );
-
-        addDevice(c, lCamera);
-
-
-        LudlFilterWheelDevice lFilterWheel = new LudlFilterWheelDevice(c);
-        addDevice(c, lFilterWheel);
-
-        for (int i = 0; i < lFilterWheel.getValidPositions().length; i++)
-        {
-          FilterWheelInstruction lFilterWheelInstruction = new FilterWheelInstruction(lFilterWheel, i);
-          addDevice(c, lFilterWheelInstruction);
-        }
-
+        FilterWheelInstruction lFilterWheelInstruction = new FilterWheelInstruction(lFilterWheel, i);
+        addDevice(c, lFilterWheelInstruction);
       }
+
     }
+
 
 
     // Adding signal Generator:
