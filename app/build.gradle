@@ -21,7 +21,7 @@ repositories
 
 application {
     // Define the main class for the application.
-    mainClass = 'multiview.main.AppMain'
+    mainClass = 'simview.main.AppMain'
 }
 
 sourceSets {
