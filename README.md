@@ -15,4 +15,11 @@ This design is original but heavily influenced by the SiMView concept by the [Ke
 - [Quantitative high-speed imaging of entire developing embryos with simultaneous multiview light-sheet microscopy. ](https://doi.org/10.1038/nmeth.2062) Raju Tomer 1, Khaled Khairy, Fernando Amat, Philipp J Keller. Nature Methods
 . 2012 
 
+## Description:
+
+One of the primary challenges of light-sheet microscopy is that it is difficult to achieve high-resolution images of larger, more optically challenging specimens, such as entire embryos, due to mismatches between the illuminating light-sheet and the focal plane of the detection objective. The microscope addresses this challenge by integrating a computational method that optimizes spatial resolution across the specimen volume in real time.
+
+The microscope has several advantages. First, it can adapt to spatiotemporal dynamics of genetically encoded fluorescent markers. Second, it can robustly optimize imaging performance during large-scale morphogenetic changes in living organisms. Third, it can recover cellular and sub-cellular structures in many regions that are not resolved by non-adaptive imaging. Fourth, it is capable of long-term adaptive imaging of entire developing zebrafish and Drosophila embryos, as well as adaptive whole-brain functional imaging in larval zebrafish.
+
+In summary, the adaptive light-sheet microscope is a powerful tool for live imaging of biological specimens that offers excellent spatial and temporal resolution and facilitates long-term observation of biological processes under physiological conditions.
 
