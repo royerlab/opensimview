@@ -110,7 +110,7 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
 
               // configure laser lines:
               for (int k = 0; k < getLightSheetMicroscope().getNumberOfLaserLines(); k++)
-                lQueue.setILO(l, la, k == la);
+                lQueue.setILO(l, k, k == la);
 
               // Adjust laser power:
               double lLaserLinePower = lLightsheetPower* getLaserPowerAdjustmentVariable(la).get();
@@ -169,13 +169,7 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
       mTimeStampBeforeImaging = System.nanoTime();
       lPlayQueueAndWait = getLightSheetMicroscope().playQueueAndWait(lQueue, 100 + lQueue.getQueueLength(), TimeUnit.SECONDS);
 
-    } catch (InterruptedException e)
-    {
-      e.printStackTrace();
-    } catch (ExecutionException e)
-    {
-      e.printStackTrace();
-    } catch (TimeoutException e)
+    } catch (InterruptedException | ExecutionException | TimeoutException e)
     {
       e.printStackTrace();
     }
@@ -194,7 +188,7 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
     boolean ison = super.isLaserLineOn(pLaserLineIndex);
     int period = mPeriodVariableArray[pLaserLineIndex].get();
     int offset = mOffsetVariableArray[pLaserLineIndex].get();
-    return ison && ((pTimePointIndex+2*period-offset)%period)==0;
+    return ison && ((pTimePointIndex+ 2L *period-offset)%period)==0;
   }
 
   public Variable<String> getChannelNameVariable()
