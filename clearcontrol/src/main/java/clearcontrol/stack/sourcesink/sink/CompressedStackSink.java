@@ -44,7 +44,7 @@ public class CompressedStackSink extends RawFileStackSink
 
     mCompressedBuffer.rewind();
     mCompressedBuffer.writeCompressedMemory(lContiguousMemory);
-    mCompressedBuffer.getCompressedContiguousMemory().writeBytesToFileChannel(lBinaryFileChannel, 0);
+    mCompressedBuffer.getCompressedContiguousMemory().writeBytesToFileChannel(0, lBinaryFileChannel, 0, 8192);
     double lCompressionRatio = mCompressedBuffer.getCompressionRatio();
 
     lBinaryFileChannel.force(false);
