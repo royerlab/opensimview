@@ -585,8 +585,21 @@ public abstract class MemoryBase extends FreeableBase implements PointerAccessib
   public long writeBytesToFileChannel(long pPositionInBufferInBytes, FileChannel pFileChannel, long pFilePositionInBytes, long pLengthInBytes) throws IOException
   {
     complainIfFreed();
+    return writeBytesToFileChannel(0, pFileChannel, pFilePositionInBytes, getSizeInBytes(), Integer.MAX_VALUE - 1024);
+  }
 
-    ArrayList<ByteBuffer> lByteBuffersForContiguousMemory = NIOBuffersInterop.getByteBuffersForContiguousMemory(this, pPositionInBufferInBytes, pLengthInBytes);
+  // @Override
+  public long writeBytesToFileChannel(
+    long pPositionInBufferInBytes,
+    FileChannel pFileChannel,
+    long pFilePositionInBytes,
+    long pLengthInBytes,
+    long pBufferSizeInBytes
+  ) throws IOException
+  {
+    complainIfFreed();
+
+    ArrayList<ByteBuffer> lByteBuffersForContiguousMemory = NIOBuffersInterop.getByteBuffersForContiguousMemory(this, pPositionInBufferInBytes, pLengthInBytes, pBufferSizeInBytes);
 
     pFileChannel.position(pFilePositionInBytes);
     for (ByteBuffer lByteBuffer : lByteBuffersForContiguousMemory)
@@ -594,7 +607,6 @@ public abstract class MemoryBase extends FreeableBase implements PointerAccessib
       pFileChannel.write(lByteBuffer);
     }
     return pFilePositionInBytes + pLengthInBytes;
-
   }
 
   @Override

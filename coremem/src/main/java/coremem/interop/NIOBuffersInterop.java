@@ -90,13 +90,7 @@ public class NIOBuffersInterop
 
   /**
    * This method creates a list of ByteBuffers that cover sequentially a given
-   * ContiguousMemory region. This should only be used within the CoreMem
-   * classes. It's use is tricky... IMPORTANT: the bytebuffers returned do not
-   * hold references to the parent responsible for the memory lifecycle. This
-   * means that the references of these bytebuffers cannot escape the scope
-   * within which the ContiguousMemory reference is held. If the GC cleans up
-   * the ContiguousMemory and there is still a returned ByteBuffer 'alive', this
-   * will necessarily lead to a segmentation fault.
+   * ContiguousMemory region.
    *
    * @param pContiguousMemory contiguous memory
    * @param pPositionInBytes  position in bytes
@@ -106,12 +100,38 @@ public class NIOBuffersInterop
    */
   public static ArrayList<ByteBuffer> getByteBuffersForContiguousMemory(ContiguousMemoryInterface pContiguousMemory, long pPositionInBytes, long pLengthInBytes)
   {
-    long lBufferSizeInBytes = pContiguousMemory.getSizeInBytes();
-
     long lLargestByteBufferSizeInBytes = Integer.MAX_VALUE - 1024; // a bit less
+    getByteBuffersForContiguousMemory(pContiguousMemory, pPositionInBytes, pLengthInBytes, lLargestByteBufferSizeInBytes)
+  }
+
+  /**
+   * This method creates a list of ByteBuffers that cover sequentially a given
+   * ContiguousMemory region. This should only be used within the CoreMem
+   * classes. It's use is tricky... IMPORTANT: the bytebuffers returned do not
+   * hold references to the parent responsible for the memory lifecycle. This
+   * means that the references of these bytebuffers cannot escape the scope
+   * within which the ContiguousMemory reference is held. If the GC cleans up
+   * the ContiguousMemory and there is still a returned ByteBuffer 'alive', this
+   * will necessarily lead to a segmentation fault.
+   *
+   * @param pContiguousMemory  contiguous memory
+   * @param pPositionInBytes   position in bytes
+   * @param pLengthInBytes     length in bytes
+   * @param pBufferSizeInBytes largest buffer size in bytes, clipped at Integer.MAX_VALUE - 1024.
+   * @return array of NIO byte buffers corresponding to given contiguous memory
+   * region
+   */
+  public static ArrayList<ByteBuffer> getByteBuffersForContiguousMemory(
+    ContiguousMemoryInterface pContiguousMemory,
+    long pPositionInBytes,
+    long pLengthInBytes,
+    long pBufferSizeInBytes
+  )
+  {
+    long lBufferSizeInBytes = pContiguousMemory.getSizeInBytes();
+    long lLargestByteBufferSizeInBytes = min(Integer.MAX_VALUE - 1024, pBufferSizeInBytes); // a bit less
     // to be
     // safe...
-
     long lAddress = pContiguousMemory.getAddress() + pPositionInBytes;
     long lLeftToAssign = min(pLengthInBytes, lBufferSizeInBytes);
 

@@ -36,6 +36,7 @@ public class CompressedStackSink extends RawFileStackSink
     File lFile = new File(getChannelFolder(pChannel), lFileName);
     FileChannel lBinaryFileChannel = getFileChannel(lFile, false);
     ContiguousMemoryInterface lContiguousMemory = pStack.getContiguousMemory();
+    long lBufferSizeInBytes = 8192L;  // experimental value, smaller buffers (chunks) were better
 
     long lDataLength = lContiguousMemory.getSizeInBytes();
 
@@ -44,7 +45,7 @@ public class CompressedStackSink extends RawFileStackSink
 
     mCompressedBuffer.rewind();
     mCompressedBuffer.writeCompressedMemory(lContiguousMemory);
-    mCompressedBuffer.getCompressedContiguousMemory().writeBytesToFileChannel(0, lBinaryFileChannel, 0, 8192);
+    mCompressedBuffer.getCompressedContiguousMemory().writeBytesToFileChannel(0, lBinaryFileChannel, 0, mCompressedBuffer.getSizeInBytes(), lBufferSizeInBytes);
     double lCompressionRatio = mCompressedBuffer.getCompressionRatio();
 
     lBinaryFileChannel.force(false);
