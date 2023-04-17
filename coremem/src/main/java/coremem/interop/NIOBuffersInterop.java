@@ -101,7 +101,7 @@ public class NIOBuffersInterop
   public static ArrayList<ByteBuffer> getByteBuffersForContiguousMemory(ContiguousMemoryInterface pContiguousMemory, long pPositionInBytes, long pLengthInBytes)
   {
     long lLargestByteBufferSizeInBytes = Integer.MAX_VALUE - 1024; // a bit less
-    getByteBuffersForContiguousMemory(pContiguousMemory, pPositionInBytes, pLengthInBytes, lLargestByteBufferSizeInBytes)
+    return getByteBuffersForContiguousMemory(pContiguousMemory, pPositionInBytes, pLengthInBytes, lLargestByteBufferSizeInBytes);
   }
 
   /**

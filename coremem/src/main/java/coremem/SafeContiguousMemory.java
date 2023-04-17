@@ -325,6 +325,14 @@ public class SafeContiguousMemory implements ContiguousMemoryInterface
   }
 
   @Override
+  public long writeBytesToFileChannel(long pBufferPositionInBytes, FileChannel pFileChannel, long pFilePositionInBytes, long pLengthInBytes, long pBufferSizeInBytes) throws IOException
+  {
+    checkOffset(pBufferPositionInBytes);
+    checkOffset(pBufferPositionInBytes + pLengthInBytes - 1);
+    return mDelegatedContiguousMemoryInterface.writeBytesToFileChannel(pBufferPositionInBytes, pFileChannel, pFilePositionInBytes, pLengthInBytes, pBufferSizeInBytes);
+  }
+
+  @Override
   public long readBytesFromFileChannel(FileChannel pFileChannel, long pFilePositionInBytes, long pLengthInBytes) throws IOException
   {
     checkOffset(0);

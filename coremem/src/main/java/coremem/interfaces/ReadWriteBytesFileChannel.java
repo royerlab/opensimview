@@ -37,6 +37,20 @@ public interface ReadWriteBytesFileChannel
   public long writeBytesToFileChannel(final long pBufferPositionInBytes, final FileChannel pFileChannel, final long pFilePositionInBytes, final long pLengthInBytes) throws IOException;
 
   /**
+   * Writes data at a given range from this memory object at a given offset of a
+   * file channel.
+   *
+   * @param pBufferPositionInBytes offset in memory object
+   * @param pFileChannel           file channel
+   * @param pFilePositionInBytes   file channel offset
+   * @param pLengthInBytes         length in bytes
+   * @param pBufferSizeInBytes largest buffer size in bytes, clipped at Integer.MAX_VALUE - 1024.
+   * @return file position past the last written byte.
+   * @throws IOException Thrown in case of IO problem.
+   */
+  public long writeBytesToFileChannel(final long pBufferPositionInBytes, final FileChannel pFileChannel, final long pFilePositionInBytes, final long pLengthInBytes, final long pBufferSizeInBytes) throws IOException;
+
+  /**
    * Reads data into this memory object for a certain position of a file
    * channel.
    *

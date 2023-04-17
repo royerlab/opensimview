@@ -148,15 +148,22 @@ public class FragmentedMemory extends FreeableBase implements FragmentedMemoryIn
   @Override
   public long writeBytesToFileChannel(long pBufferPositionInBytes, FileChannel pFileChannel, long pFilePositionInBytes, long pLengthInBytes) throws IOException
   {
+    return writeBytesToFileChannel(pBufferPositionInBytes, pFileChannel, pFilePositionInBytes, pLengthInBytes, Integer.MAX_VALUE - 1024);
+  }
+
+  @Override
+  public long writeBytesToFileChannel(long pBufferPositionInBytes, FileChannel pFileChannel, long pFilePositionInBytes, long pLengthInBytes, long pBufferSizeInBytes) throws IOException
+  {
     complainIfFreed();
     long lBytesWritten = 0;
     long lCurrentFilePosition = pFilePositionInBytes;
+    long lBufferSizeInBytes = min(Integer.MAX_VALUE - 1024, pBufferSizeInBytes);
     for (final ContiguousMemoryInterface lContiguousMemoryInterface : mMemoryRegionList)
     {
       final long lBytesLeftToBeWritten = pLengthInBytes - lBytesWritten;
       if (lBytesLeftToBeWritten <= 0) break;
       final long lBytesToBeWritten = min(lContiguousMemoryInterface.getSizeInBytes(), lBytesLeftToBeWritten);
-      lCurrentFilePosition = lContiguousMemoryInterface.writeBytesToFileChannel(0, pFileChannel, lCurrentFilePosition, lBytesToBeWritten);
+      lCurrentFilePosition = lContiguousMemoryInterface.writeBytesToFileChannel(0, pFileChannel, lCurrentFilePosition, lBytesToBeWritten, lBufferSizeInBytes);
       lBytesWritten += lBytesToBeWritten;
     }
     return lCurrentFilePosition;
