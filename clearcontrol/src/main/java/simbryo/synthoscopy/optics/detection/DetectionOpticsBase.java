@@ -46,8 +46,8 @@ public abstract class DetectionOpticsBase extends OpticsBase implements Detectio
     {
       mFluorescencePhantomImage = pFluorescencePhantomImage;
       mFluorescencePhantomImage.addListener((q, m) -> requestUpdate());
-      requestUpdate();
     }
+    requestUpdate();
   }
 
   /**
@@ -61,8 +61,8 @@ public abstract class DetectionOpticsBase extends OpticsBase implements Detectio
     {
       mScatteringPhantomImage = pScatteringPhantomImage;
       mScatteringPhantomImage.addListener((q, m) -> requestUpdate());
-      requestUpdate();
     }
+    requestUpdate();
   }
 
   /**

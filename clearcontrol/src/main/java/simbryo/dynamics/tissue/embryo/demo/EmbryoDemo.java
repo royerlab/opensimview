@@ -73,6 +73,8 @@ public class EmbryoDemo
 
     while (lDrosophila.getViewer().isShowing())
     {
+      long lTimeStepIndex = lDrosophila.getTimeStepIndex();
+      System.out.println(lTimeStepIndex);
       lTimming.syncAtPeriod(1);
       lDrosophila.simulationSteps(1);
     }

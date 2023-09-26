@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
- * Synthoscopy base class providing common fields and methods fof synthoscopy
+ * Synthoscopy base class providing common fields and methods for synthoscopy
  * modules
  *
  * @param <I> image type used to store and process images

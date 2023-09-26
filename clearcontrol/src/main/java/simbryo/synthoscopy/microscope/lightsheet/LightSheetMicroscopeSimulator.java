@@ -55,6 +55,8 @@ public class LightSheetMicroscopeSimulator extends MicroscopeSimulatorBase imple
 
   }
 
+
+
   @Override
   public LightSheetIllumination addLightSheet(Vector3f pAxisVector, Vector3f pNormalVector)
   {
@@ -119,6 +121,12 @@ public class LightSheetMicroscopeSimulator extends MicroscopeSimulatorBase imple
     {
       mIlluminationCombiner.addUpdateListener(lWideFieldDetectionOptics);
     }
+  }
+
+  @Override
+  public boolean advance()
+  {
+    return super.advance(1);
   }
 
   @Override
@@ -423,5 +431,6 @@ public class LightSheetMicroscopeSimulator extends MicroscopeSimulatorBase imple
     }
 
   }
+
 
 }

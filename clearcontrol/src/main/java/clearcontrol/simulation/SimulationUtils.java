@@ -34,14 +34,14 @@ public class SimulationUtils
   public static LightSheetMicroscopeSimulationDevice getSimulatorDevice(ClearCLContext pSimulationContext, int pNumberOfDetectionArms, int pNumberOfLightSheets, int pMaxCameraResolution, float pDivisionTime, int pPhantomWidth, int pPhantomHeight, int pPhantomDepth, boolean pUniformFluorescence)
   {
 
-    LightSheetMicroscopeSimulatorDrosophila lSimulator = new LightSheetMicroscopeSimulatorDrosophila(pSimulationContext, pNumberOfDetectionArms, pNumberOfLightSheets, pMaxCameraResolution, pDivisionTime, pPhantomWidth, pPhantomHeight, pPhantomDepth);
+    LightSheetMicroscopeSimulatorDrosophila lSimbryoSimulator = new LightSheetMicroscopeSimulatorDrosophila(pSimulationContext, pNumberOfDetectionArms, pNumberOfLightSheets, pMaxCameraResolution, pDivisionTime, pPhantomWidth, pPhantomHeight, pPhantomDepth);
     // lSimulator.openViewerForControls();
-    lSimulator.setFreezedEmbryo(true);
-    lSimulator.setNumberParameter(UnitConversion.Length, 0, 700f);
+    lSimbryoSimulator.setFreezedEmbryo(false);
+    lSimbryoSimulator.setNumberParameter(UnitConversion.Length, 0, 700f);
 
     // lSimulator.addAbberation(new Miscalibration());
     // lSimulator.addAbberation(new SampleDrift());
-    lSimulator.addAbberation(IlluminationMisalignment.buildXYZ(0, 0, 0));
+    // lSimulator.addAbberation(IlluminationMisalignment.buildXYZ(0, 0, 0));
     // lSimulator.addAbberation(new DetectionMisalignment());
 
     /*scheduleAtFixedRate(() -> lSimulator.simulationSteps(1),
@@ -50,9 +50,9 @@ public class SimulationUtils
 
     if (pUniformFluorescence)
     {
-      long lEffPhantomWidth = lSimulator.getWidth();
-      long lEffPhantomHeight = lSimulator.getHeight();
-      long lEffPhantomDepth = lSimulator.getDepth();
+      long lEffPhantomWidth = lSimbryoSimulator.getWidth();
+      long lEffPhantomHeight = lSimbryoSimulator.getHeight();
+      long lEffPhantomDepth = lSimbryoSimulator.getDepth();
 
       ClearCLImage lFluoPhantomImage = pSimulationContext.createSingleChannelImage(ImageChannelDataType.Float, lEffPhantomWidth, lEffPhantomHeight, lEffPhantomDepth);
 
@@ -68,16 +68,16 @@ public class SimulationUtils
       lUniformNoise.setMax(0.001f);
       lScatterPhantomImage.readFrom(lUniformNoise.generateTexture(lEffPhantomWidth / 2, lEffPhantomHeight / 2, lEffPhantomDepth / 2), true);
 
-      lSimulator.setPhantomParameter(PhantomParameter.Fluorescence, lFluoPhantomImage);
+      lSimbryoSimulator.setPhantomParameter(PhantomParameter.Fluorescence, lFluoPhantomImage);
 
-      lSimulator.setPhantomParameter(PhantomParameter.Scattering, lScatterPhantomImage);
+      lSimbryoSimulator.setPhantomParameter(PhantomParameter.Scattering, lScatterPhantomImage);
     }
 
     // lSimulator.openViewerForCameraImage(0);
     // lSimulator.openViewerForAllLightMaps();
     // lSimulator.openViewerForScatteringPhantom();
 
-    LightSheetMicroscopeSimulationDevice lLightSheetMicroscopeSimulatorDevice = new LightSheetMicroscopeSimulationDevice(lSimulator);
+    LightSheetMicroscopeSimulationDevice lLightSheetMicroscopeSimulatorDevice = new LightSheetMicroscopeSimulationDevice(lSimbryoSimulator);
 
     return lLightSheetMicroscopeSimulatorDevice;
   }

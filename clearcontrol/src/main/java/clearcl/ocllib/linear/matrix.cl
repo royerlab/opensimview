@@ -10,7 +10,7 @@ inline float16 matrix_load(int offset, __constant float* pointer)
 // 4x4 matrix multiplication:
 inline float4 matrix_mult(float16 matrix, float4 vector) 
 {
-  const float4 result;
+  float4 result;
 
   result.x = dot(vector, ((float4)(matrix.s0,matrix.s1,matrix.s2,matrix.s3)));
   result.y = dot(vector, ((float4)(matrix.s4,matrix.s5,matrix.s6,matrix.s7)));

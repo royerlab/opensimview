@@ -8,6 +8,7 @@ import simbryo.synthoscopy.phantom.PhantomRendererUtils;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Microscope simulator base class
@@ -22,6 +23,8 @@ public abstract class MicroscopeSimulatorBase implements MicroscopeSimulatorInte
   protected long[] mMainPhantomDimensions;
 
   private volatile int mTimeStepIndex = 0;
+
+  private volatile long mStartTimeInNanoseconds=0;
 
   protected ConcurrentHashMap<ParameterInterface<Void>, ClearCLImage> mPhantomMap = new ConcurrentHashMap<>();
 
@@ -39,6 +42,7 @@ public abstract class MicroscopeSimulatorBase implements MicroscopeSimulatorInte
   {
     mContext = pContext;
     mMainPhantomDimensions = PhantomRendererUtils.adaptImageDimensionsToDevice(pContext.getDevice(), pMainPhantomDimensions);
+    mStartTimeInNanoseconds = System.nanoTime();
   }
 
   @Override
@@ -70,6 +74,35 @@ public abstract class MicroscopeSimulatorBase implements MicroscopeSimulatorInte
 
     mTimeStepIndex += pNumberOfSteps;
   }
+
+  /**
+   * Advance simulation by the number of required steps to simulate real time.
+   * @param pStepsPerSecond The simulation must know the relationship between real time interval and number of steps.
+   *
+   */
+  public boolean advance(float pStepsPerSecond)
+  {
+    long lElapsedTimeInNanoseconds = System.nanoTime() - mStartTimeInNanoseconds;
+    long lElapsedTimeInSeconds = TimeUnit.NANOSECONDS.toSeconds(lElapsedTimeInNanoseconds);
+    float lEstimatedStepIndex = pStepsPerSecond*lElapsedTimeInSeconds;
+    int lEstimatedStepIndexAsInt = Math.round(lEstimatedStepIndex);
+    int lStepsMissing = lEstimatedStepIndexAsInt - mTimeStepIndex;
+    System.out.println(lStepsMissing);
+    if (lStepsMissing > 0)
+    {
+      simulationSteps(lStepsMissing);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Advance simulation by the number of required steps to simulate real time.
+   *
+   */
+  public abstract boolean advance();
+
 
   @Override
   public long getTimeStepIndex()

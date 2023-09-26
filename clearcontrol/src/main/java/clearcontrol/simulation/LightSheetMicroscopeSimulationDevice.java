@@ -17,20 +17,20 @@ import java.util.ArrayList;
 public class LightSheetMicroscopeSimulationDevice extends SampleSimulationDeviceBase<LightSheetMicroscopeQueue> implements SampleSimulationDeviceInterface<LightSheetMicroscopeQueue>
 {
 
-  private LightSheetMicroscopeSimulator mLightSheetMicroscopeSimulator;
+  private LightSheetMicroscopeSimulator mSimbryoLightSheetMicroscopeSimulator;
 
   private ArrayList<LightSheetSimulationStackProvider> mLightSheetSimulationStackProviderList = new ArrayList<>();
 
   /**
    * Instantiates a light sheet microscope simulator device
    *
-   * @param pLightSheetMicroscopeSimulator light sheet microscope simulator (from Simbryo
+   * @param pSimbryoLightSheetMicroscopeSimulator light sheet microscope simulator (from Simbryo
    *                                       project)
    */
-  public LightSheetMicroscopeSimulationDevice(LightSheetMicroscopeSimulator pLightSheetMicroscopeSimulator)
+  public LightSheetMicroscopeSimulationDevice(LightSheetMicroscopeSimulator pSimbryoLightSheetMicroscopeSimulator)
   {
     super();
-    mLightSheetMicroscopeSimulator = pLightSheetMicroscopeSimulator;
+    mSimbryoLightSheetMicroscopeSimulator = pSimbryoLightSheetMicroscopeSimulator;
   }
 
   /**
@@ -40,7 +40,7 @@ public class LightSheetMicroscopeSimulationDevice extends SampleSimulationDevice
    */
   public LightSheetMicroscopeSimulator getSimulator()
   {
-    return mLightSheetMicroscopeSimulator;
+    return mSimbryoLightSheetMicroscopeSimulator;
   }
 
   @Override
@@ -62,19 +62,19 @@ public class LightSheetMicroscopeSimulationDevice extends SampleSimulationDevice
     if (lMainXYZRStage != null)
     {
 
-      lMainXYZRStage.getCurrentPositionVariable(0).addSetListener((o, n) -> mLightSheetMicroscopeSimulator.setNumberParameter(StageParameter.StageX, 0, n));
+      lMainXYZRStage.getCurrentPositionVariable(0).addSetListener((o, n) -> mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(StageParameter.StageX, 0, n));
 
-      lMainXYZRStage.getCurrentPositionVariable(1).addSetListener((o, n) -> mLightSheetMicroscopeSimulator.setNumberParameter(StageParameter.StageY, 0, n));
+      lMainXYZRStage.getCurrentPositionVariable(1).addSetListener((o, n) -> mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(StageParameter.StageY, 0, n));
 
-      lMainXYZRStage.getCurrentPositionVariable(2).addSetListener((o, n) -> mLightSheetMicroscopeSimulator.setNumberParameter(StageParameter.StageZ, 0, n));
+      lMainXYZRStage.getCurrentPositionVariable(2).addSetListener((o, n) -> mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(StageParameter.StageZ, 0, n));
 
-      lMainXYZRStage.getCurrentPositionVariable(3).addSetListener((o, n) -> mLightSheetMicroscopeSimulator.setNumberParameter(StageParameter.StageRY, 0, n));
+      lMainXYZRStage.getCurrentPositionVariable(3).addSetListener((o, n) -> mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(StageParameter.StageRY, 0, n));
     }
 
-    int lNumberOfCameras = mLightSheetMicroscopeSimulator.getNumberOfDetectionArms();
+    int lNumberOfCameras = mSimbryoLightSheetMicroscopeSimulator.getNumberOfDetectionArms();
     for (int i = 0; i < lNumberOfCameras; i++)
     {
-      LightSheetSimulationStackProvider lLightSheetSimulationStackProvider = new LightSheetSimulationStackProvider(lLightSheetMicroscope, mLightSheetMicroscopeSimulator, i);
+      LightSheetSimulationStackProvider lLightSheetSimulationStackProvider = new LightSheetSimulationStackProvider(lLightSheetMicroscope, mSimbryoLightSheetMicroscopeSimulator, i);
 
       mLightSheetSimulationStackProviderList.add(lLightSheetSimulationStackProvider);
     }

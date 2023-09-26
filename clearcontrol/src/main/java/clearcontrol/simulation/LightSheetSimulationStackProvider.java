@@ -34,7 +34,7 @@ public class LightSheetSimulationStackProvider extends StackCameraSimulationProv
 {
 
   private LightSheetMicroscopeInterface mLightSheetMicroscope;
-  private LightSheetMicroscopeSimulator mLightSheetMicroscopeSimulator;
+  private LightSheetMicroscopeSimulator mSimbryoLightSheetMicroscopeSimulator;
   private int mCameraIndex;
 
   private DetectionArmInterface mDetectionArmDevice;
@@ -49,13 +49,13 @@ public class LightSheetSimulationStackProvider extends StackCameraSimulationProv
    * Instanciates a lightsheet simulation stack provider.
    *
    * @param pLightSheetMicroscope          light sheet sample simulation device
-   * @param pLightSheetMicroscopeSimulator light sheet microscope simulator
+   * @param pSimbryoLightSheetMicroscopeSimulator Simbryo light sheet microscope simulator
    * @param pCameraIndex                   camera index
    */
-  public LightSheetSimulationStackProvider(LightSheetMicroscopeInterface pLightSheetMicroscope, LightSheetMicroscopeSimulator pLightSheetMicroscopeSimulator, int pCameraIndex)
+  public LightSheetSimulationStackProvider(LightSheetMicroscopeInterface pLightSheetMicroscope, LightSheetMicroscopeSimulator pSimbryoLightSheetMicroscopeSimulator, int pCameraIndex)
   {
     mLightSheetMicroscope = pLightSheetMicroscope;
-    mLightSheetMicroscopeSimulator = pLightSheetMicroscopeSimulator;
+    mSimbryoLightSheetMicroscopeSimulator = pSimbryoLightSheetMicroscopeSimulator;
     mCameraIndex = pCameraIndex;
 
     mDetectionArmDevice = mLightSheetMicroscope.getDevice(DetectionArmInterface.class, mCameraIndex);
@@ -72,18 +72,21 @@ public class LightSheetSimulationStackProvider extends StackCameraSimulationProv
   @Override
   protected void fillStackData(StackCameraSimulationQueue pQueue, ArrayList<Boolean> pKeepPlaneList, long pWidth, long pHeight, long pDepth, StackInterface pStack)
   {
-    synchronized (mLightSheetMicroscopeSimulator)
+    synchronized (mSimbryoLightSheetMicroscopeSimulator)
     {
+
+      // Advance simulation time:
+      mSimbryoLightSheetMicroscopeSimulator.advance();
 
       int lWidth = (int) pStack.getWidth();
       int lHeight = (int) pStack.getHeight();
 
       float lExposureInSeconds = pQueue.getExposureInSecondsVariable().get().floatValue();
 
-      mLightSheetMicroscopeSimulator.setNumberParameter(CameraParameter.Exposure, mCameraIndex, lExposureInSeconds);
+      mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(CameraParameter.Exposure, mCameraIndex, lExposureInSeconds);
 
-      mLightSheetMicroscopeSimulator.setNumberParameter(CameraParameter.ROIWidth, mCameraIndex, lWidth);
-      mLightSheetMicroscopeSimulator.setNumberParameter(CameraParameter.ROIHeight, mCameraIndex, lHeight);
+      mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(CameraParameter.ROIWidth, mCameraIndex, lWidth);
+      mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(CameraParameter.ROIHeight, mCameraIndex, lHeight);
 
       final ContiguousMemoryInterface lContiguousMemory = pStack.getContiguousMemory();
 
@@ -115,12 +118,12 @@ public class LightSheetSimulationStackProvider extends StackCameraSimulationProv
             passIlluminationParameters(lSelectedLightSheet % mLightSheetMicroscope.getNumberOfLightSheets(), l, zi);
           else passIlluminationParameters(l, l, zi);
 
-        @SuppressWarnings("unused") double lMilliseconds = ElapsedTime.measure("!!renderplane", () -> mLightSheetMicroscopeSimulator.render(mCameraIndex, true));
+        @SuppressWarnings("unused") double lMilliseconds = ElapsedTime.measure("!!renderplane", () -> mSimbryoLightSheetMicroscopeSimulator.render(mCameraIndex, true));
         // info("Rendering plane %d in %g ms \n",zi,lMilliseconds);
 
         if (pKeepPlaneList.get(zi))
         {
-          ClearCLImage lCameraImage = mLightSheetMicroscopeSimulator.getCameraImage(mCameraIndex);
+          ClearCLImage lCameraImage = mSimbryoLightSheetMicroscopeSimulator.getCameraImage(mCameraIndex);
 
           long lOffset = i++ * lCameraImage.getSizeInBytes();
 
@@ -156,7 +159,7 @@ public class LightSheetSimulationStackProvider extends StackCameraSimulationProv
   {
 
     float z = mDetectionStateQueue.getQueuedValue(mDetectionArmDevice.getZFunction().get(), mDetectionStateQueue.getZVariable(), zi).floatValue();
-    mLightSheetMicroscopeSimulator.setNumberParameter(DetectionParameter.Z, mCameraIndex, z);
+    mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(DetectionParameter.Z, mCameraIndex, z);
 
   }
 
@@ -170,27 +173,27 @@ public class LightSheetSimulationStackProvider extends StackCameraSimulationProv
 
     float x = lSelectedLightSheetQueue.getQueuedValue(lLightSheet.getXFunction().get(), lSelectedLightSheetQueue.getXVariable(), zi).floatValue();
 
-    mLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.X, pLightSheetIndex, x);
+    mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.X, pLightSheetIndex, x);
 
     float y = lSelectedLightSheetQueue.getQueuedValue(lLightSheet.getYFunction().get(), lSelectedLightSheetQueue.getYVariable(), zi).floatValue();
 
-    mLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Y, pLightSheetIndex, y);
+    mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Y, pLightSheetIndex, y);
 
     float z = lSelectedLightSheetQueue.getQueuedValue(lLightSheet.getZFunction().get(), lSelectedLightSheetQueue.getZVariable(), zi).floatValue();
 
-    mLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Z, pLightSheetIndex, z);
+    mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Z, pLightSheetIndex, z);
 
     float alpha = lLightSheetQueue.getQueuedValue(lLightSheet.getAlphaFunction().get(), lLightSheetQueue.getAlphaInDegreesVariable(), zi).floatValue();
 
-    mLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Alpha, pLightSheetIndex, alpha);
+    mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Alpha, pLightSheetIndex, alpha);
 
     float beta = lLightSheetQueue.getQueuedValue(lLightSheet.getBetaFunction().get(), lLightSheetQueue.getBetaInDegreesVariable(), zi).floatValue();
 
-    mLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Beta, pLightSheetIndex, beta);
+    mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Beta, pLightSheetIndex, beta);
 
     float height = lSelectedLightSheetQueue.getQueuedValue(lLightSheet.getHeightFunction().get(), lSelectedLightSheetQueue.getHeightVariable(), zi).floatValue();
 
-    mLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Height, pLightSheetIndex, height);
+    mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Height, pLightSheetIndex, height);
 
     float lLightSheetPower =
 
@@ -204,7 +207,7 @@ public class LightSheetSimulationStackProvider extends StackCameraSimulationProv
 
     float lEffectiveIlluminationIntensity = (lLightSheetSwitchedOn ? 1 : 0) * lLightSheetPower * lLaserPower;
 
-    mLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Intensity, pLightSheetIndex, lEffectiveIlluminationIntensity);
+    mSimbryoLightSheetMicroscopeSimulator.setNumberParameter(IlluminationParameter.Intensity, pLightSheetIndex, lEffectiveIlluminationIntensity);
 
   }
 

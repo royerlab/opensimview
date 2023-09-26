@@ -47,7 +47,6 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
       mDrosophilaFluorescencePhantom.render(true);
 
       mDrosophilaScatteringPhantom = new DrosophilaScatteringPhantom(pContext, mDrosophila, mDrosophilaFluorescencePhantom, getWidth() / 2, getHeight() / 2, getDepth() / 2);
-
       mDrosophilaScatteringPhantom.render(true);
 
       setPhantomParameter(PhantomParameter.Fluorescence, mDrosophilaFluorescencePhantom.getImage());
@@ -87,12 +86,36 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
     super.simulationSteps(pNumberOfSteps);
   }
 
+  public boolean advance()
+  {
+    boolean lAdvanced = super.advance(1.2f);
+    if (lAdvanced)
+    {
+      mDrosophilaFluorescencePhantom.requestUpdate();
+      mDrosophilaScatteringPhantom.requestUpdate();
+    }
+
+    return lAdvanced;
+  }
+
   @Override
   public void render(boolean pWaitToFinish)
   {
     mDrosophilaFluorescencePhantom.render(false);
-    mDrosophilaScatteringPhantom.render(false);
+    mDrosophilaScatteringPhantom.render(true);
+    setPhantomParameter(PhantomParameter.Fluorescence, mDrosophilaFluorescencePhantom.getImage());
+    setPhantomParameter(PhantomParameter.Scattering, mDrosophilaScatteringPhantom.getImage());
     super.render(pWaitToFinish);
+  }
+
+  @Override
+  public void render(int pDetectionIndex, boolean pWaitToFinish)
+  {
+    mDrosophilaFluorescencePhantom.render(false);
+    mDrosophilaScatteringPhantom.render(true);
+    setPhantomParameter(PhantomParameter.Fluorescence, mDrosophilaFluorescencePhantom.getImage());
+    setPhantomParameter(PhantomParameter.Scattering, mDrosophilaScatteringPhantom.getImage());
+    super.render(pDetectionIndex, pWaitToFinish);
   }
 
   @Override

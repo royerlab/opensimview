@@ -27,7 +27,7 @@ inline float autofluo(float3 dim, float3 voxelpos, sampler_t sampler, __read_onl
 
   const float autoyolk       = 0.07f+0.8f*smoothstep(0.04f, 0.1f, insdistance)*(1-0.8f*smoothstep(0.1f, 0.15f, insdistance));
   
-  const float autofluo = insmask * autoyolk * (0.3f+0.7f*noiseval);
+  const float autofluo = insmask * autoyolk * 0.1 * (0.3f+0.7f*noiseval);
 
   return autofluo;
 }
