@@ -3,6 +3,7 @@ package simbryo.dynamics.tissue;
 import simbryo.dynamics.tissue.cellprop.CellProperty;
 import simbryo.dynamics.tissue.cellprop.VectorCellProperty;
 import simbryo.dynamics.tissue.cellprop.operators.CellPropertyOperatorInterface;
+import simbryo.dynamics.tissue.recorder.TissueRecorder;
 import simbryo.particles.ParticleSystem;
 import simbryo.particles.forcefield.interaction.impl.CollisionForceField;
 import simbryo.particles.viewer.ParticleViewerInterface;
@@ -45,6 +46,8 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
 
   private transient ParticleViewer3D mParticleViewer3D;
 
+  private TissueRecorder mTissueRecorder;
+
   /**
    * Constructs a tissue of given dimensions (2D or 3D), dimension, grid size,
    * max number of particle per neighborhood cell, collision force between
@@ -63,6 +66,17 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
 
     mCollisionForceField = new CollisionForceField(pCollisionForce, pDrag, false);
   }
+
+  public void setRecorder(TissueRecorder pTissueRecorder)
+  {
+      mTissueRecorder = pTissueRecorder;
+  }
+
+  public TissueRecorder getRecorder()
+  {
+    return mTissueRecorder;
+  }
+
 
   /**
    * Returns the current time step index.
@@ -118,6 +132,24 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
     return lNewParticleId;
   }
 
+
+  public int cellDivision(final int pId)
+  {
+    int lNewCellId = cloneParticle(pId, 0.001f);
+    // record cell division:
+    if (mTissueRecorder != null)
+      mTissueRecorder.recordCellDivisionEvent(pId, lNewCellId);
+    return lNewCellId;
+  }
+
+  public void cellDeath(final int pId)
+  {
+    removeParticle(pId);
+    // record cell death:
+    if (mTissueRecorder != null)
+      mTissueRecorder.recordCellDeathEvent(pId);
+  }
+
   /**
    * Adds a new 1D cell property to this tissue.
    *
@@ -160,6 +192,10 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
       mTimeStepIndex++;
       // mSequence.step(pDeltaTime);
     }
+
+    // record new cell positions after update
+    if (mTissueRecorder != null)
+      mTissueRecorder.recordPositions();
 
     if (mParticleViewer3D != null) mParticleViewer3D.updateDisplay(true);
 

@@ -68,7 +68,7 @@ public class Organoid extends EmbryoDynamics
 
     for (int i = 0; i < lNumberOfParticles; i++)
     {
-      int lNewParticleId = cloneParticle(i, 0.001f);
+      int lNewParticleId = cellDivision(i);
       setTargetRadius(i, getRadius(i) * cRadiusShrinkageFactor);
       setTargetRadius(lNewParticleId, getRadius(lNewParticleId) * cRadiusShrinkageFactor);
     }

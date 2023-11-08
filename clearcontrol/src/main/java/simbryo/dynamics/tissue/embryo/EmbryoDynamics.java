@@ -28,9 +28,7 @@ public class EmbryoDynamics extends TissueDynamics implements TissueDynamicsInte
    */
   public EmbryoDynamics(float pCollisionForce, float pDrag, int pMaxNumberOfParticlesPerGridCell, int[] pGridDimensions)
   {
-
     super(pCollisionForce, pDrag, pMaxNumberOfParticlesPerGridCell, pGridDimensions);
-
   }
 
   @Override

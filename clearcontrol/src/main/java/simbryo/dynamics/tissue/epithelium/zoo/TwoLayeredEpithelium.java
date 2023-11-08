@@ -159,7 +159,7 @@ public class TwoLayeredEpithelium extends LayeredEpitheliumDynamics
   private void divide(int pCellId)
   {
     int lDaughterId1 = pCellId;
-    int lDaughterId2 = cloneParticle(pCellId, 0.0001f);
+    int lDaughterId2 = cellDivision(pCellId);
 
     mCellLabelProperty.getArray().getCurrentArray()[lDaughterId1] = mCellLabelProperty.getArray().getCurrentArray()[lDaughterId1];
     mCellLabelProperty.getArray().getCurrentArray()[lDaughterId2] = mCellLabelProperty.getArray().getCurrentArray()[lDaughterId1];

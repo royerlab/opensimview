@@ -33,6 +33,8 @@ public class Drosophila extends EmbryoDynamics implements HasPolarity, Serializa
 
   private static final float Ri = 0.08f;
 
+  private static final float cCellDeathRate = 0.001f;
+
   private ForceFieldInterface mOutsideEllipseForceField;
   private ForceFieldInterface mInsideEllipseForceField;
 
@@ -147,7 +149,7 @@ public class Drosophila extends EmbryoDynamics implements HasPolarity, Serializa
     if (pEvent && pNewMorphogenValue < 14)
     {
 
-      int lNewParticleId = cloneParticle(pId, 0.001f);
+      int lNewParticleId = cellDivision(pId);
 
       mCellCycleProperty.getArray().getWriteArray()[lNewParticleId] = pNewMorphogenValue;
 
@@ -178,6 +180,8 @@ public class Drosophila extends EmbryoDynamics implements HasPolarity, Serializa
   {
     for (int i = 0; i < pNumberOfSteps; i++)
     {
+      triggerCellDeath();
+
       applyOperator(mStrogatzOscillator, mCellCycleProperty);
       applyOperator(mSurfaceGradientOperator, mPolarityProperty);
 
@@ -187,6 +191,16 @@ public class Drosophila extends EmbryoDynamics implements HasPolarity, Serializa
       applyForceField(mInsideEllipseForceField);
 
       super.simulationSteps(1);
+    }
+  }
+
+  private void triggerCellDeath()
+  {
+    if (Math.random() < cCellDeathRate)
+    {
+      int lNumberOfParticles = getNumberOfParticles();
+      int lIndexOfParticleToDie = (int)(lNumberOfParticles*Math.random());
+      cellDeath(lIndexOfParticleToDie);
     }
   }
 

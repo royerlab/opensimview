@@ -2,12 +2,15 @@ package simbryo.synthoscopy.microscope.lightsheet.drosophila;
 
 import clearcl.ClearCLContext;
 import clearcl.viewer.ClearCLImageViewer;
+import clearcontrol.core.configuration.MachineConfiguration;
 import simbryo.dynamics.tissue.embryo.zoo.Drosophila;
+import simbryo.dynamics.tissue.recorder.TissueRecorder;
 import simbryo.synthoscopy.microscope.lightsheet.LightSheetMicroscopeSimulatorOrtho;
 import simbryo.synthoscopy.microscope.parameters.PhantomParameter;
 import simbryo.synthoscopy.phantom.fluo.impl.drosophila.DrosophilaHistoneFluorescence;
 import simbryo.synthoscopy.phantom.scatter.impl.drosophila.DrosophilaScatteringPhantom;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -43,12 +46,31 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
     {
       mDrosophila = Drosophila.getDeveloppedEmbryo(pInitialDivisionTime);
 
+      // operating system dependent download folder for storing recordings:
+      String lDefaultFolderPrefix = System.getProperty("user.home") + "/Downloads/";
+
+      // get prefix for recording folder from machine configuration:
+      String lRecorderFolderPrefix = MachineConfiguration.get().getStringProperty("simbryo.recorder.folderprefix", lDefaultFolderPrefix);
+
+      // create recording folder from lRecorderFolderPrefix and with a subfolder that is the date and time in YYYY:MM:DD:HH:MM:SS format:
+      String lRecorderFolderName = lRecorderFolderPrefix + File.separator + String.format("%1$tY:%1$tm:%1$td:%1$tH:%1$tM:%1$tS", System.currentTimeMillis());
+
+      // Ensure folder exists:
+      File lRecorderFolderFile = new File(lRecorderFolderName);
+      lRecorderFolderFile.mkdirs();
+
+      // set recorder:
+      mDrosophila.setRecorder(new TissueRecorder(mDrosophila, lRecorderFolderName));
+
+      // create embryo fluorescence phantom:
       mDrosophilaFluorescencePhantom = new DrosophilaHistoneFluorescence(pContext, mDrosophila, getWidth(), getHeight(), getDepth());
       mDrosophilaFluorescencePhantom.render(true);
 
+      // create embryo scattering phantom:
       mDrosophilaScatteringPhantom = new DrosophilaScatteringPhantom(pContext, mDrosophila, mDrosophilaFluorescencePhantom, getWidth() / 2, getHeight() / 2, getDepth() / 2);
       mDrosophilaScatteringPhantom.render(true);
 
+      // set embryo fluorescence and scattering phantoms:
       setPhantomParameter(PhantomParameter.Fluorescence, mDrosophilaFluorescencePhantom.getImage());
       setPhantomParameter(PhantomParameter.Scattering, mDrosophilaScatteringPhantom.getImage());
     } catch (IOException e)
