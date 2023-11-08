@@ -22,7 +22,7 @@ public class Spheroid extends EmbryoDynamics
 
   private static final float cRadiusShrinkageFactor = (float) Math.pow(0.5f, 1.0f / 2);
 
-  private IsoSurfaceForceField mForceField;
+  private final IsoSurfaceForceField mForceField;
 
   private volatile int mCellDivCount;
 

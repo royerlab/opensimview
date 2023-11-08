@@ -20,7 +20,7 @@ public class Organoid extends EmbryoDynamics
 
   private static final float cRadiusShrinkageFactor = (float) Math.pow(0.5f, 1.0f / 4);
 
-  private CentriForceField mCentriForceField;
+  private final CentriForceField mCentriForceField;
 
   private volatile int mCellDivCount;
 

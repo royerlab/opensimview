@@ -26,10 +26,10 @@ public class TwoLayeredEpithelium extends LayeredEpitheliumDynamics
   private static final float cCellCycleIncrement = cMasterIncrement;
   private static final float cCellDivisionIncrement = cMasterIncrement * 40;
 
-  private float mExclusionRadius;
+  private final float mExclusionRadius;
 
-  private CellProperty mCellLabelProperty;
-  private CellProperty mCellStateProperty;
+  private final CellProperty mCellLabelProperty;
+  private final CellProperty mCellStateProperty;
 
   /**
    * Creates a two-layered epithelium.
@@ -88,7 +88,7 @@ public class TwoLayeredEpithelium extends LayeredEpitheliumDynamics
 
   private float getRandomRadius(int i)
   {
-    return (float) (mExclusionRadius * (1 + 0.1f * (drand(i) - 0.5f)));
+    return mExclusionRadius * (1 + 0.1f * (drand(i) - 0.5f));
   }
 
   protected float drand(int i)
@@ -180,7 +180,7 @@ public class TwoLayeredEpithelium extends LayeredEpitheliumDynamics
 
   private void pullup(int pCellId)
   {
-    assignCellToLayer(pCellId, 0.001f * 1f + 0.999f * getCellLayer(pCellId));/**/
+    assignCellToLayer(pCellId, 0.001f + 0.999f * getCellLayer(pCellId));/**/
 
     // assignCellToLayer(pCellId, 1);
 

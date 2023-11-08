@@ -21,9 +21,9 @@ import java.io.IOException;
 public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscopeSimulatorOrtho
 {
 
-  private Drosophila mDrosophila;
-  private DrosophilaHistoneFluorescence mDrosophilaFluorescencePhantom;
-  private DrosophilaScatteringPhantom mDrosophilaScatteringPhantom;
+  private final Drosophila mDrosophila;
+  private final DrosophilaHistoneFluorescence mDrosophilaFluorescencePhantom;
+  private final DrosophilaScatteringPhantom mDrosophilaScatteringPhantom;
 
   private volatile boolean mFreezedEmbryo = false;
 

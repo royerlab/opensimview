@@ -35,14 +35,14 @@ public class Drosophila extends EmbryoDynamics implements HasPolarity, Serializa
 
   private static final float cCellDeathRate = 0.001f;
 
-  private ForceFieldInterface mOutsideEllipseForceField;
-  private ForceFieldInterface mInsideEllipseForceField;
+  private final ForceFieldInterface mOutsideEllipseForceField;
+  private final ForceFieldInterface mInsideEllipseForceField;
 
-  private CellProperty mCellCycleProperty;
-  private StrogatzWaveOperator mStrogatzOscillator;
+  private final CellProperty mCellCycleProperty;
+  private final StrogatzWaveOperator mStrogatzOscillator;
 
-  private VectorCellProperty mPolarityProperty;
-  private SurfaceGradientOperator mSurfaceGradientOperator;
+  private final VectorCellProperty mPolarityProperty;
+  private final SurfaceGradientOperator mSurfaceGradientOperator;
 
   private volatile int mCellDivCount;
 

@@ -6,13 +6,8 @@ import java.io.*;
 
 public class TissueRecorder implements Closeable
 {
-    private final String[] cCellPositionsHeaders = {"time (ns)", "cell id", "x", "y", "z", "r"};
-    private final String[] cCellEventsHeaders = {"time (ns)", "event", "cell id 1", "cell id 2"};
 
     private final TissueDynamics mTissueDynamics;
-
-    private final File mCellPositionsFile;
-    private final File mCellEventsFile;
 
     private FileWriter mCellPositionsFileWriter = null, mCellEventsFileWriter = null;
     private PrintWriter mCellPositionsPrintWriter = null, mCellEventsPrintWriter = null;
@@ -28,10 +23,10 @@ public class TissueRecorder implements Closeable
         recordingFolder.mkdirs();
 
         // Create the cell positions file
-        mCellPositionsFile = new File(recordingFolder, "cell_positions.csv");
+        File mCellPositionsFile = new File(recordingFolder, "cell_positions.csv");
 
         // Create the cell event file
-        mCellEventsFile = new File(recordingFolder, "cell_events.csv");
+        File mCellEventsFile = new File(recordingFolder, "cell_events.csv");
 
         // Create file writer and print writer for both files, and write headers:
 
@@ -46,6 +41,7 @@ public class TissueRecorder implements Closeable
 
 
             // Write the header for the cell positions file:
+            String[] cCellPositionsHeaders = {"time (ns)", "cell id", "x", "y", "z", "r"};
             for (int i = 0; i < cCellPositionsHeaders.length; i++) {
                 mCellPositionsPrintWriter.print(cCellPositionsHeaders[i]);
                 if (i < cCellPositionsHeaders.length - 1) {
@@ -55,6 +51,7 @@ public class TissueRecorder implements Closeable
             mCellPositionsPrintWriter.println();
 
             // Write the header for the cell events file:
+            String[] cCellEventsHeaders = {"time (ns)", "event", "cell id 1", "cell id 2"};
             for (int i = 0; i < cCellEventsHeaders.length; i++) {
                 mCellEventsPrintWriter.print(cCellEventsHeaders[i]);
                 if (i < cCellEventsHeaders.length - 1) {
