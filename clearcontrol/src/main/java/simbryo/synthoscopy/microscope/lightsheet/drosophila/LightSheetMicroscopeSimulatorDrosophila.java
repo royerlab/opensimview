@@ -24,6 +24,7 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
   private final Drosophila mDrosophila;
   private final DrosophilaHistoneFluorescence mDrosophilaFluorescencePhantom;
   private final DrosophilaScatteringPhantom mDrosophilaScatteringPhantom;
+  private final float mStepsPerSecond;
 
   private volatile boolean mFreezedEmbryo = false;
 
@@ -73,6 +74,10 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
       // set embryo fluorescence and scattering phantoms:
       setPhantomParameter(PhantomParameter.Fluorescence, mDrosophilaFluorescencePhantom.getImage());
       setPhantomParameter(PhantomParameter.Scattering, mDrosophilaScatteringPhantom.getImage());
+
+      // Simulation speed:
+      mStepsPerSecond = (float) MachineConfiguration.get().getDoubleProperty("simbryo.speed", 1.2).doubleValue();
+
     } catch (IOException e)
     {
       e.printStackTrace();
@@ -110,7 +115,7 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
 
   public boolean advance()
   {
-    boolean lAdvanced = super.advance(1.2f);
+    boolean lAdvanced = super.advance(mStepsPerSecond);
     if (lAdvanced)
     {
       mDrosophilaFluorescencePhantom.requestUpdate();

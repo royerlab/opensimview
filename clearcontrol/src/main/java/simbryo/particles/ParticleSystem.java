@@ -178,8 +178,22 @@ public class ParticleSystem implements ParticleSystemInterface
   public void removeParticle(int pParticleId)
   {
     final int lLastParticleId = mNumberOfParticles - 1;
-    copyParticle(lLastParticleId, pParticleId);
-    mNumberOfParticles--;
+
+    if (mNumberOfParticles == 0)
+      throw new RuntimeException("No particles to remove!");
+    else if (mNumberOfParticles == 1)
+    {
+      // If there is only one particle left, we just remove it:
+      mNumberOfParticles--;
+    }
+    else if(mNumberOfParticles >= 2)
+    {
+      // If there are more than one particle, we swap the last particle with
+      // the one to be removed:
+
+      copyParticle(lLastParticleId, pParticleId);
+      mNumberOfParticles--;
+    }
   }
 
   @Override
