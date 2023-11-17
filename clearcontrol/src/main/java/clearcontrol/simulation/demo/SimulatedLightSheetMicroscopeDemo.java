@@ -50,7 +50,7 @@ public class SimulatedLightSheetMicroscopeDemo extends Application implements As
 
       float lDivisionTime = 11f;
 
-      int lPhantomWidth = 320;
+      int lPhantomWidth = MachineConfiguration.get().getIntegerProperty("simulation.embryo.phantom.size", 512);
       int lPhantomHeight = lPhantomWidth;
       int lPhantomDepth = lPhantomWidth;
 

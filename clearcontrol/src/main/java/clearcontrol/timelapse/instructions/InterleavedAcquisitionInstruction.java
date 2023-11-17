@@ -1,5 +1,6 @@
 package clearcontrol.timelapse.instructions;
 
+import clearcontrol.LightSheetDOF;
 import clearcontrol.LightSheetMicroscope;
 import clearcontrol.LightSheetMicroscopeQueue;
 import clearcontrol.core.log.LoggingFeature;
@@ -42,6 +43,7 @@ public class InterleavedAcquisitionInstruction extends AbstractAcquistionInstruc
     int lImageHeight = mCurrentState.getImageHeightVariable().get().intValue();
     double lExposureTimeInSeconds = mCurrentState.getExposureInSecondsVariable().get().doubleValue();
 
+    int lNumberOfLaserLines = mCurrentState.getNumberOfLaserLines();
     int lNumberOfImagesToTake = mCurrentState.getNumberOfZPlanesVariable().get().intValue();
 
     // build a queue
@@ -71,6 +73,10 @@ public class InterleavedAcquisitionInstruction extends AbstractAcquistionInstruc
           // configure light sheets accordingly
           for (int k = 0; k < getLightSheetMicroscope().getNumberOfLightSheets(); k++)
             lQueue.setI(k, k==l);
+
+          // Lightsheet XY position:
+          lQueue.setIX(l, mCurrentState.get(LightSheetDOF.IX, lImageCounter, l));
+          lQueue.setIY(l, mCurrentState.get(LightSheetDOF.IY, lImageCounter, l));
 
           lQueue.addCurrentStateToQueue();
         }

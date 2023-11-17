@@ -100,6 +100,10 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
           // Light intensity:
           double lLightsheetPower = mCurrentState.get(LightSheetDOF.IP, lImageCounter, l);
 
+          // Lightsheet XY position:
+          lQueue.setIX(l, mCurrentState.get(LightSheetDOF.IX, lImageCounter, l));
+          lQueue.setIY(l, mCurrentState.get(LightSheetDOF.IY, lImageCounter, l));
+
           // configure light sheets:
           for (int k = 0; k < getLightSheetMicroscope().getNumberOfLightSheets(); k++)
             lQueue.setI(k, k == l);
@@ -116,6 +120,10 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
               double lLaserLinePower = lLightsheetPower* getLaserPowerAdjustmentVariable(la).get();
               lQueue.setIP(l, lLaserLinePower);
 
+              // Reset lightsheet just in case:
+              lQueue.setI(l, true);
+
+              // Append to queue:
               lQueue.addCurrentStateToQueue();
             }
         }
