@@ -54,27 +54,37 @@ public class LightSheetMicroscopeSimulatorOrtho extends LightSheetMicroscopeSimu
 
     if (pNumberOfIlluminationArms == 1)
     {
+      Vector3f lIlluminationPositionVector = new Vector3f(0, 0, 0);
       Vector3f lIlluminationAxisVector = new Vector3f(1, 0, 0);
       Vector3f lIlluminationNormalVector = new Vector3f(0, 0, 1);
 
-      addLightSheet(lIlluminationAxisVector, lIlluminationNormalVector);
-    } else if (pNumberOfIlluminationArms == 2)
+      addLightSheet(lIlluminationPositionVector, lIlluminationAxisVector, lIlluminationNormalVector);
+    }
+    else if (pNumberOfIlluminationArms == 2)
     {
+      Vector3f lIlluminationPositionVector0 = new Vector3f(-0.1f, 0, 0);
       Vector3f lIlluminationAxisVector0 = new Vector3f(1, 0, 0);
       Vector3f lIlluminationNormalVector0 = new Vector3f(0, 0, 1);
 
-      addLightSheet(lIlluminationAxisVector0, lIlluminationNormalVector0);
+      addLightSheet(lIlluminationPositionVector0, lIlluminationAxisVector0, lIlluminationNormalVector0);
 
+      Vector3f lIlluminationPositionVector1 = new Vector3f(0.1f, 0, 0);
       Vector3f lIlluminationAxisVector1 = new Vector3f(-1, 0, 0);
       Vector3f lIlluminationNormalVector1 = new Vector3f(0, 0, -1);
 
-      addLightSheet(lIlluminationAxisVector1, lIlluminationNormalVector1);
-    } else if (pNumberOfIlluminationArms == 4)
+      addLightSheet(lIlluminationPositionVector1, lIlluminationAxisVector1, lIlluminationNormalVector1);
+
+    }
+    else if (pNumberOfIlluminationArms == 4)
     {
       double gammazero = toRadians(30);
       float ax = (float) cos(gammazero);
       float ay = (float) sin(gammazero);
 
+      Vector3f lIlluminationPositionVector0 = new Vector3f(0, 0, 0);
+      Vector3f lIlluminationPositionVector1 = new Vector3f(0, 0, 0);
+      Vector3f lIlluminationPositionVector2 = new Vector3f(0, 0, 0);
+      Vector3f lIlluminationPositionVector3 = new Vector3f(0, 0, 0);
       Vector3f lIlluminationAxisVector0 = new Vector3f(ax, ay, 0);
       Vector3f lIlluminationAxisVector1 = new Vector3f(ax, -ay, 0);
       Vector3f lIlluminationAxisVector2 = new Vector3f(-ax, ay, 0);
@@ -82,13 +92,13 @@ public class LightSheetMicroscopeSimulatorOrtho extends LightSheetMicroscopeSimu
       Vector3f lIlluminationNormalVector01 = new Vector3f(0, 0, 1);
       Vector3f lIlluminationNormalVector23 = new Vector3f(0, 0, -1);
 
-      addLightSheet(lIlluminationAxisVector0, lIlluminationNormalVector01);
+      addLightSheet(lIlluminationPositionVector0, lIlluminationAxisVector0, lIlluminationNormalVector01);
 
-      addLightSheet(lIlluminationAxisVector1, lIlluminationNormalVector01);
+      addLightSheet(lIlluminationPositionVector1, lIlluminationAxisVector1, lIlluminationNormalVector01);
 
-      addLightSheet(lIlluminationAxisVector2, lIlluminationNormalVector23);
+      addLightSheet(lIlluminationPositionVector2, lIlluminationAxisVector2, lIlluminationNormalVector23);
 
-      addLightSheet(lIlluminationAxisVector3, lIlluminationNormalVector23);
+      addLightSheet(lIlluminationPositionVector3, lIlluminationAxisVector3, lIlluminationNormalVector23);
 
     } else
     {
@@ -105,10 +115,11 @@ public class LightSheetMicroscopeSimulatorOrtho extends LightSheetMicroscopeSimu
         // Vector3f lIlluminationNormalVector01 = new Vector3f(0, 0, ax * ay);
         // lIlluminationNormalVector01.normalize();
 
+        Vector3f lIlluminationPositionVector0 = new Vector3f(0, 0, 0);
         Vector3f lIlluminationAxisVector0 = new Vector3f(ax, ay, 0);
         Vector3f lIlluminationNormalVector01 = new Vector3f(0, 0, 1);
 
-        addLightSheet(lIlluminationAxisVector0, lIlluminationNormalVector01);
+        addLightSheet(lIlluminationPositionVector0, lIlluminationAxisVector0, lIlluminationNormalVector01);
       }
     }
 

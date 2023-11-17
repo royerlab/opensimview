@@ -58,7 +58,7 @@ public class LightSheetMicroscopeSimulator extends MicroscopeSimulatorBase imple
 
 
   @Override
-  public LightSheetIllumination addLightSheet(Vector3f pAxisVector, Vector3f pNormalVector)
+  public LightSheetIllumination addLightSheet(Vector3f pPositionVector, Vector3f pAxisVector, Vector3f pNormalVector)
   {
     try
     {
@@ -68,6 +68,7 @@ public class LightSheetMicroscopeSimulator extends MicroscopeSimulatorBase imple
 
       LightSheetIllumination lLightSheetIllumination = new LightSheetIllumination(mContext, lWidth, lHeight, lDepth);
 
+      lLightSheetIllumination.setLightSheetPositionOffset(pPositionVector);
       lLightSheetIllumination.setLightSheetAxisVector(pAxisVector);
       lLightSheetIllumination.setLightSheetNormalVector(pNormalVector);
 

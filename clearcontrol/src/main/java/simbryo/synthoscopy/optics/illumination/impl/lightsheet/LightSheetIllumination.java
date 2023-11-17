@@ -27,7 +27,7 @@ public class LightSheetIllumination extends IlluminationOpticsBase implements Il
   protected ClearCLKernel mPropagateLightSheetKernel;
   private ClearCLBuffer mCombinedTransformMatrixBuffer;
 
-  protected Vector4f mLightSheetPosition, mLightSheetAxisVector, mLightSheetNormalVector, mLightSheetEffectivePosition, mLightSheetEffectiveAxisVector, mLightSheetEffectiveNormalVector;
+  protected Vector4f mLightSheetPositionOffset, mLightSheetPosition, mLightSheetAxisVector, mLightSheetNormalVector, mLightSheetEffectivePosition, mLightSheetEffectiveAxisVector, mLightSheetEffectiveNormalVector;
 
   private volatile float mLightSheetAlphaInRad, mLightSheetBetaInRad, mLightSheetGammaInRad, mLightSheetThetaInRad, mLightSheetHeigth, mScatterConstant, mScatterLoss, mSigmaMin, mSigmaMax;
 
@@ -63,6 +63,7 @@ public class LightSheetIllumination extends IlluminationOpticsBase implements Il
 
     mBallisticLightImageB = mContext.createSingleChannelImage(ImageChannelDataType.Float, getHeight(), getDepth());
 
+    mLightSheetPositionOffset = new Vector4f(0f, 0f, 0.0f, 1.0f);
     mLightSheetPosition = new Vector4f(0f, 0f, 0.5f, 1.0f);
     mLightSheetAxisVector = new Vector4f(1.0f, 0, 0, 1.0f);
     mLightSheetNormalVector = new Vector4f(0, 0, 1.0f, 1.0f);
@@ -250,6 +251,36 @@ public class LightSheetIllumination extends IlluminationOpticsBase implements Il
   }
 
   /**
+   * Sets lightsheet position offset in normalized units.
+   *
+   * @param pPositionOffsetVector coordinates within [0,1]
+   */
+  public void setLightSheetPositionOffset(Vector3f pPositionOffsetVector)
+  {
+    float lX = pPositionOffsetVector.x;
+    float lY = pPositionOffsetVector.y;
+    float lZ = pPositionOffsetVector.z;
+
+    if (mLightSheetPositionOffset.x != lX || mLightSheetPositionOffset.y != lY || mLightSheetPositionOffset.z != lZ)
+    {
+      mLightSheetPositionOffset.x = lX;
+      mLightSheetPositionOffset.y = lY;
+      mLightSheetPositionOffset.z = lZ;
+      requestUpdate();
+    }
+  }
+
+  /**
+   * Returns lightsheet center position offset vector.
+   *
+   * @return axis vector
+   */
+  public Vector4f getLightSheetPositionOffsetVector()
+  {
+    return mLightSheetPositionOffset;
+  }
+
+  /**
    * Sets lightsheet position in normalized units. N
    *
    * @param pX x coordinate within [0,1]
@@ -260,9 +291,9 @@ public class LightSheetIllumination extends IlluminationOpticsBase implements Il
   {
     if (mLightSheetPosition.x != pX || mLightSheetPosition.y != pY || mLightSheetPosition.z != pZ)
     {
-      mLightSheetPosition.x = pX;
-      mLightSheetPosition.y = pY;
-      mLightSheetPosition.z = pZ;
+      mLightSheetPosition.x = mLightSheetPositionOffset.x + pX;
+      mLightSheetPosition.y = mLightSheetPositionOffset.y + pY;
+      mLightSheetPosition.z = mLightSheetPositionOffset.z + pZ;
       requestUpdate();
     }
   }

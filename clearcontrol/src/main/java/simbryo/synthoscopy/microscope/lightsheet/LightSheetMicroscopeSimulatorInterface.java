@@ -14,13 +14,14 @@ public interface LightSheetMicroscopeSimulatorInterface extends MicroscopeSimula
 {
 
   /**
-   * Adds a lightsheet with given axis and normal vectors.
+   * Adds a lightsheet with given position, axis, and normal vectors.
    *
+   * @param pPositionVector   position vector
    * @param pAxisVector   axis vector
    * @param pNormalVector normal vector
    * @return lightsheet illumination
    */
-  LightSheetIllumination addLightSheet(Vector3f pAxisVector, Vector3f pNormalVector);
+  LightSheetIllumination addLightSheet(Vector3f pPositionVector, Vector3f pAxisVector, Vector3f pNormalVector);
 
   /**
    * Adds detection path. This includes widefield detection optics and a sCMOS
