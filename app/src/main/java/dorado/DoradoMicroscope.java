@@ -9,6 +9,7 @@ import clearcontrol.devices.cameras.StackCameraDeviceInterface;
 import clearcontrol.devices.cameras.devices.hamamatsu.HamStackCamera;
 import clearcontrol.devices.lasers.devices.sim.LaserDeviceSimulator;
 import clearcontrol.devices.optomech.filterwheels.devices.ludl.LudlFilterWheelDevice;
+import clearcontrol.devices.optomech.filterwheels.devices.sutter.SutterFilterWheelDevice;
 import clearcontrol.devices.optomech.filterwheels.instructions.FilterWheelInstruction;
 import clearcontrol.devices.signalgen.LightSheetSignalGeneratorDevice;
 import clearcontrol.devices.signalgen.devices.nirio.NIRIOSignalGenerator;
@@ -78,18 +79,17 @@ public class DoradoMicroscope extends SimulatedLightSheetMicroscope
 
         addDevice(c, lCamera);
 
-
-        LudlFilterWheelDevice lFilterWheel = new LudlFilterWheelDevice(c);
-        addDevice(c, lFilterWheel);
-
-        for (int i = 0; i < lFilterWheel.getValidPositions().length; i++)
-        {
-          FilterWheelInstruction lFilterWheelInstruction = new FilterWheelInstruction(lFilterWheel, i);
-          addDevice(c, lFilterWheelInstruction);
-        }
-
-
       }
+
+      SutterFilterWheelDevice lFilterWheel = new SutterFilterWheelDevice(0);
+      addDevice(0, lFilterWheel);
+
+      for (int i = 0; i < lFilterWheel.getValidPositions().length; i++)
+      {
+        FilterWheelInstruction lFilterWheelInstruction = new FilterWheelInstruction(lFilterWheel, i);
+        addDevice(0, lFilterWheelInstruction);
+      }
+
     }
 
 

@@ -1,4 +1,4 @@
- b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           /#ClearControl machine configuration file
+#ClearControl machine configuration file
 
 lookandfeel = metal
 
@@ -11,31 +11,22 @@ fastfuse.register  = true
 fastfuse.downscale = true
 
 # device.serial.laser.omicron.0=COM6
-# device.serial.laser.cobolt.1=COM8
-
 
 
 #For Nikon 16x 0.8NA with tube lense: TTL165-A
-device.camera0.pixelsizenm  = 492.424242424
-device.camera1.pixelsizenm  = 492.424242424
+device.camera0.pixelsizenm  = 406.25
+device.camera1.pixelsizenm  = 406.25
 
 # LUDL flterwheel positions:
 
-device.serial.filterwheel.ludl.0 =  COM31
-filterwheel.ludl.0.filter0 = empty
-filterwheel.ludl.0.filter1 = 488 (525/50)
-filterwheel.ludl.0.filter2 = 561 (610/75)
-filterwheel.ludl.0.filter3 = quadband (ZET405/488/561/647m)
-filterwheel.ludl.0.filter4 = 405 (488/40)
-filterwheel.ludl.0.filter5 = 637 (655lp)
-
-device.serial.filterwheel.ludl.1 =  COM30
-filterwheel.ludl.1.filter0 = empty
-filterwheel.ludl.1.filter1 = 488 (525/50)
-filterwheel.ludl.1.filter2 = 561 (610/75)
-filterwheel.ludl.1.filter3 = quadband (ZET405/488/561/647m)
-filterwheel.ludl.1.filter4 = 405 (488/40)
-filterwheel.ludl.1.filter5 = 637 (655lp)
+device.serial.filterwheel.sutter.0 =  COM8
+filterwheel.ludl.0.filter0 = closed
+filterwheel.ludl.0.filter1 = open
+filterwheel.ludl.0.filter2 = 488 (525/50)
+filterwheel.ludl.0.filter3 = 561 (610/75)
+filterwheel.ludl.0.filter4 = quadband (ZET405/488/561/647m)
+filterwheel.ludl.0.filter5 = 405 (488/40)
+filterwheel.ludl.0.filter6 = 637 (655lp)
 
 
 device.lsm.detection.D0.z.index = 1
@@ -107,8 +98,8 @@ device.lsm.detection.D0.z.f = {"a":0.0025,"b":0 }
 device.lsm.detection.D1.z.f = {"a":-0.0025,"b":0 }
 
 device.lsm.lighsheet.I0.x.f = {"a":0.0025,"b":0 }
-device.lsm.lighsheet.I0.y.f = {"a":0.000148885,"b":0 }
-device.lsm.lighsheet.I0.z.f = {"a":-0.000148885,"b":0 }
+device.lsm.lighsheet.I0.y.f = {"a":0.000148885,"b":0.012960 }
+device.lsm.lighsheet.I0.z.f = {"a":-0.000148885,"b":0.015926 }
 device.lsm.lighsheet.I0.w.f = {"a":1,"b":0 }
 device.lsm.lighsheet.I0.h.f = {"a":1,"b":0 }
 device.lsm.lighsheet.I0.a.f = {"a":1,"b":0 }
@@ -119,9 +110,9 @@ device.lsm.lighsheet.I0.hp.f = {"a":0,"b":0 }
 
 
 device.lsm.lighsheet.I1.x.f = {"a":0.0025,"b":0 }
-device.lsm.lighsheet.I1.y.f = {"a":0.000148885,"b":0 }
-device.lsm.lighsheet.I1.z.f = {"a":0.000148885,"b":0 }
-device.lsm.lighsheet.I1.w.f = {"a":1,"b":0 }
+device.lsm.lighsheet.I1.y.f = {"a":0.000148885,"b":0.03774219861 }
+device.lsm.lighsheet.I1.z.f = {"a":0.000148885,"b":-0.047987 }
+device.lsm.lighsheet.I1.w.f = {"a":1,"b":-0.799990 }
 device.lsm.lighsheet.I1.h.f = {"a":1,"b":0 }
 device.lsm.lighsheet.I1.a.f = {"a":1,"b":0 }
 device.lsm.lighsheet.I1.b.f = {"a":1,"b":0 }

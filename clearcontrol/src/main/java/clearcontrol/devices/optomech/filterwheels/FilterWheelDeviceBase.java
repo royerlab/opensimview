@@ -10,7 +10,7 @@ import clearcontrol.core.variable.Variable;
  */
 public abstract class FilterWheelDeviceBase extends PositionDeviceBase implements FilterWheelDeviceInterface
 {
-  protected Variable<Integer> mFilterSpeedVariable = null;
+  protected Variable<Integer> mFilterSpeedVariable;
 
   /**
    * Instanciate a filterwheel device given a name and valid positions
@@ -21,11 +21,11 @@ public abstract class FilterWheelDeviceBase extends PositionDeviceBase implement
   public FilterWheelDeviceBase(String pDeviceName, int[] pValidPositions)
   {
     super(pDeviceName, pValidPositions);
-    mFilterSpeedVariable = new Variable<Integer>("FilterWheelSpeed", 0);
+    mFilterSpeedVariable = new Variable<>("FilterWheelSpeed", 0);
   }
 
   /**
-   * Instanciates a filterwheel device given a device name and device index.
+   * Instantiates a filterwheel device given a device name and device index.
    *
    * @param pDeviceName  device name
    * @param pDeviceIndex device index
@@ -33,7 +33,7 @@ public abstract class FilterWheelDeviceBase extends PositionDeviceBase implement
   public FilterWheelDeviceBase(String pDeviceName, int pDeviceIndex)
   {
     super("filterwheel", pDeviceName, pDeviceIndex);
-    mFilterSpeedVariable = new Variable<Integer>("FilterWheelSpeed", 0);
+    mFilterSpeedVariable = new Variable<>("FilterWheelSpeed", 0);
   }
 
   @Override
