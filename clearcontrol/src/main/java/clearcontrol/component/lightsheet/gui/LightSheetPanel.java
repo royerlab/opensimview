@@ -1,6 +1,8 @@
 package clearcontrol.component.lightsheet.gui;
 
 import clearcontrol.component.lightsheet.LightSheetInterface;
+import clearcontrol.core.variable.VariableSetListener;
+import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 import clearcontrol.gui.jfx.var.onoffarray.OnOffArrayPane;
 
@@ -20,6 +22,7 @@ public class LightSheetPanel extends CustomVariablePane
   public LightSheetPanel(LightSheetInterface pLightSheetInterface)
   {
     super();
+
 
     {
       addTab("DOFs");
@@ -106,6 +109,52 @@ public class LightSheetPanel extends CustomVariablePane
       addSliderForVariable("Overscan :", pLightSheetInterface.getOverScanVariable(), 0.0, 2.0, 0.01, 0.1).setUpdateIfChanging(true);
 
       addSliderForVariable("Readout Time :", pLightSheetInterface.getReadoutTimeInMicrosecondsPerLineVariable(), 0.0, 10.0, 0.0, 1.0).setUpdateIfChanging(true);
+    }
+
+    {
+      addTab("Focus Fine-Tuning");
+
+      // Get the min and max values for the Z variable:
+      double lMinZValue = pLightSheetInterface.getZVariable().getMin().doubleValue();
+      double lMaxZValue = pLightSheetInterface.getZVariable().getMax().doubleValue();
+
+      // Create the variables for the sliders:
+      BoundedVariable<Double> lAdjustLowZVariable = new BoundedVariable<Double>("Low Z position", 0.0, lMinZValue, lMaxZValue);
+      BoundedVariable<Double> lAdjustHighZVariable = new BoundedVariable<Double>("High Z position", 0.0, lMinZValue, lMaxZValue);
+
+      BoundedVariable<Double> lAdjustLowZFocusVariable = new BoundedVariable<Double>("Adjust Low Z Focus", 0.0, -32.0, 32.0);
+      BoundedVariable<Double> lAdjustHighZFocusVariable = new BoundedVariable<Double>("Adjust Low Z Focus", 0.0, -32.0, 32.0);
+
+      // Set listeners for the sliders:
+      lAdjustLowZVariable.addSetListener((o, n) ->
+      {
+        // nothing needed here, we just use that variable value when the focus is tuned.
+      });
+
+      lAdjustHighZVariable.addSetListener((o, n) ->
+      {
+        // nothing needed here, we just use that variable value when the focus is tuned.
+      });
+
+      lAdjustLowZFocusVariable.addSetListener((o, n) ->
+      {
+        // adjust the low Z position by modifying a and b in the Z function: pLightSheetInterface.getZFunction()
+        double a = pLightSheetInterface.getZFunction().get().getSlope();
+        double b = pLightSheetInterface.getZFunction().get().getConstant();
+      });
+
+      lAdjustHighZFocusVariable.addSetListener((o, n) ->
+      {
+        // adjust the HIGH Z position by modifying a and b in the Z function: pLightSheetInterface.getZFunction()
+        double a = pLightSheetInterface.getZFunction().get().getSlope();
+        double b = pLightSheetInterface.getZFunction().get().getConstant();
+      });
+
+      addSliderForVariable("Low Z position:", lAdjustLowZVariable, null).setUpdateIfChanging(true);
+      addSliderForVariable("High Z position:", lAdjustHighZVariable, null).setUpdateIfChanging(true);
+      addSliderForVariable("Low Z focus: ", lAdjustLowZFocusVariable, null).setUpdateIfChanging(true);
+      addSliderForVariable("High Z focus: ", lAdjustHighZFocusVariable, null).setUpdateIfChanging(true);
+
     }
 
   }
