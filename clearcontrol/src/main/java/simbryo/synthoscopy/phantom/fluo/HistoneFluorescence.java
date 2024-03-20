@@ -29,8 +29,8 @@ import java.io.IOException;
 public abstract class HistoneFluorescence extends PhantomRendererBase implements PhantomRendererInterface<ClearCLImage>
 {
   private static final int cNoiseDim = 32;
-  private ClearCLBuffer mNeighboorsBuffer, mPositionsBuffer, mPolaritiesBuffer, mRadiiBuffer;
-  private OffHeapMemory mNeighboorsMemory, mPositionsMemory, mPolaritiesMemory, mRadiiMemory;
+  private ClearCLBuffer mNeighboorsBuffer, mPositionsBuffer, mPolaritiesBuffer, mRadiiBuffer, mBrightnessesBuffer;
+  private OffHeapMemory mNeighboorsMemory, mPositionsMemory, mPolaritiesMemory, mRadiiMemory, mBrightnessesMemory;
   private ClearCLImage mPerlinNoiseImage;
 
   private float mNucleiRadius, mNucleiSharpness, mNucleiRoughness, mNucleiTextureContrast;
@@ -47,7 +47,7 @@ public abstract class HistoneFluorescence extends PhantomRendererBase implements
    */
   public HistoneFluorescence(ClearCLContext pContext, TissueDynamics pTissueDynamics, long... pStackDimensions) throws IOException
   {
-    this(pContext, pTissueDynamics, 16, 0.004f, 0.95f, 0.5f, 0.75f, 1e-2f, pStackDimensions);
+    this(pContext, pTissueDynamics, 16, 0.003f, 0.1f, 4.0f, 1.00f, 1e-2f, pStackDimensions);
   }
 
   /**
@@ -91,6 +91,7 @@ public abstract class HistoneFluorescence extends PhantomRendererBase implements
     mRenderKernel.setArgument("positions", mPositionsBuffer);
     mRenderKernel.setArgument("polarities", mPolaritiesBuffer);
     mRenderKernel.setArgument("radii", mRadiiBuffer);
+    mRenderKernel.setArgument("brightnesses", mBrightnessesBuffer);
     mRenderKernel.setArgument("perlin", mPerlinNoiseImage);
 
   }
@@ -110,12 +111,17 @@ public abstract class HistoneFluorescence extends PhantomRendererBase implements
 
     mRadiiBuffer = mContext.createBuffer(HostAccessType.WriteOnly, KernelAccessType.ReadOnly, NativeTypeEnum.Float, pTissueDynamics.getMaxNumberOfParticles());
 
+    mBrightnessesBuffer = mContext.createBuffer(HostAccessType.WriteOnly, KernelAccessType.ReadOnly, NativeTypeEnum.Float, pTissueDynamics.getMaxNumberOfParticles());
+
     mNeighboorsMemory = OffHeapMemory.allocateInts(lNeighboorsArrayLength);
 
     mPositionsMemory = OffHeapMemory.allocateFloats(lDimension * pTissueDynamics.getMaxNumberOfParticles());
 
     mPolaritiesMemory = OffHeapMemory.allocateFloats(lDimension * pTissueDynamics.getMaxNumberOfParticles());
+
     mRadiiMemory = OffHeapMemory.allocateFloats(pTissueDynamics.getMaxNumberOfParticles());
+
+    mBrightnessesMemory = OffHeapMemory.allocateFloats(pTissueDynamics.getMaxNumberOfParticles());
   }
 
   protected void setupProgramAndKernel(final int pMaxParticlesPerGridCell) throws IOException
@@ -142,7 +148,7 @@ public abstract class HistoneFluorescence extends PhantomRendererBase implements
   }
 
   /**
-   * This function must be implemented by derived classes. It adds the souce
+   * This function must be implemented by derived classes. It adds the source
    * code to the autofluo function to the rendering kernel. this functions is
    * responsible for rendering the background fluorescence.
    *
@@ -188,6 +194,8 @@ public abstract class HistoneFluorescence extends PhantomRendererBase implements
       }
 
       mRadiiMemory.copyFrom(getTissue().getRadii().getCurrentArray(), 0, 0, lNumberOfCells);
+
+      mBrightnessesMemory.copyFrom(getTissue().getBrightnesses().getCurrentArray(), 0, 0, lNumberOfCells);
 
       mNeighboorsBuffer.readFrom(mNeighboorsMemory, false);
 
@@ -316,6 +324,7 @@ public abstract class HistoneFluorescence extends PhantomRendererBase implements
     mNeighboorsBuffer.close();
     mPositionsBuffer.close();
     mRadiiBuffer.close();
+    mBrightnessesBuffer.close();
     mPerlinNoiseImage.close();
   }
 

@@ -13,6 +13,7 @@ __kernel void hisrender(   __write_only    image3d_t  image,
                            __global const  float*     positions,
                            __global const  float*     polarities,
                            __global const  float*     radii,
+                           __global const  float*     brightnesses,
                                     const  float      intensity,
                                     const  int        timeindex,
                            __read_only     image3d_t  perlin                            
@@ -99,7 +100,7 @@ __kernel void hisrender(   __write_only    image3d_t  image,
     write_imagef (image, (int4){x,y,z,0.0f}, intensity*value);
     return;
   }
-  
+
   const float nucleiradiusvoxels = NUCLEIRADIUS*width ;
   
   
@@ -109,6 +110,7 @@ __kernel void hisrender(   __write_only    image3d_t  image,
     if(nei>=0)
     {
       const float3 partpos     = vload3(k,localpositions);
+      const float  radius      = min(nucleiradiusvoxels, radii[nei]*width);
       const float3 relvoxpos   = voxelpos-partpos;
       const float3 relvoxposac = relvoxpos*iaspectr;
       
@@ -124,13 +126,13 @@ __kernel void hisrender(   __write_only    image3d_t  image,
       
       const float3 partpol     = vload3(k,localpolarities);
       const float cosval = fabs(dot(partpol,relvoxposac)/(fast_length(relvoxposac)));
-      const float eccentricity = -(0.5f*cosval*cosval)*nucleiradiusvoxels;
+      const float eccentricity = -(0.5f*cosval*cosval)*radius;
       
       const float d      = fast_length(relvoxposac) + eccentricity; 
       const float noisyd = d + NUCLEIROUGHNESS*levelnoise;
       
-      //const float level      =  native_recip(1.0f+native_exp2(NUCLEISHARPNESS*(noisyd-nucleiradiusvoxels)));
-      const float level      =  1.0f-smoothstep(nucleiradiusvoxels,nucleiradiusvoxels*(2.0f-NUCLEISHARPNESS), noisyd);
+      //const float level      =  native_recip(1.0f+native_exp2(NUCLEISHARPNESS*(noisyd-radius)));
+      const float level      =  1.0f-smoothstep(radius,radius*(2.0f-NUCLEISHARPNESS), noisyd);
       const float noisylevel =  (1.0f+NUCLEITEXTURECONTRAST*levelnoise)*level;
        
       value += noisylevel;

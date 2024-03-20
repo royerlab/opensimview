@@ -155,22 +155,39 @@ public class ParticleSystem implements ParticleSystemInterface
   @Override
   public int addParticle(float... pPosition)
   {
+    // check if there is space left:
     if (mNumberOfParticles >= mMaxNumberOfParticles) return -1;
 
+    // prepare some variables, get arrays, and particle id:
     final int lDimension = mDimension;
     final float[] lPositionsRead = mPositions.getReadArray();
     final float[] lPositionsWrite = mPositions.getWriteArray();
     final int lParticleId = mNumberOfParticles;
     final int i = lParticleId * lDimension;
 
+    // initialise position:
     for (int d = 0; d < Math.min(mDimension, pPosition.length); d++)
     {
       lPositionsRead[i + d] = pPosition[d];
       lPositionsWrite[i + d] = pPosition[d];
     }
 
+    // initialise radius:
+    mRadii.getReadArray()[lParticleId] = 0;
+
+    // initialise velocity:
+    final float[] lVelocitiesRead = mVelocities.getReadArray();
+    final float[] lVelocitiesWrite = mVelocities.getWriteArray();
+    for (int d = 0; d < lDimension; d++)
+    {
+      lVelocitiesRead[i + d] = 0;
+      lVelocitiesWrite[i + d] = 0;
+    }
+
+    // increment number of particles:
     mNumberOfParticles++;
 
+    // return new particle id:
     return lParticleId;
   }
 
@@ -209,9 +226,7 @@ public class ParticleSystem implements ParticleSystemInterface
 
     for (int d = 0; d < lDimension; d++)
     {
-
       lPositionsRead[pDestinationParticleId * lDimension + d] = lPositionsRead[pSourceParticleId * lDimension + d];
-
       lPositionsWrite[pDestinationParticleId * lDimension + d] = lPositionsWrite[pSourceParticleId * lDimension + d];
 
       lVelocitiesRead[pDestinationParticleId * lDimension + d] = lVelocitiesRead[pSourceParticleId * lDimension + d];
@@ -298,34 +313,6 @@ public class ParticleSystem implements ParticleSystemInterface
     pNeighborhoodGrid.update(lPositions, lRadii, mNumberOfParticles);
   }
 
-  @Override
-  public void repelAround(float pFactor, float pCenterX, float pCenterY)
-  {
-    final int lDimension = mDimension;
-    final float[] lPositionsRead = mPositions.getReadArray();
-    final float[] lVelocitiesRead = mVelocities.getReadArray();
-    final float[] lVelocitiesWrite = mVelocities.getWriteArray();
-    final int lLength = mNumberOfParticles * lDimension;
-
-    for (int i = 0; i < lLength; i += lDimension)
-    {
-
-      float x = lPositionsRead[i + 0];
-      float y = lPositionsRead[i + 1];
-      float ux = x - pCenterX;
-      float uy = y - pCenterY;
-      float l = (float) Math.sqrt(ux * ux + uy * uy);
-      float n = pFactor / l;
-      float fx = n * ux;
-      float fy = n * uy;
-
-      lVelocitiesWrite[i + 0] = 0.99f * lVelocitiesRead[i + 0] + fx;
-      lVelocitiesWrite[i + 1] = 0.99f * lVelocitiesRead[i + 1] + fy;
-    }
-
-    mVelocities.swap();
-
-  }
 
   @Override
   public void enforceBounds(float pDampening)
@@ -342,10 +329,11 @@ public class ParticleSystem implements ParticleSystemInterface
     final float[] lVelocitiesRead = mVelocities.getReadArray();
     final float[] lVelocitiesWrite = mVelocities.getWriteArray();
     final float[] lRadiiRead = mRadii.getReadArray();
+    final int lNumberOfParticles = getNumberOfParticles();
 
     ThreadLocalRandom lRandom = ThreadLocalRandom.current();
 
-    for (int id = 0; id < mNumberOfParticles; id++)
+    for (int id = 0; id < lNumberOfParticles; id++)
     {
       for (int d = 0; d < lDimension; d++)
       {
@@ -378,15 +366,16 @@ public class ParticleSystem implements ParticleSystemInterface
     final int lDimension = mDimension;
     final float[] lVelocitiesRead = mVelocities.getReadArray();
     final float[] lVelocitiesWrite = mVelocities.getWriteArray();
+    final int lNumberOfParticles = getNumberOfParticles();
 
     ThreadLocalRandom lRandom = ThreadLocalRandom.current();
 
-    for (int id = 0; id < mNumberOfParticles; id++)
+
+    for (int id = 0; id < lNumberOfParticles; id++)
     {
       for (int d = 0; d < lDimension; d++)
       {
         int i = id * lDimension + d;
-
         lVelocitiesWrite[i] = (float) (lVelocitiesRead[i] + pAmount * lRandom.nextDouble(-1, 1));
       }
     }
@@ -403,6 +392,7 @@ public class ParticleSystem implements ParticleSystemInterface
   @Override
   public void applyForce(int pBeginId, int pEndId, float... pForce)
   {
+    // Setting up some variables:
     final int lDimension = mDimension;
     final float[] lVelocitiesRead = mVelocities.getReadArray();
     final float[] lVelocitiesWrite = mVelocities.getWriteArray();
@@ -410,10 +400,12 @@ public class ParticleSystem implements ParticleSystemInterface
     final int lIndexStart = pBeginId * lDimension;
     final int lIndexEnd = pEndId * lDimension;
 
+    // Apply force:
     for (int i = lIndexStart; i < lIndexEnd; i += lDimension)
       for (int d = 0; d < lDimension; d++)
         lVelocitiesWrite[i + d] = lVelocitiesRead[i + d] + pForce[d];
 
+    // Swap velocities:
     mVelocities.swap();
   }
 
@@ -432,18 +424,21 @@ public class ParticleSystem implements ParticleSystemInterface
   @Override
   public void intergrateEuler()
   {
+    // Prepare some variables:
     final int lDimension = mDimension;
     final float[] lPositionsRead = mPositions.getReadArray();
     final float[] lPositionsWrite = mPositions.getWriteArray();
     final float[] lVelocities = mVelocities.getCurrentArray();
     final int lLength = mNumberOfParticles * lDimension;
 
+    // Integrate:
     for (int i = 0; i < lLength; i += lDimension)
     {
       for (int d = 0; d < lDimension; d++)
         lPositionsWrite[i + d] = lPositionsRead[i + d] + lVelocities[i + d];
     }
 
+    // Swap positions:
     mPositions.swap();
 
   }

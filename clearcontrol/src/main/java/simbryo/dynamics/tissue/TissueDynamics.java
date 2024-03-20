@@ -33,9 +33,14 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
   protected static final float Fg = 0.000001f;
 
   protected static final float Ar = 0.05f;
+  protected static final float Ab = 0.01f;
+
   protected static final float Fb = 0.00001f;
 
   private final DoubleBufferingFloatArray mTargetRadii;
+
+  private final DoubleBufferingFloatArray mBrightnesses;
+  private final DoubleBufferingFloatArray mTargetBrightnesses;
 
   protected final CollisionForceField mCollisionForceField;
 
@@ -64,7 +69,19 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
 
     mTargetRadii = new DoubleBufferingFloatArray(cMaximumNumberOfCells);
 
+    mBrightnesses = new DoubleBufferingFloatArray(cMaximumNumberOfCells);
+
+    mTargetBrightnesses = new DoubleBufferingFloatArray(cMaximumNumberOfCells);
+
     mCollisionForceField = new CollisionForceField(pCollisionForce, pDrag, false);
+
+    for (int i = 0; i < cMaximumNumberOfCells; i++)
+    {
+      setRadius(i, 1.0f);
+      setTargetRadius(i, 1.0f);
+      setBrightness(i, 1.0f);
+      setTargetBrightness(i, 1.0f);
+    }
   }
 
   public void setRecorder(TissueRecorder pTissueRecorder)
@@ -87,6 +104,54 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
   public long getTimeStepIndex()
   {
     return mTimeStepIndex;
+  }
+
+  @Override
+  public DoubleBufferingFloatArray getBrightnesses()
+  {
+    return mBrightnesses;
+  }
+
+  /**
+   * Sets the brightness.
+   *
+   */
+  @Override
+  public void setBrightness(int pParticleId, float pBrightness)
+  {
+    float[] lBrightnesses = mBrightnesses.getCurrentArray();
+    lBrightnesses[pParticleId] = pBrightness;
+  }
+
+  /**
+   * Returns the brightness.
+   *
+   */
+  @Override
+  public float getBrightness(int pParticleId)
+  {
+    return mBrightnesses.getCurrentArray()[pParticleId];
+  }
+
+  /**
+   * Sets the target brightness.
+   *
+   */
+  @Override
+  public void setTargetBrightness(int pParticleId, float pTargetBrightness)
+  {
+    float[] lTargetBrightnesses = mTargetBrightnesses.getCurrentArray();
+    lTargetBrightnesses[pParticleId] = pTargetBrightness;
+  }
+
+  /**
+   * Returns the target brightness.
+   *
+   */
+  @Override
+  public float getTargetBrightness(int pParticleId)
+  {
+    return mTargetBrightnesses.getCurrentArray()[pParticleId];
   }
 
   /**
@@ -122,7 +187,12 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
   public int cloneParticle(int pSourceParticleId, float pNoiseFactor)
   {
     int lNewParticleId = super.cloneParticle(pSourceParticleId, pNoiseFactor);
+
+    if (lNewParticleId<0)
+      return lNewParticleId;
+
     mTargetRadii.getCurrentArray()[lNewParticleId] = mTargetRadii.getCurrentArray()[pSourceParticleId];
+    mTargetBrightnesses.getCurrentArray()[lNewParticleId] = mTargetBrightnesses.getCurrentArray()[pSourceParticleId];
 
     for (CellProperty lMorphogen : mCellPropertyList)
     {
@@ -135,19 +205,44 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
 
   public int cellDivision(final int pId)
   {
+    // Check if cell is already dying:
+    if (isCellDying(pId))
+      return -1;
+
+    // Create a daughter cell, we keep the original cell as one of the daughters:
     int lNewCellId = cloneParticle(pId, 0.001f);
+
+    // Check that both cells could be created:
+    if (lNewCellId < 0)
+      return -1;
+
     // record cell division:
     if (mTissueRecorder != null)
       mTissueRecorder.recordCellDivisionEvent(pId, lNewCellId);
+
     return lNewCellId;
   }
 
   public void cellDeath(final int pId)
   {
-    removeParticle(pId);
+    if (isCellDying(pId))
+      return;
+
+    setTargetBrightness(pId, 0f);
+    setTargetRadius(pId,0f);
     // record cell death:
     if (mTissueRecorder != null)
       mTissueRecorder.recordCellDeathEvent(pId);
+  }
+
+  public boolean isCellDying(final int pId)
+  {
+    return getTargetBrightness(pId) < 0.001f && getTargetRadius(pId) < 0.001f;
+  }
+
+  public boolean isCellDead(final int pId)
+  {
+    return getBrightness(pId) < 0.001f && getRadius(pId) < 0.001f;
   }
 
   /**
@@ -185,6 +280,7 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
     {
       addBrownianMotion(Fb);
       smoothToTargetRadius(Ar);
+      smoothToTargetBrightness(Ab);
       applyForceField(mCollisionForceField);
       intergrateEuler();
       enforceBounds(Db);
@@ -219,6 +315,26 @@ public class TissueDynamics extends ParticleSystem implements TissueDynamicsInte
     }
 
     mRadii.swap();
+  }
+
+  /**
+   * Smoothly converges current particle brightness to the target brightness.
+   *
+   * @param pAlpha exponential coefficient.
+   */
+  private void smoothToTargetBrightness(float pAlpha)
+  {
+    final float[] lBrightnessesReadArray = mBrightnesses.getReadArray();
+    final float[] lBrightnessesWriteArray = mBrightnesses.getWriteArray();
+    final float[] lTargetBrightnessesArray = mTargetBrightnesses.getCurrentArray();
+    final int lNumberOfParticles = getNumberOfParticles();
+
+    for (int id = 0; id < lNumberOfParticles; id++)
+    {
+      lBrightnessesWriteArray[id] = (1 - pAlpha) * lBrightnessesReadArray[id] + pAlpha * lTargetBrightnessesArray[id];
+    }
+
+    mBrightnesses.swap();
   }
 
   /**

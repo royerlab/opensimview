@@ -32,7 +32,7 @@ public class TissueRecorder implements Closeable
 
         try
         {
-
+            // Create file writer and print writer for both files:
             mCellPositionsFileWriter = new FileWriter(mCellPositionsFile);
             mCellPositionsPrintWriter = new PrintWriter(mCellPositionsFileWriter);
 
@@ -72,17 +72,26 @@ public class TissueRecorder implements Closeable
     @Override
     public void close() throws IOException
     {
+        // flush both writers:
+        mCellPositionsPrintWriter.flush();
+        mCellEventsPrintWriter.flush();
+
+        // Close both writers:
         mCellPositionsFileWriter.close();
         mCellEventsFileWriter.close();
     }
 
-    public void recordCellDivisionEvent(int pExistingCellId, int pNewCellId)
+    public void recordCellDivisionEvent(int pExistingCellId, int pDaughterCellId)
     {
         // get system time in nanoseconds:
         long lTimeInNanoseconds = System.nanoTime();
 
+        // Ensure that cell is not dead:
+        if (mTissueDynamics.isCellDead(pExistingCellId))
+            return;
+
         // write in the CellEvent file the time, the event type, the existing cell id, and the new cell id:
-        mCellEventsPrintWriter.println(lTimeInNanoseconds + ", " + "CellDivision" + ", " + pExistingCellId + ", " + pNewCellId);
+        mCellEventsPrintWriter.println(lTimeInNanoseconds + ", " + "CellDivision" + ", " + pExistingCellId + ", " + pDaughterCellId);
 
         // flush the print writer:
         mCellEventsPrintWriter.flush();
@@ -94,7 +103,7 @@ public class TissueRecorder implements Closeable
         long lTimeInNanoseconds = System.nanoTime();
 
         // write in the CellEvent file the time, the event type, the existing cell id, and the new cell id:
-        mCellEventsPrintWriter.println(lTimeInNanoseconds + ", " + "CellDeath" + ", " + pDyingCellId+ ", " + -1);
+        mCellEventsPrintWriter.println(lTimeInNanoseconds + ", " + "CellDeath" + ", " + pDyingCellId+ ", " + -1 );
 
         // flush the print writer:
         mCellEventsPrintWriter.flush();
@@ -107,9 +116,10 @@ public class TissueRecorder implements Closeable
 
         // write in the CellPositions file, for each cell/particle in mTissueDynamics:  the time, and the cell position, and radius:
         for (int i = 0; i < mTissueDynamics.getNumberOfParticles(); i++)
-        {
-            mCellPositionsPrintWriter.println(lTimeInNanoseconds + ", " + i + ", " + mTissueDynamics.getPositions().getCurrentArray()[i*3] + ", " + mTissueDynamics.getPositions().getCurrentArray()[i*3+1] + ", " + mTissueDynamics.getPositions().getCurrentArray()[i*3+2] + ", " + mTissueDynamics.getRadii().getCurrentArray()[i]);
-        }
+        if (!mTissueDynamics.isCellDead(i))
+            {
+                mCellPositionsPrintWriter.println(lTimeInNanoseconds + ", " + i + ", " + mTissueDynamics.getPositions().getCurrentArray()[i*3] + ", " + mTissueDynamics.getPositions().getCurrentArray()[i*3+1] + ", " + mTissueDynamics.getPositions().getCurrentArray()[i*3+2] + ", " + mTissueDynamics.getRadii().getCurrentArray()[i]);
+            }
 
         // flush the print writer:
         mCellPositionsPrintWriter.flush();

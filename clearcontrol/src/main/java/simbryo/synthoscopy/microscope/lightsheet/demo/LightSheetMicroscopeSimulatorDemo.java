@@ -102,7 +102,7 @@ public class LightSheetMicroscopeSimulatorDemo
 
       int lMaxCameraResolution = 1024;
 
-      int lPhantomWidth = 320;
+      int lPhantomWidth = 1024;
       int lPhantomHeight = lPhantomWidth;
       int lPhantomDepth = lPhantomWidth;
 
@@ -113,7 +113,9 @@ public class LightSheetMicroscopeSimulatorDemo
       try (ClearCL lClearCL = new ClearCL(lBestBackend); ClearCLDevice lFastestGPUDevice = lClearCL.getDeviceByName("HD"); ClearCLContext lContext = lFastestGPUDevice.createContext())
       {
 
-        Drosophila lDrosophila = Drosophila.getDeveloppedEmbryo(11);
+        Drosophila lDrosophila = Drosophila.getDeveloppedEmbryo(11, false);
+
+        //lDrosophila.sCellDeathRate = 0.01f;
 
         DrosophilaHistoneFluorescence lDrosophilaFluorescencePhantom = new DrosophilaHistoneFluorescence(lContext, lDrosophila, lPhantomWidth, lPhantomHeight, lPhantomDepth);
         lDrosophilaFluorescencePhantom.render(true);
@@ -155,20 +157,15 @@ public class LightSheetMicroscopeSimulatorDemo
 
         while (lCameraImageViewer.isShowing())
         {
-          /*lSimulator.setNumberParameter(IlluminationParameter.Height,
-                                        0,
-                                        0.01f);
-          lSimulator.setNumberParameter(IlluminationParameter.Y,
-                                        0,
-                                        y);
-          
-          y += 0.01f;
-          if (y > 1)
-            y = 0;
-            /**/
-          // lDrosophila.simulationSteps(10, 1);
-          // lDrosophilaFluorescencePhantom.clear(false);
+          lDrosophila.simulationSteps(10);
+
+          lDrosophilaFluorescencePhantom.requestUpdate();
+          lDrosophilaScatteringPhantom.requestUpdate();
           lDrosophilaFluorescencePhantom.render(false);
+          lDrosophilaScatteringPhantom.render(true);
+
+          lSimulator.setPhantomParameter(PhantomParameter.Fluorescence, lDrosophilaFluorescencePhantom.getImage());
+          lSimulator.setPhantomParameter(PhantomParameter.Scattering, lDrosophilaScatteringPhantom.getImage());
 
           lSimulator.render(true);
         }

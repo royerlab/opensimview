@@ -33,7 +33,7 @@ public class Drosophila extends EmbryoDynamics implements HasPolarity, Serializa
 
   private static final float Ri = 0.08f;
 
-  private static final float cCellDeathRate = 0.00001f;
+  public  float sCellDeathRate = 0.00001f;
 
   private final ForceFieldInterface mOutsideEllipseForceField;
   private final ForceFieldInterface mInsideEllipseForceField;
@@ -151,19 +151,24 @@ public class Drosophila extends EmbryoDynamics implements HasPolarity, Serializa
 
       int lNewParticleId = cellDivision(pId);
 
-      mCellCycleProperty.getArray().getWriteArray()[lNewParticleId] = pNewMorphogenValue;
-
-      if (pNewMorphogenValue >= 6)
+      if (lNewParticleId>=0)
       {
-        setTargetRadius(pId, getRadius(pId) * cCellDivisionRadiusShrinkage);
-        setTargetRadius(lNewParticleId, getRadius(lNewParticleId) * cCellDivisionRadiusShrinkage);
-      }
 
-      if (pNewMorphogenValue >= 5)
-      {
-        float[] lPositions = mPositions.getReadArray();
-        float y = lPositions[pId * lDimension + 1];
-        if (y > 0.9f) return (float) (pNewMorphogenValue + 0.1f * Math.pow(y, 4));
+        mCellCycleProperty.getArray().getWriteArray()[lNewParticleId] = pNewMorphogenValue;
+
+        if (pNewMorphogenValue >= 6)
+        {
+          setTargetRadius(pId, getRadius(pId) * cCellDivisionRadiusShrinkage);
+          setTargetRadius(lNewParticleId, getRadius(lNewParticleId) * cCellDivisionRadiusShrinkage);
+        }
+
+        if (pNewMorphogenValue >= 5)
+        {
+          float[] lPositions = mPositions.getReadArray();
+          float y = lPositions[pId * lDimension + 1];
+          if (y > 0.9f) return (float) (pNewMorphogenValue + 0.1f * Math.pow(y, 4));
+        }
+
       }
 
     }
@@ -196,12 +201,13 @@ public class Drosophila extends EmbryoDynamics implements HasPolarity, Serializa
 
   private void triggerCellDeath()
   {
-    if (Math.random() < cCellDeathRate)
+    int lNumberOfCells = getNumberOfParticles();
+
+    if (Math.random() < sCellDeathRate*lNumberOfCells )
     {
-      int lNumberOfParticles = getNumberOfParticles();
-      if (lNumberOfParticles >= 2)
+      if (lNumberOfCells >= 2)
       {
-        int lIndexOfParticleToDie = (int) (lNumberOfParticles * Math.random());
+        int lIndexOfParticleToDie = (int) (lNumberOfCells * Math.random());
         cellDeath(lIndexOfParticleToDie);
       }
     }
@@ -245,16 +251,17 @@ public class Drosophila extends EmbryoDynamics implements HasPolarity, Serializa
    * provided to optimize the grid size.
    *
    * @param pDivisionTime time in cell-division time
+   * @param pDisableCache true to disable cache
    * @return Drosohila dynamics at given state.
-   * @throws IOException exception if problem savin/loading saved dynamics state
+   * @throws IOException exception if problem saving/loading saved dynamics state
    */
-  public static Drosophila getDeveloppedEmbryo(float pDivisionTime) throws IOException
+  public static Drosophila getDeveloppedEmbryo(float pDivisionTime, boolean pDisableCache) throws IOException
   {
     File lTempDirectory = new File(System.getProperty("java.io.tmpdir"));
     File lCachedEmbryoDynamicsFile = new File(lTempDirectory, Drosophila.class.getSimpleName() + pDivisionTime);
     Drosophila lDrosophila = SerializationUtilities.loadFromFile(Drosophila.class, lCachedEmbryoDynamicsFile);
 
-    if (lDrosophila == null)
+    if (lDrosophila == null || pDisableCache)
     {
 
       lDrosophila = new Drosophila(64, 16, 16, 16);

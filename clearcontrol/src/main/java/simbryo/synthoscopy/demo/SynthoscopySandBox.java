@@ -61,7 +61,7 @@ public class SynthoscopySandBox
       try (ClearCL lClearCL = new ClearCL(lBestBackend); ClearCLDevice lFastestGPUDevice = lClearCL.getFastestGPUDeviceForImages(); ClearCLContext lContext = lFastestGPUDevice.createContext())
       {
 
-        Drosophila lDrosophila = Drosophila.getDeveloppedEmbryo(11);
+        Drosophila lDrosophila = Drosophila.getDeveloppedEmbryo(11, true);
 
         DrosophilaHistoneFluorescence lDrosophilaFluorescencePhantom = new DrosophilaHistoneFluorescence(lContext, lDrosophila, lPhantomWidth, lPhantomHeight, lPhantomDepth);
         lDrosophilaFluorescencePhantom.render(true);
@@ -174,7 +174,7 @@ public class SynthoscopySandBox
       try (ClearCL lClearCL = new ClearCL(lBestBackend); ClearCLDevice lFastestGPUDevice = lClearCL.getFastestGPUDeviceForImages(); ClearCLContext lContext = lFastestGPUDevice.createContext())
       {
 
-        Drosophila lDrosophila = Drosophila.getDeveloppedEmbryo(11);
+        Drosophila lDrosophila = Drosophila.getDeveloppedEmbryo(11, false);
 
         DrosophilaHistoneFluorescence lDrosophilaFluorescencePhantom = new DrosophilaHistoneFluorescence(lContext, lDrosophila, lPhantomWidth, lPhantomHeight, lPhantomDepth);
         lDrosophilaFluorescencePhantom.render(true);

@@ -24,7 +24,7 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
   private final Drosophila mDrosophila;
   private final DrosophilaHistoneFluorescence mDrosophilaFluorescencePhantom;
   private final DrosophilaScatteringPhantom mDrosophilaScatteringPhantom;
-  private final float mStepsPerSecond;
+  private float mStepsPerSecond;
 
   private volatile boolean mFreezedEmbryo = false;
 
@@ -45,10 +45,13 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
 
     try
     {
-      mDrosophila = Drosophila.getDeveloppedEmbryo(pInitialDivisionTime);
+      mDrosophila = Drosophila.getDeveloppedEmbryo(pInitialDivisionTime, false);
 
       // operating system dependent download folder for storing recordings:
-      String lDefaultFolderPrefix = System.getProperty("user.home") + "/Downloads/";
+      String lDefaultFolderPrefixInDownloads = System.getProperty("user.home") + "/Downloads/";
+
+      // operating system dependent download folder for storing recordings:
+      String lDefaultFolderPrefix = MachineConfiguration.get().getStringProperty("timelapse.rootfolder",lDefaultFolderPrefixInDownloads);
 
       // get prefix for recording folder from machine configuration:
       String lRecorderFolderPrefix = MachineConfiguration.get().getStringProperty("simbryo.recorder.folderprefix", lDefaultFolderPrefix);
@@ -84,6 +87,16 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
       throw new RuntimeException("Problem while initializing phantoms", e);
     }
 
+  }
+
+  /**
+   * Set the steps per second
+   *  @param pStepsPerSecond steps per second
+   *
+   */
+  public void setStepsPerSecond(float pStepsPerSecond)
+  {
+    mStepsPerSecond = pStepsPerSecond;
   }
 
   /**

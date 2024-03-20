@@ -46,7 +46,7 @@ public class StackGenerator implements AutoCloseable
       long lPhantomHeight = mSimulator.getHeight();
       long lPhantomDepth = mSimulator.getDepth();
 
-      mDrosophila = Drosophila.getDeveloppedEmbryo(11);
+      mDrosophila = Drosophila.getDeveloppedEmbryo(11, false);
 
       mContext = mSimulator.getContext();
 

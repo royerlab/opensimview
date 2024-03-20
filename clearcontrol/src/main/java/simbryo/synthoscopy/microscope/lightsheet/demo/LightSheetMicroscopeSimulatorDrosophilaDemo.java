@@ -84,7 +84,7 @@ public class LightSheetMicroscopeSimulatorDrosophilaDemo
     try
     {
 
-      int lPhantomWidth = 320;
+      int lPhantomWidth = 1024;
       int lPhantomHeight = lPhantomWidth;
       int lPhantomDepth = lPhantomWidth;
 
@@ -110,9 +110,12 @@ public class LightSheetMicroscopeSimulatorDrosophilaDemo
         for (int i = 0; i < pNumberOfIlluminationArms; i++)
           lSimulator.openViewerForLightMap(i);
 
+        lSimulator.setStepsPerSecond(10);
+
         while (lCameraImageViewer.isShowing())
         {
-          // lSimulator.simulationSteps(100, 1);
+
+          lSimulator.advance();
           lSimulator.render(true);
         }
 

@@ -168,15 +168,6 @@ public interface ParticleSystemInterface extends Serializable
   public void updateNeighborhoodGrid(NeighborhoodGrid pNeighborhoodGrid);
 
   /**
-   * Apply a centrifugal force around a point (X,Y)
-   *
-   * @param pCenterX center x coordinate
-   * @param pCenterY center y coordinate
-   * @param pFactor  force factor.
-   */
-  void repelAround(float pFactor, float pCenterX, float pCenterY);
-
-  /**
    * Enforces bounds [0,1]^d by bouncing the particles elastically.
    *
    * @param pDampening how much should velocity be dampened.

@@ -25,7 +25,7 @@ public class HistoneFluorescenceDrosophilaDemo
 
   private static final boolean cWriteStack = false;
   private static final boolean cRenderFullStack = true;
-  private static final int cWidth = 320;
+  private static final int cWidth = 1024;
   private static final int cHeight = cWidth;
   private static final int cDepth = cWidth;
   private static final int cStartSimulationStep = 0;
@@ -50,7 +50,7 @@ public class HistoneFluorescenceDrosophilaDemo
          ClearCLContext lContext = lFastestGPUDevice.createContext())
     {
 
-      Drosophila lDrosophila = Drosophila.getDeveloppedEmbryo(14);
+      Drosophila lDrosophila = Drosophila.getDeveloppedEmbryo(14, false);
 
       System.out.println("grid size:" + Arrays.toString(lDrosophila.getGridDimensions()));
       // lDrosophila.open3DViewer();
