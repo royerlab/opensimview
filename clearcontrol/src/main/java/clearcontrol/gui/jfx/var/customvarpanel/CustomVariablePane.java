@@ -14,6 +14,7 @@ import clearcontrol.gui.jfx.var.textfield.NumberVariableTextField;
 import clearcontrol.gui.jfx.var.textfield.StringVariableTextField;
 import clearcontrol.gui.jfx.var.togglebutton.VariableToggleButton;
 import javafx.collections.ListChangeListener;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -137,6 +138,19 @@ public class CustomVariablePane extends TabPane
     GridPane.setColumnSpan(lToggleButton, 3);
 
     return lToggleButton;
+  }
+
+  /**
+   * Adds an already instantiated controls.
+   *
+   * @param pControl    Control objectbto add
+   */
+  public void addControl(Control pControl, int pCursorIncrement, int pColumnIndex, int pColumnSpan)
+  {
+    int lCursor = mCursor+pCursorIncrement;
+    mCurrentTabGridPane.add(pControl, pColumnIndex, lCursor);
+    GridPane.setHgrow(pControl, Priority.ALWAYS);
+    GridPane.setColumnSpan(pControl, pColumnSpan);
   }
 
   /**

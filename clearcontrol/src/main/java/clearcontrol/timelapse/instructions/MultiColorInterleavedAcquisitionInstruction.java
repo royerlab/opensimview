@@ -46,9 +46,9 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
     mChannelNameVariable = new Variable<>("Acquisition Channel", pChannelName);
 
     int lNumberOfLaserLines = getLightSheetMicroscope().getNumberOfLaserLines();
-    mPeriodVariableArray = new BoundedVariable<>[lNumberOfLaserLines];
-    mOffsetVariableArray = new BoundedVariable<>[lNumberOfLaserLines];
-    mLaserPowerAdjustmentVariableArray = new BoundedVariable<>[lNumberOfLaserLines];
+    mPeriodVariableArray = new BoundedVariable[lNumberOfLaserLines];
+    mOffsetVariableArray = new BoundedVariable[lNumberOfLaserLines];
+    mLaserPowerAdjustmentVariableArray = new BoundedVariable[lNumberOfLaserLines];
 
 
     for (int la = 0; la < getLightSheetMicroscope().getNumberOfLaserLines(); la++) {

@@ -5,6 +5,10 @@ import clearcontrol.core.variable.VariableSetListener;
 import clearcontrol.core.variable.bounded.BoundedVariable;
 import clearcontrol.gui.jfx.var.customvarpanel.CustomVariablePane;
 import clearcontrol.gui.jfx.var.onoffarray.OnOffArrayPane;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import clearcontrol.core.math.functions.UnivariateAffineFunction;
+import javafx.scene.control.Control;
 
 /**
  * Light sheet panel
@@ -122,41 +126,81 @@ public class LightSheetPanel extends CustomVariablePane
       BoundedVariable<Double> lAdjustLowZVariable = new BoundedVariable<Double>("Low Z position", 0.0, lMinZValue, lMaxZValue);
       BoundedVariable<Double> lAdjustHighZVariable = new BoundedVariable<Double>("High Z position", 0.0, lMinZValue, lMaxZValue);
 
-      BoundedVariable<Double> lAdjustLowZFocusVariable = new BoundedVariable<Double>("Adjust Low Z Focus", 0.0, -32.0, 32.0);
-      BoundedVariable<Double> lAdjustHighZFocusVariable = new BoundedVariable<Double>("Adjust Low Z Focus", 0.0, -32.0, 32.0);
-
-      // Set listeners for the sliders:
-      lAdjustLowZVariable.addSetListener((o, n) ->
-      {
-        // nothing needed here, we just use that variable value when the focus is tuned.
-      });
-
-      lAdjustHighZVariable.addSetListener((o, n) ->
-      {
-        // nothing needed here, we just use that variable value when the focus is tuned.
-      });
-
-      lAdjustLowZFocusVariable.addSetListener((o, n) ->
-      {
-        // adjust the low Z position by modifying a and b in the Z function: pLightSheetInterface.getZFunction()
-        double a = pLightSheetInterface.getZFunction().get().getSlope();
-        double b = pLightSheetInterface.getZFunction().get().getConstant();
-      });
-
-      lAdjustHighZFocusVariable.addSetListener((o, n) ->
-      {
-        // adjust the HIGH Z position by modifying a and b in the Z function: pLightSheetInterface.getZFunction()
-        double a = pLightSheetInterface.getZFunction().get().getSlope();
-        double b = pLightSheetInterface.getZFunction().get().getConstant();
-      });
-
+      // Add sliders for the variables:
       addSliderForVariable("Low Z position:", lAdjustLowZVariable, null).setUpdateIfChanging(true);
       addSliderForVariable("High Z position:", lAdjustHighZVariable, null).setUpdateIfChanging(true);
-      addSliderForVariable("Low Z focus: ", lAdjustLowZFocusVariable, null).setUpdateIfChanging(true);
-      addSliderForVariable("High Z focus: ", lAdjustHighZFocusVariable, null).setUpdateIfChanging(true);
+
+      // Create a variable for the Z focus step size:
+      BoundedVariable<Double> lZFocusStepVariable = new BoundedVariable<Double>("Z Focus step size", 0.0, 0.0, 32.0);
+
+      // Add a slider for the Z focus step size:
+      addSliderForVariable("Z focus step size: ", lZFocusStepVariable, null).setUpdateIfChanging(true);
+
+      // Create a button for changing the low Z focus up:
+      Button lLowZPosUpButton = new Button("Low Z position Up");
+      lLowZPosUpButton.setAlignment(Pos.CENTER);
+      lLowZPosUpButton.setOnAction((e) ->
+      {
+        double z_low = lAdjustLowZVariable.get();
+        double z_high = lAdjustHighZVariable.get();
+        double step = lZFocusStepVariable.get();
+        updateFunction(pLightSheetInterface.getZFunction().get(), z_low, z_high, +step, 0);
+      });
+
+      // Create a button for changing the low Z focus down:
+      Button lLowZPosDownButton = new Button("Low Z position Down");
+      lLowZPosDownButton.setAlignment(Pos.CENTER);
+      lLowZPosDownButton.setOnAction((e) ->
+      {
+        double z_low = lAdjustLowZVariable.get();
+        double z_high = lAdjustHighZVariable.get();
+        double step = lZFocusStepVariable.get();
+        updateFunction(pLightSheetInterface.getZFunction().get(), z_low, z_high, -step, 0);
+      });
+
+      // Create a button for changing the high Z focus up:
+      Button lHighZPosUpButton = new Button("High Z position Up");
+      lHighZPosUpButton.setAlignment(Pos.CENTER);
+      lHighZPosUpButton.setOnAction((e) ->
+      {
+        double z_low = lAdjustLowZVariable.get();
+        double z_high = lAdjustHighZVariable.get();
+        double step = lZFocusStepVariable.get();
+        updateFunction(pLightSheetInterface.getZFunction().get(), z_low, z_high, 0, +step);
+      });
+
+      // Create a button for changing the high Z focus down:
+      Button lHighZPosDownButton = new Button("Low Z position Down");
+      lHighZPosDownButton.setAlignment(Pos.CENTER);
+      lHighZPosDownButton.setOnAction((e) ->
+      {
+        double z_low = lAdjustLowZVariable.get();
+        double z_high = lAdjustHighZVariable.get();
+        double step = lZFocusStepVariable.get();
+        updateFunction(pLightSheetInterface.getZFunction().get(), z_low, z_high, 0, -step);
+      });
+
+      // Add the buttons to the panel:
+      addControl(lLowZPosUpButton, 0,0, 1);
+      addControl(lLowZPosDownButton, 1,1, 1);
+      addControl(lHighZPosUpButton, 0, 0, 1);
+      addControl(lHighZPosDownButton, 1,1, 1);
 
     }
 
   }
+
+
+  // Function that updates the function for a given delta low and delta high value:
+  public void updateFunction(UnivariateAffineFunction function, double z_low, double z_high, double delta_l, double delta_h)
+  {
+    double a = function.getSlope();
+    double b = function.getConstant();
+    double a_prime = a + (delta_h - delta_l) / (z_high - z_low);
+    double b_prime = b + delta_l - ((delta_h - delta_l) / (z_high - z_low)) * z_low;
+    function.setSlope(a_prime);
+    function.setConstant(b_prime);
+  }
+
 
 }
