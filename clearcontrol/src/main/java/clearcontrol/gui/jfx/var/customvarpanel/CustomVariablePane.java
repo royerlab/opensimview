@@ -14,9 +14,9 @@ import clearcontrol.gui.jfx.var.textfield.NumberVariableTextField;
 import clearcontrol.gui.jfx.var.textfield.StringVariableTextField;
 import clearcontrol.gui.jfx.var.togglebutton.VariableToggleButton;
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -100,6 +100,20 @@ public class CustomVariablePane extends TabPane
   }
 
   /**
+   * Adds horyzontal separator
+   *
+   */
+  public void addSeparator()
+  {
+    int lCursor = mCursor++;
+    Separator lSeparator = new Separator();
+    lSeparator.setOrientation(Orientation.HORIZONTAL);
+    GridPane.setColumnSpan(lSeparator, 4);
+    mCurrentTabGridPane.add(lSeparator, 0, lCursor);
+  }
+
+
+  /**
    * Adds a check box for a given variable
    *
    * @param pLabelText       label text
@@ -137,6 +151,24 @@ public class CustomVariablePane extends TabPane
     GridPane.setColumnSpan(lToggleButton, 3);
 
     return lToggleButton;
+  }
+
+  /**
+   * Adds an already instantiated controls.
+   *
+   * @param pControl    Control objectbto add
+   */
+  public void addControl(String pControlName, Control pControl)
+  {
+    int lCursor = mCursor++;
+
+    Label lControlNameLabel = new Label(pControlName);
+    lControlNameLabel.setAlignment(Pos.CENTER);
+
+    mCurrentTabGridPane.add(lControlNameLabel, 0, lCursor);
+    mCurrentTabGridPane.add(pControl, 1, lCursor);
+    GridPane.setHgrow(pControl, Priority.ALWAYS);
+    GridPane.setColumnSpan(pControl, 3);
   }
 
   /**

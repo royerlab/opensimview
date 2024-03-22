@@ -113,7 +113,7 @@ public class MultiColorInterleavedAcquisitionInstruction extends AbstractAcquist
                 lQueue.setILO(l, k, k == la);
 
               // Adjust laser power:
-              double lLaserLinePower = lLightsheetPower* getLaserPowerAdjustmentVariable(la).get();
+              double lLaserLinePower = lLightsheetPower * getLaserPowerAdjustmentVariable(la).get();
               lQueue.setIP(l, lLaserLinePower);
 
               lQueue.addCurrentStateToQueue();

@@ -8,9 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * MachineConfiguration is a singleton that can be accessed to query infromation
@@ -20,15 +18,11 @@ import java.util.Properties;
  *
  * @author royer
  */
-
-/**
- * @author royer
- */
 public class MachineConfiguration implements LoggingFeature
 {
   private static final String cComments = "ClearControl machine configuration file";
   private static final MachineConfiguration sConfiguration = new MachineConfiguration();
-  private static ObjectMapper sObjectMapper = new ObjectMapper();
+  private static final ObjectMapper sObjectMapper = new ObjectMapper();
 
   /**
    * Returns the singleton instance of MachineConfiguration.
@@ -57,7 +51,10 @@ public class MachineConfiguration implements LoggingFeature
       final String lUserHome = System.getProperty("user.home");
       final File lUserHomeFolder = new File(lUserHome);
       mClearControlFolder = new File(lUserHomeFolder, ".clearcontrol/");
-      mClearControlFolder.mkdirs();
+      final boolean lFolderCreated = mClearControlFolder.mkdirs();
+      if (lFolderCreated)
+        System.out.println("ClearControl configuration file created at: "+mClearControlFolder.toString());
+
       mPersistentVariablesFolder = getFolder("PersistentVariables");
 
       final File lConfigurationFile = new File(mClearControlFolder, "configuration.txt");
@@ -201,7 +198,7 @@ public class MachineConfiguration implements LoggingFeature
       return pDefaultValue;
     }
 
-    return Boolean.parseBoolean(lProperty.toLowerCase()) || lProperty.trim().equals("1") || lProperty.trim().toLowerCase().equals("on") || lProperty.trim().toLowerCase().equals("present") || lProperty.trim().toLowerCase().equals("true");
+    return Boolean.parseBoolean(lProperty.toLowerCase()) || lProperty.trim().equals("1") || lProperty.trim().equalsIgnoreCase("on") || lProperty.trim().equalsIgnoreCase("present") || lProperty.trim().equalsIgnoreCase("true");
   }
 
   /**
@@ -237,8 +234,7 @@ public class MachineConfiguration implements LoggingFeature
   public String getSerialDevicePort(String pDeviceName, int pDeviceIndex, String pDefaultPort)
   {
     final String lKey = "device.serial." + pDeviceName + "." + pDeviceIndex;
-    final String lPort = getStringProperty(lKey, pDefaultPort);
-    return lPort;
+    return getStringProperty(lKey, pDefaultPort);
   }
 
   /**
@@ -267,8 +263,7 @@ public class MachineConfiguration implements LoggingFeature
   public Integer getIODevicePort(String pDeviceName, Integer pDefaultPort)
   {
     final String lKey = "device." + pDeviceName;
-    final Integer lPort = getIntegerProperty(lKey, pDefaultPort);
-    return lPort;
+    return getIntegerProperty(lKey, pDefaultPort);
   }
 
   /**
@@ -293,7 +288,7 @@ public class MachineConfiguration implements LoggingFeature
    */
   public ArrayList<String> getList(String pPrefix)
   {
-    final ArrayList<String> lList = new ArrayList<String>();
+    final ArrayList<String> lList = new ArrayList<>();
     for (int i = 0; i < Integer.MAX_VALUE; i++)
     {
       final String lKey = pPrefix + "." + i;
@@ -439,5 +434,22 @@ public class MachineConfiguration implements LoggingFeature
       e.printStackTrace();
     }
 
+  }
+
+
+  public void clearProperties(String pPrefixFilter, String pPostfixFilter)
+  {
+    HashSet<String> lKeysToClearSet = new HashSet<>();
+
+    for (Map.Entry<Object, Object> lEntry : mProperties.entrySet())
+    {
+      String lKey = (String) lEntry.getKey();
+      if (lKey.startsWith(pPrefixFilter) && lKey.endsWith(pPostfixFilter)) lKeysToClearSet.add(lKey);
+    }
+
+    for (String lKey : lKeysToClearSet)
+    {
+      mProperties.remove(lKey);
+    }
   }
 }
