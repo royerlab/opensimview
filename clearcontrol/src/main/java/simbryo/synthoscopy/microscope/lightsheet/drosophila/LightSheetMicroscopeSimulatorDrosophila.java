@@ -57,7 +57,7 @@ public class LightSheetMicroscopeSimulatorDrosophila extends LightSheetMicroscop
       String lRecorderFolderPrefix = MachineConfiguration.get().getStringProperty("simbryo.recorder.folderprefix", lDefaultFolderPrefix);
 
       // create recording folder from lRecorderFolderPrefix and with a subfolder that is the date and time in YYYY:MM:DD:HH:MM:SS format:
-      String lRecorderFolderName = lRecorderFolderPrefix + File.separator + String.format("%1$tY:%1$tm:%1$td:%1$tH:%1$tM:%1$tS", System.currentTimeMillis());
+      String lRecorderFolderName = lRecorderFolderPrefix + File.separator + String.format("%1$tY-%1$tm-%1$td-%1$tH-%1$tM-%1$tS", System.currentTimeMillis());
 
       // Ensure folder exists:
       File lRecorderFolderFile = new File(lRecorderFolderName);

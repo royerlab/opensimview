@@ -4,6 +4,7 @@ import clearcl.ClearCLContext;
 import clearcl.ClearCLImage;
 import clearcl.util.ElapsedTime;
 import clearcl.viewer.ClearCLImageViewer;
+import clearcontrol.core.configuration.MachineConfiguration;
 import coremem.ContiguousMemoryInterface;
 import simbryo.synthoscopy.camera.impl.SCMOSCameraRenderer;
 import simbryo.synthoscopy.microscope.MicroscopeSimulatorBase;
@@ -33,7 +34,7 @@ public class LightSheetMicroscopeSimulator extends MicroscopeSimulatorBase imple
 
   private static final float cDepthOfIlluminationInNormUnits = 1f;
 
-  private static final int cLightMapScaleFactor = 2;
+  private static final int cLightMapScaleFactor = MachineConfiguration.get().getIntegerProperty("simbryo.synthoscopy.lightmapscalefactor", 4);
 
   private ArrayList<LightSheetIllumination> mLightSheetIlluminationList = new ArrayList<>();
   private IlluminationCombiner<LightSheetIllumination> mIlluminationCombiner;
